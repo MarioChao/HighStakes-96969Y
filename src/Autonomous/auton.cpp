@@ -166,15 +166,19 @@ namespace {
     /// @brief Run the 15-seconds red-up autonomous.
     void runAutonRedUp() {
         timer autontimer;
-        setRotation(-90.0);
+        setRotation(90.0);
 
         /* Start facing left */
 
         // 1: Go to mobile goal and grab it
-        turnToAngle(90.0 - 180.0);
-        driveAndTurnDistanceTiles(-1.26, 90.0 - 180.0, 100., 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
-
+        turnToAngle(90.0);
+        driveAndTurnDistanceTiles(-1, 90.0, 100., 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
+        turnToAngle(45);
+        driveAndTurnDistanceTiles(-0.05, 45.0, 100., 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
+        setGoalClampState(1);
+        
         // Score ring
+        
         setIntakeState(1);
 
         // 2: Intake ring and score the stake (bottom of the stack)

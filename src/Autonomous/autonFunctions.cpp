@@ -23,10 +23,13 @@ namespace {
     double setLeftWing_DelaySec;
     double setRightWing_DelaySec;
     double setWings_DelaySec;
+    double setGoalClamp_DelaySec;
     bool setFrontWings_WingState;
     bool setLeftWing_LeftWingState;
     bool setRightWing_RightWingState;
     bool setWings_WingsState;
+    bool setGoalClamp_ClampState;
+
 
     bool useRotationSensorForPid = true;
     bool useEncoderForPid = true;
@@ -375,6 +378,23 @@ namespace auton {
                 task::sleep(setRightWing_DelaySec * 1000);
             }
             RightWingPneumatic.set(taskState);
+            return 1;
+        });
+    }
+
+    /// @brief Set the state of Left Wing's pneumatic.
+    /// @param state Expanded: true, retracted: false.
+    /// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
+    void setGoalClampState(bool state, double delaySec) {
+        setGoalClamp_ClampState = state;
+        setGoalClamp_DelaySec = delaySec;
+        task setPneumaticState([] () -> int {
+            int taskState = setGoalClamp_ClampState;
+
+            if (setGoalClamp_DelaySec > 1e-9) {
+                task::sleep(setGoalClamp_DelaySec * 1000);
+            }
+            GoalClampPneumatic.set(taskState);
             return 1;
         });
     }
