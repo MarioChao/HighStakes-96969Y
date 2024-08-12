@@ -25,17 +25,17 @@ motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA, Rig
 // Intake motors
 
 motor IntakeMotor1(PORT1, ratio6_1);
-motor IntakeMotor2(PORT2, ratio6_1);
+motor IntakeMotor2(PORT6, ratio6_1,true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 // Wing pneumatic (not used)
 
 pneumatics FrontWingsPneumatic(Brain.ThreeWirePort.D);
 pneumatics LeftWingPneumatic(Brain.ThreeWirePort.B);
-pneumatics RightWingPneumatic(Brain.ThreeWirePort.E);
+pneumatics RightWingPneumatic(Brain.ThreeWirePort.F);
 
 pneumatics IntakeLiftPneumatic(Brain.ThreeWirePort.A);
-
+pneumatics HangPneumatic(Brain.ThreeWirePort.E);
 pneumatics GoalClampPneumatic(Brain.ThreeWirePort.C);
 
 // Sensors

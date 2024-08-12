@@ -25,7 +25,7 @@ extern pneumatics LeftWingPneumatic;
 extern pneumatics RightWingPneumatic;
 
 extern pneumatics IntakeLiftPneumatic;
-
+extern pneumatics HangPneumatic;
 extern pneumatics GoalClampPneumatic;
 
 extern encoder LookEncoder;

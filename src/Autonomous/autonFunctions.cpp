@@ -1,6 +1,7 @@
 #include "Autonomous/autonFunctions.h"
 
 #include "Mechanics/botIntake.h"
+#include "Mechanics/goalClamp.h"
 #include "Utilities/angleFunctions.h"
 #include "Utilities/pidControl.h"
 #include "Utilities/motionProfile.h"
@@ -23,13 +24,16 @@ namespace {
     double setLeftWing_DelaySec;
     double setRightWing_DelaySec;
     double setWings_DelaySec;
+    double setGoalClamp_DelaySec;
     bool setFrontWings_WingState;
     bool setLeftWing_LeftWingState;
     bool setRightWing_RightWingState;
     bool setWings_WingsState;
+    bool setGoalClamp_ClampState;
 
-    bool useRotationSensorForPid = true;
-    bool useEncoderForPid = true;
+
+    bool useRotationSensorForPid = 0;
+    bool useEncoderForPid = 0;
 }
 
 namespace auton {
@@ -326,6 +330,24 @@ namespace auton {
     /// @param delaySec Number of seconds to wait before setting the state (in a task).
     void setIntakeState(int state, double delaySec) {
         botintake::setState(state, delaySec);
+    }
+
+     /// @brief Set the state of Left Wing's pneumatic.
+    /// @param state Expanded: true, retracted: false.
+    /// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
+    void setGoalClampState(bool state, double delaySec) {
+        goalclamp::setState(state, delaySec);
+        // setGoalClamp_ClampState = state;
+        // setGoalClamp_DelaySec = delaySec;
+        // task setPneumaticState([] () -> int {
+        //     int taskState = setGoalClamp_ClampState;
+
+        //     if (setGoalClamp_DelaySec > 1e-9) {
+        //         task::sleep(setGoalClamp_DelaySec * 1000);
+        //     }
+        //     GoalClampPneumatic.set(taskState);
+        //     return 1;
+        // });
     }
 
     /// @brief Set the state of Front Wings's pneumatic.

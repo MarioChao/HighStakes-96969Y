@@ -4,7 +4,7 @@
 namespace {
     void resolveIntake();
 
-	double intakeVelocityPct = 100;
+	double intakeVelocityPct = 80;
 
     int resolveState = 0;
 
