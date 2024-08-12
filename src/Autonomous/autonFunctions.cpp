@@ -32,8 +32,8 @@ namespace {
     bool setGoalClamp_ClampState;
 
 
-    bool useRotationSensorForPid = 0;
-    bool useEncoderForPid = 0;
+    bool useRotationSensorForPid = true;
+    bool useEncoderForPid = false;
 }
 
 namespace auton {
@@ -71,7 +71,7 @@ namespace auton {
         // PID
         // L_vel = L_dist / time
         // R_vel = R_dist / time = L_vel * (R_dist / L_dist)
-        PIDControl rotateTargetAnglePid(0.62, 0, 0, errorRange); // Reach goal
+        PIDControl rotateTargetAnglePid(0.5, 0, 0, errorRange); // Reach goal
         timer timeout;
         while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
             // Compute rotate error
@@ -145,7 +145,7 @@ namespace auton {
 
         // PID
         // TODO: Tune pid
-        PIDControl driveTargetDistancePid(5.3, 0, 0, errorRange);
+        PIDControl driveTargetDistancePid(4.0, 0, 0, errorRange);
         PIDControl rotateTargetAnglePid(0.3, 0, 0, defaultTurnAngleErrorRange);
         PIDControl synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -156,6 +156,7 @@ namespace auton {
             double distanceError;
             double targetDistanceInches = distanceInches;
             if (useRotationSensorForPid) {
+                printf("Rotation sensor pid\n");
                 // Compute current rotation revolutions
                 double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
                 

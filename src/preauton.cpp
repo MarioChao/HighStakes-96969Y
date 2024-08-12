@@ -18,6 +18,7 @@ void preautonControllerThread() {
     // eeecegg
     Controller1.rumble(".--.-- -");
 }
+
 void runPreauton() {
     // Buffer screen task
     task bufferTask([] () -> int {
@@ -27,6 +28,7 @@ void runPreauton() {
     // Initialize components
     initComponents();
 }
+
 bool isPreautonFinished() {
     return initComponentFinished;
 }

@@ -20,6 +20,8 @@ extern motor IntakeMotor1;
 extern motor IntakeMotor2;
 extern motor_group IntakeMotors;
 
+extern triport Expander1;
+
 extern pneumatics FrontWingsPneumatic;
 extern pneumatics LeftWingPneumatic;
 extern pneumatics RightWingPneumatic;
@@ -30,6 +32,7 @@ extern pneumatics GoalClampPneumatic;
 
 extern encoder LookEncoder;
 extern rotation LookRotation;
+extern rotation RightRotation;
 
 extern inertial InertialSensor;
 extern distance DistanceSensor;
