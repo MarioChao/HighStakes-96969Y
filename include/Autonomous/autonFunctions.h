@@ -22,6 +22,5 @@ namespace auton {
     void setRightWingState(bool state, double delaySec = 0);
     void setBackWingsState(bool state, double delaySec = 0);
     void setGoalClampState(bool state, double delaySec = 0);
-
     void setIntakeLiftState(bool state);
 }

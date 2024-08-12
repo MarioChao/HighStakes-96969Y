@@ -3,7 +3,7 @@
 #include "Mechanics/botLift.h"
 // #include "Mechanics/botWings.h"
 #include "Mechanics/goalClamp.h"
-#include "Mechanics/botHang.h"
+
 #include "Controller/controls.h"
 #include "main.h"
 
@@ -23,12 +23,6 @@ namespace controls {
 		Controller1.ButtonL1.pressed([] () -> void {
 			printf("Intake lift pneu: %d\n", IntakeLiftPneumatic.value());
 			botlift::switchState();
-		});
-		Controller1.ButtonUp.pressed([] () -> void {
-			printf("Hang pneu: %d\n", HangPneumatic.value());
-			HangPneumatic.set(!HangPneumatic.value());
-			task::sleep(100);
-			
 		});
 	}
 
