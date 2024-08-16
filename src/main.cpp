@@ -12,6 +12,7 @@
 #include "Autonomous/auton.h"
 
 #include "Controller/controls.h"
+#include "Controller/odometry.h"
 
 #include "Utilities/fieldInfo.h"
 #include "Utilities/debugFunctions.h"
@@ -24,9 +25,6 @@ competition Competition;
 // define your global instances of motors and other devices here
 
 // ---------- Variables ----------
-double botX = 5 * field::tileLengthIn * 2.54;
-double botY = 0.5 * field::tileLengthIn * 2.54;
-double botAngle = 180;
 double motSpeedRpm, motAimSpeedRpm = 0;
 
 int playingVideoId = 0;
@@ -49,6 +47,7 @@ void pre_auton(void) {
 
     // Tasks
     controls::startThreads();
+    odometry::startThreads();
     task rum([] () -> int { preautonControllerThread(); return 1; });
 
     // Brake-types

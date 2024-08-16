@@ -1,13 +1,14 @@
 // Brain Screen Painter
 
 #include "Graphics/BrainScreen.h"
-#include "main.h"
 #include "Autonomous/auton.h"
 #include "Graphics/GraphicMain.h"
 #include "Graphics/GUIs/ButtonsGui.h"
 #include "Graphics/GUIs/ShapesGui.h"
 #include "Graphics/GUIs/SlidersGui.h"
 #include "Graphics/GUIs/DocksGui.h"
+#include "Controller/odometry.h"
+#include "main.h"
 
 using namespace gfxmain;
 
@@ -524,13 +525,13 @@ namespace {
 
   // Getters
   double getRobotX() {
-    return botX;
+    return odometry::getX();
   }
   double getRobotY() {
-    return botY;
+    return odometry::getY();
   }
   double getRobotAngle() {
-    return botAngle;
+    return odometry::getAngle();
   }
   double getMotorExpectedSpeed() {
     return motSpeedRpm;

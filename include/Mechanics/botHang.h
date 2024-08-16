@@ -1,7 +1,7 @@
 #pragma once
 
-namespace botHang {
-	void sethangState(bool value);
+namespace bothang {
+	void setState(bool, double = 0);
 	
 	void switchState();
 

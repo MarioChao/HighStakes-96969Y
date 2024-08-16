@@ -7,6 +7,7 @@ enum autonomousType {
     BlueDown,
     AutonSkills,
     DrivingSkills,
+    AllianceWallStake,
     Test,
     None
 };
