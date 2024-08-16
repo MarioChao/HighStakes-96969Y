@@ -19,6 +19,7 @@ namespace {
     void runAutonSkills();
     void runAutonSkillsCrossBarrier();
     void runAutonSkillsStrategicPush();
+    void runAllianceWallStake();
 
     bool userRunningAutonomous = false;
     autonomousType auton_runType = autonomousType::BlueUp;
@@ -92,6 +93,9 @@ void runAutonomous() {
             // runAutonSkills();
             runAutonSkillsStrategicPush();
             break;
+        case autonomousType::AllianceWallStake:
+            runAllianceWallStake();
+            break;
         case autonomousType::Test:
             autonTest();
         default:
@@ -103,12 +107,14 @@ void runAutonomous() {
 namespace {
     void autonTest() {
         setRotation(0.0);
-        // driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+        driveAndTurnDistanceTiles(1.0, 0.0, 40.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+        task::sleep(2000);
         // driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
         // driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
         // driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
         // driveAndTurnDistanceTiles(2.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
         // driveAndTurnDistanceTiles(-2.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+        return;
 
         // driveAndTurnDistanceTilesMotionProfile(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
         // driveAndTurnDistanceTilesMotionProfile(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
@@ -202,9 +208,9 @@ namespace {
         /* Start facing left */
         
         // 1: Go to middle mobile goal and grab it
-        turnToAngle(-102.23 + 180.0);
-        driveAndTurnDistanceTiles(-1.82, -102.23 + 180.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
-        driveAndTurnDistanceTiles(-0.50, -102.23 + 180.0, 25.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
+        turnToAngle(-105.23 + 180.0);
+        driveAndTurnDistanceTiles(-1.72, -105.23 + 180.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
+        driveAndTurnDistanceTiles(-0.50, -105.23 + 180.0, 25.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
         // ...
         setGoalClampState(1);
 
@@ -238,86 +244,38 @@ namespace {
 
     /// @brief Run the 15-seconds blue-up autonomous.
     void runAutonBlueUp() {
-         timer autontimer;
+        timer autontimer;
         setRotation(90.0);
 
-        /* Start facing left */
-
-        /*
-        // 1: Go to mobile goal and grab it
-
-        turnToAngle(-113.19 + 180.0);
-        driveAndTurnDistanceTiles(-1.02, -113.19 + 180.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-        driveAndTurnDistanceTiles(-0.42, -113.19 + 180.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+        // Grab goal
+        turnToAngle(90.0);
+        driveAndTurnDistanceTiles(-1.5, 90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
         setGoalClampState(1);
 
-        // 2: Bump into ladder
-
-        turnToAngle(-159.79 + 180.0);
-        driveAndTurnDistanceTiles(-0.71, -159.79 + 180.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
-        
-        // 3: Go prepare intake
-
-        turnToAngle(-40.41);
-        driveAndTurnDistanceTiles(1.27, -40.41, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-
-        // 4: Intake two rings
-
+        // Intake middle up
+        turnToAngle(-62.0);
         setIntakeState(1);
-        turnToAngle(0.74);
-        driveAndTurnDistanceTiles(0.79, 0.74, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+        driveAndTurnDistanceTiles(1.0, -62.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);   
+        turnToAngle(0);
+        driveAndTurnDistanceTiles(1.0, 0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 
-        // 5: Intake one ring halfway
+        // Intake up
+        turnToAngle(126.05);
+        setIntakeState(0, 0.8);
+        setGoalClampState(0, 0.5);
+        driveAndTurnDistanceTiles(2.76, 126.05, 50.0, 70.0, autonvals::defaultMoveTilesErrorRange, 2.5);
 
-        turnToAngle(105.04);
-        driveAndTurnDistanceTiles(0.75, 105.04, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-        setIntakeState(0, 0.3);
-
-        // Drop goal
-
-        setGoalClampState(0);
-
-        // 6: Go to wall stake
-
-        turnToAngle(139.52);
-        driveAndTurnDistanceTiles(2.09, 139.52, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
-
-        // 7: Turn around and push ring away
-
-        turnToAngle(145.14 - 180.0);
-        driveAndTurnDistanceTiles(-0.53, 145.14 - 180.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-
-        // 8: Prepare to score wall stake
-
-        turnToAngle(90.0 - 180.0);
-        driveAndTurnDistanceTiles(-0.18, 90.0 - 180.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-
-        // Score wall stake
-
+        // Try to score alliance
+        turnToAngle(0);
+        driveAndTurnDistanceTiles(-0.85, 0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
+        turnToAngle(-90.0);
+        driveAndTurnDistanceTiles(-0.4, -90.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 0.5);
         setIntakeState(1);
-        setIntakeState(0, 1.5);/**/
-       
-        
-        driveAndTurnDistanceTiles(-0.225, 90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange/2, 0.75);
-        driveAndTurnDistanceTiles(-0.22, 45.0, 100.0, 100.0, 0, 1);
-        setGoalClampState(1);
-        driveAndTurnDistanceTiles(-0.18, 0.0, 60., 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
-        driveAndTurnDistanceTiles(0.17, -30.0, 56., 80.0, autonvals::defaultMoveTilesErrorRange, 1.0);
-        setIntakeState(1);
-        driveAndTurnDistanceTiles(0.64, 0.0, 30., 100.0, autonvals::defaultMoveTilesErrorRange, 1.4);
-        driveAndTurnDistanceTiles(-0.165, -20.0, 30.*10/7, 70.0*10/7, autonvals::defaultMoveTilesErrorRange, 1.0);
-        turnToAngleVelocity(45, 100, 0, autonvals::defaultTurnAngleErrorRange, 1);
-        driveAndTurnDistanceTiles(0.1, 45.0, 60., 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
-        turnToAngleVelocity(150, 100, 0, autonvals::defaultTurnAngleErrorRange, 1);
-        setGoalClampState(0);
-        IntakeLiftPneumatic.set(1);
-        driveAndTurnDistanceTiles(0.5, 145.0, 100., 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
-        IntakeLiftPneumatic.set(0);
-        setIntakeState(0);
-        turnToAngleVelocity(270,100, -1, autonvals::defaultTurnAngleErrorRange, 1);
-        driveAndTurnDistanceTiles(-0.1, 270.0, 100, 100, autonvals::defaultMoveTilesErrorRange, 1.0);
-        setIntakeState(1);/**/
+        task::sleep(500);
 
+        // Touch ladder
+        setIntakeState(0, 0.5);
+        driveAndTurnDistanceTiles(2.0, -90.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
     }
 
     /// @brief Run the skills autonomous.
@@ -328,5 +286,25 @@ namespace {
     }
 
     void runAutonSkillsStrategicPush() {
+    }
+
+    void runAllianceWallStake() {
+        timer autontimer;
+        setRotation(-180.0);
+
+        // Go back 1 tile
+        driveAndTurnDistanceTiles(-1.0, -180.0);
+
+        // Score
+        turnToAngle(-90.0);
+        setIntakeState(1);
+        
+        while (autontimer.value() < 12.0) {
+            task::sleep(20);
+        }
+
+        setIntakeState(0);
+
+        driveAndTurnDistanceTiles(2.0, -90.0, 30.0, 100.0);
     }
 }

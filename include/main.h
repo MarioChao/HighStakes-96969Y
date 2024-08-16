@@ -7,7 +7,6 @@
 extern competition Competition;
 
 // Drive info
-extern double botX, botY, botAngle;
 extern double motSpeedRpm, motAimSpeedRpm;
 
 // Global variables

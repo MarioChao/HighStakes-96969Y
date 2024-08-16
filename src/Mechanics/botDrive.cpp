@@ -19,8 +19,10 @@ namespace {
 
 namespace botdrive {
     void preauton() {
-        LeftMotors.setStopping(brake);
-        RightMotors.setStopping(brake);
+        LeftMotors.setStopping(coast);
+        RightMotors.setStopping(coast);
+        // LeftMotors.setStopping(brake);
+        // RightMotors.setStopping(brake);
     }
 
     /// @brief Switch driving mode between arcade two stick, arcade single stick, and Mario

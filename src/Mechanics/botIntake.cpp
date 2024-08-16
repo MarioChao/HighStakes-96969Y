@@ -69,10 +69,14 @@ namespace {
         // Resolve intake
         if (resolveState == 1) {
             // Forward
-            IntakeMotors.spin(fwd, intakeVelocityPct, pct);
+            IntakeMotor1.spin(fwd, intakeVelocityPct, pct);
+            IntakeMotor2.spin(fwd, intakeVelocityPct*0.8, pct);
+
         } else if (resolveState == -1) {
             // Reversed
             IntakeMotors.spin(fwd, -intakeVelocityPct, pct);
+            IntakeMotor2.spin(fwd, -intakeVelocityPct*0.8, pct);
+
         } else {
             // Hold
             IntakeMotors.stop(brakeType::coast);
