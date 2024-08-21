@@ -9,7 +9,7 @@
 
 namespace controls {
 	void startThreads() {
-		task intakeTast([] () -> int { botintake::startThread(); return 1; });
+		task intakeTast([] () -> int { botintake::runThread(); return 1; });
 	}
 
 	void setUpKeybinds() {

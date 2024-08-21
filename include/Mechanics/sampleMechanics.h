@@ -1,7 +1,7 @@
 #pragma once
 
 namespace samplemech {
-	void startThread();
+	void runThread();
 	
 	void preauton();
 	

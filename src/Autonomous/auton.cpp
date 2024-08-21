@@ -107,7 +107,7 @@ void runAutonomous() {
 namespace {
     void autonTest() {
         setRotation(0.0);
-        driveAndTurnDistanceTiles(1.0, 0.0, 40.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+        driveAndTurnDistanceTiles(1.0, 0.0, 50.0, 100.0, defaultMoveTilesErrorRange, 6.0);
         task::sleep(2000);
         // driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
         // driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
@@ -245,37 +245,38 @@ namespace {
     /// @brief Run the 15-seconds blue-up autonomous.
     void runAutonBlueUp() {
         timer autontimer;
-        setRotation(90.0);
+        setRotation(75.0);
+
+        setGoalClampState(0, 14.5);
 
         // Grab goal
-        turnToAngle(90.0);
-        driveAndTurnDistanceTiles(-1.5, 90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-        setGoalClampState(1);
+        turnToAngle(75.0);
+        driveAndTurnDistanceTiles(-1.4, 75.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+        setGoalClampState(1, 0.3);
+        driveAndTurnDistanceTiles(-0.3, 75.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 
         // Intake middle up
-        turnToAngle(-62.0);
+        turnToAngle(-55);
         setIntakeState(1);
-        driveAndTurnDistanceTiles(1.0, -62.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);   
-        turnToAngle(0);
-        driveAndTurnDistanceTiles(1.0, 0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+        driveAndTurnDistanceTiles(0.80, -55, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);   
+        turnToAngle(-60.0, -halfRobotLengthIn * 0.75);
+        turnToAngle(0, halfRobotLengthIn * 0.75);
+        driveAndTurnDistanceTiles(0.80, 0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 
         // Intake up
         turnToAngle(126.05);
-        setIntakeState(0, 0.8);
-        setGoalClampState(0, 0.5);
-        driveAndTurnDistanceTiles(2.76, 126.05, 50.0, 70.0, autonvals::defaultMoveTilesErrorRange, 2.5);
-
-        // Try to score alliance
-        turnToAngle(0);
-        driveAndTurnDistanceTiles(-0.85, 0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.0);
-        turnToAngle(-90.0);
-        driveAndTurnDistanceTiles(-0.4, -90.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 0.5);
-        setIntakeState(1);
-        task::sleep(500);
+        // setIntakeState(0, 0.8);
+        // setGoalClampState(0, 1);
+        driveAndTurnDistanceTiles(1.2, 126.05, 50.0, 70.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+        setIntakeState(0, 0.3);
 
         // Touch ladder
-        setIntakeState(0, 0.5);
-        driveAndTurnDistanceTiles(2.0, -90.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
+        while (autontimer.value() < 12.0) {
+            task::sleep(20);
+        }
+        turnToAngle(270.0, halfRobotLengthIn * 1.0);
+        setGoalClampState(0);
+        driveAndTurnDistanceTiles(2.0, 270.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
     }
 
     /// @brief Run the skills autonomous.

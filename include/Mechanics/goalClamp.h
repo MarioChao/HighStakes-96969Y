@@ -1,7 +1,7 @@
 #pragma once
 
 namespace goalclamp {
-	void startThread();
+	void runThread();
 	
 	void preauton();
 	

@@ -6,7 +6,7 @@ namespace {
 }
 
 namespace samplemech {
-	void startThread() {
+	void runThread() {
 		while (true) {
 			// Thread code here
 
