@@ -157,7 +157,7 @@ namespace {
     else if (botY - 1 <= y + 1) botY = y + 2;
     // Shooting path
     //  Get flywheel angle
-    double botAng = getRobotAngle();
+    double botAng = 90 - getRobotAngle();
     //  Calculate x and y components
     double dx, dy;
     if (cos(botAng * DegToRad) > 0) dx = x + width - botX;

@@ -12,7 +12,7 @@ namespace {
 }
 
 namespace botintake {
-	void startThread() {
+	void runThread() {
 		while (true) {
 			resolveIntake();
 			task::sleep(20);

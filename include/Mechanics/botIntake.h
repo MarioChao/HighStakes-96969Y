@@ -1,7 +1,7 @@
 #pragma once
 
 namespace botintake {
-	void startThread();
+	void runThread();
 	
 	void preauton();
 	

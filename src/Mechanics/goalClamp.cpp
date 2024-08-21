@@ -6,7 +6,7 @@ namespace {
 }
 
 namespace goalclamp {
-	void startThread() {
+	void runThread() {
 		while (true) {
 			// Thread code here
 
