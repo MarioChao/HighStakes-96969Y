@@ -331,8 +331,24 @@ namespace auton {
     /// @param state Forward: 1, released: 0, reversed: -1
     /// @param delaySec Number of seconds to wait before setting the state (in a task).
     void setIntakeState(int state, double delaySec) {
-        botintake::setState(state, delaySec);
-    }
+       botintake::setState(state, delaySec);
+   }
+
+
+   /// @brief Set the state of the bottom intake.
+   /// @param state Forward: 1, released: 0, reversed: -1
+   /// @param delaySec Number of seconds to wait before setting the state (in a task).
+   void setIntakeTopState(int state, double delaySec) {
+       botintake::setState2(state, delaySec);
+   }
+
+
+   /// @brief Set the state of the bottom intake.
+   /// @param state Forward: 1, released: 0, reversed: -1
+   /// @param delaySec Number of seconds to wait before setting the state (in a task).
+   void setIntakeBottomState(int state, double delaySec) {
+       botintake::setState3(state, delaySec);
+   }
 
      /// @brief Set the state of Left Wing's pneumatic.
     /// @param state Expanded: true, retracted: false.
