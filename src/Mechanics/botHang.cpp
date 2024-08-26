@@ -3,6 +3,14 @@
 
 namespace bothang {
     void setState(bool state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+			HangPneumatic.set(state);
+
+			return;
+		}
+
 		// Set global variables
 		_taskState = state;
 		_taskDelay = delaySec;
@@ -13,9 +21,7 @@ namespace bothang {
 			double taskDelay = _taskDelay;
 
 			// Delay setting state
-			if (taskDelay > 1e-9) {
-				task::sleep(taskDelay * 1000);
-			}
+			task::sleep(taskDelay * 1000);
 
 			// Set state here
 			printf("New state: %d\n", taskState);

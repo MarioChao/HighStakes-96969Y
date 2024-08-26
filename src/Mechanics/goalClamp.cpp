@@ -19,6 +19,14 @@ namespace goalclamp {
 	}
 
 	void setState(int state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+			GoalClampPneumatic.set(state);
+
+			return;
+		}
+
 		// Set global variables
 		_taskState = state;
 		_taskDelay = delaySec;
@@ -29,9 +37,7 @@ namespace goalclamp {
 			double taskDelay = _taskDelay;
 
 			// Delay setting state
-			if (taskDelay > 1e-9) {
-				task::sleep(taskDelay * 1000);
-			}
+			task::sleep(taskDelay * 1000);
 
 			// Set state here
 			printf("New state: %d\n", taskState);

@@ -19,6 +19,13 @@ namespace samplemech {
 	}
 
 	void setState(int state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+
+			return;
+		}
+
 		// Set global variables
 		_taskState = state;
 		_taskDelay = delaySec;
@@ -29,9 +36,7 @@ namespace samplemech {
 			double taskDelay = _taskDelay;
 
 			// Delay setting state
-			if (taskDelay > 1e-9) {
-				task::sleep(taskDelay * 1000);
-			}
+			task::sleep(taskDelay * 1000);
 
 			// Set state here
 

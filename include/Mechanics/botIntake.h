@@ -6,6 +6,10 @@ namespace botintake {
 	void preauton();
 	
 	void setState(int, double = 0);
+
+	void setState2(int, double = 0);
+
+	void setState3(int, double = 0);
 	
 	void control();
 	
