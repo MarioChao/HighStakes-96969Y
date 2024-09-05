@@ -20,6 +20,8 @@ extern motor IntakeMotor1;
 extern motor IntakeMotor2;
 extern motor_group IntakeMotors;
 
+extern motor ArmMotor;
+
 extern triport Expander1;
 
 extern pneumatics FrontWingsPneumatic;

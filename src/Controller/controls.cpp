@@ -1,6 +1,7 @@
 #include "Mechanics/botDrive.h"
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botLift.h"
+#include "Mechanics/botArm.h"
 // #include "Mechanics/botWings.h"
 #include "Mechanics/goalClamp.h"
 
@@ -9,7 +10,8 @@
 
 namespace controls {
 	void startThreads() {
-		task intakeTast([] () -> int { botintake::runThread(); return 1; });
+		task intakeTask([] () -> int { botintake::runThread(); return 1; });
+		task armTask([] () -> int { botarm::runThread(); return 1; });
 	}
 
 	void setUpKeybinds() {
@@ -20,10 +22,9 @@ namespace controls {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
 		});
-		Controller1.ButtonL1.pressed([] () -> void {
-			printf("Intake lift pneu: %d\n", IntakeLiftPneumatic.value());
-			botlift::switchState();
-		});
+		// Controller1.ButtonL1.pressed([] () -> void {
+		// 	// botlift::switchState();
+		// });
 	}
 
 	void preauton() {
@@ -37,6 +38,7 @@ namespace controls {
 
 	void doControls() {
         botdrive::control();
-        botintake::control();
+        botintake::control((int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing());
+		botarm::control((int) Controller1.ButtonUp.pressing() - (int) Controller1.ButtonDown.pressing());
 	}
 }

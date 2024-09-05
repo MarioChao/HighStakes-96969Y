@@ -7,7 +7,7 @@ namespace {
 
 
     double intakeVelocityPct = 80;
-    double intakeVeolcityVolt = intakeVelocityPct/100*12;
+    double intakeVeolcityVolt = intakeVelocityPct / 100 * 12;
 
 
     int resolveTopState = 0;
@@ -155,10 +155,9 @@ namespace botintake {
     }
 
 
-    void control() {
+    void control(int state) {
         if (canControl()) {
-            int intakeDirection = (int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing();
-            setState(-intakeDirection);
+            setState(-state);
         }
     }
 

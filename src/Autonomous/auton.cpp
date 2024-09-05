@@ -14,7 +14,6 @@ namespace {
 
     void autonTest();
 
-
     void runAutonRedDown();
     void runAutonRedUp();
     void runAutonBlueDown();
