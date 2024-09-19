@@ -69,12 +69,15 @@ namespace auton {
         double leftVelocityFactor = leftRotateRadiusIn / averageRotateRadiusIn;
         double rightVelocityFactor = -rightRotateRadiusIn / averageRotateRadiusIn;
         
+        
         // PID
         // L_vel = L_dist / time
         // R_vel = R_dist / time = L_vel * (R_dist / L_dist)
         PIDControl rotateTargetAnglePid(0.45, 0, 0, errorRange); // Reach goal
         timer timeout;
         while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
+            printf("Inertial value:");
+            std::cout<<(InertialSensor.rotation(degrees))<<std::endl;
             // Compute rotate error
             double rotateError = rotation - InertialSensor.rotation();
             rotateTargetAnglePid.computeFromError(rotateError);

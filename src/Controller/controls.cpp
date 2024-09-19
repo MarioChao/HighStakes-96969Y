@@ -2,6 +2,7 @@
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botLift.h"
 #include "Mechanics/botArm.h"
+#include "Mechanics/botArmPneumatics.h"
 // #include "Mechanics/botWings.h"
 #include "Mechanics/goalClamp.h"
 
@@ -22,13 +23,15 @@ namespace controls {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
 		});
-		// Controller1.ButtonL1.pressed([] () -> void {
-		// 	// botlift::switchState();
-		// });
+		Controller1.ButtonL1.pressed([] () -> void {
+			botarmpneu::switchState();
+		});
+		
 	}
 
 	void preauton() {
 		botdrive::preauton();
+		botarm::preauton();
 		goalclamp::preauton();
 	}
 
@@ -38,7 +41,10 @@ namespace controls {
 
 	void doControls() {
         botdrive::control();
-        botintake::control((int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing());
+        botintake::control(
+			(int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing(),
+			(int) Controller1.ButtonLeft.pressing()
+		);
 		botarm::control((int) Controller1.ButtonUp.pressing() - (int) Controller1.ButtonDown.pressing());
 	}
 }

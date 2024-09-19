@@ -11,7 +11,7 @@ namespace botintake {
 
 	void setState3(int, double = 0);
 	
-	void control(int);
+	void control(int, int);
 	
 	bool canControl();
 

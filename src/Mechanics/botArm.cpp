@@ -10,7 +10,10 @@ namespace {
     PIDControl armMaintainPositionPid(0.4, 0.01, 0.0);
 
     double armVelocityPct = 90;
+    double armUpVelocityPct = 70;
+
     double armVelocityVolt = armVelocityPct / 100.0 * 12.0;
+    double armUpVelocityVolt = armUpVelocityPct / 100.0 * 12.0;
 
     int armStateDegrees = 0;
     int armStateDirection = 0;
@@ -33,6 +36,10 @@ namespace botarm {
 			task::sleep(20);
 		}
 	}
+
+    void preauton() {
+        ArmMotor.setPosition(0, degrees);
+    }
 
 	void setState(int state, double delaySec) {
 		// Check for instant set
@@ -101,11 +108,19 @@ namespace {
 
         switch (armStateDirection) {
             case 1:
-                ArmMotor.spin(forward, armVelocityVolt, volt);
+                if (ArmMotor.position(deg) > 340.0) {
+                    ArmMotor.stop(hold);
+                } else {
+                    ArmMotor.spin(forward, armUpVelocityPct, volt);
+                }
                 break;
 
             case -1:
-                ArmMotor.spin(forward, -armVelocityVolt, volt);
+                if (ArmMotor.position(deg) < 10.0) {
+                    ArmMotor.stop();
+                } else {
+                    ArmMotor.spin(forward, -armVelocityVolt, volt);
+                }
                 break;
         
             default:

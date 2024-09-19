@@ -6,13 +6,13 @@ namespace {
     void resolveIntake();
 
 
-    double intakeVelocityPct = 80;
+    double intakeVelocityPct = 100;
     double intakeVeolcityVolt = intakeVelocityPct / 100 * 12;
 
+    double hookFactor = 1.0;
 
     int resolveTopState = 0;
     int resolveBottomState = 0;
-
 
     bool controlState = true;
 }
@@ -23,7 +23,7 @@ namespace botintake {
         timer stuckTime;
         bool isStuck = false;
         while (true) {
-            if(IntakeMotor2.torque() > 0.32){
+            if(IntakeMotor2.torque() > 0.41) {
                 if (!isStuck) {
                     stuckTime.clear();
                     isStuck = true;
@@ -38,8 +38,9 @@ namespace botintake {
             } else {
                 resolveIntake();
             }
+
             // if (Controller1.ButtonX.pressing()){
-            //  printf("torque: %.3f\n", IntakeMotor2.torque());
+            //     printf("torque: %.3f\n", IntakeMotor2.torque());
             // }
             task::sleep(20);
         }
@@ -155,9 +156,11 @@ namespace botintake {
     }
 
 
-    void control(int state) {
+    void control(int state, int hookState) {
         if (canControl()) {
             setState(-state);
+            if (hookState) hookFactor = 0.5;
+            else hookFactor = 1.0;
         }
     }
 
@@ -197,11 +200,11 @@ namespace {
         switch (resolveTopState) {
             case 1:
                 // Forward
-                IntakeMotor2.spin(fwd, intakeVeolcityVolt , volt);
+                IntakeMotor2.spin(fwd, intakeVeolcityVolt * hookFactor, volt);
                 break;
             case -1:
                 // Reversed
-                IntakeMotor2.spin(fwd, -intakeVeolcityVolt , volt);
+                IntakeMotor2.spin(fwd, -intakeVeolcityVolt * hookFactor, volt);
                 break;
             default:
                 IntakeMotor2.stop(brakeType::coast);
