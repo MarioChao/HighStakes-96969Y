@@ -23,7 +23,7 @@ namespace botarmpneu {
 namespace {
     void setArmState(bool value = 0) {
         armState = value;
-        botArmPneumatics.set(armState);
+        BotArmPneumatics.set(armState);
     }
 
     /// @brief Change the arm's position to high or low.

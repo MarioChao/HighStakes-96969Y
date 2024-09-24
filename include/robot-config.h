@@ -31,7 +31,8 @@ extern pneumatics RightWingPneumatic;
 extern pneumatics IntakeLiftPneumatic;
 extern pneumatics HangPneumatic;
 extern pneumatics GoalClampPneumatic;
-extern pneumatics botArmPneumatics;
+extern pneumatics BotArmPneumatics;
+extern pneumatics SwordPneumatics;
 
 extern encoder LookEncoder;
 extern rotation LookRotation;

@@ -34,7 +34,11 @@ motor ArmMotor(PORT14, ratio36_1);
 
 // Expander
 
-triport Expander1(PORT22);
+// PORT22 is used for the Brain's default ThreeWirePort
+
+const int emptyPort = PORT4;
+
+triport Expander1(emptyPort);
 
 // Wing pneumatic (not used)
 
@@ -45,16 +49,18 @@ pneumatics RightWingPneumatic(Expander1.C);
 pneumatics IntakeLiftPneumatic(Expander1.B);
 pneumatics HangPneumatic(Expander1.E);
 pneumatics GoalClampPneumatic(Brain.ThreeWirePort.A);
-pneumatics botArmPneumatics(Brain.ThreeWirePort.B);
+pneumatics BotArmPneumatics(Brain.ThreeWirePort.B);
+pneumatics SwordPneumatics(Brain.ThreeWirePort.C);
+
 
 // Sensors
 
-encoder LookEncoder(Expander1.G); // .G .H
+encoder LookEncoder(Expander1.C); // .G .H
 rotation LookRotation(PORT20);
 rotation RightRotation(PORT3);
 
 inertial InertialSensor(PORT9);
-distance DistanceSensor(PORT22);
+distance DistanceSensor(emptyPort);
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

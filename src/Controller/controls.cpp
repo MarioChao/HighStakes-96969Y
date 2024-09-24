@@ -3,6 +3,7 @@
 #include "Mechanics/botLift.h"
 #include "Mechanics/botArm.h"
 #include "Mechanics/botArmPneumatics.h"
+#include "Mechanics/swing.h"
 // #include "Mechanics/botWings.h"
 #include "Mechanics/goalClamp.h"
 
@@ -25,6 +26,9 @@ namespace controls {
 		});
 		Controller1.ButtonL1.pressed([] () -> void {
 			botarmpneu::switchState();
+		});
+		Controller1.ButtonB.pressed([] () -> void {
+			swing::switchState();
 		});
 		
 	}
