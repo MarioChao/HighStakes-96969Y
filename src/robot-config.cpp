@@ -62,6 +62,8 @@ rotation RightRotation(PORT3);
 inertial InertialSensor(PORT9);
 distance DistanceSensor(emptyPort);
 
+distance RingDistanceSensor(PORT8);
+
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *

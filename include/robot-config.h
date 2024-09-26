@@ -41,6 +41,8 @@ extern rotation RightRotation;
 extern inertial InertialSensor;
 extern distance DistanceSensor;
 
+extern distance RingDistanceSensor;
+
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *

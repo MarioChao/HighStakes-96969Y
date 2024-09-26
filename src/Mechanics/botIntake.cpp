@@ -1,18 +1,28 @@
 #include "Mechanics/botIntake.h"
+#include "Utilities/debugFunctions.h"
 #include "main.h"
 
 
 namespace {
     void resolveIntake();
 
+    void resolveIntakeToArm();
 
     double intakeVelocityPct = 100;
     double intakeVeolcityVolt = intakeVelocityPct / 100 * 12;
 
+    double toArmHookVelocityPct = 40.0;
+    double toArmHookReverseVelocityPct = 70.0;
+    double toArmHookVelocityVolt = toArmHookVelocityPct / 100 * 12;
+    double toArmHookReverseVelocityVolt = toArmHookReverseVelocityPct / 100 * 12;
+
     double hookFactor = 1.0;
+    int hookMode = 0;
 
     int resolveTopState = 0;
     int resolveBottomState = 0;
+
+    bool ringDetected = false;
 
     bool controlState = true;
 }
@@ -23,20 +33,26 @@ namespace botintake {
         timer stuckTime;
         bool isStuck = false;
         while (true) {
-            if(IntakeMotor2.torque() > 0.41) {
-                if (!isStuck) {
-                    stuckTime.clear();
-                    isStuck = true;
+            if (hookMode == 0) {
+                // Normal intake
+                if (IntakeMotor2.torque() > 0.41) {
+                    if (!isStuck) {
+                        stuckTime.clear();
+                        isStuck = true;
+                    }
+                } else {
+                    isStuck = false;
                 }
-            } else {
-                isStuck = false;
-            }
-            if (isStuck && stuckTime.value() > 0.08) {
-                resolveTopState = -1;
-                resolveIntake();
-                task::sleep(300);
-            } else {
-                resolveIntake();
+                if (isStuck && stuckTime.value() > 0.08) {
+                    resolveTopState = -1;
+                    resolveIntake();
+                    task::sleep(300);
+                } else {
+                    resolveIntake();
+                }
+            } else if (hookMode == 1) {
+                // Intake to arm
+                resolveIntakeToArm();
             }
 
             // if (Controller1.ButtonX.pressing()){
@@ -155,12 +171,26 @@ namespace botintake {
         });
     }
 
+    void switchMode() {
+        hookMode++;
+        hookMode %= 2;
+        switch (hookMode) {
+            case 0:
+                debug::printOnController("Intake normal");
+                // hookFactor = 1.0;
+                break;
+            case 1:
+                debug::printOnController("Intake to arm");
+                // hookFactor = 0.5;
+                break;
+        }
+    }
 
     void control(int state, int hookState) {
         if (canControl()) {
             setState(-state);
-            if (hookState) hookFactor = 0.5;
-            else hookFactor = 1.0;
+            // if (hookState) hookFactor = 0.4;
+            // else hookFactor = 1.0;
         }
     }
 
@@ -209,6 +239,37 @@ namespace {
             default:
                 IntakeMotor2.stop(brakeType::coast);
                 break;
+        }
+    }
+
+    void resolveIntakeToArm() {
+        bool previousRingDetected = ringDetected;
+
+        // Update ring detected
+        double detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
+        if (detectedDistance <= 60.0) {
+            ringDetected = true;
+        } else {
+            ringDetected = false;
+        }
+
+        // Reverse hook if ring no longer detected
+        if (!ringDetected && previousRingDetected) {
+            // Slow bottom
+            IntakeMotor1.spin(fwd, 20, pct);
+
+            // Spin hook sequence
+            wait(30, msec);
+            IntakeMotor2.spin(fwd, -toArmHookReverseVelocityVolt, volt);
+            wait(700, msec);
+            IntakeMotor2.spin(fwd, 0, volt);
+            wait(300, msec);
+        }
+        // Otherwise spin hook normally
+        else {
+            // Spin both
+            IntakeMotor1.spin(fwd, intakeVeolcityVolt, volt);
+            IntakeMotor2.spin(fwd, toArmHookVelocityVolt, volt);
         }
     }
 }

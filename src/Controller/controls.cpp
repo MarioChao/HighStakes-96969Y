@@ -13,12 +13,15 @@
 namespace controls {
 	void startThreads() {
 		task intakeTask([] () -> int { botintake::runThread(); return 1; });
-		task armTask([] () -> int { botarm::runThread(); return 1; });
+		// task armTask([] () -> int { botarm::runThread(); return 1; });
 	}
 
 	void setUpKeybinds() {
 		Controller2.ButtonX.pressed([] () -> void {
 			botdrive::switchDriveMode();
+		});
+		Controller1.ButtonX.pressed([] () -> void {
+			botintake::switchMode();
 		});
 		Controller1.ButtonL2.pressed([] () -> void {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
@@ -35,7 +38,7 @@ namespace controls {
 
 	void preauton() {
 		botdrive::preauton();
-		botarm::preauton();
+		// botarm::preauton();
 		goalclamp::preauton();
 	}
 
@@ -47,8 +50,8 @@ namespace controls {
         botdrive::control();
         botintake::control(
 			(int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing(),
-			(int) Controller1.ButtonLeft.pressing()
+			/*This is not used =>*/ (int) Controller1.ButtonX.pressing()
 		);
-		botarm::control((int) Controller1.ButtonUp.pressing() - (int) Controller1.ButtonDown.pressing());
+		// botarm::control((int) Controller1.ButtonUp.pressing() - (int) Controller1.ButtonDown.pressing());
 	}
 }

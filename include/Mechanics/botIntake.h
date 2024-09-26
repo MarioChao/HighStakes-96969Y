@@ -10,6 +10,8 @@ namespace botintake {
 	void setState2(int, double = 0);
 
 	void setState3(int, double = 0);
+
+	void switchMode();
 	
 	void control(int, int);
 	

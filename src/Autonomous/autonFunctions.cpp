@@ -1,7 +1,7 @@
 #include "Autonomous/autonFunctions.h"
 
 #include "Mechanics/botIntake.h"
-#include "Mechanics/botArm.h"
+#include "Mechanics/botArmPneumatics.h"
 #include "Mechanics/goalClamp.h"
 #include "Utilities/angleFunctions.h"
 #include "Utilities/pidControl.h"
@@ -355,7 +355,7 @@ namespace auton {
     }
 
     void setArmHangState(int state, double delaySec) {
-        botarm::setState(state, delaySec);
+        botarmpneu::setState(state, delaySec);
     }
 
      /// @brief Set the state of Left Wing's pneumatic.

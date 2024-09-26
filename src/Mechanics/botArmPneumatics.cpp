@@ -2,39 +2,45 @@
 #include "main.h"
 
 namespace {
-    void setArmState(bool);
-    void switchState();
-
-    bool armDebounce = false;
-
-    int armState = 0;
+    
 }
 
 namespace botarmpneu {
-    void setArmState(bool value) {
-        ::setArmState(value);
+    void setState(bool state, double delaySec) {
+        // Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+            BotArmPneumatics.set(state);
+
+			return;
+		}
+
+		// Set global variables
+		_taskState = state;
+		_taskDelay = delaySec;
+
+		task setState([] () -> int {
+			// Get global variables
+			int taskState = _taskState;
+			double taskDelay = _taskDelay;
+
+			// Delay setting state
+			task::sleep(taskDelay * 1000);
+
+			// Set state here
+            BotArmPneumatics.set(_taskState);
+
+			return 1;
+		});
     }
 
     void switchState() {
-        ::switchState();
+        setState(!BotArmPneumatics.value());
     }
+
+	int _taskState;
+	double _taskDelay;
 }
 
 namespace {
-    void setArmState(bool value = 0) {
-        armState = value;
-        BotArmPneumatics.set(armState);
-    }
-
-    /// @brief Change the arm's position to high or low.
-    void switchState() {
-        if (!armDebounce) {
-            armDebounce = true;
-
-            setArmState(armState ^ 1);
-            task::sleep(10);
-
-            armDebounce = false;
-        }
-    }
 }
