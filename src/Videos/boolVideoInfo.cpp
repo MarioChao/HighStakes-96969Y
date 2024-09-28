@@ -7,12 +7,17 @@ BoolVideoInfo::BoolVideoInfo() {
     savedVideo.clear();
 }
 
-BoolVideoInfo::BoolVideoInfo(double videoFps, double videoFrameSteps, std::vector< std::vector< std::vector<bool> > > *video, color onColor, color offColor) {
+BoolVideoInfo::BoolVideoInfo(
+    double videoFps, double videoFrameSteps, std::vector< std::vector< std::vector<bool> > > *video, color onColor, color offColor,
+    double width, double height
+) {
     fps = videoFps;
     frameSteps = videoFrameSteps;
     savedVideo = *video;
     this -> onColor = onColor;
     this -> offColor = offColor;
+    display_width = width;
+    display_height = height;
 }
 
 void BoolVideoInfo::saveVideo(std::vector< std::vector< std::vector<bool> > > *video) {
@@ -22,6 +27,11 @@ void BoolVideoInfo::saveVideo(std::vector< std::vector< std::vector<bool> > > *v
 void BoolVideoInfo::loadVideo(std::vector< std::vector< std::vector<bool> > > *video, double *frameDelayMs) {
     *video = savedVideo;
     *frameDelayMs = (1.0 / fps) * (1000.0 / 1) * (frameSteps);
+}
+
+void BoolVideoInfo::loadDimensions(double *width, double *height) {
+    *width = display_width;
+    *height = display_height;
 }
 
 std::pair<color, color> BoolVideoInfo::getColors() {

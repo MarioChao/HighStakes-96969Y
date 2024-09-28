@@ -2,7 +2,6 @@
 #include "main.h"
 
 namespace {
-    
 }
 
 namespace botarmpneu {
@@ -11,6 +10,7 @@ namespace botarmpneu {
 		if (delaySec <= 1e-9) {
 			// Set state here
             BotArmPneumatics.set(state);
+			pressedCount++;
 
 			return;
 		}
@@ -29,6 +29,7 @@ namespace botarmpneu {
 
 			// Set state here
             BotArmPneumatics.set(_taskState);
+			pressedCount++;
 
 			return 1;
 		});
@@ -40,6 +41,8 @@ namespace botarmpneu {
 
 	int _taskState;
 	double _taskDelay;
+
+	double pressedCount = 0;
 }
 
 namespace {

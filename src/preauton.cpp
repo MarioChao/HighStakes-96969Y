@@ -48,6 +48,10 @@ namespace {
         // Reset encoder
         LookEncoder.resetRotation();
         LookRotation.resetPosition();
+
+        // Increase optical sensor brightness
+        RingOpticalSensor.setLight(ledState::on);
+        RingOpticalSensor.setLightPower(30);
         
         initComponentFinished = true;
     }

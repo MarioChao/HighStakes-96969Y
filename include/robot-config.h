@@ -42,6 +42,7 @@ extern inertial InertialSensor;
 extern distance DistanceSensor;
 
 extern distance RingDistanceSensor;
+extern optical RingOpticalSensor;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

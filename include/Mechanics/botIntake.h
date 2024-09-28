@@ -12,6 +12,10 @@ namespace botintake {
 	void setState3(int, double = 0);
 
 	void switchMode();
+
+	void switchFilterColor();
+
+	void setFilterColor(char *);
 	
 	void control(int, int);
 	

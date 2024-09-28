@@ -29,6 +29,8 @@ double motSpeedRpm, motAimSpeedRpm = 0;
 
 int playingVideoId = 0;
 
+timer drivingTimer;
+
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -113,6 +115,9 @@ void userRunAutonomous() {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+    // Timer
+    drivingTimer.reset();
+
     // User autonomous
     if (isUserRunningAuton()) {
         userRunAutonomous();

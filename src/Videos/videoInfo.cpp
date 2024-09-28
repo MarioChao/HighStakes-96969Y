@@ -5,12 +5,19 @@
 VideoInfo::VideoInfo() {
     fps = frameSteps = 0;
     savedVideo.clear();
+    display_width = 480;
+    display_height = 240;
 }
 
-VideoInfo::VideoInfo(double videoFps, double videoFrameSteps, std::vector< std::vector< std::vector<int> > > *video) {
+VideoInfo::VideoInfo(
+    double videoFps, double videoFrameSteps, std::vector< std::vector< std::vector<int> > > *video,
+    double width, double height
+) {
     fps = videoFps;
     frameSteps = videoFrameSteps;
     savedVideo = *video;
+    display_width = width;
+    display_height = height;
 }
 
 void VideoInfo::saveVideo(std::vector< std::vector< std::vector<int> > > *video) {
@@ -20,6 +27,11 @@ void VideoInfo::saveVideo(std::vector< std::vector< std::vector<int> > > *video)
 void VideoInfo::loadVideo(std::vector< std::vector< std::vector<int> > > *video, double *frameDelayMs) {
     *video = savedVideo;
     *frameDelayMs = (1.0 / fps) * (1000.0 / 1) * (frameSteps);
+}
+
+void VideoInfo::loadDimensions(double *width, double *height) {
+    *width = display_width;
+    *height = display_height;
 }
 
 void VideoInfo::drawFrame(std::vector< std::vector< std::vector<int> > > *video, int x, int y, int width, int height, int frameId) {

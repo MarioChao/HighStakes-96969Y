@@ -5,8 +5,8 @@
 
 namespace {
     void resolveIntake();
-
     void resolveIntakeToArm();
+    void resolveIntakeFilter();
 
     double intakeVelocityPct = 100;
     double intakeVeolcityVolt = intakeVelocityPct / 100 * 12;
@@ -22,7 +22,11 @@ namespace {
     int resolveTopState = 0;
     int resolveBottomState = 0;
 
+    bool previousRingDetected = false;
     bool ringDetected = false;
+
+    char *filterOutColor = "none";
+    char *detectedRingColor;
 
     bool controlState = true;
 }
@@ -33,6 +37,25 @@ namespace botintake {
         timer stuckTime;
         bool isStuck = false;
         while (true) {
+            // Update ring detected
+            previousRingDetected = ringDetected;
+            double detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
+            if (detectedDistance <= 80.0) {
+                ringDetected = true;
+            } else {
+                ringDetected = false;
+            }
+
+            // Update detected ring color
+            if (RingOpticalSensor.hue() <= 20 || RingOpticalSensor.hue() >= 340) {
+                detectedRingColor = "red";
+                // debug::printOnController("Red ring");
+            } else if (160 <= RingOpticalSensor.hue() && RingOpticalSensor.hue() <= 240) {
+                detectedRingColor = "blue";
+                // debug::printOnController("Blue ring");
+            }
+
+            // Intake loop
             if (hookMode == 0) {
                 // Normal intake
                 if (IntakeMotor2.torque() > 0.41) {
@@ -58,7 +81,7 @@ namespace botintake {
             // if (Controller1.ButtonX.pressing()){
             //     printf("torque: %.3f\n", IntakeMotor2.torque());
             // }
-            task::sleep(20);
+            task::sleep(5);
         }
     }
 
@@ -186,6 +209,20 @@ namespace botintake {
         }
     }
 
+    void switchFilterColor() {
+        if (filterOutColor == "red") {
+            filterOutColor = "blue";
+            debug::printOnController("filter blue");
+        } else {
+            filterOutColor = "red";
+            debug::printOnController("filter red");
+        }
+    }
+
+    void setFilterColor(char * colorText) {
+        filterOutColor = colorText;
+    }
+
     void control(int state, int hookState) {
         if (canControl()) {
             setState(-state);
@@ -212,6 +249,15 @@ namespace {
         resolveTopState = (resolveTopState > 0) - (resolveTopState < 0);
         resolveBottomState = (resolveBottomState > 0) - (resolveBottomState < 0);
 
+        // Filter out on some detection
+        if (previousRingDetected && !ringDetected) {
+            if (detectedRingColor == filterOutColor) {
+                // Filter out
+                wait(5, msec);
+                IntakeMotor2.spin(fwd, 0, volt);
+                wait(300, msec);
+            }
+        }
 
         // Resolve intake
         switch (resolveBottomState) {
@@ -243,27 +289,18 @@ namespace {
     }
 
     void resolveIntakeToArm() {
-        bool previousRingDetected = ringDetected;
-
-        // Update ring detected
-        double detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
-        if (detectedDistance <= 60.0) {
-            ringDetected = true;
-        } else {
-            ringDetected = false;
-        }
-
-        // Reverse hook if ring no longer detected
-        if (!ringDetected && previousRingDetected) {
-            // Slow bottom
-            IntakeMotor1.spin(fwd, 20, pct);
+        // Reverse hook on some detection
+        if (previousRingDetected && !ringDetected) {
+        // if (ringDetected) {
+            // Stop bottom
+            IntakeMotor1.spin(fwd, 10, pct);
 
             // Spin hook sequence
-            wait(30, msec);
+            // wait(30, msec);
             IntakeMotor2.spin(fwd, -toArmHookReverseVelocityVolt, volt);
-            wait(700, msec);
-            IntakeMotor2.spin(fwd, 0, volt);
             wait(300, msec);
+            IntakeMotor2.spin(fwd, 0, volt);
+            wait(700, msec);
         }
         // Otherwise spin hook normally
         else {

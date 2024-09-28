@@ -28,10 +28,12 @@ namespace controls {
 			goalclamp::switchState();
 		});
 		Controller1.ButtonL1.pressed([] () -> void {
-			botarmpneu::switchState();
+			if (botarmpneu::pressedCount <= 14 || drivingTimer.value() > 105 - 15) {
+				botarmpneu::switchState();
+			}
 		});
 		Controller1.ButtonB.pressed([] () -> void {
-			swing::switchState();
+			botintake::switchFilterColor();
 		});
 		
 	}

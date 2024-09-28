@@ -2,10 +2,11 @@
 #include "Videos/VideoInfos/yoruNiKakeru.h"
 #include "Videos/VideoInfos/badApple.h"
 #include "Videos/VideoInfos/teamLogo.h"
+#include "Videos/VideoInfos/ningning.h"
 #include "main.h"
 
 namespace {
-    void drawFrame(int x, int y, int width, int height, int frameId);
+    void drawFrame(int x, int y, int frameId);
 
     std::vector< std::vector< std::vector<int> > > video;
     std::vector< std::vector< std::vector<bool> > > boolVideo;
@@ -13,6 +14,8 @@ namespace {
     int videoCount = 3;
     double frameDelayMs;
     int frameId;
+
+    double display_width, display_height;
 
     int videoType = 0; // 0 : video, 1 : bool video
 
@@ -30,7 +33,7 @@ void brainVideosThread() {
     switchVideoState(0);
     while (true) {
         if (playingVideoId > 0 && frameId >= 0) {
-            drawFrame(0, 0, 480, 240, frameId);
+            drawFrame(0, 0, frameId);
             frameId++;
             if (videoType == 0) {
                 frameId %= (int) video.size();
@@ -59,14 +62,22 @@ void switchVideoState(int increment) {
         switch (playingVideoId) {
             case 1:
                 teamLogo.loadVideo(&video, &frameDelayMs);
+                teamLogo.loadDimensions(&display_width, &display_height);
                 videoType = 0;
                 break;
             case 2:
-                yoruNiKakeru.loadVideo(&video, &frameDelayMs);
+                ningning.loadVideo(&video, &frameDelayMs);
+                ningning.loadDimensions(&display_width, &display_height);
                 videoType = 0;
                 break;
             case 3:
+                yoruNiKakeru.loadVideo(&video, &frameDelayMs);
+                yoruNiKakeru.loadDimensions(&display_width, &display_height);
+                videoType = 0;
+                break;
+            case 4:
                 badApple.loadVideo(&boolVideo, &frameDelayMs);
+                badApple.loadDimensions(&display_width, &display_height);
                 boolVideoColors = badApple.getColors();
                 videoType = 1;
                 break;
@@ -83,12 +94,12 @@ void switchVideoState(int increment) {
 }
 
 namespace {
-    void drawFrame(int x, int y, int width, int height, int frameId) {
+    void drawFrame(int x, int y, int frameId) {
         // Two types of videos
         if (videoType == 0) {
-            VideoInfo::drawFrame(&video, x, y, width, height, frameId);
+            VideoInfo::drawFrame(&video, x, y, display_width, display_height, frameId);
         } else if (videoType == 1) {
-            BoolVideoInfo::drawFrame(&boolVideo, x, y, width, height, frameId, boolVideoColors.first, boolVideoColors.second);
+            BoolVideoInfo::drawFrame(&boolVideo, x, y, display_width, display_height, frameId, boolVideoColors.first, boolVideoColors.second);
         }
     }
 }

@@ -1,5 +1,6 @@
 #include "Autonomous/auton.h"
 #include "Autonomous/autonFunctions.h"
+#include "Mechanics/botIntake.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "preauton.h"
@@ -25,7 +26,7 @@ namespace {
 
 
     bool userRunningAutonomous = false;
-    autonomousType auton_runType = autonomousType::BlueUp;
+    autonomousType auton_runType = autonomousType::BlueDown;
     int auton_allianceId;
 }
 
@@ -35,30 +36,37 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
         case autonomousType::RedDown:
             printOnController("Auton: RedDown");
             printf("Nearaw\n");
+            botintake::setFilterColor("blue");
             break;
         case autonomousType::RedUp:
             printOnController("Auton: RedUp");
             printf("Nearaw Safe\n");
+            botintake::setFilterColor("blue");
             break;
         case autonomousType::BlueDown:
             printOnController("Auton: BlueDown");
             printf("Nearel\n");
+            botintake::setFilterColor("red");
             break;
         case autonomousType::BlueUp:
             printOnController("Auton: BlueUp");
             printf("Faraw\n");
+            botintake::setFilterColor("red");
             break;
         case autonomousType::AutonSkills:
             printOnController("Auton: Skills");
             printf("AuSk\n");
+            botintake::setFilterColor("none");
             break;
         case autonomousType::DrivingSkills:
             printOnController("Driving Skills");
             printf("DrSk\n");
+            botintake::setFilterColor("none");
             break;
         default:
             printOnController("Auton: None");
             printf("None\n");
+            botintake::setFilterColor("none");
             break;
     }
     auton_runType = autonType;
@@ -205,37 +213,7 @@ namespace {
 
     /// @brief Run the 15-seconds red-up autonomous.
     void runAutonRedUpNew() {
-        timer autontimer;
-        //setGoalClampState(1);
-        setGoalClampState(0);
-        setRotation(-90.0);
-
-        // Grab goal
-        driveAndTurnDistanceTiles(-1.1, -90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-        setGoalClampState(1, 0.5);
-        driveAndTurnDistanceTiles(-0.15, -90.0, 15.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
         
-        //driveAndTurnDistanceTiles(-0.3, 105.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-        //driveAndTurnDistanceTiles(-0.4, 90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-        // Intake middle up
-        setIntakeState(1);
-        task::sleep(500);
-        turnToAngle(45.0);
-        driveAndTurnDistanceTiles(1.0, 45.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-        task::sleep(700);
-        turnToAngleVelocity(10,50,halfRobotLengthIn*0.7);
-        driveAndTurnDistanceTiles(0.4, 10.0, 20.0, 100.0, autonvals::defaultMoveTilesErrorRange, 0.5);
-        driveAndTurnDistanceTiles(-0.1, 10.0, 20.0, 100.0, autonvals::defaultMoveTilesErrorRange, 0.5);
-        task::sleep(300);
-        turnToAngleVelocity(-94, 50);
-        setIntakeState(0, 2);
-        driveAndTurnDistanceTiles(1.2, -90.0, 50.0, 100.0, autonvals::defaultMoveWithInchesErrorRange);
-        while (autontimer.value() < 12.0) {
-            task::sleep(20);
-        }
-        turnToAngle(-235);
-        driveAndTurnDistanceTiles(2, -235, 100, 100, autonvals::defaultMoveTilesErrorRange, 1.0);
-				
     }
 
     /// @brief Run the 15-seconds red-up autonomous.
@@ -299,31 +277,33 @@ namespace {
         // Grab middle goal
         turnToAngle(90.0);
         driveAndTurnDistanceTiles(-1.5, 90.0, 60);
-        turnToAngle(118.0);
+        turnToAngle(118.0, -halfRobotLengthIn * 0.5);
         setGoalClampState(1, 0.85);
-        driveAndTurnDistanceTiles(-0.68, 118.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 3.0);
-        turnToAngleVelocity(105.0, 30.0, halfRobotLengthIn * 0.75);
+        driveAndTurnDistanceTiles(-0.64, 118.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 3.0);
+        turnToAngleVelocity(110.0, 30.0, halfRobotLengthIn * 0.75);
         
         task::sleep(200);
         setIntakeState(1);
+
         // Score 1 ring
         //turnToAngle(125.0);
         
-        driveAndTurnDistanceTiles(0.3, 105.0);
+        turnToAngleVelocity(120.0, 30.0, halfRobotLengthIn * 0.75);
+        driveAndTurnDistanceTiles(0.3, 120.0);
         
         task::sleep(750);
 
 
         // Drop goal
         //setIntakeState(0);
-        turnToAngle(48.5);
+        turnToAngle(50.0);
         setGoalClampState(0);
 
         // Intake bottom ring
-        turnToAngle(48.5);
+        // turnToAngle(48.5);
         setIntakeTopState(0);
         setIntakeBottomState(1);
-        driveAndTurnDistanceTiles(0.6, 48.5, 20.0, 100.0);
+        driveAndTurnDistanceTiles(0.6, 50.0, 20.0, 100.0);
 
 
         // Grab bottom goal

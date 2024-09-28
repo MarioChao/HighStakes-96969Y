@@ -7,4 +7,6 @@ namespace botarmpneu {
 
 	extern int _taskState;
 	extern double _taskDelay;
+
+	extern double pressedCount;
 }

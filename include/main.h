@@ -11,3 +11,6 @@ extern double motSpeedRpm, motAimSpeedRpm;
 
 // Global variables
 extern int playingVideoId;
+
+// Timer
+extern timer drivingTimer;
