@@ -20,6 +20,7 @@ namespace botintake {
 	void control(int, int);
 	
 	bool canControl();
+	void resolveIntakeToArm();
 
 	extern int _taskState;
 	extern double _taskDelay;

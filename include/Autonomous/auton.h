@@ -4,6 +4,7 @@ enum autonomousType {
     RedUp,
     RedDown,
     BlueUp,
+    BlueUpNew,
     BlueDown,
     AutonSkills,
     DrivingSkills,

@@ -5,7 +5,7 @@
 
 namespace {
     void resolveIntake();
-    void resolveIntakeToArm();
+    //void resolveIntakeToArm();
     void resolveIntakeFilter();
 
     double intakeVelocityPct = 100;
@@ -230,7 +230,27 @@ namespace botintake {
             // else hookFactor = 1.0;
         }
     }
+    void resolveIntakeToArm() {
+        // Reverse hook on some detection
+        if (previousRingDetected && !ringDetected) {
+        // if (ringDetected) {
+            // Stop bottom
+            IntakeMotor1.spin(fwd, 10, pct);
 
+            // Spin hook sequence
+            // wait(30, msec);
+            IntakeMotor2.spin(fwd, -toArmHookReverseVelocityVolt, volt);
+            wait(300, msec);
+            IntakeMotor2.spin(fwd, 0, volt);
+            wait(700, msec);
+        }
+        // Otherwise spin hook normally
+        else {
+            // Spin both
+            IntakeMotor1.spin(fwd, intakeVeolcityVolt, volt);
+            IntakeMotor2.spin(fwd, toArmHookVelocityVolt, volt);
+        }
+    }
 
     bool canControl() {
         return controlState;
@@ -288,25 +308,5 @@ namespace {
         }
     }
 
-    void resolveIntakeToArm() {
-        // Reverse hook on some detection
-        if (previousRingDetected && !ringDetected) {
-        // if (ringDetected) {
-            // Stop bottom
-            IntakeMotor1.spin(fwd, 10, pct);
-
-            // Spin hook sequence
-            // wait(30, msec);
-            IntakeMotor2.spin(fwd, -toArmHookReverseVelocityVolt, volt);
-            wait(300, msec);
-            IntakeMotor2.spin(fwd, 0, volt);
-            wait(700, msec);
-        }
-        // Otherwise spin hook normally
-        else {
-            // Spin both
-            IntakeMotor1.spin(fwd, intakeVeolcityVolt, volt);
-            IntakeMotor2.spin(fwd, toArmHookVelocityVolt, volt);
-        }
-    }
+    
 }

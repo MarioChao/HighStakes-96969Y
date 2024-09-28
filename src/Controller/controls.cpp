@@ -35,6 +35,9 @@ namespace controls {
 		Controller1.ButtonB.pressed([] () -> void {
 			botintake::switchFilterColor();
 		});
+		Controller1.ButtonDown.pressed([] () -> void {
+			swing::switchState();
+		});
 		
 	}
 
