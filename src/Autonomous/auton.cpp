@@ -264,6 +264,7 @@ namespace {
 		setIntakeState(0, 0.75);
 		driveAndTurnDistanceTiles(0.4, -90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		turnToAngle(120);
+		setIntakeState(1);
 		// setGoalClampState(0, 0.5);
 		// task::sleep(2000);
 		while (autontimer.value() < 12.0) {
@@ -436,6 +437,7 @@ namespace {
 		setIntakeState(0, 0.75);
 		driveAndTurnDistanceTiles(0.4, 90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		turnToAngle(-120);
+		setIntakeState(1);
 		//setGoalClampState(0, 0.5);
 		// Touch ladder
 		while (autontimer.value() < 12.0) {
