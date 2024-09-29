@@ -5,8 +5,7 @@
 
 namespace {
     void resolveIntake();
-    //void resolveIntakeToArm();
-    void resolveIntakeFilter();
+    void resolveIntakeToArm();
 
     double intakeVelocityPct = 100;
     double intakeVeolcityVolt = intakeVelocityPct / 100 * 12;
@@ -195,8 +194,11 @@ namespace botintake {
     }
 
     void switchMode() {
-        hookMode++;
-        hookMode %= 2;
+        setHookMode(!hookMode);
+    }
+
+    void setHookMode(int mode) {
+        hookMode = mode;
         switch (hookMode) {
             case 0:
                 debug::printOnController("Intake normal");
@@ -228,27 +230,6 @@ namespace botintake {
             setState(-state);
             // if (hookState) hookFactor = 0.4;
             // else hookFactor = 1.0;
-        }
-    }
-    void resolveIntakeToArm() {
-        // Reverse hook on some detection
-        if (previousRingDetected && !ringDetected) {
-        // if (ringDetected) {
-            // Stop bottom
-            IntakeMotor1.spin(fwd, 10, pct);
-
-            // Spin hook sequence
-            // wait(30, msec);
-            IntakeMotor2.spin(fwd, -toArmHookReverseVelocityVolt, volt);
-            wait(300, msec);
-            IntakeMotor2.spin(fwd, 0, volt);
-            wait(700, msec);
-        }
-        // Otherwise spin hook normally
-        else {
-            // Spin both
-            IntakeMotor1.spin(fwd, intakeVeolcityVolt, volt);
-            IntakeMotor2.spin(fwd, toArmHookVelocityVolt, volt);
         }
     }
 
@@ -308,5 +289,25 @@ namespace {
         }
     }
 
-    
+    void resolveIntakeToArm() {
+        // Reverse hook on some detection
+        if (previousRingDetected && !ringDetected) {
+        // if (ringDetected) {
+            // Stop bottom
+            IntakeMotor1.spin(fwd, 10, pct);
+
+            // Spin hook sequence
+            // wait(30, msec);
+            IntakeMotor2.spin(fwd, -toArmHookReverseVelocityVolt, volt);
+            wait(300, msec);
+            IntakeMotor2.spin(fwd, 0, volt);
+            wait(700, msec);
+        }
+        // Otherwise spin hook normally
+        else {
+            // Spin both
+            IntakeMotor1.spin(fwd, intakeVeolcityVolt, volt);
+            IntakeMotor2.spin(fwd, toArmHookVelocityVolt, volt);
+        }
+    }
 }

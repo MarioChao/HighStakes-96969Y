@@ -338,7 +338,7 @@ namespace {
 
     /// @brief Run the 15-seconds blue-up autonomous.
     void runAutonBlueUpNew() {
-       setGoalClampState(0);
+        setGoalClampState(0);
         setRotation(90.0);
 
         // Grab goal
@@ -387,11 +387,13 @@ namespace {
         \
         driveAndTurnDistanceTiles(2.0, -120.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
         */
-       turnToAngle(160);
-       driveAndTurnDistanceTiles(2.4, 160.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-       turnToAngle(90);
-       driveAndTurnDistanceTiles(0.1, 90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-       botintake::resolveIntakeToArm();
+        turnToAngle(160);
+        driveAndTurnDistanceTiles(2.4, 160.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+        turnToAngle(90);
+        driveAndTurnDistanceTiles(0.1, 90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+        
+        // botintake::resolveIntakeToArm();
+        botintake::setHookMode(1);
 
     }
 

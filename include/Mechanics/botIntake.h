@@ -13,6 +13,8 @@ namespace botintake {
 
 	void switchMode();
 
+	void setHookMode(int);
+
 	void switchFilterColor();
 
 	void setFilterColor(char *);
@@ -20,7 +22,6 @@ namespace botintake {
 	void control(int, int);
 	
 	bool canControl();
-	void resolveIntakeToArm();
 
 	extern int _taskState;
 	extern double _taskDelay;
