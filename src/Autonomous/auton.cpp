@@ -254,8 +254,8 @@ namespace {
 		//turnToAngle(-55.0, -halfRobotLengthIn * 0.75);
 		//turnToAngle(0, halfRobotLengthIn * 0.75);
 		// Intake up
-		turnToAngleVelocity(0.0, 70.0, -halfRobotLengthIn * 0.7);
-		driveAndTurnDistanceTiles(-0.3, 0.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+		turnToAngleVelocity(0.0, 70.0);
+		// driveAndTurnDistanceTiles(-0.3, 0.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 
 
 		// Touch ladder
@@ -263,14 +263,14 @@ namespace {
 		driveAndTurnDistanceTiles(0.6, -90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		setIntakeState(0, 0.75);
 		driveAndTurnDistanceTiles(0.4, -90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-		turnToAngle(120);
+		turnToAngle(125);
 		setIntakeState(1);
 		// setGoalClampState(0, 0.5);
 		// task::sleep(2000);
 		while (autontimer.value() < 12.0) {
 			task::sleep(20);
 		}
-		driveAndTurnDistanceTiles(2.0, 120.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
+		driveAndTurnDistanceTiles(2.0, 125.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
 		//*/
 	}
 
@@ -416,34 +416,34 @@ namespace {
 		setIntakeState(1);
 		// task::sleep(1000);
 		turnToAngle(-55.0);
-		driveAndTurnDistanceTiles(1.06, -55.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+		driveAndTurnDistanceTiles(1.04, -55.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		// task::sleep(500);
-		driveAndTurnDistanceTiles(-0.16, -55.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+		driveAndTurnDistanceTiles(-0.18, -55.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		turnToAngle(0.0);
 		// task::sleep(500);
 		driveAndTurnDistanceTiles(0.1, 0.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-		turnToAngleVelocity(-65.0, 70.0, -halfRobotLengthIn * 1.37);
+		turnToAngleVelocity(-65.0, 70.0, -halfRobotLengthIn * 1.30);
 		// driveAndTurnDistanceTiles(0.6, 0.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		// task::sleep(750);
 		//turnToAngle(-55.0, -halfRobotLengthIn * 0.75);
 		//turnToAngle(0, halfRobotLengthIn * 0.75);
 		// Intake up
-		turnToAngleVelocity(0.0, 70.0, halfRobotLengthIn *0.7);
-		driveAndTurnDistanceTiles(-0.3, 0.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+		turnToAngleVelocity(0.0, 70.0);
+		// driveAndTurnDistanceTiles(-0.3, 0.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 
 
 		turnToAngle(90.0);
 		driveAndTurnDistanceTiles(0.6, 90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		setIntakeState(0, 0.75);
 		driveAndTurnDistanceTiles(0.4, 90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-		turnToAngle(-120);
+		turnToAngle(-125);
 		setIntakeState(1);
 		//setGoalClampState(0, 0.5);
 		// Touch ladder
 		while (autontimer.value() < 12.0) {
 			task::sleep(20);
 		}
-		driveAndTurnDistanceTiles(2.0, -120.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
+		driveAndTurnDistanceTiles(2.0, -125.0, 30.0, 100.0, autonvals::defaultMoveTilesErrorRange, 2.0);
 		//*/
 	}
 
