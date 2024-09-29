@@ -71,5 +71,5 @@ optical RingOpticalSensor(PORT7);
  * This should be called at the start of your int main function.
  */
 void vexcodeInit(void) {
-  // Nothing to initialize
+	// Nothing to initialize
 }

@@ -52,8 +52,8 @@ namespace controls {
 	}
 
 	void doControls() {
-        botdrive::control();
-        botintake::control(
+		botdrive::control();
+		botintake::control(
 			(int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing(),
 			/*This is not used =>*/ (int) Controller1.ButtonX.pressing()
 		);

@@ -2,7 +2,7 @@
 #include "main.h"
 
 namespace {
-    bool controlState = true;
+	bool controlState = true;
 }
 
 namespace goalclamp {

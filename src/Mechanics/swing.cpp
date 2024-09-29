@@ -2,7 +2,7 @@
 #include "main.h"
 
 namespace {
-    bool controlState = true;
+	bool controlState = true;
 }
 
 namespace swing {
@@ -22,7 +22,7 @@ namespace swing {
 		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here
-            SwordPneumatics.set(state);
+			SwordPneumatics.set(state);
 
 			return;
 		}
@@ -40,7 +40,7 @@ namespace swing {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-            SwordPneumatics.set(taskState);
+			SwordPneumatics.set(taskState);
 
 			return 1;
 		});

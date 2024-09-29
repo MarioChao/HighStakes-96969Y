@@ -2,11 +2,11 @@
 #include "main.h"
 
 namespace botlift {
-    void setLiftState(bool state, double delaySec) {
-        // Check for instant set
+	void setLiftState(bool state, double delaySec) {
+		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here
-            IntakeLiftPneumatic.set(state);
+			IntakeLiftPneumatic.set(state);
 
 			return;
 		}
@@ -24,13 +24,13 @@ namespace botlift {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-            IntakeLiftPneumatic.set(taskState);
+			IntakeLiftPneumatic.set(taskState);
 
 			return 1;
 		});
-    }
+	}
 
-    void switchState() {
-       // setState(!IntakeLiftPneumatic.value());
-    }
+	void switchState() {
+	   // setState(!IntakeLiftPneumatic.value());
+	}
 }

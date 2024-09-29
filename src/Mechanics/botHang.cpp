@@ -2,7 +2,7 @@
 #include "main.h"
 
 namespace bothang {
-    void setState(bool state, double delaySec) {
+	void setState(bool state, double delaySec) {
 		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here

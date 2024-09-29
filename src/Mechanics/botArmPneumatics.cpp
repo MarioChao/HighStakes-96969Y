@@ -5,11 +5,11 @@ namespace {
 }
 
 namespace botarmpneu {
-    void setState(bool state, double delaySec) {
-        // Check for instant set
+	void setState(bool state, double delaySec) {
+		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here
-            BotArmPneumatics.set(state);
+			BotArmPneumatics.set(state);
 			pressedCount++;
 
 			return;
@@ -28,16 +28,16 @@ namespace botarmpneu {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-            BotArmPneumatics.set(_taskState);
+			BotArmPneumatics.set(_taskState);
 			pressedCount++;
 
 			return 1;
 		});
-    }
+	}
 
-    void switchState() {
-        setState(!BotArmPneumatics.value());
-    }
+	void switchState() {
+		setState(!BotArmPneumatics.value());
+	}
 
 	int _taskState;
 	double _taskDelay;

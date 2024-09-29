@@ -42,24 +42,24 @@ timer drivingTimer;
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-    vexcodeInit();
+	vexcodeInit();
 
-    // All activities that occur before the competition starts
-    // Example: clearing encoders, setting servo positions, ...
+	// All activities that occur before the competition starts
+	// Example: clearing encoders, setting servo positions, ...
 
-    // Tasks
-    controls::startThreads();
-    odometry::startThreads();
-    task rum([] () -> int { preautonControllerThread(); return 1; });
+	// Tasks
+	controls::startThreads();
+	odometry::startThreads();
+	task rum([] () -> int { preautonControllerThread(); return 1; });
 
-    // Brake-types
-    controls::preauton();
+	// Brake-types
+	controls::preauton();
 
-    // Sensors
-    runPreauton();
+	// Sensors
+	runPreauton();
 
-    // Debug
-    showAutonRunType();
+	// Debug
+	showAutonRunType();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -73,35 +73,35 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-    // Start autonomous
-    timer benchmark;
+	// Start autonomous
+	timer benchmark;
 
-    // Switch to a random video
-    task switchVideo([] () -> int {
-        srand(Brain.Timer.systemHighResolution());
-        switchVideoState(rand() % 3 + 1);
-        return 1;
-    });
+	// Switch to a random video
+	task switchVideo([] () -> int {
+		srand(Brain.Timer.systemHighResolution());
+		switchVideoState(rand() % 3 + 1);
+		return 1;
+	});
 
-    // ..........................................................................
-    runAutonomous();
-    
-    
-    // ..........................................................................
+	// ..........................................................................
+	runAutonomous();
+	
+	
+	// ..........................................................................
 
-    printf("Time spent: %.3f s\n", benchmark.value());
+	printf("Time spent: %.3f s\n", benchmark.value());
 }
 
 /// @brief A function for testing autonomous directly in usercontrol.
 void userRunAutonomous() {
-    // Wait until sensors are initialized
-    task::sleep(1500);
-    while (!isPreautonFinished()) {
-        task::sleep(10);
-    }
+	// Wait until sensors are initialized
+	task::sleep(1500);
+	while (!isPreautonFinished()) {
+		task::sleep(10);
+	}
 
-    // userRunAutonomous();
-    autonomous();
+	// userRunAutonomous();
+	autonomous();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -115,42 +115,42 @@ void userRunAutonomous() {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-    // Timer
-    drivingTimer.reset();
+	// Timer
+	drivingTimer.reset();
 
-    // User autonomous
-    if (isUserRunningAuton()) {
-        userRunAutonomous();
-    }
+	// User autonomous
+	if (isUserRunningAuton()) {
+		userRunAutonomous();
+	}
 
-    // Keybinds
-    controls::setUpKeybinds();
-    keybindVideos();
+	// Keybinds
+	controls::setUpKeybinds();
+	keybindVideos();
 
-    // Reset
-    controls::resetStates();
+	// Reset
+	controls::resetStates();
 
-    // User control code here, inside the loop
-    while (1) {
-        controls::doControls();
+	// User control code here, inside the loop
+	while (1) {
+		controls::doControls();
 
-        wait(20, msec);
-    }
+		wait(20, msec);
+	}
 }
 
 //
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-    // Set up callbacks for autonomous and driver control periods.
-    Competition.autonomous(autonomous);
-    Competition.drivercontrol(usercontrol);
+	// Set up callbacks for autonomous and driver control periods.
+	Competition.autonomous(autonomous);
+	Competition.drivercontrol(usercontrol);
 
-    // Run the pre-autonomous function.
-    pre_auton();
+	// Run the pre-autonomous function.
+	pre_auton();
 
-    // Prevent main from exiting with an infinite loop.
-    while (true) {
-        wait(100, msec);
-    }
+	// Prevent main from exiting with an infinite loop.
+	while (true) {
+		wait(100, msec);
+	}
 }

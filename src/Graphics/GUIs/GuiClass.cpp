@@ -1,18 +1,18 @@
 #include "Graphics/GUIs/GuiClass.h"
 
 void GuiClass::draw() {
-  printf("GuiClass draw\n");
-  return;
+	printf("GuiClass draw\n");
+	return;
 }
 
 void GuiClass::check() {
-  return;
+	return;
 }
 
 void GuiClass::setVisibility(bool visibility) {
-  visible = visibility;
+	visible = visibility;
 }
 
 bool GuiClass::isVisible() {
-  return visible;
+	return visible;
 }

@@ -6,100 +6,110 @@
 #include "main.h"
 
 namespace {
-    void drawFrame(int x, int y, int frameId);
+	void drawFrame(int x, int y, int frameId);
 
-    std::vector< std::vector< std::vector<int> > > video;
-    std::vector< std::vector< std::vector<bool> > > boolVideo;
+	std::vector< std::vector< std::vector<int> > > video;
+	std::vector< std::vector< std::vector<bool> > > boolVideo;
 
-    int videoCount = 3;
-    double frameDelayMs;
-    int frameId;
+	int videoCount = 6;
+	double frameDelayMs;
+	int frameId;
 
-    double display_width, display_height;
+	double display_width, display_height;
 
-    int videoType = 0; // 0 : video, 1 : bool video
+	int videoType = 0; // 0 : video, 1 : bool video
 
-    std::pair<color, color> boolVideoColors;
+	std::pair<color, color> boolVideoColors;
 }
 
 void keybindVideos() {
-    Controller1.ButtonLeft.pressed([] () -> void {
-        switchVideoState();
-    });
+	Controller1.ButtonLeft.pressed([] () -> void {
+		switchVideoState();
+	});
 }
 
 void brainVideosThread() {
-    frameId = 0;
-    switchVideoState(0);
-    while (true) {
-        if (playingVideoId > 0 && frameId >= 0) {
-            drawFrame(0, 0, frameId);
-            frameId++;
-            if (videoType == 0) {
-                frameId %= (int) video.size();
-            } else if (videoType == 1) {
-                frameId %= (int) boolVideo.size();
-            }
-        }
-        task::sleep(frameDelayMs);
-    }
+	frameId = 0;
+	switchVideoState(0);
+	while (true) {
+		if (playingVideoId > 0 && frameId >= 0) {
+			drawFrame(0, 0, frameId);
+			frameId++;
+			if (videoType == 0) {
+				frameId %= (int) video.size();
+			} else if (videoType == 1) {
+				frameId %= (int) boolVideo.size();
+			}
+		}
+		task::sleep(frameDelayMs);
+	}
 }
 
 bool videoDebounce = false;
 void switchVideoState(int increment) {
-    if (!videoDebounce) {
-        videoDebounce = true;
+	if (!videoDebounce) {
+		videoDebounce = true;
 
-        frameId = -10;
-        // Increment video id
-        playingVideoId += increment;
-        playingVideoId %= (videoCount + 1);
-        if (playingVideoId > 0) {
-            // printf("Playing video %d!\n", playingVideoId);
-        }
+		frameId = -10;
+		// Increment video id
+		playingVideoId += increment;
+		playingVideoId %= (videoCount + 1);
+		if (playingVideoId > 0) {
+			// printf("Playing video %d!\n", playingVideoId);
+		}
 
-        // Switch video
-        switch (playingVideoId) {
-            case 1:
-                teamLogo.loadVideo(&video, &frameDelayMs);
-                teamLogo.loadDimensions(&display_width, &display_height);
-                videoType = 0;
-                break;
-            case 2:
-                ningning.loadVideo(&video, &frameDelayMs);
-                ningning.loadDimensions(&display_width, &display_height);
-                videoType = 0;
-                break;
-            case 3:
-                yoruNiKakeru.loadVideo(&video, &frameDelayMs);
-                yoruNiKakeru.loadDimensions(&display_width, &display_height);
-                videoType = 0;
-                break;
-            case 4:
-                badApple.loadVideo(&boolVideo, &frameDelayMs);
-                badApple.loadDimensions(&display_width, &display_height);
-                boolVideoColors = badApple.getColors();
-                videoType = 1;
-                break;
-            case 0:
-                video.clear();
-                boolVideo.clear();
-        }
-        task::sleep(30);
-        frameId = 0;
-        task::sleep(30);
+		// Switch video
+		switch (playingVideoId) {
+			case 1:
+				teamLogo.loadVideo(&video, &frameDelayMs);
+				teamLogo.loadDimensions(&display_width, &display_height);
+				videoType = 0;
+				break;
+			case 2:
+				yoruNiKakeru.loadVideo(&video, &frameDelayMs);
+				yoruNiKakeru.loadDimensions(&display_width, &display_height);
+				videoType = 0;
+				break;
+			case 3:
+				badApple.loadVideo(&boolVideo, &frameDelayMs);
+				badApple.loadDimensions(&display_width, &display_height);
+				boolVideoColors = badApple.getColors();
+				videoType = 1;
+				break;
+			case 4:
+				ningning.loadVideo(&video, &frameDelayMs);
+				ningning.loadDimensions(&display_width, &display_height);
+				videoType = 0;
+				break;
+			case 5:
+				ningning2.loadVideo(&video, &frameDelayMs);
+				ningning2.loadDimensions(&display_width, &display_height);
+				videoType = 0;
+				break;
+			case 6:
+				ningning3.loadVideo(&video, &frameDelayMs);
+				ningning3.loadDimensions(&display_width, &display_height);
+				videoType = 0;
+				break;
+			case 0:
+				video.clear();
+				boolVideo.clear();
+		}
+		task::sleep(30);
+		frameId = 0;
+		task::sleep(30);
 
-        videoDebounce = false;
-    }
+		videoDebounce = false;
+	}
 }
 
 namespace {
-    void drawFrame(int x, int y, int frameId) {
-        // Two types of videos
-        if (videoType == 0) {
-            VideoInfo::drawFrame(&video, x, y, display_width, display_height, frameId);
-        } else if (videoType == 1) {
-            BoolVideoInfo::drawFrame(&boolVideo, x, y, display_width, display_height, frameId, boolVideoColors.first, boolVideoColors.second);
-        }
-    }
+	void drawFrame(int x, int y, int frameId) {
+		// Two types of videos
+		if (videoType == 0) {
+			VideoInfo::drawFrame(&video, x, y, display_width, display_height, frameId);
+		} else if (videoType == 1) {
+			BoolVideoInfo::drawFrame(&boolVideo, x, y, display_width, display_height, frameId, boolVideoColors.first, boolVideoColors.second);
+		}
+	}
 }
