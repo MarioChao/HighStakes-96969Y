@@ -28,7 +28,7 @@ namespace controls {
 			goalclamp::switchState();
 		});
 		Controller1.ButtonL1.pressed([] () -> void {
-			if (botarmpneu::pressedCount <= 14 || drivingTimer.value() > 105 - 15) {
+			if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
 				botarmpneu::switchState();
 			}
 		});

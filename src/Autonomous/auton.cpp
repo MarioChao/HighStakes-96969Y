@@ -29,7 +29,7 @@ namespace {
 
 
 	bool userRunningAutonomous = false;
-	autonomousType auton_runType = autonomousType::BlueUpNew;
+	autonomousType auton_runType = autonomousType::BlueUp;
 	int auton_allianceId;
 }
 
@@ -248,13 +248,13 @@ namespace {
 		turnToAngle(0.0);
 		// task::sleep(500);
 		driveAndTurnDistanceTiles(0.1, 0.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-		turnToAngleVelocity(65.0, 70.0, -halfRobotLengthIn * 1.37);
+		turnToAngleVelocity(65.0, 70.0, halfRobotLengthIn * 1.37);
 		// driveAndTurnDistanceTiles(0.6, 0.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		// task::sleep(750);
 		//turnToAngle(-55.0, -halfRobotLengthIn * 0.75);
 		//turnToAngle(0, halfRobotLengthIn * 0.75);
 		// Intake up
-		turnToAngleVelocity(0.0, 70.0, halfRobotLengthIn * 0.7);
+		turnToAngleVelocity(0.0, 70.0, -halfRobotLengthIn * 0.7);
 		driveAndTurnDistanceTiles(-0.3, 0.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 
 

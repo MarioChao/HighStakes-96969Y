@@ -8,7 +8,7 @@ namespace {
 	void resolveIntakeToArm();
 
 	double intakeVelocityPct = 100;
-	double intakeVeolcityVolt = intakeVelocityPct / 100 * 12;
+	double intakeVelocityVolt = intakeVelocityPct / 100 * 12;
 
 	double toArmHookVelocityPct = 40.0;
 	double toArmHookReverseVelocityPct = 70.0;
@@ -223,6 +223,7 @@ namespace botintake {
 
 	void setFilterColor(char * colorText) {
 		filterOutColor = colorText;
+		// debug::printOnController(colorText);
 	}
 
 	void control(int state, int hookState) {
@@ -257,6 +258,7 @@ namespace {
 				wait(5, msec);
 				IntakeMotor2.spin(fwd, 0, volt);
 				wait(300, msec);
+				return;
 			}
 		}
 
@@ -264,11 +266,11 @@ namespace {
 		switch (resolveBottomState) {
 			case 1:
 				// Forward
-				IntakeMotor1.spin(fwd, intakeVeolcityVolt, volt);
+				IntakeMotor1.spin(fwd, intakeVelocityVolt, volt);
 				break;
 			case -1:
 				// Reversed
-				IntakeMotor1.spin(fwd, -intakeVeolcityVolt, volt);
+				IntakeMotor1.spin(fwd, -intakeVelocityVolt, volt);
 				break;
 			default:
 				IntakeMotor1.stop(brakeType::coast);
@@ -277,11 +279,11 @@ namespace {
 		switch (resolveTopState) {
 			case 1:
 				// Forward
-				IntakeMotor2.spin(fwd, intakeVeolcityVolt * hookFactor, volt);
+				IntakeMotor2.spin(fwd, intakeVelocityVolt * hookFactor, volt);
 				break;
 			case -1:
 				// Reversed
-				IntakeMotor2.spin(fwd, -intakeVeolcityVolt * hookFactor, volt);
+				IntakeMotor2.spin(fwd, -intakeVelocityVolt * hookFactor, volt);
 				break;
 			default:
 				IntakeMotor2.stop(brakeType::coast);
@@ -306,7 +308,7 @@ namespace {
 		// Otherwise spin hook normally
 		else {
 			// Spin both
-			IntakeMotor1.spin(fwd, intakeVeolcityVolt, volt);
+			IntakeMotor1.spin(fwd, intakeVelocityVolt, volt);
 			IntakeMotor2.spin(fwd, toArmHookVelocityVolt, volt);
 		}
 	}
