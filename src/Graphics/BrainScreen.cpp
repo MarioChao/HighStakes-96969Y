@@ -45,6 +45,7 @@ namespace {
 	void drawQRCodes();
 	void drawQRCode(double x, double y, double width, vector<pair<int, int>> QRCode, color bgCol, color qrCol);
 	void drawTemperature();
+	void drawMotorPower();
 	
 	// Variables
 	// Flywheel
@@ -402,6 +403,7 @@ namespace {
 		motTempDock = new DockGui(0, 20, 480, 220, {}, {});
 		motTempDock -> addFunction([] {
 			drawTemperature();
+			drawMotorPower();
 		});
 	}
 
@@ -589,5 +591,23 @@ namespace {
 		Brain.Screen.printAt(10, 65, 1, "L2: %s°C, R2: %s°C", leadTrailZero(3, 3, leftBC).c_str(), leadTrailZero(3, 3, rightBC).c_str());
 		Brain.Screen.printAt(10, 90, 1, "L3: %s°C, R3: %s°C", leadTrailZero(3, 3, leftCC).c_str(), leadTrailZero(3, 3, rightCC).c_str());
 		// Brain.Screen.printAt(10, 115, 1, "L4: %s°C, R4: %s°C", leadTrailZero(3, 3, leftDC).c_str(), leadTrailZero(3, 3, rightDC).c_str());
+	}
+	void drawMotorPower() {
+		// Get power info
+		double leftA_watt = LeftMotorA.power(watt);
+		double leftB_watt = LeftMotorB.power(watt);
+		double leftC_watt = LeftMotorC.power(watt);
+		double rightA_watt = RightMotorA.power(watt);
+		double rightB_watt = RightMotorB.power(watt);
+		double rightC_watt = RightMotorC.power(watt);
+
+		double leftAvg_watt = (leftA_watt + leftB_watt + leftC_watt) / 3.0;
+		double rightAvg_watt = (rightA_watt + rightB_watt + rightC_watt) / 3.0;
+
+		// Draw info
+		Brain.Screen.setPenColor(color::white);
+		Brain.Screen.setFillColor(color::transparent);
+		Brain.Screen.setFont(fontType::mono20);
+		Brain.Screen.printAt(10, 130, 1, "Lavg: %07.3f W, Ravg: %07.3f W", leftAvg_watt, rightAvg_watt);
 	}
 }
