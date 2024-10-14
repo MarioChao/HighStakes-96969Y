@@ -10,15 +10,15 @@ using gfxmain::brightenColor;
 ButtonGui::ButtonGui(ShapeGui *shape, string msg, color textFill, void (*func)()) {
 	buttonShape = shape;
 
-	centerX = buttonShape -> getX();
-	centerY = buttonShape -> getY();
+	centerX = buttonShape->getX();
+	centerY = buttonShape->getY();
 
-	fillColor = buttonShape -> getColor();
+	fillColor = buttonShape->getColor();
 	disabledColor = brightenColor(fillColor, 0.3);
 	unusableColor = brightenColor(fillColor, 0.5);
 	unusableDisabledColor = brightenColor(fillColor, 0.1);
 	displayedColor = fillColor;
-	
+
 	storedText = displayedText = msg;
 	textColor = textFill;
 
@@ -56,7 +56,7 @@ void ButtonGui::draw() {
 	if (!isVisible()) {
 		return;
 	}
-	buttonShape -> draw(displayedColor);
+	buttonShape->draw(displayedColor);
 
 	// Draw text
 	Brain.Screen.setPenColor(textColor);
@@ -77,7 +77,7 @@ void ButtonGui::check() {
 /// @param clickX The x-position of the cursor.
 /// @param clickY The y-position of the cursor.
 void ButtonGui::check(double clickX, double clickY) {
-	if (!buttonShape -> isTouching(clickX, clickY)) return;
+	if (!buttonShape->isTouching(clickX, clickY)) return;
 	if (dbFrames < 20 || !usable) {
 		dbFrames = 0;
 		return;

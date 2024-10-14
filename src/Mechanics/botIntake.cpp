@@ -107,7 +107,7 @@ namespace botintake {
 		_taskDelay = delaySec;
 
 
-		task setState([] () -> int {
+		task setState([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;
@@ -142,7 +142,7 @@ namespace botintake {
 		_taskState = state;
 		_taskDelay = delaySec;
 
-		task setState([] () -> int {
+		task setState([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;
@@ -175,7 +175,7 @@ namespace botintake {
 		_taskDelay = delaySec;
 
 
-		task setState([] () -> int {
+		task setState([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;
@@ -185,7 +185,7 @@ namespace botintake {
 			task::sleep(taskDelay * 1000);
 
 
-		   // Set state here
+			// Set state here
 			resolveBottomState = taskState;
 
 
@@ -221,7 +221,7 @@ namespace botintake {
 		}
 	}
 
-	void setFilterColor(char * colorText) {
+	void setFilterColor(char *colorText) {
 		filterOutColor = colorText;
 		// debug::printOnController(colorText);
 	}
@@ -294,8 +294,8 @@ namespace {
 	void resolveIntakeToArm() {
 		// Reverse hook on some detection
 		if (previousRingDetected && !ringDetected) {
-		// if (ringDetected) {
-			// Stop bottom
+			// if (ringDetected) {
+				// Stop bottom
 			IntakeMotor1.spin(fwd, 10, pct);
 
 			// Spin hook sequence

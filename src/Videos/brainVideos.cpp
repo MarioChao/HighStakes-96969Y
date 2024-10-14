@@ -23,7 +23,7 @@ namespace {
 }
 
 void keybindVideos() {
-	Controller1.ButtonLeft.pressed([] () -> void {
+	Controller1.ButtonLeft.pressed([]() -> void {
 		switchVideoState();
 	});
 }

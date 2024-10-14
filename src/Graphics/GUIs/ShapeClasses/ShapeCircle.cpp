@@ -2,8 +2,8 @@
 #include "Graphics/GraphicMain.h"
 
 Circle::Circle(double x, double y, double radius, color fillCol, color outlineCol, double outlineWeight)
-: ShapeGui(ShapeType::CIRCLE, x, y, fillCol, outlineCol, outlineWeight) {
-	this -> radius = radius;
+	: ShapeGui(ShapeType::CIRCLE, x, y, fillCol, outlineCol, outlineWeight) {
+	this->radius = radius;
 }
 
 void Circle::draw() {

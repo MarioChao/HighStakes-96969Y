@@ -1,16 +1,16 @@
 #pragma once
 
 enum autonomousType {
-    RedUp,
-    RedDown,
-    BlueUp,
-    BlueUpNew,
-    BlueDown,
-    AutonSkills,
-    DrivingSkills,
-    AllianceWallStake,
-    Test,
-    None
+	RedUp,
+	RedDown,
+	BlueUp,
+	BlueUpNew,
+	BlueDown,
+	AutonSkills,
+	DrivingSkills,
+	AllianceWallStake,
+	Test,
+	None
 };
 
 /// @brief Set the type of autonomous to run at the start of the match.

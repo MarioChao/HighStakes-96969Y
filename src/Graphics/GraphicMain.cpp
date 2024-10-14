@@ -25,8 +25,8 @@ namespace gfxmain {
 
 	// Returns the cross product given an origin and two coordinates
 	double getCrossProduct(double initPnt[], double p1[], double p2[]) {
-		double v1[] = {p1[0] - initPnt[0], p1[1] - initPnt[1]};
-		double v2[] = {p2[0] - initPnt[0], p2[1] - initPnt[1]};
+		double v1[] = { p1[0] - initPnt[0], p1[1] - initPnt[1] };
+		double v2[] = { p2[0] - initPnt[0], p2[1] - initPnt[1] };
 		return getCrossProduct(v1, v2);
 	}
 
@@ -92,14 +92,14 @@ namespace gfxmain {
 				double pathB1 = startY1 - pathM1 * startX1;
 				retX = startX0;
 				retY = pathM1 * retX + pathB1;
-				ret = {retX, retY};
+				ret = { retX, retY };
 			}
 		} else if (startX1 == endX1) {
 			double pathM0 = (endY0 - startY0) / (endX0 - startX0);
 			double pathB0 = startY0 - pathM0 * startX0;
 			retX = startX1;
 			retY = pathM0 * retX + pathB0;
-			ret = {retX, retY};
+			ret = { retX, retY };
 		} else {
 			double pathM0 = (endY0 - startY0) / (endX0 - startX0);
 			double pathB0 = startY0 - pathM0 * startX0;
@@ -114,7 +114,7 @@ namespace gfxmain {
 				// x = (b1 - b) / (m - m1)
 				retX = (pathB1 - pathB0) / (pathM0 - pathM1);
 				retY = pathM0 * retX + pathB0;
-				ret = {retX, retY};
+				ret = { retX, retY };
 			}
 		}
 		return ret;
@@ -153,9 +153,9 @@ namespace gfxmain {
 		}
 		if (!ret.empty()) {
 			if (ret[0] > endX) {
-				ret = {endX, endY};
+				ret = { endX, endY };
 			} else if (ret[0] < startX) {
-				ret = {startX, startY};
+				ret = { startX, startY };
 			}
 		}
 		return ret;

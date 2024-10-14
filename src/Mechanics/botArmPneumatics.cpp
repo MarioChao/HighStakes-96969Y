@@ -19,7 +19,7 @@ namespace botarmpneu {
 		_taskState = state;
 		_taskDelay = delaySec;
 
-		task setState([] () -> int {
+		task setState([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;

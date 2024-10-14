@@ -1,9 +1,9 @@
 #include "Graphics/GUIs/ShapesGui.h"
 
 RoundedRectangle::RoundedRectangle(double x, double y, double width, double height, double radius, color fillCol, color outlineCol, double outlineWeight)
-: ShapeGui(ShapeType::ROUNDED_RECTANGLE, x, y, fillCol, outlineCol, outlineWeight) {
-	this -> width = width;
-	this -> height = height;
+	: ShapeGui(ShapeType::ROUNDED_RECTANGLE, x, y, fillCol, outlineCol, outlineWeight) {
+	this->width = width;
+	this->height = height;
 	cornerRadius = radius;
 }
 
@@ -11,7 +11,7 @@ void RoundedRectangle::draw() {
 	if (!isVisible()) {
 		return;
 	}
-	
+
 	// Draw corner
 	double halfW = width / 2;
 	double halfH = height / 2;
@@ -24,7 +24,7 @@ void RoundedRectangle::draw() {
 			Brain.Screen.drawCircle(centerX + (halfW - cornerRadius) * i, centerY + (halfH - cornerRadius) * j, cornerRadius);
 		}
 	}
-	
+
 	// Draw sides
 	Brain.Screen.setPenWidth(0);
 	Brain.Screen.setFillColor(displayedColor);

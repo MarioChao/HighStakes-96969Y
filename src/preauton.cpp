@@ -8,7 +8,7 @@
 namespace {
 	void initComponents();
 	void bufferScreen();
-	
+
 	bool initComponentFinished = false;
 }
 
@@ -21,7 +21,7 @@ void preautonControllerThread() {
 
 void runPreauton() {
 	// Buffer screen task
-	task bufferTask([] () -> int {
+	task bufferTask([]() -> int {
 		bufferScreen();
 		return 1;
 	});
@@ -52,7 +52,7 @@ namespace {
 		// Increase optical sensor brightness
 		RingOpticalSensor.setLight(ledState::on);
 		RingOpticalSensor.setLightPower(30);
-		
+
 		initComponentFinished = true;
 	}
 
@@ -87,11 +87,11 @@ namespace {
 			if (fabs(i - 1) <= 1e-8) break;
 		}
 		// Brain Screen
-		task brainScreen([] () -> int {
+		task brainScreen([]() -> int {
 			brainScreenThread();
 			return 1;
 		});
-		task brainVideos([] () -> int {
+		task brainVideos([]() -> int {
 			brainVideosThread();
 			return 1;
 		});

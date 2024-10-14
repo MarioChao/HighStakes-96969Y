@@ -15,7 +15,7 @@ namespace {
 	double rightWingDebounce = false;
 }
 
-namespace botwings{
+namespace botwings {
 	void changeFrontWingsState() {
 		::changeFrontWingsState();
 	}
@@ -31,7 +31,7 @@ namespace botwings{
 	void changeLeftWingState() {
 		::changeLeftWingState();
 	}
-	
+
 	void changeRightWingState() {
 		::changeRightWingState();
 	}

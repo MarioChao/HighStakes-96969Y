@@ -5,7 +5,7 @@ PIDControl::PIDControl(double kP, double kI, double kD, double settleRange, doub
 	kProp = kP, kInteg = kI, kDeriv = kD;
 	cumulativeError = deltaError = 0;
 	currentError = previousError = 2e17;
-	
+
 	settleErrorRange = fabs(settleRange);
 	settleMinFrameCount = settleFrameCount;
 	settledFrames = 0;

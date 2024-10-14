@@ -81,7 +81,7 @@ namespace {
 
 		double axis4 = Controller1.Axis4.position();
 		if (fabs(axis4) < 2) axis4 = 0;
-		
+
 		drive(axis3, axis3, -axis4);
 	}
 

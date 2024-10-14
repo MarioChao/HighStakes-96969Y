@@ -7,12 +7,12 @@
 using std::string, std::vector, std::pair, std::make_pair, std::copy;
 
 class GuiClass {
-  public:
-    virtual void draw();
-    virtual void check();
-    
-    void setVisibility(bool visibility);
-    bool isVisible();
-  private:
-    bool visible = true;
+public:
+	virtual void draw();
+	virtual void check();
+
+	void setVisibility(bool visibility);
+	bool isVisible();
+private:
+	bool visible = true;
 };

@@ -3,9 +3,9 @@
 namespace odometry {
 	void startThreads();
 
-    double getX();
-    double getY();
-    double getAngle();
+	double getX();
+	double getY();
+	double getAngle();
 
-    void setValues(double, double, double);
+	void setValues(double, double, double);
 }

@@ -1,10 +1,10 @@
 #include "Graphics/GUIs/DocksGui.h"
 
-DockGui::DockGui(double leftX, double topY, double width, double height, vector<GuiClass*> guiList, vector<void (*)()> functionList) {
-	this -> leftX = leftX;
-	this -> topY = topY;
-	this -> width = width;
-	this -> height = height;
+DockGui::DockGui(double leftX, double topY, double width, double height, vector<GuiClass *> guiList, vector<void (*)()> functionList) {
+	this->leftX = leftX;
+	this->topY = topY;
+	this->width = width;
+	this->height = height;
 	guis = guiList;
 	functions = functionList;
 }
@@ -13,7 +13,7 @@ void DockGui::addGui(GuiClass *gui) {
 	guis.push_back(gui);
 }
 
-void DockGui::addGuis(vector<GuiClass*> guiList) {
+void DockGui::addGuis(vector<GuiClass *> guiList) {
 	for (GuiClass *gui : guiList) {
 		addGui(gui);
 	}
@@ -39,8 +39,8 @@ void DockGui::draw() {
 	}
 	// Draw guis
 	for (GuiClass *gui : guis) {
-			gui -> draw();
-		}
+		gui->draw();
+	}
 }
 
 /// @brief Clear the dock by drawing a black rectangle with white borders.
@@ -61,7 +61,7 @@ void DockGui::check() {
 		}
 		// Check guis
 		for (GuiClass *gui : guis) {
-			gui -> check();
+			gui->check();
 		}
 	}
 }
@@ -69,14 +69,14 @@ void DockGui::check() {
 /// @brief Set the dock as enabled (active) or not (inactive).
 /// @param enabled Whether the dock is active or not.
 void DockGui::setEnabled(bool enabled) {
-	this -> enabled = enabled;
+	this->enabled = enabled;
 	if (enabled) {
 		// printf("Enabled dock\n");
 		// On dock enabled
 		clearDock();
 		// Set gui visibility & draw
 		for (GuiClass *gui : guis) {
-			gui -> setVisibility(true);
+			gui->setVisibility(true);
 		}
 		draw();
 		// Enabled functions
@@ -87,7 +87,7 @@ void DockGui::setEnabled(bool enabled) {
 		// printf("Disabled dock\n");
 		// On dock disabled
 		for (GuiClass *gui : guis) {
-			gui -> setVisibility(false);
+			gui->setVisibility(false);
 		}
 	}
 }

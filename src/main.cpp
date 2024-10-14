@@ -50,7 +50,7 @@ void pre_auton(void) {
 	// Tasks
 	controls::startThreads();
 	odometry::startThreads();
-	task rum([] () -> int { preautonControllerThread(); return 1; });
+	task rum([]() -> int { preautonControllerThread(); return 1; });
 
 	// Brake-types
 	controls::preauton();
@@ -77,7 +77,7 @@ void autonomous(void) {
 	timer benchmark;
 
 	// Switch to a random video
-	task switchVideo([] () -> int {
+	task switchVideo([]() -> int {
 		srand(Brain.Timer.systemHighResolution());
 		switchVideoState(rand() % 3 + 1);
 		return 1;
@@ -85,8 +85,8 @@ void autonomous(void) {
 
 	// ..........................................................................
 	runAutonomous();
-	
-	
+
+
 	// ..........................................................................
 
 	printf("Time spent: %.3f s\n", benchmark.value());

@@ -14,8 +14,8 @@ BoolVideoInfo::BoolVideoInfo(
 	fps = videoFps;
 	frameSteps = videoFrameSteps;
 	savedVideo = *video;
-	this -> onColor = onColor;
-	this -> offColor = offColor;
+	this->onColor = onColor;
+	this->offColor = offColor;
 	display_width = width;
 	display_height = height;
 }
@@ -41,7 +41,7 @@ std::pair<color, color> BoolVideoInfo::getColors() {
 
 void BoolVideoInfo::drawFrame(std::vector< std::vector< std::vector<bool> > > *video, int x, int y, int width, int height, int frameId, color onColor, color offColor) {
 	// Validate frame
-	if (frameId < 0 || frameId >= (int) video -> size()) {
+	if (frameId < 0 || frameId >= (int) video->size()) {
 		return;
 	}
 
@@ -74,7 +74,7 @@ void BoolVideoInfo::drawFrame(std::vector< std::vector< std::vector<bool> > > *v
 				Brain.Screen.setPenColor(offColor);
 			}
 			Brain.Screen.drawPixel(posX, posY);
-			
+
 			// Update
 			posX++;
 		}

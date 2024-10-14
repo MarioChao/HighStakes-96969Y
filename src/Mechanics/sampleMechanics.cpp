@@ -30,7 +30,7 @@ namespace samplemech {
 		_taskState = state;
 		_taskDelay = delaySec;
 
-		task setState([] () -> int {
+		task setState([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;
@@ -45,7 +45,7 @@ namespace samplemech {
 	}
 
 	void switchState() {
-		
+
 	}
 
 	void control(int state) {

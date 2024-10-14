@@ -36,7 +36,7 @@ void VideoInfo::loadDimensions(double *width, double *height) {
 
 void VideoInfo::drawFrame(std::vector< std::vector< std::vector<int> > > *video, int x, int y, int width, int height, int frameId) {
 	// Validate frame
-	if (frameId < 0 || frameId >= (int) video -> size()) {
+	if (frameId < 0 || frameId >= (int) video->size()) {
 		return;
 	}
 

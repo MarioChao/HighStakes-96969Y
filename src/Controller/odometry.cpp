@@ -11,7 +11,7 @@ namespace {
 
 namespace odometry {
 	void startThreads() {
-		task odometryTask([] () -> int { odometryThread(); return 1; });
+		task odometryTask([]() -> int { odometryThread(); return 1; });
 	}
 
 	double getX() {

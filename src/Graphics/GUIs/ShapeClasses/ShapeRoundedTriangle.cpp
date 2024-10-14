@@ -2,7 +2,7 @@
 #include "Graphics/GraphicMain.h"
 
 RoundedTriangle::RoundedTriangle(double x, double y, double p1[], double p2[], double p3[], double radius, color fillCol, color outlineCol, double outlineWeight)
-: ShapeGui(ShapeType::ROUNDED_TRIANGLE, x, y, fillCol, outlineCol, outlineWeight) {
+	: ShapeGui(ShapeType::ROUNDED_TRIANGLE, x, y, fillCol, outlineCol, outlineWeight) {
 	copy(p1, p1 + 2, point1);
 	copy(p2, p2 + 2, point2);
 	copy(p3, p3 + 2, point3);
@@ -13,7 +13,7 @@ void RoundedTriangle::draw() {
 	if (!isVisible()) {
 		return;
 	}
-	
+
 	// Draw border
 	Brain.Screen.setPenWidth(outlineWidth);
 	Brain.Screen.setPenColor(outlineColor);
@@ -23,6 +23,6 @@ void RoundedTriangle::draw() {
 }
 
 bool RoundedTriangle::isTouching(double x, double y) {
-	double tmpP[] = {x, y};
+	double tmpP[] = { x, y };
 	return gfxmain::pointInTriangle(tmpP, point1, point2, point3);
 }

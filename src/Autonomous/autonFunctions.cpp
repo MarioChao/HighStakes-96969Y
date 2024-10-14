@@ -68,8 +68,8 @@ namespace auton {
 		// Velocity factors
 		double leftVelocityFactor = leftRotateRadiusIn / averageRotateRadiusIn;
 		double rightVelocityFactor = -rightRotateRadiusIn / averageRotateRadiusIn;
-		
-		
+
+
 		// PID
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
@@ -77,7 +77,7 @@ namespace auton {
 		timer timeout;
 		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
 			printf("Inertial value:");
-			std::cout<<(InertialSensor.rotation(degrees))<<std::endl;
+			std::cout << (InertialSensor.rotation(degrees)) << std::endl;
 			// Compute rotate error
 			double rotateError = rotation - InertialSensor.rotation();
 			rotateTargetAnglePid.computeFromError(rotateError);
@@ -139,7 +139,7 @@ namespace auton {
 		// Test
 		// driveAndTurnDistanceInchesMotionProfile(distanceInches, targetRotation, maxVelocityPct, maxTurnVelocityPct, errorRange, runTimeout);
 		// return;
-		
+
 		// Variables
 		// double motorTargetDistanceRev = distanceInches * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio);
 		vector<double> initRevolutions = getMotorRevolutions();
@@ -159,12 +159,12 @@ namespace auton {
 		while (!(driveTargetDistancePid.isSettled() && rotateTargetAnglePid.isSettled()) && timeout.value() < runTimeout) {
 			// Compute linear distance error
 			double distanceError;
-			double targetDistanceInches = distanceInches;   
+			double targetDistanceInches = distanceInches;
 			if (useRotationSensorForPid) {
 				printf("Rotation sensor pid\n");
 				// Compute current rotation revolutions
 				double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
-				
+
 				// Convert current revolutions into distance inches
 				double currentTravelDistanceInches = lookCurrentRevolution * (1.0 / trackingLookWheelSensorGearRatio) * (trackingLookWheelCircumIn / 1.0);
 
@@ -173,7 +173,7 @@ namespace auton {
 			} else if (useEncoderForPid) {
 				// Compute current encoder revolutions
 				double lookEncoderCurrentRevolution = LookEncoder.rotation(rev) - lookEncoderInitialRevolution;
-				
+
 				// Convert current revolutions into distance inches
 				double currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / trackingLookWheelSensorGearRatio) * (trackingLookWheelCircumIn / 1.0);
 
@@ -185,7 +185,7 @@ namespace auton {
 				// Compute average traveled motor revolutions
 				vector<double> travelRevolutions = getMotorRevolutions();
 				double averageTravelRev = getAverageDifference(initRevolutions, travelRevolutions);
-				
+
 				// Convert current revolutions into distance inches
 				double currentTravelDistanceInches = averageTravelRev * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
 
@@ -207,7 +207,7 @@ namespace auton {
 			// Compute final motor velocities
 			double leftVelocityPct = velocityPct + rotateVelocityPct;
 			double rightVelocityPct = velocityPct - rotateVelocityPct;
-			
+
 			// Compute value to synchronize velocity
 			double velocityDifferencePct = LeftMotors.velocity(pct) - RightMotors.velocity(pct);
 			double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
@@ -222,7 +222,7 @@ namespace auton {
 			// Update final motor velocities
 			leftVelocityPct += finalDeltaVelocityPct;
 			rightVelocityPct -= finalDeltaVelocityPct;
-			
+
 			// Drive with velocities
 			driveVelocity(leftVelocityPct, rightVelocityPct);
 			// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
@@ -358,9 +358,9 @@ namespace auton {
 		botarmpneu::setState(state, delaySec);
 	}
 
-	 /// @brief Set the state of Left Wing's pneumatic.
-	/// @param state Expanded: true, retracted: false.
-	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
+	/// @brief Set the state of Left Wing's pneumatic.
+   /// @param state Expanded: true, retracted: false.
+   /// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
 	void setGoalClampState(bool state, double delaySec) {
 		goalclamp::setState(state, delaySec);
 		// setGoalClamp_ClampState = state;
@@ -382,7 +382,7 @@ namespace auton {
 	void setFrontWingsState(bool state, double delaySec) {
 		setFrontWings_WingState = state;
 		setFrontWings_DelaySec = delaySec;
-		task setPneumaticState([] () -> int {
+		task setPneumaticState([]() -> int {
 			int taskState = setFrontWings_WingState;
 
 			if (setFrontWings_DelaySec > 1e-9) {
@@ -399,7 +399,7 @@ namespace auton {
 	void setLeftWingState(bool state, double delaySec) {
 		setLeftWing_LeftWingState = state;
 		setLeftWing_DelaySec = delaySec;
-		task setPneumaticState([] () -> int {
+		task setPneumaticState([]() -> int {
 			int taskState = setLeftWing_LeftWingState;
 
 			if (setLeftWing_DelaySec > 1e-9) {
@@ -416,7 +416,7 @@ namespace auton {
 	void setRightWingState(bool state, double delaySec) {
 		setRightWing_RightWingState = state;
 		setRightWing_DelaySec = delaySec;
-		task setPneumaticState([] () -> int {
+		task setPneumaticState([]() -> int {
 			int taskState = setRightWing_RightWingState;
 
 			if (setRightWing_DelaySec > 1e-9) {
@@ -433,7 +433,7 @@ namespace auton {
 	void setBackWingsState(bool state, double delaySec) {
 		setWings_WingsState = state;
 		setWings_DelaySec = delaySec;
-		task setPneumaticsState([] () -> int {
+		task setPneumaticsState([]() -> int {
 			int taskState = setWings_WingsState;
 
 			if (setWings_DelaySec > 1e-9) {
@@ -449,7 +449,7 @@ namespace auton {
 	/// @param state Lifted: true, lowered: false
 	void setIntakeLiftState(bool state) {
 		IntakeLiftPneumatic.set(state);
-	}    
+	}
 }
 
 namespace {

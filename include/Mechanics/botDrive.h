@@ -1,14 +1,14 @@
 #pragma once
 
 namespace botdrive {
-    enum controlType {
-        ArcadeTwoStick,
-        ArcadeSingleStick,
-    };
+	enum controlType {
+		ArcadeTwoStick,
+		ArcadeSingleStick,
+	};
 
-    void preauton();
+	void preauton();
 
-    void switchDriveMode();
-    
-    void control();
+	void switchDriveMode();
+
+	void control();
 }

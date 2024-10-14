@@ -8,13 +8,13 @@ using namespace std;
 
 namespace {
 	// Comparison for sorting values from small to big
-	bool comp(pair<double, ShapeGui*> a, pair<double, ShapeGui*> b) {
+	bool comp(pair<double, ShapeGui *> a, pair<double, ShapeGui *> b) {
 		return a.first < b.first;
 	}
 }
 
 // Constructor for the slider
-SliderGui::SliderGui(double lowLimit, double upLimit, vector<pair<double, ShapeGui*>> defaultVal, double lowX, double lowY, double upX, double upY) {
+SliderGui::SliderGui(double lowLimit, double upLimit, vector<pair<double, ShapeGui *>> defaultVal, double lowX, double lowY, double upX, double upY) {
 	minVal = lowLimit;
 	maxVal = upLimit;
 	values = defaultVal;
@@ -49,7 +49,7 @@ void SliderGui::draw() {
 	// Draw sliders
 	for (int i = 0; i < (int) values.size(); i++) {
 		updateCord(i);
-		values[i].second -> draw();
+		values[i].second->draw();
 	}
 }
 
@@ -62,7 +62,7 @@ void SliderGui::updateCord(int sliderId) {
 	double currentVal = values[sliderId].first;
 	double newX = startX + (finishX - startX) * (currentVal - minVal) / (maxVal - minVal);
 	double newY = startY + (finishY - startY) * (currentVal - minVal) / (maxVal - minVal);
-	values[sliderId].second -> setCord(newX, newY);
+	values[sliderId].second->setCord(newX, newY);
 }
 // Sets and moves a slider to a position that represents the value
 void SliderGui::setCord(int sliderId, double val) {
@@ -91,7 +91,7 @@ void SliderGui::check(double mouseX, double mouseY) {
 		if (sliderId == (int) values.size()) sliderId--;
 		else if (sliderId == 0);
 		else if (fabs(pointVal - values[sliderId - 1].first) < fabs(pointVal - values[sliderId].first)) sliderId--;
-		
+
 		// Modify slider's value and position
 		setCord(sliderId, pointVal);
 

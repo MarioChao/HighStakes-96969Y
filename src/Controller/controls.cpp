@@ -12,33 +12,33 @@
 
 namespace controls {
 	void startThreads() {
-		task intakeTask([] () -> int { botintake::runThread(); return 1; });
+		task intakeTask([]() -> int { botintake::runThread(); return 1; });
 		// task armTask([] () -> int { botarm::runThread(); return 1; });
 	}
 
 	void setUpKeybinds() {
-		Controller2.ButtonX.pressed([] () -> void {
+		Controller2.ButtonX.pressed([]() -> void {
 			botdrive::switchDriveMode();
 		});
-		Controller1.ButtonX.pressed([] () -> void {
+		Controller1.ButtonX.pressed([]() -> void {
 			botintake::switchMode();
 		});
-		Controller1.ButtonL2.pressed([] () -> void {
+		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
 		});
-		Controller1.ButtonL1.pressed([] () -> void {
+		Controller1.ButtonL1.pressed([]() -> void {
 			if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
 				botarmpneu::switchState();
 			}
 		});
-		Controller1.ButtonB.pressed([] () -> void {
+		Controller1.ButtonB.pressed([]() -> void {
 			botintake::switchFilterColor();
 		});
-		Controller1.ButtonA.pressed([] () -> void {
+		Controller1.ButtonA.pressed([]() -> void {
 			swing::switchState();
 		});
-		
+
 	}
 
 	void preauton() {

@@ -2,7 +2,7 @@
 
 ShapeGui::ShapeGui(ShapeType shape, double x, double y, color fillCol, color outlineCol, double strokeWeight) {
 	shapeName = shape;
-	
+
 	centerX = x;
 	centerY = y;
 
@@ -19,7 +19,7 @@ void ShapeGui::draw() {
 
 void ShapeGui::draw(color fillCol) {
 	displayedColor = fillCol;
-	this -> draw();
+	this->draw();
 	displayedColor = fillColor;
 }
 
