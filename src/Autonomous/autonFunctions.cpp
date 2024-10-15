@@ -150,7 +150,7 @@ namespace auton {
 
 		// PID
 		// TODO: Tune pid
-		PIDControl driveTargetDistancePid(4.5, 0, 0, errorRange);
+		PIDControl driveTargetDistancePid(3.5, 0, 0, errorRange);
 		PIDControl rotateTargetAnglePid(0.3, 0, 0, defaultTurnAngleErrorRange);
 		PIDControl synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -476,6 +476,8 @@ namespace {
 	}
 
 	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
+		driveVoltage(leftVelocityPct / 100.0 * 12.0, rightVelocityPct / 100.0 * 12.0);
+		return;
 		// Scale percentages if overshoot
 		double scaleFactor = 100.0 / fmax(100.0, fmax(fabs(leftVelocityPct), fabs(rightVelocityPct)));
 		leftVelocityPct *= scaleFactor;
@@ -486,8 +488,10 @@ namespace {
 		RightMotors.spin(fwd, rightVelocityPct, pct);
 	}
 	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt) {
+		double maxVoltage = 11.0;
+
 		// Scale voltages if overshoot
-		double scaleFactor = 12.0 / fmax(12.0, fmax(fabs(leftVoltageVolt), fabs(rightVoltageVolt)));
+		double scaleFactor = maxVoltage / fmax(maxVoltage, fmax(fabs(leftVoltageVolt), fabs(rightVoltageVolt)));
 		leftVoltageVolt *= scaleFactor;
 		rightVoltageVolt *= scaleFactor;
 

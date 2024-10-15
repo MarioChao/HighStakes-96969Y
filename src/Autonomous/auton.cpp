@@ -134,15 +134,13 @@ void runAutonomous() {
 namespace {
 	void autonTest() {
 		setRotation(0.0);
-		//driveAndTurnDistanceTiles(1.0, 0.0, 50.0, 100.0, defaultMoveTilesErrorRange, 6.0);
-		//task::sleep(2000);
-		// driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
-		// driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
-		// driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
-		// driveAndTurnDistanceTiles(2.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
-		// driveAndTurnDistanceTiles(-2.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
 
-
+		driveAndTurnDistanceTiles(1.0, 0.0, 50.0, 100.0, defaultMoveTilesErrorRange, 6.0);
+		driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+		driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+		driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+		driveAndTurnDistanceTiles(2.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
+		driveAndTurnDistanceTiles(-2.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
 
 		// driveAndTurnDistanceTilesMotionProfile(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 		// driveAndTurnDistanceTilesMotionProfile(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
@@ -152,7 +150,7 @@ namespace {
 		// driveAndTurnDistanceTilesMotionProfile(-2.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 
 
-		turnToAngle(90);
+		// turnToAngle(90);
 		// turnToAngle(-90);
 		// turnToAngle(180);
 		// turnToAngle(-180);
@@ -232,9 +230,11 @@ namespace {
 		setRotation(-90.0);
 
 		// Grab goal
-		driveAndTurnDistanceTiles(-1.1, -90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
-		setGoalClampState(1, 0.5);
-		driveAndTurnDistanceTiles(-0.15, -90.0, 15.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+		driveAndTurnDistanceTiles(-1.2, -90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+		driveAndTurnDistanceTiles(-0.3, -90.0, 60.0, 80.0, autonvals::defaultMoveTilesErrorRange, 1.5);
+		// turnToAngle(-80.0, -halfRobotLengthIn * 1.0);
+		setGoalClampState(1);
+		task::sleep(30);
 
 		//driveAndTurnDistanceTiles(-0.3, 105.0, 40.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		//driveAndTurnDistanceTiles(-0.4, 90.0, 60.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
