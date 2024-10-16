@@ -16,7 +16,15 @@ namespace {
 void preautonControllerThread() {
 	debug::printOnController("No auton selected!");
 	// eeecegg
-	Controller1.rumble(".--.-- -");
+	// Controller1.rumble(".--.-- -");
+	// nyan nyan
+	// const char tune[][10] = { "--.-.", "..---" };
+	// literature
+	const char tune[][10] = { "....-..", "-....-" };
+	for (int i = 0; i < sizeof(tune) / sizeof(tune[0]); i++) {
+		Controller1.rumble(tune[i]);
+		task::sleep(2000);
+	}
 }
 
 void runPreauton() {

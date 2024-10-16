@@ -8,6 +8,7 @@
 #include "Utilities/motionProfile.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
+#include "Utilities/generalUtility.h"
 #include "main.h"
 
 namespace {
@@ -19,7 +20,7 @@ namespace {
 	vector<double> getMotorRevolutions();
 	double getAverageDifference(vector<double> vector1, vector<double> vector2);
 	void driveVelocity(double leftVelocityPct, double rightVelocityPct);
-	void driveVoltage(double leftVoltagePct, double rightVoltagePct);
+	void driveVoltage(double leftVoltagePct, double rightVoltagePct, double clampMaxVoltage);
 
 	double setFrontWings_DelaySec;
 	double setLeftWing_DelaySec;
@@ -73,7 +74,8 @@ namespace auton {
 		// PID
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
-		PIDControl rotateTargetAnglePid(0.45, 0, 0, errorRange); // Reach goal
+		// TODO: Tune pid
+		PIDControl rotateTargetAnglePid(1.5, 0.0003, 0.3, errorRange);
 		timer timeout;
 		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
 			printf("Inertial value:");
@@ -88,7 +90,7 @@ namespace auton {
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
 			// Drive with velocities
-			driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
+			driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 6);
 
 			task::sleep(20);
 		}
@@ -150,7 +152,7 @@ namespace auton {
 
 		// PID
 		// TODO: Tune pid
-		PIDControl driveTargetDistancePid(3.5, 0, 0, errorRange);
+		PIDControl driveTargetDistancePid(12.5, 0, 80, errorRange);
 		PIDControl rotateTargetAnglePid(0.3, 0, 0, defaultTurnAngleErrorRange);
 		PIDControl synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -224,7 +226,7 @@ namespace auton {
 			rightVelocityPct -= finalDeltaVelocityPct;
 
 			// Drive with velocities
-			driveVelocity(leftVelocityPct, rightVelocityPct);
+			driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
 			// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
 
 			task::sleep(20);
@@ -322,7 +324,7 @@ namespace auton {
 			double rightVelocityPct = linearVelocityPct - rotateVelocityPct;
 
 			// Drive with voltage
-			driveVoltage(leftVelocityPct / 100.0 * 12.0, rightVelocityPct / 100.0 * 12.0);
+			driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
 
 			task::sleep(20);
 		}
@@ -476,8 +478,6 @@ namespace {
 	}
 
 	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
-		driveVoltage(leftVelocityPct / 100.0 * 12.0, rightVelocityPct / 100.0 * 12.0);
-		return;
 		// Scale percentages if overshoot
 		double scaleFactor = 100.0 / fmax(100.0, fmax(fabs(leftVelocityPct), fabs(rightVelocityPct)));
 		leftVelocityPct *= scaleFactor;
@@ -487,13 +487,17 @@ namespace {
 		LeftMotors.spin(fwd, leftVelocityPct, pct);
 		RightMotors.spin(fwd, rightVelocityPct, pct);
 	}
-	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt) {
-		double maxVoltage = 11.0;
+	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage) {
+		double maxVoltage = 12.0;
 
 		// Scale voltages if overshoot
 		double scaleFactor = maxVoltage / fmax(maxVoltage, fmax(fabs(leftVoltageVolt), fabs(rightVoltageVolt)));
 		leftVoltageVolt *= scaleFactor;
 		rightVoltageVolt *= scaleFactor;
+
+		// Clamp
+		leftVoltageVolt = genutil::clamp(leftVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
+		rightVoltageVolt = genutil::clamp(rightVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
 
 		// Spin motors
 		LeftMotors.spin(fwd, leftVoltageVolt, volt);

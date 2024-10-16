@@ -1,5 +1,6 @@
 #pragma once
 
 namespace genutil {
-	double clamp(double, double, double);
+	double clamp(double value, double min, double max);
+	double pctToVolt(double pct);
 }
