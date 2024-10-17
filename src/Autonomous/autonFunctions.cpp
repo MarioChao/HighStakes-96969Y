@@ -75,11 +75,10 @@ namespace auton {
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDControl rotateTargetAnglePid(1.5, 0.0003, 0.3, errorRange);
+		PIDControl rotateTargetAnglePid(1.5, 0.0006, 0.3, errorRange);
 		timer timeout;
 		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
-			printf("Inertial value:");
-			std::cout << (InertialSensor.rotation(degrees)) << std::endl;
+			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
 			// Compute rotate error
 			double rotateError = rotation - InertialSensor.rotation();
 			rotateTargetAnglePid.computeFromError(rotateError);
