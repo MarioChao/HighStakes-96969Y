@@ -1,12 +1,11 @@
 #pragma once
 
 enum autonomousType {
-	RedUp,
-	RedDown,
-	BlueUp,
-	BlueDown,
-	AutonSkills,
-	DrivingSkills,
+	RedUp, RedDown,
+	BlueUp, BlueDown,
+	RedUpSafe, RedDownSafe,
+	BlueUpSafe, BlueDownSafe,
+	AutonSkills, DrivingSkills,
 	AllianceWallStake,
 	Test,
 	None

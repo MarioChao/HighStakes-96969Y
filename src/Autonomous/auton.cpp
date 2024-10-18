@@ -17,12 +17,12 @@ namespace {
 
 	void autonTest();
 
-	void runAutonRedDown();
 	void runAutonRedUpNew();
 	void runAutonRedUp();
-	void runAutonBlueDown();
-	void runAutonBlueUp();
+	void runAutonRedDown();
 	void runAutonBlueUpNew();
+	void runAutonBlueUp();
+	void runAutonBlueDown();
 	void runAutonSkills();
 	void runAutonSkillsCrossBarrier();
 	void runAutonSkillsStrategicPush();
@@ -37,24 +37,44 @@ namespace {
 
 void setAutonRunType(int allianceId, autonomousType autonType) {
 	switch (autonType) {
-		case autonomousType::RedDown:
-			printOnController("Auton: RedDown");
-			printf("Nearaw\n");
-			botintake::setFilterColor("blue");
-			break;
 		case autonomousType::RedUp:
 			printOnController("Auton: RedUp");
-			printf("Nearaw Safe\n");
+			printf("RedUp\n");
 			botintake::setFilterColor("blue");
 			break;
-		case autonomousType::BlueDown:
-			printOnController("Auton: BlueDown");
-			printf("Nearel\n");
-			botintake::setFilterColor("red");
+		case autonomousType::RedDown:
+			printOnController("Auton: RedDown");
+			printf("RedDown\n");
+			botintake::setFilterColor("blue");
 			break;
 		case autonomousType::BlueUp:
 			printOnController("Auton: BlueUp");
-			printf("Faraw\n");
+			printf("BlueUp\n");
+			botintake::setFilterColor("red");
+			break;
+		case autonomousType::BlueDown:
+			printOnController("Auton: BlueDown");
+			printf("BlueDown\n");
+			botintake::setFilterColor("red");
+			break;
+		case autonomousType::RedUpSafe:
+			printOnController("Auton: RedUp SF");
+			printf("RedUp Safe\n");
+			botintake::setFilterColor("blue");
+			break;
+		case autonomousType::RedDownSafe:
+			printOnController("Auton: RedDown SF");
+			printf("RedDown Safe\n");
+			botintake::setFilterColor("blue");
+			break;
+		case autonomousType::BlueUpSafe:
+			printOnController("Auton: BlueUp SF");
+			printf("BlueUp Safe\n");
+			botintake::setFilterColor("red");
+			break;
+		case autonomousType::BlueDownSafe:
+			printOnController("Auton: BlueDown SF");
+			printf("BlueDown Safe\n");
 			botintake::setFilterColor("red");
 			break;
 		case autonomousType::AutonSkills:
@@ -109,6 +129,14 @@ void runAutonomous() {
 			break;
 		case autonomousType::BlueDown:
 			runAutonBlueDown();
+			break;
+		case autonomousType::RedUpSafe:
+			break;
+		case autonomousType::RedDownSafe:
+			break;
+		case autonomousType::BlueUpSafe:
+			break;
+		case autonomousType::BlueDownSafe:
 			break;
 		case autonomousType::AutonSkills:
 			// runAutonSkills();
@@ -343,7 +371,7 @@ namespace {
 		turnToAngleVelocity(0.0, 70.0);
 
 		// Intake left up
-		turnToAngle(90.0);
+		turnToAngleVelocity(90.0, 70.0);
 		driveAndTurnDistanceTiles(1.0, 90.0, 100.0, 100.0, autonvals::defaultMoveTilesErrorRange, 1.5);
 		setIntakeState(0);
 		turnToAngle(-125);

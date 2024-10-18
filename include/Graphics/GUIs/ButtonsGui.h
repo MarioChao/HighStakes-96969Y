@@ -48,4 +48,7 @@ public:
 	// Usability
 	void setUsability(bool usability);
 	bool getUsability();
+
+	// Button function
+	void activateButtonFunction();
 };

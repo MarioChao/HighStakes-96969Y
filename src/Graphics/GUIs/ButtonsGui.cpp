@@ -133,3 +133,7 @@ void ButtonGui::setUsability(bool usability) {
 bool ButtonGui::getUsability() {
 	return usable;
 }
+
+void ButtonGui::activateButtonFunction() {
+	runFunction();
+}
