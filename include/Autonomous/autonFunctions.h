@@ -2,9 +2,9 @@
 
 #include "Autonomous/autonValues.h"
 
-using namespace autonvals;
+namespace autonfunctions {
+	using autonvals::defaultMoveTilesErrorRange, autonvals::defaultMoveWithInchesErrorRange, autonvals::defaultTurnAngleErrorRange;
 
-namespace auton {
 	void setRotation(double rotation);
 	void turnToAngle(double rotation, double rotateCenterOffsetIn = 0, double errorRange = defaultTurnAngleErrorRange, double runTimeout = 3);
 	void turnToAngleVelocity(double rotation, double maxVelocityPct = 100.0, double rotateCenterOffsetIn = 0, double errorRange = defaultTurnAngleErrorRange, double runTimeout = 3);

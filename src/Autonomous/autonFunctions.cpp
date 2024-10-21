@@ -38,7 +38,7 @@ namespace {
 	bool useEncoderForPid = false;
 }
 
-namespace auton {
+namespace autonfunctions {
 	/// @brief Set the inertial sensor's absolute angle reading to a specified value. Doesn't turn the robot.
 	/// @param rotation The angle (in degrees) to be set for the current orientation.
 	void setRotation(double rotation) {

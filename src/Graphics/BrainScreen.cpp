@@ -10,10 +10,11 @@
 #include "Controller/odometry.h"
 #include "main.h"
 
-using namespace gfxmain;
-
 // File-local Functions & Variables
 namespace {
+	using namespace gfxmain;
+	using namespace auton;
+
 	// The field and the robot
 	void drawCoordinate(int x, int y, int width, int height);
 	// Flywheel speed graph

@@ -59,7 +59,7 @@ void pre_auton(void) {
 	runPreauton();
 
 	// Debug
-	showAutonRunType();
+	auton::showAutonRunType();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ void autonomous(void) {
 	});
 
 	// ..........................................................................
-	runAutonomous();
+	auton::runAutonomous();
 
 
 	// ..........................................................................
@@ -119,7 +119,7 @@ void usercontrol(void) {
 	drivingTimer.reset();
 
 	// User autonomous
-	if (isUserRunningAuton()) {
+	if (auton::isUserRunningAuton()) {
 		userRunAutonomous();
 	}
 
