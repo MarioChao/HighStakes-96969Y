@@ -13,7 +13,7 @@ namespace {
 	using debug::printOnController;
 
 	bool userRunningAutonomous = false;
-	autonomousType auton_runType = autonomousType::BlueUp;
+	autonomousType auton_runType = autonomousType::DrivingSkills;
 	int auton_allianceId;
 }
 
@@ -63,12 +63,12 @@ namespace auton {
 			case autonomousType::AutonSkills:
 				printOnController("Auton: Skills");
 				printf("AuSk\n");
-				botintake::setFilterColor("none");
+				botintake::setFilterColor("blue");
 				break;
 			case autonomousType::DrivingSkills:
 				printOnController("Driving Skills");
 				printf("DrSk\n");
-				botintake::setFilterColor("none");
+				botintake::setFilterColor("blue");
 				break;
 			default:
 				printOnController("Auton: None");
