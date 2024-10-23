@@ -58,6 +58,9 @@ void switchVideoState(int increment) {
 			// printf("Playing video %d!\n", playingVideoId);
 		}
 
+		// Clear screen
+		Brain.Screen.clearScreen(color::black);
+
 		// Switch video
 		switch (playingVideoId) {
 			case 1:
@@ -94,6 +97,7 @@ void switchVideoState(int increment) {
 			case 0:
 				video.clear();
 				boolVideo.clear();
+				break;
 		}
 		task::sleep(30);
 		frameId = 0;
