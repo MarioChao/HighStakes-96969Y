@@ -1,5 +1,6 @@
 #include "Mechanics/botIntake.h"
 #include "Utilities/debugFunctions.h"
+#include "Utilities/generalUtility.h"
 #include "main.h"
 
 
@@ -8,12 +9,15 @@ namespace {
 	void resolveIntakeToArm();
 
 	double intakeVelocityPct = 100;
-	double intakeVelocityVolt = intakeVelocityPct / 100 * 12;
 
 	double toArmHookVelocityPct = 40.0;
 	double toArmHookReverseVelocityPct = 70.0;
-	double toArmHookVelocityVolt = toArmHookVelocityPct / 100 * 12;
-	double toArmHookReverseVelocityVolt = toArmHookReverseVelocityPct / 100 * 12;
+
+	/* Derived values (don't change) */
+
+	double intakeVelocityVolt = genutil::pctToVolt(intakeVelocityPct);
+
+	/* Factors */
 
 	double hookFactor = 1.0;
 	int hookMode = 0;
@@ -294,13 +298,11 @@ namespace {
 	void resolveIntakeToArm() {
 		// Reverse hook on some detection
 		if (previousRingDetected && !ringDetected) {
-			// if (ringDetected) {
-				// Stop bottom
-			IntakeMotor1.spin(fwd, 10, pct);
+			// IntakeMotor1.spin(fwd, 10, pct);
 
 			// Spin hook sequence
 			// wait(30, msec);
-			IntakeMotor2.spin(fwd, -toArmHookReverseVelocityVolt, volt);
+			IntakeMotor2.spin(fwd, genutil::pctToVolt(-toArmHookReverseVelocityPct), volt);
 			wait(300, msec);
 			IntakeMotor2.spin(fwd, 0, volt);
 			wait(700, msec);
@@ -309,7 +311,7 @@ namespace {
 		else {
 			// Spin both
 			IntakeMotor1.spin(fwd, intakeVelocityVolt, volt);
-			IntakeMotor2.spin(fwd, toArmHookVelocityVolt, volt);
+			IntakeMotor2.spin(fwd, genutil::pctToVolt(toArmHookVelocityPct), volt);
 		}
 	}
 }

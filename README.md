@@ -21,4 +21,5 @@ Our team id is [96969Y](https://www.robotevents.com/teams/VRC/96969Y).
 ## Resources
 
 Here's some tools that we used during our robot's development.
-- [Scratch tool](https://scratch.mit.edu/projects/921506148/) for path planning and autonomous
+- [VEX Path Planner (Scratch tool)](https://scratch.mit.edu/projects/921506148/) for path planning and autonomous
+- [Image Array (Web tool)](https://mariochao.github.io/vex-competition-tools/image-array/) for converting images to arrays for drawing
