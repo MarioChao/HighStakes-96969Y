@@ -2,5 +2,158 @@
 
 /// @brief Run the skills autonomous.
 void autonpaths::runAutonSkills() {
-	
+	timer autontimer;
+	setRotation(-90.0);
+
+	// Score Preload at alliance wall stake
+	setArmHangState(1);
+	task::sleep(300);
+	driveAndTurnDistanceTiles(0.3, -90.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setArmHangState(0);
+	task::sleep(200);
+
+	// Grab bottom mobile goal
+	driveAndTurnDistanceTiles(-0.64, -90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(0);
+	driveAndTurnDistanceTiles(-0.96, 0, 40.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	setGoalClampState(1);
+
+	// Take in 2 rings & score
+	turnToAngle(90.0);
+	setIntakeState(1);
+	driveAndTurnDistanceTiles(0.98, 90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	turnToAngle(146.1);
+	driveAndTurnDistanceTiles(1.79, 146.1, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+
+	// Take in 3 rings in a row & score
+	turnToAngle(140.0);
+	driveAndTurnDistanceTiles(-0.63, 140.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	turnToAngle(270.0);
+	driveAndTurnDistanceTiles(2.13, 270.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+
+	// Take in 1 ring to arm
+	turnToAngle(270.0);
+	turnToAngle(180.0, halfRobotLengthIn * 1.0);
+	setIntakeHookMode(1);
+	driveAndTurnDistanceTiles(1.02, 180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Place mobile goal in corner
+	turnToAngle(90.0);
+	setGoalClampState(0);
+	driveAndTurnDistanceTiles(-0.40, 90.0, 30.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Go to & face neutral wall stake
+	setIntakeState(0);
+	setIntakeHookMode(0);
+	turnToAngle(90.0);
+	setArmHangState(1);
+	driveAndTurnDistanceTiles(2.38, 85.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	turnToAngle(180.0);
+
+	// Score ring at neutral wall stake
+	driveAndTurnDistanceTiles(0.3, 180.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setArmHangState(0);
+	task::sleep(200);
+
+	// Store 2 rings
+	turnToAngle(180.0);
+	driveAndTurnDistanceTiles(-0.5, 180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(90.0);
+	setIntakeBottomState(1);
+	driveAndTurnDistanceTiles(1.0, 90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(0.0);
+	driveAndTurnDistanceTiles(1.0, 0.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Grab bottom mobile goal w/ blue ring
+	turnToAngle(-90.0);
+	driveAndTurnDistanceTiles(-1.5, -90.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setGoalClampState(1);
+
+	// Put mobile goal in corner
+	turnToAngle(-10.0);
+	setGoalClampState(0);
+	driveAndTurnDistanceTiles(-1.41, -10.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Go to middle mobile goal
+	setIntakeState(0);
+	turnToAngle(-26.0);
+	driveAndTurnDistanceTiles(1.58, -26.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Grab middle mobile goal
+	turnToAngle(-180.0);
+	driveAndTurnDistanceTiles(-0.87, -180.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setGoalClampState(0);
+
+	// Score 2 stored rings
+	setIntakeState(1);
+	task::sleep(600);
+
+	// Take in 4 rings & score
+	turnToAngle(-42.0);
+	driveAndTurnDistanceTiles(1.52, -42.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(0);
+	driveAndTurnDistanceTiles(0.98, 0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(90.0);
+	driveAndTurnDistanceTiles(1.68, 90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Take in 1 ring to arm
+	turnToAngle(90.0);
+	turnToAngle(0, halfRobotLengthIn * 1.0);
+	setIntakeHookMode(1);
+	driveAndTurnDistanceTiles(1.10, 0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Put mobile goal in corner
+	turnToAngle(-100.0);
+	setGoalClampState(0);
+	driveAndTurnDistanceTiles(-0.5, -100.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Go to neutral wall stake & store 1 ring
+	setIntakeHookMode(0);
+	setIntakeBottomState(1);
+	setIntakeTopState(0);
+	turnToAngle(-93.4);
+	driveAndTurnDistanceTiles(2.51, -93.4, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+
+	// Score ring at neutral wall stake
+	turnToAngle(0);
+	driveAndTurnDistanceTiles(-0.4, 0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setArmHangState(1);
+	task::sleep(400);
+	driveAndTurnDistanceTiles(0.6, 0.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setArmHangState(0);
+	task::sleep(200);
+
+	// Store 1 more ring
+	driveAndTurnDistanceTiles(-0.62, 0.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(-135.5);
+	driveAndTurnDistanceTiles(1.43, -135.5, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Grab top mobile goal
+	turnToAngle(-270.0);
+	driveAndTurnDistanceTiles(-1.0, -270.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setGoalClampState(1);
+
+	// Score 2 stored rings
+	setIntakeState(1);
+	task::sleep(600);
+
+	// Take in 4 rings & score
+	setRotation(90.0);
+	turnToAngle(0);
+	driveAndTurnDistanceTiles(1.51, 0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(118.0);
+	driveAndTurnDistanceTiles(1.10, 118.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(270.0);
+	driveAndTurnDistanceTiles(1.50, 270.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Place mobile goal in corner
+	turnToAngle(170.0);
+	setGoalClampState(0);
+	driveAndTurnDistanceTiles(-0.60, 170.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Climb
+	turnToAngle(135.0);
+	setArmHangState(1);
+	driveAndTurnDistanceTiles(2.35, 135.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(1.0, 135.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 }

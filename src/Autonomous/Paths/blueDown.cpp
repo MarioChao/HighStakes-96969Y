@@ -2,60 +2,49 @@
 
 /// @brief Run the 15-seconds blue-down autonomous.
 void autonpaths::runAutonBlueDown() {
+	// Mirrored from RedDown
+
 	timer autontimer;
 	setRotation(90.0);
-
 
 	/* Start facing left */
 
 	// Grab middle goal
 	turnToAngle(90.0);
-	driveAndTurnDistanceTiles(-1.4, 90.0, 60);
-	turnToAngle(118.0, -halfRobotLengthIn * 0.5);
-	setGoalClampState(1, 0.85);
-	driveAndTurnDistanceTiles(-0.65, 118.0, 30.0, 100.0, defaultMoveTilesErrorRange, 3.0);
-
-	task::sleep(200);
-	setIntakeState(1);
+	driveAndTurnDistanceTiles(-1.30, 70.0, 100);
+	turnToAngle(120.0, -halfRobotLengthIn * 0.5);
+	setGoalClampState(1, 0.7);
+	driveAndTurnDistanceTiles(-0.76, 120.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 
 	// Score 1 ring
-	//turnToAngle(125.0);
+	task::sleep(200);
+	setIntakeState(1);
+	task::sleep(700);
 
-	turnToAngleVelocity(120.0, 30.0, halfRobotLengthIn * 0.75);
-	driveAndTurnDistanceTiles(0.365, 120.0);
-
-	task::sleep(750);
-
-
-	// Drop goal
-	//setIntakeState(0);
-	turnToAngle(50.0);
+	// Drop goal & face bottom ring
+	turnToAngleVelocity(50, 50.0, -halfRobotLengthIn * 0.85);
 	setGoalClampState(0);
+	setIntakeState(0);
 
 	// Intake bottom ring
-	// turnToAngle(48.5);
 	setIntakeTopState(0);
 	setIntakeBottomState(1);
-	driveAndTurnDistanceTiles(0.6, 50.0, 20.0, 100.0);
-
+	setIntakeBottomState(0, 0.5);
+	driveAndTurnDistanceTiles(0.43, 50, 60.0, 100.0);
 
 	// Grab bottom goal
 	turnToAngle(180.0);
-	driveAndTurnDistanceTiles(-0.4, 180.0);
-	driveAndTurnDistanceTiles(-0.4, 180.0, 20.0);
+	driveAndTurnDistanceTiles(-0.75, 180.0, 30.0);
 	setGoalClampState(1);
-
 
 	// Score 1 ring
 	setIntakeState(1);
 	task::sleep(750);
-
 
 	// Drop goal
 	turnToAngle(270.0);
 	setIntakeState(0);
 	setGoalClampState(0);
-
 
 	// Touch the ladder
 	driveAndTurnDistanceTiles(0.9, 270.0, 30.0, 100.0);
