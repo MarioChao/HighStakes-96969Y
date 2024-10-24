@@ -7,6 +7,7 @@ VideoInfo::VideoInfo() {
 	savedVideo.clear();
 	display_width = 480;
 	display_height = 240;
+	use8BitBuffer = false;
 }
 
 VideoInfo::VideoInfo(
@@ -18,6 +19,14 @@ VideoInfo::VideoInfo(
 	savedVideo = *video;
 	display_width = width;
 	display_height = height;
+	use8BitBuffer = false;
+}
+
+VideoInfo::VideoInfo(double videoFps, double videoFrameSteps, std::vector< std::vector<uint8_t> > *videoBuffer) {
+	fps = videoFps;
+	frameSteps = videoFrameSteps;
+	savedVideoBuffer = *videoBuffer;
+	use8BitBuffer = true;
 }
 
 void VideoInfo::saveVideo(std::vector< std::vector< std::vector<int> > > *video) {
@@ -34,6 +43,20 @@ void VideoInfo::loadDimensions(double *width, double *height) {
 	*height = display_height;
 }
 
+bool VideoInfo::isUsingBuffer() {
+	return use8BitBuffer;
+}
+
+void VideoInfo::saveVideoBuffer(std::vector< std::vector<uint8_t> > *videoBuffer) {
+	savedVideoBuffer = *videoBuffer;
+	use8BitBuffer = true;
+}
+
+void VideoInfo::loadVideoBuffer(std::vector< std::vector<uint8_t> > *videoBuffer, double *frameDelayMs) {
+	*videoBuffer = savedVideoBuffer;
+	*frameDelayMs = (1.0 / fps) * (1000.0 / 1) * (frameSteps);
+}
+
 void VideoInfo::drawFrame(std::vector< std::vector< std::vector<int> > > *video, int x, int y, int width, int height, int frameId) {
 	// Validate frame
 	if (frameId < 0 || frameId >= (int) video->size()) {
@@ -42,6 +65,7 @@ void VideoInfo::drawFrame(std::vector< std::vector< std::vector<int> > > *video,
 
 	// Get frame
 	std::vector< std::vector<int> > frame = (*video)[frameId];
+	// printf("Frame: %d\n", frameId);
 
 	// Draw frame at position
 	int rgb;
@@ -73,4 +97,20 @@ void VideoInfo::drawFrame(std::vector< std::vector< std::vector<int> > > *video,
 		}
 		posY++;
 	}
+}
+
+void VideoInfo::drawBufferFrame(std::vector< std::vector<uint8_t> > *videoBuffer, int x, int y, int frameId) {
+	// Validate frame
+	if (frameId < 0 || frameId >= (int) videoBuffer->size()) {
+		return;
+	}
+
+	// Get frame
+	uint8_t *frame = &(*videoBuffer)[frameId][0];
+	int frameSize = (int) (*videoBuffer)[frameId].size();
+	// printf("%d %d %d\n", frame[0], frame[1], frame[2]);
+	// printf("Size: %d\n", frameSize);
+
+	// Draw frame at position
+	Brain.Screen.drawImageFromBuffer(frame, x, y, frameSize);
 }

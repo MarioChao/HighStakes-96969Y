@@ -20,7 +20,8 @@ void preautonControllerThread() {
 	// nyan nyan
 	// const char tune[][10] = { "--.-.", "..---" };
 	// literature
-	const char tune[][10] = { "....-..", "-....-" };
+	// const char tune[][10] = { "....-..", "-....-" };
+	const char tune[][10] = { "." };
 	for (int i = 0; i < sizeof(tune) / sizeof(tune[0]); i++) {
 		Controller1.rumble(tune[i]);
 		task::sleep(2000);

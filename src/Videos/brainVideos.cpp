@@ -9,6 +9,7 @@ namespace {
 	void drawFrame(int x, int y, int frameId);
 
 	std::vector< std::vector< std::vector<int> > > video;
+	std::vector< std::vector<uint8_t> > videoBuffer;
 	std::vector< std::vector< std::vector<bool> > > boolVideo;
 
 	int videoCount = 6;
@@ -35,9 +36,12 @@ void brainVideosThread() {
 		if (playingVideoId > 0 && frameId >= 0) {
 			drawFrame(0, 0, frameId);
 			frameId++;
+			// Different types of videos
 			if (videoType == 0) {
-				frameId %= (int) video.size();
+				frameId %= (int) videoBuffer.size();
 			} else if (videoType == 1) {
+				frameId %= (int) video.size();
+			} else if (videoType == 2) {
 				frameId %= (int) boolVideo.size();
 			}
 		}
@@ -55,7 +59,7 @@ void switchVideoState(int increment) {
 		playingVideoId += increment;
 		playingVideoId %= (videoCount + 1);
 		if (playingVideoId > 0) {
-			// printf("Playing video %d!\n", playingVideoId);
+			printf("Playing video %d!\n", playingVideoId);
 		}
 
 		// Clear screen
@@ -64,35 +68,31 @@ void switchVideoState(int increment) {
 		// Switch video
 		switch (playingVideoId) {
 			case 1:
-				teamLogo.loadVideo(&video, &frameDelayMs);
-				teamLogo.loadDimensions(&display_width, &display_height);
-				videoType = 0;
+				teamLogo.loadVideoBuffer(&videoBuffer, &frameDelayMs);
+				videoType = !teamLogo.isUsingBuffer();
 				break;
 			case 2:
 				yoruNiKakeru.loadVideo(&video, &frameDelayMs);
 				yoruNiKakeru.loadDimensions(&display_width, &display_height);
-				videoType = 0;
+				videoType = 1;
 				break;
 			case 3:
 				badApple.loadVideo(&boolVideo, &frameDelayMs);
 				badApple.loadDimensions(&display_width, &display_height);
 				boolVideoColors = badApple.getColors();
-				videoType = 1;
+				videoType = 2;
 				break;
 			case 4:
 				ningning.loadVideo(&video, &frameDelayMs);
-				ningning.loadDimensions(&display_width, &display_height);
-				videoType = 0;
+				videoType = !ningning.isUsingBuffer();
 				break;
 			case 5:
 				ningning2.loadVideo(&video, &frameDelayMs);
-				ningning2.loadDimensions(&display_width, &display_height);
-				videoType = 0;
+				videoType = !ningning2.isUsingBuffer();
 				break;
 			case 6:
 				ningning3.loadVideo(&video, &frameDelayMs);
-				ningning3.loadDimensions(&display_width, &display_height);
-				videoType = 0;
+				videoType = !ningning3.isUsingBuffer();
 				break;
 			case 0:
 				video.clear();
@@ -109,10 +109,12 @@ void switchVideoState(int increment) {
 
 namespace {
 	void drawFrame(int x, int y, int frameId) {
-		// Two types of videos
+		// Different types of videos
 		if (videoType == 0) {
-			VideoInfo::drawFrame(&video, x, y, display_width, display_height, frameId);
+			VideoInfo::drawBufferFrame(&videoBuffer, x, y, frameId);
 		} else if (videoType == 1) {
+			VideoInfo::drawFrame(&video, x, y, display_width, display_height, frameId);
+		} else if (videoType == 2) {
 			BoolVideoInfo::drawFrame(&boolVideo, x, y, display_width, display_height, frameId, boolVideoColors.first, boolVideoColors.second);
 		}
 	}
