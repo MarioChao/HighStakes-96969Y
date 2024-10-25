@@ -96,7 +96,9 @@ void switchVideoState(int increment) {
 
 		// Refresh screen
 		task::sleep(30);
-		Brain.Screen.clearScreen(color::black);
+		if (playingVideoId > 0) {
+			Brain.Screen.clearScreen(color::black);
+		}
 		frameId = 0;
 		task::sleep(30);
 
