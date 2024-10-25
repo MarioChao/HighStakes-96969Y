@@ -22,6 +22,8 @@ namespace {
 	double hookFactor = 1.0;
 	int hookMode = 0;
 
+	bool autoHookSwitchMode = true;
+
 	int resolveTopState = 0;
 	int resolveBottomState = 0;
 
@@ -306,6 +308,10 @@ namespace {
 			wait(300, msec);
 			IntakeMotor2.spin(fwd, 0, volt);
 			wait(700, msec);
+
+			if (autoHookSwitchMode) {
+				hookMode = 0;
+			}
 		}
 		// Otherwise spin hook normally
 		else {

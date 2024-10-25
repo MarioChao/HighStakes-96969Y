@@ -1,4 +1,6 @@
 #include "Videos/brainVideos.h"
+#include "Videos/boolVideoInfo.h"
+#include "Videos/videoInfo.h"
 #include "Videos/VideoInfos/yoruNiKakeru.h"
 #include "Videos/VideoInfos/badApple.h"
 #include "Videos/VideoInfos/teamLogo.h"
@@ -6,6 +8,7 @@
 #include "main.h"
 
 namespace {
+	void handleLoadVideo(VideoInfo &videoInfo);
 	void drawFrame(int x, int y, int frameId);
 
 	std::vector< std::vector< std::vector<int> > > video;
@@ -62,44 +65,38 @@ void switchVideoState(int increment) {
 			printf("Playing video %d!\n", playingVideoId);
 		}
 
-		// Clear screen
-		Brain.Screen.clearScreen(color::black);
-
 		// Switch video
 		switch (playingVideoId) {
 			case 1:
-				teamLogo.loadVideoBuffer(&videoBuffer, &frameDelayMs);
-				videoType = !teamLogo.isUsingBuffer();
+				// teamLogo.loadVideo(&video, &frameDelayMs);
+				// teamLogo.loadDimensions(&display_width, &display_height);
+				// videoType = !teamLogo.isUsingBuffer();
+				handleLoadVideo(teamLogo);
 				break;
 			case 2:
-				yoruNiKakeru.loadVideo(&video, &frameDelayMs);
-				yoruNiKakeru.loadDimensions(&display_width, &display_height);
-				videoType = 1;
+				handleLoadVideo(yoruNiKakeru);
 				break;
 			case 3:
-				badApple.loadVideo(&boolVideo, &frameDelayMs);
-				badApple.loadDimensions(&display_width, &display_height);
-				boolVideoColors = badApple.getColors();
-				videoType = 2;
+				handleLoadVideo(badApple);
 				break;
 			case 4:
-				ningning.loadVideo(&video, &frameDelayMs);
-				videoType = !ningning.isUsingBuffer();
+				handleLoadVideo(ningning);
 				break;
 			case 5:
-				ningning2.loadVideo(&video, &frameDelayMs);
-				videoType = !ningning2.isUsingBuffer();
+				handleLoadVideo(ningning2);
 				break;
 			case 6:
-				ningning3.loadVideo(&video, &frameDelayMs);
-				videoType = !ningning3.isUsingBuffer();
+				handleLoadVideo(ningning3);
 				break;
 			case 0:
 				video.clear();
 				boolVideo.clear();
 				break;
 		}
+
+		// Refresh screen
 		task::sleep(30);
+		Brain.Screen.clearScreen(color::black);
 		frameId = 0;
 		task::sleep(30);
 
@@ -108,6 +105,17 @@ void switchVideoState(int increment) {
 }
 
 namespace {
+	void handleLoadVideo(VideoInfo &videoInfo) {
+		if (videoInfo.isUsingBuffer()) {
+			videoInfo.loadVideoBuffer(&videoBuffer, &frameDelayMs);
+			videoType = 0;
+		} else {
+			videoInfo.loadVideo(&video, &frameDelayMs);
+			videoInfo.loadDimensions(&display_width, &display_height);
+			videoType = 1;
+		}
+	}
+
 	void drawFrame(int x, int y, int frameId) {
 		// Different types of videos
 		if (videoType == 0) {
