@@ -9,6 +9,7 @@
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
+#include "Utilities/driftCorrection.h"
 #include "main.h"
 
 namespace {
@@ -26,16 +27,15 @@ namespace {
 	double setLeftWing_DelaySec;
 	double setRightWing_DelaySec;
 	double setWings_DelaySec;
-	double setGoalClamp_DelaySec;
 	bool setFrontWings_WingState;
 	bool setLeftWing_LeftWingState;
 	bool setRightWing_RightWingState;
 	bool setWings_WingsState;
-	bool setGoalClamp_ClampState;
-
 
 	bool useRotationSensorForPid = false;
 	bool useEncoderForPid = false;
+
+	DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
 }
 
 namespace autonfunctions {
@@ -61,6 +61,9 @@ namespace autonfunctions {
 	/// @param errorRange The allowed degree errors the target angle.
 	/// @param runTimeout Maximum seconds the function will run for.
 	void turnToAngleVelocity(double rotation, double maxVelocityPct, double rotateCenterOffsetIn, double errorRange, double runTimeout) {
+		// Set corrector
+		driftCorrector.setInitial();
+
 		// Center of rotations
 		double leftRotateRadiusIn = halfRobotLengthIn + rotateCenterOffsetIn;
 		double rightRotateRadiusIn = halfRobotLengthIn - rotateCenterOffsetIn;
@@ -69,7 +72,6 @@ namespace autonfunctions {
 		// Velocity factors
 		double leftVelocityFactor = leftRotateRadiusIn / averageRotateRadiusIn;
 		double rightVelocityFactor = -rightRotateRadiusIn / averageRotateRadiusIn;
-
 
 		// PID
 		// L_vel = L_dist / time
@@ -96,6 +98,9 @@ namespace autonfunctions {
 
 		// Stop
 		LeftRightMotors.stop(brake);
+
+		// Correct
+		driftCorrector.correct();
 	}
 
 	/// @brief Drive straight in the direction of the robot for a specified tile distance.
@@ -140,6 +145,9 @@ namespace autonfunctions {
 		// Test
 		// driveAndTurnDistanceInchesMotionProfile(distanceInches, targetRotation, maxVelocityPct, maxTurnVelocityPct, errorRange, runTimeout);
 		// return;
+
+		// Set corrector
+		driftCorrector.setInitial();
 
 		// Variables
 		// double motorTargetDistanceRev = distanceInches * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio);
@@ -233,6 +241,9 @@ namespace autonfunctions {
 
 		// Stop
 		LeftRightMotors.stop(brake);
+
+		// Correct
+		driftCorrector.correct();
 	}
 
 	/// @brief Drive the robot for a specified distance in inches and rotate it to a specified rotation in degrees.
@@ -370,17 +381,6 @@ namespace autonfunctions {
    /// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
 	void setGoalClampState(bool state, double delaySec) {
 		goalclamp::setState(state, delaySec);
-		// setGoalClamp_ClampState = state;
-		// setGoalClamp_DelaySec = delaySec;
-		// task setPneumaticState([] () -> int {
-		//     int taskState = setGoalClamp_ClampState;
-
-		//     if (setGoalClamp_DelaySec > 1e-9) {
-		//         task::sleep(setGoalClamp_DelaySec * 1000);
-		//     }
-		//     GoalClampPneumatic.set(taskState);
-		//     return 1;
-		// });
 	}
 
 	/// @brief Set the state of Front Wings's pneumatic.
