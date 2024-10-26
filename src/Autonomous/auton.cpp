@@ -8,7 +8,6 @@
 
 namespace {
 	using namespace auton;
-	using namespace autonpaths;
 
 	using debug::printOnController;
 
@@ -101,16 +100,16 @@ namespace auton {
 		userRunningAutonomous = false;
 		switch (auton_runType) {
 			case autonomousType::RedUp:
-				runAutonRedUpNew();
+				autonpaths::runAutonRedUp();
 				break;
 			case autonomousType::RedDown:
-				runAutonRedDown();
+				autonpaths::runAutonRedDown();
 				break;
 			case autonomousType::BlueUp:
-				runAutonBlueUpNew();
+				autonpaths::runAutonBlueUp();
 				break;
 			case autonomousType::BlueDown:
-				runAutonBlueDown();
+				autonpaths::runAutonBlueDown();
 				break;
 			case autonomousType::RedUpSafe:
 				break;
@@ -121,13 +120,13 @@ namespace auton {
 			case autonomousType::BlueDownSafe:
 				break;
 			case autonomousType::AutonSkills:
-				runAutonSkills();
+				autonpaths::runAutonSkills();
 				break;
 			case autonomousType::AllianceWallStake:
-				runAllianceWallStake();
+				autonpaths::runAllianceWallStake();
 				break;
 			case autonomousType::Test:
-				autonTest();
+				autonpaths::autonTest();
 			default:
 				break;
 		}

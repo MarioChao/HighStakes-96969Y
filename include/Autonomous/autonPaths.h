@@ -13,10 +13,8 @@ namespace autonpaths {
 
 	void autonTest();
 
-	void runAutonRedUpNew();
 	void runAutonRedUp();
 	void runAutonRedDown();
-	void runAutonBlueUpNew();
 	void runAutonBlueUp();
 	void runAutonBlueDown();
 	void runAutonSkills();
