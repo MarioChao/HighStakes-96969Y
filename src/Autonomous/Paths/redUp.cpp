@@ -27,7 +27,6 @@ void autonpaths::runAutonRedUp() {
 	// Intake 2nd middle up
 	turnToAngle(0.0);
 	turnToAngleVelocity(35.0, 80.0, halfRobotLengthIn * 1.37);
-	// turnToAngleVelocity(0.0, 80.0);
 
 	// Intake left up
 	turnToAngle(-90.0);
@@ -48,6 +47,6 @@ void autonpaths::runAutonRedUp() {
 	}
 	setArmHangState(0);
 	setIntakeState(0, 0.6);
-	driveAndTurnDistanceTiles(2.0, 120.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(2.2, 120.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	driveAndTurnDistanceTiles(0.5, 120.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 }
