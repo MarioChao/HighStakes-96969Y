@@ -160,7 +160,7 @@ namespace autonfunctions {
 		// PID
 		// TODO: Tune pid
 		PIDControl driveTargetDistancePid(12.5, 0, 80, errorRange);
-		PIDControl rotateTargetAnglePid(0.3, 0, 0, defaultTurnAngleErrorRange);
+		PIDControl rotateTargetAnglePid(0.75, 0.001, 0.15, defaultTurnAngleErrorRange);
 		PIDControl synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
 		timer timeout;
