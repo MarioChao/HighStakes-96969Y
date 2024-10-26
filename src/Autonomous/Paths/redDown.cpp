@@ -9,7 +9,7 @@ void autonpaths::runAutonRedDown() {
 
 	// Grab middle goal
 	turnToAngle(-90.0);
-	driveAndTurnDistanceTiles(-1.30, -90.0, 100);
+	driveAndTurnDistanceTiles(-1.30, -90.0, 100.0);
 	turnToAngle(-120.0, halfRobotLengthIn * 0.5);
 	setGoalClampState(1, 0.7);
 	driveAndTurnDistanceTiles(-0.76, -120.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
@@ -39,10 +39,9 @@ void autonpaths::runAutonRedDown() {
 	setIntakeState(1);
 	task::sleep(750);
 
-	// Drop goal
+	// Face the ladder
 	turnToAngle(-270.0);
 	setIntakeState(0);
-	setGoalClampState(0);
 
 	// Touch the ladder
 	driveAndTurnDistanceTiles(0.9, -270.0, 30.0, 100.0);

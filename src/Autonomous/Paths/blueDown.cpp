@@ -11,10 +11,10 @@ void autonpaths::runAutonBlueDown() {
 
 	// Grab middle goal
 	turnToAngle(90.0);
-	driveAndTurnDistanceTiles(-1.30, 70.0, 100);
-	turnToAngle(120.0, -halfRobotLengthIn * 0.5);
+	driveAndTurnDistanceTiles(-1.35, 80.0, 90.0);
+	turnToAngle(120.0, -halfRobotLengthIn * 0.6);
 	setGoalClampState(1, 0.7);
-	driveAndTurnDistanceTiles(-0.76, 120.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(-0.68, 120.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 
 	// Score 1 ring
 	task::sleep(200);
@@ -22,7 +22,7 @@ void autonpaths::runAutonBlueDown() {
 	task::sleep(700);
 
 	// Drop goal & face bottom ring
-	turnToAngleVelocity(50, 50.0, -halfRobotLengthIn * 0.85);
+	turnToAngleVelocity(55, 50.0, -halfRobotLengthIn * 0.85);
 	setGoalClampState(0);
 	setIntakeState(0);
 
@@ -30,7 +30,7 @@ void autonpaths::runAutonBlueDown() {
 	setIntakeTopState(0);
 	setIntakeBottomState(1);
 	setIntakeBottomState(0, 0.5);
-	driveAndTurnDistanceTiles(0.43, 50, 60.0, 100.0);
+	driveAndTurnDistanceTiles(0.6, 55, 60.0, 100.0);
 
 	// Grab bottom goal
 	turnToAngle(180.0);
@@ -41,10 +41,9 @@ void autonpaths::runAutonBlueDown() {
 	setIntakeState(1);
 	task::sleep(750);
 
-	// Drop goal
+	// Face the ladder
 	turnToAngle(270.0);
 	setIntakeState(0);
-	setGoalClampState(0);
 
 	// Touch the ladder
 	driveAndTurnDistanceTiles(0.9, 270.0, 30.0, 100.0);
