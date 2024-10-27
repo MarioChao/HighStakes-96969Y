@@ -16,31 +16,31 @@ void autonpaths::runAutonBlueUp() {
 
 	// Grab goal
 	setGoalClampState(1, 1.4);
-	driveAndTurnDistanceTiles(-1.75, 120.0, 50.0, 15.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(-1.70, 115.0, 38.0, 15.0, defaultMoveTilesErrorRange, 2.0);
 	// turnToAngle(-80.0, -halfRobotLengthIn * 1.0);
 	task::sleep(200);
 
 	// Intake middle up
 	setIntakeState(1);
-	turnToAngle(-40.0);
-	driveAndTurnDistanceTiles(0.95, -40.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(-0.16, -40.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(-42.0);
+	driveAndTurnDistanceTiles(0.92, -42.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-0.10, -42.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Intake 2nd middle up
 	turnToAngle(0.0);
-	turnToAngleVelocity(-35.0, 80.0, -halfRobotLengthIn * 1.37);
+	turnToAngleVelocity(-45.0, 80.0, -halfRobotLengthIn * 1.1);
 
-	// Intake left up
-	turnToAngle(90.0);
-	driveAndTurnDistanceTiles(1.0, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	// Intake right up
+	turnToAngle(92.0);
+	driveAndTurnDistanceTiles(1.3, 92.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Intake corner
 	setArmHangState(1);
-	turnToAngle(58.0);
-	driveAndTurnDistanceTiles(1.65, 58.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-	driveAndTurnDistanceTiles(0.3, 58.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.2);
+	turnToAngle(50.0);
+	driveAndTurnDistanceTiles(1.65, 50.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(0.3, 50.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.2);
 	task::sleep(200);
-	driveAndTurnDistanceTiles(-0.50, 58.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(-0.50, 50.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Touch ladder
 	turnToAngle(-120.0);
