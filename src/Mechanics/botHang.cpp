@@ -24,7 +24,6 @@ namespace bothang {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-			printf("New state: %d\n", taskState);
 			HangPneumatic.set(taskState);
 
 			return 1;

@@ -93,7 +93,6 @@ namespace botintake {
 
 	void preauton() {
 
-
 	}
 
 	void setState(int state, double delaySec) {
@@ -103,30 +102,24 @@ namespace botintake {
 			resolveTopState = state;
 			resolveBottomState = state;
 
-
 			return;
 		}
-
 
 		// Set global variables
 		_taskState = state;
 		_taskDelay = delaySec;
-
 
 		task setState([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;
 
-
 			// Delay setting state
 			task::sleep(taskDelay * 1000);
-
 
 			// Set state here
 			resolveTopState = taskState;
 			resolveBottomState = taskState;
-
 
 			return 1;
 		});
@@ -139,10 +132,8 @@ namespace botintake {
 			// Set state here
 			resolveTopState = state;
 
-
 			return;
 		}
-
 
 		// Set global variables
 		_taskState = state;
@@ -171,29 +162,23 @@ namespace botintake {
 			// Set state here
 			resolveBottomState = state;
 
-
 			return;
 		}
-
 
 		// Set global variables
 		_taskState = state;
 		_taskDelay = delaySec;
-
 
 		task setState([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;
 
-
 			// Delay setting state
 			task::sleep(taskDelay * 1000);
 
-
 			// Set state here
 			resolveBottomState = taskState;
-
 
 			return 1;
 		});
