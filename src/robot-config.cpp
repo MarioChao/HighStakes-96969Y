@@ -5,6 +5,10 @@ using namespace vex;
 // A global instance of brain used for printing to the V5 brain screen
 brain Brain;
 
+// PORT22 is used for the Brain's default ThreeWirePort
+
+const int emptyPort = PORT4;
+
 // Devices
 
 controller Controller1(primary);
@@ -12,11 +16,11 @@ controller Controller2(partner);
 
 // Wheel motors
 
-motor LeftMotorA(PORT1, ratio6_1, true);
-motor LeftMotorB(PORT18, ratio6_1, true);
-motor LeftMotorC(PORT17, ratio6_1);
-motor RightMotorA(PORT2, ratio6_1);
-motor RightMotorB(PORT21, ratio6_1);
+motor LeftMotorA(PORT15, ratio6_1, true);
+motor LeftMotorB(PORT17, ratio6_1, true);
+motor LeftMotorC(PORT16, ratio6_1);
+motor RightMotorA(PORT20, ratio6_1);
+motor RightMotorB(PORT18, ratio6_1);
 motor RightMotorC(PORT19, ratio6_1, true);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
@@ -24,19 +28,15 @@ motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA, Rig
 
 // Intake motors
 
-motor IntakeMotor1(PORT15, ratio6_1, true);
-motor IntakeMotor2(PORT16, ratio6_1);
+motor IntakeMotor1(PORT1, ratio6_1, true);
+motor IntakeMotor2(emptyPort, ratio6_1);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 //arm motor
 
-motor ArmMotor(PORT14, ratio36_1);
+motor ArmMotor(emptyPort, ratio36_1);
 
 // Expander
-
-// PORT22 is used for the Brain's default ThreeWirePort
-
-const int emptyPort = PORT4;
 
 triport Expander1(emptyPort);
 
@@ -48,22 +48,23 @@ pneumatics RightWingPneumatic(Expander1.C);
 
 pneumatics IntakeLiftPneumatic(Expander1.B);
 pneumatics HangPneumatic(Expander1.E);
-pneumatics GoalClampPneumatic(Brain.ThreeWirePort.A);
-pneumatics BotArmPneumatics(Brain.ThreeWirePort.B);
-pneumatics SwordPneumatics(Brain.ThreeWirePort.C);
+pneumatics GoalClampPneumatic(Expander1.A);
+pneumatics BotArmPneumatics(Expander1.B);
+pneumatics SwordPneumatics(Expander1.C);
 
 
 // Sensors
 
-encoder LookEncoder(Expander1.C); // .G .H
-rotation LookRotation(PORT20);
-rotation RightRotation(PORT3);
+encoder LookEncoder(Expander1.A); // .G .H
+encoder RightEncoder(Brain.ThreeWirePort.A); // .G .H
+rotation LookRotation(PORT14);
+rotation RightRotation(emptyPort);
 
-inertial InertialSensor(PORT9);
+inertial InertialSensor(emptyPort);
 distance DistanceSensor(emptyPort);
 
-distance RingDistanceSensor(PORT8);
-optical RingOpticalSensor(PORT7);
+distance RingDistanceSensor(emptyPort);
+optical RingOpticalSensor(emptyPort);
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
