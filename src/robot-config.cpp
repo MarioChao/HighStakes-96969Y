@@ -5,6 +5,10 @@ using namespace vex;
 // A global instance of brain used for printing to the V5 brain screen
 brain Brain;
 
+// PORT22 is used for the Brain's default ThreeWirePort
+
+const int emptyPort = PORT4;
+
 // Devices
 
 controller Controller1(primary);
@@ -33,10 +37,6 @@ motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 motor ArmMotor(PORT14, ratio36_1);
 
 // Expander
-
-// PORT22 is used for the Brain's default ThreeWirePort
-
-const int emptyPort = PORT4;
 
 triport Expander1(emptyPort);
 
