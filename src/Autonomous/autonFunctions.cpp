@@ -1,15 +1,16 @@
 #include "Autonomous/autonFunctions.h"
 
+#include "AutonUtilities/driftCorrection.h"
+#include "AutonUtilities/pidControl.h"
+#include "AutonUtilities/motionProfile.h"
+
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botArmPneumatics.h"
 #include "Mechanics/goalClamp.h"
 #include "Utilities/angleFunctions.h"
-#include "Utilities/pidControl.h"
-#include "Utilities/motionProfile.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
-#include "Utilities/driftCorrection.h"
 #include "main.h"
 
 namespace {
