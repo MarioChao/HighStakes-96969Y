@@ -19,4 +19,12 @@ namespace genutil {
 	bool isWithin(double value, double target, double withinRange) {
 		return fabs(value - target) <= withinRange;
 	}
+
+	double toRadians(double degrees) {
+		return degrees * M_PI / 180.0;
+	}
+
+	double toDegrees(double radians) {
+		return radians * 180.0 / M_PI;
+	}
 }
