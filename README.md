@@ -10,11 +10,13 @@ Modify robot specifications in [`robotInfo.cpp`](./src/Utilities/robotInfo.cpp).
 
 ## About
 
-Our main control program is organized into the categories [`Autonomous`](./include/Autonomous/), [`Controller`](./include/Controller/), [`Mechanics`](./include/Mechanics/), and [`Utilities`](./include/Utilities/).
+Our main control program is organized into the categories [`Autonomous`](./include/Autonomous/), [`Controller`](./include/Controller/), and [`Mechanics`](./include/Mechanics/).
+
+Our utility functions are organized into [`AutonUtilities`](./include/AutonUtilities/) and [`Utilities`](./include/Utilities/).
 
 Our cosmetic program is organized into the categories [`Graphics`](./include/Graphics/) and [`Videos`](./include/Videos/).
 
-Our team id is [96969Y](https://www.robotevents.com/teams/VRC/96969Y).
+Our team id is [96969Y](https://www.robotevents.com/teams/VRC/96969Y), and our website is [here](https://mariochao.github.io/vex-pas1/).
 
 # Extra
 

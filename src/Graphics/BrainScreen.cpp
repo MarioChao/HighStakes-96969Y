@@ -2,12 +2,12 @@
 
 #include "Graphics/BrainScreen.h"
 #include "Autonomous/auton.h"
+#include "AutonUtilities/odometry.h"
 #include "Graphics/GraphicMain.h"
 #include "Graphics/GUIs/ButtonsGui.h"
 #include "Graphics/GUIs/ShapesGui.h"
 #include "Graphics/GUIs/SlidersGui.h"
 #include "Graphics/GUIs/DocksGui.h"
-#include "Controller/odometry.h"
 #include "main.h"
 
 // File-local Functions & Variables
@@ -598,13 +598,13 @@ namespace {
 
 	// Getters
 	double getRobotX() {
-		return odometry::getX();
+		return mainOdometry.getX();
 	}
 	double getRobotY() {
-		return odometry::getY();
+		return mainOdometry.getY();
 	}
 	double getRobotAngle() {
-		return odometry::getAngle();
+		return mainOdometry.getAngle();
 	}
 	double getMotorExpectedSpeed() {
 		return motSpeedRpm;
