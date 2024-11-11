@@ -5,11 +5,12 @@
 #include "Utilities/generalUtility.h"
 #include "main.h"
 
-// File-local field
+// File-local variables
 
 namespace {
 	const double cosAngleWithinRange = 1e-5;
 }
+
 
 // Public functions
 
@@ -157,6 +158,7 @@ double Odometry::getX() { return x; }
 double Odometry::getY() { return y; }
 
 double Odometry::getAngle() { return angle; }
+
 
 // Private functions
 
