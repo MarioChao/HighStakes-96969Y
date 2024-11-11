@@ -40,7 +40,6 @@ namespace goalclamp {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-			printf("New state: %d\n", taskState);
 			GoalClampPneumatic.set(taskState);
 
 			return 1;

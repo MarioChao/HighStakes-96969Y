@@ -4,7 +4,7 @@
 
 class DriftCorrection {
 public:
-	DriftCorrection(inertial &sensor, double perClockwiseRevolutionDrift, double peCCWRevolutionDrift);
+	DriftCorrection(inertial &sensor, double perClockwiseRevolutionDrift, double perCCWRevolutionDrift);
 	void setInitial();
 	void correct();
 private:

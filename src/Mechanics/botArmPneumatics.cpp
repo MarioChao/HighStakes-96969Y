@@ -28,7 +28,7 @@ namespace botarmpneu {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-			BotArmPneumatics.set(_taskState);
+			BotArmPneumatics.set(taskState);
 			pressedCount++;
 
 			return 1;
