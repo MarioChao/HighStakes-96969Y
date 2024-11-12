@@ -19,34 +19,35 @@ void autonpaths::runAutonRedUp() {
 	task::sleep(200);
 
 	// Intake middle up
-	setIntakeState(1);
 	turnToAngle(47.0);
+	setIntakeState(1);
 	driveAndTurnDistanceTiles(0.85, 47.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(-0.16, 47.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-0.12, 47.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Intake 2nd middle up
-	turnToAngle(0.0);
-	turnToAngleVelocity(40.0, 80.0, halfRobotLengthIn * 1.3);
+	turnToAngle(5.0);
+	turnToAngleVelocity(50.0, 80.0, halfRobotLengthIn * 1.3);
+	task::sleep(200);
 
 	// Intake left up
-	turnToAngle(-85.0);
-	driveAndTurnDistanceTiles(1.3, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngleVelocity(-88.0, 50.0);
+	driveAndTurnDistanceTiles(1.3, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Intake corner
 	setArmHangState(1);
-	turnToAngle(-50.0);
-	driveAndTurnDistanceTiles(1.65, -50.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-	driveAndTurnDistanceTiles(0.3, -50.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.2);
-	task::sleep(200);
-	driveAndTurnDistanceTiles(-0.50, -50.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	turnToAngle(-55.0);
+	driveAndTurnDistanceTiles(1.65, -55.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(0.7, -45.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.3);
+	task::sleep(600);
+	driveAndTurnDistanceTiles(-0.50, -45.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Touch ladder
-	turnToAngle(120.0);
+	turnToAngle(155.0);
 	while (autontimer.value() < 13.0) {
 		task::sleep(20);
 	}
 	setArmHangState(0);
 	setIntakeState(0, 0.6);
-	driveAndTurnDistanceTiles(2.2, 120.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(0.5, 120.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(2.2, 155.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(0.5, 155.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 }
