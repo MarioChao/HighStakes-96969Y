@@ -36,7 +36,8 @@ namespace {
 	bool useRotationSensorForPid = false;
 	bool useEncoderForPid = false;
 
-	DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
+	// DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
+	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 }
 
 namespace autonfunctions {
@@ -74,11 +75,14 @@ namespace autonfunctions {
 		double leftVelocityFactor = leftRotateRadiusIn / averageRotateRadiusIn;
 		double rightVelocityFactor = -rightRotateRadiusIn / averageRotateRadiusIn;
 
+		// Set stopping
+		LeftRightMotors.setStopping(brake);
+
 		// PID
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDControl rotateTargetAnglePid(1.5, 0.0013, 0.3, errorRange);
+		PIDControl rotateTargetAnglePid(1.75, 0.001, 0.3, errorRange);
 		timer timeout;
 		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
@@ -92,7 +96,7 @@ namespace autonfunctions {
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
 			// Drive with velocities
-			driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 6);
+			driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
 
 			task::sleep(20);
 		}
@@ -241,7 +245,7 @@ namespace autonfunctions {
 		}
 
 		// Stop
-		LeftRightMotors.stop(brake);
+		LeftRightMotors.stop(coast);
 
 		// Correct
 		driftCorrector.correct();
