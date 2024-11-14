@@ -25,7 +25,7 @@ void autonpaths::runAutonRedUp() {
 
 	// Intake 2nd middle up
 	turnToAngleVelocity(5.0, 40.0);
-	turnToAngleVelocity(35.0, 80.0, halfRobotLengthIn * 1.25);
+	turnToAngleVelocity(40.0, 90.0, halfRobotLengthIn * 1.25);
 	task::sleep(100);
 
 	// Intake left up
@@ -36,16 +36,17 @@ void autonpaths::runAutonRedUp() {
 	setArmHangState(1);
 	turnToAngle(-50.0);
 	driveAndTurnDistanceTiles(0.95, -50.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	task::sleep(200);
 	driveAndTurnDistanceTiles(1.0, -45.0, 40.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	task::sleep(600);
-	driveAndTurnDistanceTiles(-0.50, -40.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(-0.50, -42.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Touch ladder
-	turnToAngle(-40.0);
+	turnToAngle(-42.0);
 	while (autontimer.value() < 13.0) {
 		task::sleep(20);
 	}
 	setArmHangState(0, 0.5);
 	setIntakeState(0, 0.5);
-	driveAndTurnDistanceTiles(-2.25, -40.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.6);
+	driveAndTurnDistanceTiles(-2.24, -42.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.6);
 }
