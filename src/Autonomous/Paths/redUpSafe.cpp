@@ -1,6 +1,6 @@
 #include "Autonomous/autonPaths.h"
 
-/// @brief Run the 15-seconds new red-up autonomous.
+/// @brief Run the 15-seconds new red-up safe autonomous.
 void autonpaths::runAutonRedUpSafe() {
 	timer autontimer;
 	setRotation(-120.0);
