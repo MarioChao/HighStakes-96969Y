@@ -14,6 +14,7 @@ namespace autonpaths {
 	void autonTest();
 
 	void runAutonRedUp();
+	void runAutonRedUpSafe();
 	void runAutonRedDown();
 	void runAutonBlueUp();
 	void runAutonBlueDown();
