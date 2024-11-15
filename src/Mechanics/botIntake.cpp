@@ -8,7 +8,7 @@ namespace {
 	void resolveIntake();
 	void resolveIntakeToArm();
 
-	double intakeVelocityPct = 100;
+	double intakeVelocityPct = 80;
 
 	double toArmHookVelocityPct = 40.0;
 	double toArmHookReverseVelocityPct = 70.0;
