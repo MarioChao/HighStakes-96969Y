@@ -28,8 +28,8 @@ motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA, Rig
 
 // Intake motors
 
-motor IntakeMotor1(PORT1, ratio6_1, true);
-motor IntakeMotor2(PORT4, ratio18_1);
+motor IntakeMotor1(PORT1, ratio6_1);
+motor IntakeMotor2(PORT4, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 //arm motor
