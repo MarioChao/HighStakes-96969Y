@@ -84,9 +84,6 @@ namespace botintake2 {
 				resolveIntakeToArm();
 			}
 
-			// if (Controller1.ButtonX.pressing()){
-			//     printf("torque: %.3f\n", IntakeMotor2.torque());
-			// }
 			task::sleep(5);
 		}
 	}
