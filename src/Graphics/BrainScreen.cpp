@@ -687,6 +687,6 @@ namespace {
 		Brain.Screen.setFillColor(color::transparent);
 		Brain.Screen.setFont(fontType::mono20);
 		Brain.Screen.printAt(10, 130, 1, "Lavg: %07.3f W, Ravg: %07.3f W", leftAvg_watt, rightAvg_watt);
-		Brain.Screen.printAt(10, 155, 1, "Intake 1: %07.3f W, Intake 2: %07.3f W", leftAvg_watt, rightAvg_watt);
+		Brain.Screen.printAt(10, 155, 1, "Intake 1: %07.3f W, Intake 2: %07.3f W", intake1_watt, intake2_watt);
 	}
 }

@@ -1,9 +1,9 @@
-#include "Mechanics/botIntake.h"
+#include "Mechanics/botIntake2.h"
 #include "Utilities/debugFunctions.h"
 #include "Utilities/generalUtility.h"
 #include "main.h"
 
-// This mechanic is for one-part intake with two motors
+// This mechanic is for two-part intakes: roller + hook
 
 namespace {
 	void resolveIntake();
@@ -25,7 +25,8 @@ namespace {
 
 	bool autoHookSwitchMode = true;
 
-	int resolveState = 0;
+	int resolveTopState = 0;
+	int resolveBottomState = 0;
 
 	bool previousRingDetected = false;
 	bool ringDetected = false;
@@ -37,7 +38,7 @@ namespace {
 }
 
 
-namespace botintake {
+namespace botintake2 {
 	void runThread() {
 		timer stuckTime;
 		bool isStuck = false;
@@ -72,7 +73,7 @@ namespace botintake {
 					isStuck = false;
 				}
 				if (isStuck && stuckTime.value() > 0.08) {
-					resolveState = -1;
+					resolveTopState = -1;
 					resolveIntake();
 					task::sleep(300);
 				} else {
@@ -99,7 +100,8 @@ namespace botintake {
 		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here
-			resolveState = state;
+			resolveTopState = state;
+			resolveBottomState = state;
 
 			return;
 		}
@@ -117,7 +119,67 @@ namespace botintake {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-			resolveState = taskState;
+			resolveTopState = taskState;
+			resolveBottomState = taskState;
+
+			return 1;
+		});
+	}
+
+
+	void setState2(int state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+			resolveTopState = state;
+
+			return;
+		}
+
+		// Set global variables
+		_taskState = state;
+		_taskDelay = delaySec;
+
+		task setState([]() -> int {
+			// Get global variables
+			int taskState = _taskState;
+			double taskDelay = _taskDelay;
+
+			// Delay setting state
+			task::sleep(taskDelay * 1000);
+
+
+			// Set state here
+			resolveTopState = taskState;
+
+			return 1;
+		});
+	}
+
+
+	void setState3(int state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+			resolveBottomState = state;
+
+			return;
+		}
+
+		// Set global variables
+		_taskState = state;
+		_taskDelay = delaySec;
+
+		task setState([]() -> int {
+			// Get global variables
+			int taskState = _taskState;
+			double taskDelay = _taskDelay;
+
+			// Delay setting state
+			task::sleep(taskDelay * 1000);
+
+			// Set state here
+			resolveBottomState = taskState;
 
 			return 1;
 		});
@@ -178,7 +240,8 @@ namespace {
 	/// @brief Set the intake to Holding (0) or Released (1). Intake state is modified by setIntakeResolveState(int).
 	void resolveIntake() {
 		// Make sure intakeResolveState is within [-1, 1]
-		resolveState = (resolveState > 0) - (resolveState < 0);
+		resolveTopState = (resolveTopState > 0) - (resolveTopState < 0);
+		resolveBottomState = (resolveBottomState > 0) - (resolveBottomState < 0);
 
 		// Filter out on some detection
 		if (previousRingDetected && !ringDetected) {
@@ -192,19 +255,29 @@ namespace {
 		}
 
 		// Resolve intake
-		switch (resolveState) {
+		switch (resolveBottomState) {
 			case 1:
 				// Forward
 				IntakeMotor1.spin(fwd, intakeVelocityVolt, volt);
-				IntakeMotor2.spin(fwd, intakeVelocityVolt, volt);
 				break;
 			case -1:
 				// Reversed
 				IntakeMotor1.spin(fwd, -intakeVelocityVolt, volt);
-				IntakeMotor2.spin(fwd, -intakeVelocityVolt, volt);
 				break;
 			default:
 				IntakeMotor1.stop(brakeType::coast);
+				break;
+		}
+		switch (resolveTopState) {
+			case 1:
+				// Forward
+				IntakeMotor2.spin(fwd, intakeVelocityVolt * hookFactor, volt);
+				break;
+			case -1:
+				// Reversed
+				IntakeMotor2.spin(fwd, -intakeVelocityVolt * hookFactor, volt);
+				break;
+			default:
 				IntakeMotor2.stop(brakeType::coast);
 				break;
 		}

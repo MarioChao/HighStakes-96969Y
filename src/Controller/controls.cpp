@@ -1,5 +1,6 @@
 #include "Mechanics/botDrive.h"
 #include "Mechanics/botIntake.h"
+#include "Mechanics/botIntake2.h"
 #include "Mechanics/botLift.h"
 #include "Mechanics/botArm.h"
 #include "Mechanics/botArmPneumatics.h"
@@ -12,7 +13,11 @@
 
 namespace controls {
 	void startThreads() {
-		task intakeTask([]() -> int { botintake::runThread(); return 1; });
+		if (intakePart == 1) {
+			task intakeTask([]() -> int { botintake::runThread(); return 1; });
+		} else {
+			task intakeTask([]() -> int { botintake2::runThread(); return 1; });
+		}
 		// task armTask([] () -> int { botarm::runThread(); return 1; });
 	}
 
@@ -21,7 +26,8 @@ namespace controls {
 			botdrive::switchDriveMode();
 		});
 		Controller1.ButtonX.pressed([]() -> void {
-			botintake::switchMode();
+			if (intakePart == 1) botintake::switchMode();
+			else botintake2::switchMode();
 		});
 		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
@@ -33,7 +39,8 @@ namespace controls {
 			}
 		});
 		Controller1.ButtonB.pressed([]() -> void {
-			botintake::switchFilterColor();
+			if (intakePart == 1) botintake::switchFilterColor();
+			else botintake2::switchFilterColor();
 		});
 		Controller1.ButtonA.pressed([]() -> void {
 			swing::switchState();
@@ -53,10 +60,17 @@ namespace controls {
 
 	void doControls() {
 		botdrive::control();
-		botintake::control(
-			(int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing(),
-			/*This is not used =>*/ (int) Controller1.ButtonX.pressing()
-		);
+		if (intakePart == 1) {
+			botintake::control(
+				(int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing(),
+				/*This is not used =>*/ (int) Controller1.ButtonX.pressing()
+			);
+		} else {
+			botintake2::control(
+				(int) Controller1.ButtonR1.pressing() - (int) Controller1.ButtonR2.pressing(),
+				/*This is not used =>*/ (int) Controller1.ButtonX.pressing()
+			);
+		}
 		// botarm::control((int) Controller1.ButtonUp.pressing() - (int) Controller1.ButtonDown.pressing());
 	}
 }
