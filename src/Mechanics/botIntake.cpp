@@ -71,6 +71,7 @@ namespace botintake {
 				} else {
 					isStuck = false;
 				}
+				isStuck = false;
 				if (isStuck && stuckTime.value() > 0.08) {
 					resolveState = -1;
 					resolveIntake();
