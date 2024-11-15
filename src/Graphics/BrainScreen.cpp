@@ -679,10 +679,14 @@ namespace {
 		double leftAvg_watt = (leftA_watt + leftB_watt + leftC_watt) / 3.0;
 		double rightAvg_watt = (rightA_watt + rightB_watt + rightC_watt) / 3.0;
 
+		double intake1_watt = IntakeMotor1.power(watt);
+		double intake2_watt = IntakeMotor2.power(watt);
+
 		// Draw info
 		Brain.Screen.setPenColor(color::white);
 		Brain.Screen.setFillColor(color::transparent);
 		Brain.Screen.setFont(fontType::mono20);
 		Brain.Screen.printAt(10, 130, 1, "Lavg: %07.3f W, Ravg: %07.3f W", leftAvg_watt, rightAvg_watt);
+		Brain.Screen.printAt(10, 155, 1, "Intake 1: %07.3f W, Intake 2: %07.3f W", leftAvg_watt, rightAvg_watt);
 	}
 }
