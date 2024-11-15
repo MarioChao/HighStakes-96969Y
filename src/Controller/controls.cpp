@@ -48,7 +48,7 @@ namespace controls {
 	}
 
 	void resetStates() {
-
+		LeftRightMotors.setStopping(brake);
 	}
 
 	void doControls() {
