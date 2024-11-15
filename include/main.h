@@ -16,7 +16,7 @@ extern competition Competition;
 extern double motSpeedRpm, motAimSpeedRpm;
 
 // Intake info
-extern double intakePart;
+extern int intakePart;
 
 // Video info
 extern int playingVideoId;
