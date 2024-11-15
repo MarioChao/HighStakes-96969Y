@@ -83,9 +83,6 @@ namespace botintake {
 				resolveIntakeToArm();
 			}
 
-			// if (Controller1.ButtonX.pressing()){
-			//     printf("torque: %.3f\n", IntakeMotor2.torque());
-			// }
 			task::sleep(5);
 		}
 	}
@@ -185,6 +182,7 @@ namespace {
 			if (detectedRingColor == filterOutColor) {
 				// Filter out
 				wait(45, msec);
+				IntakeMotor1.spin(fwd, 0, volt);
 				IntakeMotor2.spin(fwd, 0, volt);
 				wait(300, msec);
 				return;
@@ -213,15 +211,6 @@ namespace {
 	void resolveIntakeToArm() {
 		// Reverse hook on some detection
 		if (previousRingDetected && !ringDetected) {
-			// IntakeMotor1.spin(fwd, 10, pct);
-
-			// Spin hook sequence
-			// wait(30, msec);
-			IntakeMotor2.spin(fwd, genutil::pctToVolt(-toArmHookReverseVelocityPct), volt);
-			wait(300, msec);
-			IntakeMotor2.spin(fwd, 0, volt);
-			wait(700, msec);
-
 			if (autoHookSwitchMode) {
 				hookMode = 0;
 			}
@@ -229,8 +218,6 @@ namespace {
 		// Otherwise spin hook normally
 		else {
 			// Spin both
-			IntakeMotor1.spin(fwd, intakeVelocityVolt, volt);
-			IntakeMotor2.spin(fwd, genutil::pctToVolt(toArmHookVelocityPct), volt);
 		}
 	}
 }
