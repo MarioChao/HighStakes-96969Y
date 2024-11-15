@@ -5,7 +5,7 @@ void autonpaths::runAutonRedUp() {
 	timer autontimer;
 	setRotation(-120.0);
 
-	// Score Preload
+	// Score preload
 	setArmHangState(1);
 	task::sleep(700);
 	driveAndTurnDistanceTiles(0.45, -120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);

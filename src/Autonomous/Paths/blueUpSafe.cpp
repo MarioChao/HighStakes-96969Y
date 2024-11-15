@@ -1,22 +1,15 @@
 #include "Autonomous/autonPaths.h"
 
-/// @brief Run the 15-seconds new blue-up autonomous.
-void autonpaths::runAutonBlueUp() {
-	// Mirrored from red up
+/// @brief Run the 15-seconds new blue-up safe autonomous.
+void autonpaths::runAutonBlueUpSafe() {
+	// Modified from blue up
 
 	timer autontimer;
 	setRotation(120.0);
 
-	// Score preload
-	setArmHangState(1);
-	task::sleep(700);
-	driveAndTurnDistanceTiles(0.45, 120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	setArmHangState(0);
-	task::sleep(200);
-
 	// Grab goal
 	setGoalClampState(1, 1.4);
-	driveAndTurnDistanceTiles(-1.73, 115.0, 38.0, 15.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(-1.32, 115.0, 38.0, 15.0, defaultMoveTilesErrorRange, 2.0);
 	task::sleep(200);
 
 	// Intake middle up

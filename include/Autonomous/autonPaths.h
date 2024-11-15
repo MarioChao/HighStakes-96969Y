@@ -18,6 +18,7 @@ namespace autonpaths {
 	void runAutonRedDown();
 	void runAutonRedDownOld();
 	void runAutonBlueUp();
+	void runAutonBlueUpSafe();
 	void runAutonBlueDown();
 	void runAutonSkills();
 	void runAllianceWallStake();

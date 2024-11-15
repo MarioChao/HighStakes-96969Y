@@ -2,6 +2,8 @@
 
 /// @brief Run the 15-seconds new red-up safe autonomous.
 void autonpaths::runAutonRedUpSafe() {
+	// Modified from red up
+
 	timer autontimer;
 	setRotation(-120.0);
 

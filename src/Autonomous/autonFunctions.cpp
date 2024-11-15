@@ -82,7 +82,7 @@ namespace autonfunctions {
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDControl rotateTargetAnglePid(1.75, 0.00, 1.7, errorRange);
+		PIDControl rotateTargetAnglePid(1.8, 0.002, 1.7, errorRange);
 		timer timeout;
 		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
