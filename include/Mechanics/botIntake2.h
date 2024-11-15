@@ -1,11 +1,15 @@
 #pragma once
 
-namespace botintake {
+namespace botintake2 {
 	void runThread();
 
 	void preauton();
 
 	void setState(int, double = 0);
+
+	void setState2(int, double = 0);
+
+	void setState3(int, double = 0);
 
 	void switchMode();
 
