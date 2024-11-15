@@ -26,6 +26,8 @@ competition Competition;
 
 double motSpeedRpm, motAimSpeedRpm = 0;
 
+int intakePart = 1;
+
 int playingVideoId = 0;
 
 timer drivingTimer;

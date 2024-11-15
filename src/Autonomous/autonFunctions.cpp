@@ -5,6 +5,7 @@
 #include "AutonUtilities/motionProfile.h"
 
 #include "Mechanics/botIntake.h"
+#include "Mechanics/botIntake2.h"
 #include "Mechanics/botArmPneumatics.h"
 #include "Mechanics/goalClamp.h"
 #include "Utilities/angleFunctions.h"
@@ -352,7 +353,8 @@ namespace autonfunctions {
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).
 	void setIntakeState(int state, double delaySec) {
-		botintake::setState(state, delaySec);
+		if (intakePart == 1) botintake::setState(state, delaySec);
+		else botintake2::setState(state, delaySec);
 	}
 
 
@@ -360,7 +362,8 @@ namespace autonfunctions {
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).
 	void setIntakeTopState(int state, double delaySec) {
-		botintake::setState2(state, delaySec);
+		if (intakePart == 1) return;
+		else botintake2::setState2(state, delaySec);
 	}
 
 
@@ -368,13 +371,15 @@ namespace autonfunctions {
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).
 	void setIntakeBottomState(int state, double delaySec) {
-		botintake::setState3(state, delaySec);
+		if (intakePart == 1) return;
+		else botintake2::setState3(state, delaySec);
 	}
 
 	/// @brief Set the hook mode of the intake.
 	/// @param state Normal: 0, to arm: 1
 	void setIntakeHookMode(int state) {
-		botintake::setHookMode(state);
+		if (intakePart == 1) return;
+		else botintake2::setHookMode(state);
 	}
 
 	void setArmHangState(int state, double delaySec) {

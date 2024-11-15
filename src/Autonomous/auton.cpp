@@ -2,6 +2,7 @@
 
 #include "Autonomous/autonpaths.h"
 #include "Mechanics/botIntake.h"
+#include "Mechanics/botIntake2.h"
 #include "Utilities/debugFunctions.h"
 #include "preauton.h"
 #include "main.h"
@@ -23,56 +24,67 @@ namespace auton {
 				printOnController("Auton: RedUp");
 				printf("RedUp\n");
 				botintake::setFilterColor("blue");
+				botintake2::setFilterColor("blue");
 				break;
 			case autonomousType::RedDown:
 				printOnController("Auton: RedDown");
 				printf("RedDown\n");
 				botintake::setFilterColor("blue");
+				botintake2::setFilterColor("blue");
 				break;
 			case autonomousType::BlueUp:
 				printOnController("Auton: BlueUp");
 				printf("BlueUp\n");
 				botintake::setFilterColor("red");
+				botintake2::setFilterColor("red");
 				break;
 			case autonomousType::BlueDown:
 				printOnController("Auton: BlueDown");
 				printf("BlueDown\n");
 				botintake::setFilterColor("red");
+				botintake2::setFilterColor("red");
 				break;
 			case autonomousType::RedUpSafe:
 				printOnController("Auton: RedUp SF");
 				printf("RedUp Safe\n");
 				botintake::setFilterColor("blue");
+				botintake2::setFilterColor("blue");
 				break;
 			case autonomousType::RedDownSafe:
 				printOnController("Auton: RedDown SF");
 				printf("RedDown Safe\n");
 				botintake::setFilterColor("blue");
+				botintake2::setFilterColor("blue");
 				break;
 			case autonomousType::BlueUpSafe:
 				printOnController("Auton: BlueUp SF");
 				printf("BlueUp Safe\n");
 				botintake::setFilterColor("red");
+				botintake2::setFilterColor("red");
 				break;
 			case autonomousType::BlueDownSafe:
 				printOnController("Auton: BlueDown SF");
 				printf("BlueDown Safe\n");
 				botintake::setFilterColor("red");
+				botintake2::setFilterColor("red");
 				break;
 			case autonomousType::AutonSkills:
 				printOnController("Auton: Skills");
 				printf("AuSk\n");
 				botintake::setFilterColor("blue");
+				botintake2::setFilterColor("blue");
 				break;
 			case autonomousType::DrivingSkills:
 				printOnController("Driving Skills");
 				printf("DrSk\n");
 				botintake::setFilterColor("blue");
+				botintake2::setFilterColor("blue");
 				break;
 			default:
 				printOnController("Auton: None");
 				printf("None\n");
 				botintake::setFilterColor("none");
+				botintake2::setFilterColor("none");
 				break;
 		}
 		auton_runType = autonType;
