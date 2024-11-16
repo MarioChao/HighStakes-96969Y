@@ -70,6 +70,7 @@ namespace video {
 			// }
 
 			// Refresh screen
+			refreshedVideoId = -1;
 			task::sleep(30);
 			Brain.Screen.clearScreen(color::black);
 			task::sleep(30);
