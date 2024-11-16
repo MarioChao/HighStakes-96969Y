@@ -29,6 +29,15 @@ namespace controls {
 			if (intakePart == 1) botintake::switchMode();
 			else botintake2::switchMode();
 		});
+		Controller1.ButtonY.pressed([]() -> void {
+			if (intakePart == 1) {
+				if (botintake::getIntakeVelocity() == 100) {
+					botintake::setIntakeVelocity(80);
+				} else {
+					botintake::setIntakeVelocity(100);
+				}
+			}
+		});
 		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
 			goalclamp::switchState();

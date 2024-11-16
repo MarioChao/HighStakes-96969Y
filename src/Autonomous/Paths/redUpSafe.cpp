@@ -12,22 +12,22 @@ void autonpaths::runAutonRedUpSafe() {
 	driveAndTurnDistanceTiles(-1.32, -115.0, 38.0, 15.0, defaultMoveTilesErrorRange, 2.0);
 	task::sleep(200);
 
-	// Intake middle up
+	// Take in middle up
 	turnToAngle(44.0);
 	setIntakeState(1);
 	driveAndTurnDistanceTiles(0.85, 44.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	driveAndTurnDistanceTiles(-0.12, 44.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
-	// Intake 2nd middle up
+	// Take in 2nd middle up
 	turnToAngleVelocity(5.0, 40.0);
 	turnToAngleVelocity(40.0, 90.0, halfRobotLengthIn * 1.25);
 	task::sleep(100);
 
-	// Intake left up
+	// Take in left up
 	turnToAngleVelocity(-70.0, 40.0);
 	driveAndTurnDistanceTiles(1.3, -80.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
-	// Intake corner
+	// Take in corner
 	setArmHangState(1);
 	turnToAngle(-50.0);
 	driveAndTurnDistanceTiles(0.95, -50.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);

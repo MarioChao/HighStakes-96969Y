@@ -115,7 +115,7 @@ namespace auton {
 				autonpaths::runAutonRedUp();
 				break;
 			case autonomousType::RedDown:
-				autonpaths::runAutonRedDownOld();
+				autonpaths::runAutonRedDown();
 				break;
 			case autonomousType::BlueUp:
 				autonpaths::runAutonBlueUp();
@@ -127,6 +127,7 @@ namespace auton {
 				autonpaths::runAutonRedUpSafe();
 				break;
 			case autonomousType::RedDownSafe:
+				autonpaths::runAutonRedDownOld();
 				break;
 			case autonomousType::BlueUpSafe:
 				autonpaths::runAutonBlueUpSafe();

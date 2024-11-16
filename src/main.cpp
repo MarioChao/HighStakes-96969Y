@@ -17,7 +17,7 @@
 #include "Utilities/fieldInfo.h"
 #include "Utilities/debugFunctions.h"
 
-#include "Videos/brainVideos.h"
+#include "Videos/video-main.h"
 
 
 // ---------- Variables ----------
@@ -27,8 +27,6 @@ competition Competition;
 double motSpeedRpm, motAimSpeedRpm = 0;
 
 int intakePart = 1;
-
-int playingVideoId = 0;
 
 timer drivingTimer;
 
@@ -94,8 +92,7 @@ void autonomous(void) {
 
 	// Switch to a random video
 	task switchVideo([]() -> int {
-		srand(Brain.Timer.systemHighResolution());
-		switchVideoState(rand() % 3 + 4);
+		video::switchVideoState(5);
 		return 1;
 	});
 
@@ -141,7 +138,7 @@ void usercontrol(void) {
 
 	// Keybinds
 	controls::setUpKeybinds();
-	keybindVideos();
+	video::keybindVideos();
 
 	// Reset
 	controls::resetStates();

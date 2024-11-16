@@ -12,20 +12,29 @@ public:
 	);
 	VideoInfo(double fps, double frameSteps, std::vector< std::vector<uint8_t> > *videoBuffer);
 	void saveVideo(std::vector< std::vector< std::vector<int> > > *video);
-	void loadVideo(std::vector< std::vector< std::vector<int> > > *video, double *frameDelayMs);
-	void loadDimensions(double *width, double *height);
 	
-	bool isUsingBuffer();
 	void saveVideoBuffer(std::vector< std::vector<uint8_t> > *videoBuffer);
-	void loadVideoBuffer(std::vector< std::vector<uint8_t> > *videoBuffer, double *frameDelayMs);
+	bool isUsingBuffer();
 
-	static void drawFrame(std::vector< std::vector< std::vector<int> > > *video, int x, int y, int width, int height, int frameId);
-	static void drawBufferFrame(std::vector< std::vector<uint8_t> > *videoBuffer, int x, int y, int frameId);
+	void preProcess();
+
+	void setFrameId(double timePosition_ms);
+
+	void drawFrame(int x = 0, int y = 0);
+	void drawFrameRGB(int x = 0, int y = 0);
+	void drawFrameBuffer(int x = 0, int y = 0);
+
 private:
+	// Configurations
 	double fps;
 	double frameSteps;
 	std::vector< std::vector< std::vector<int> > > savedVideo;
 	std::vector< std::vector<uint8_t> > savedVideoBuffer;
 	int display_width, display_height;
 	bool use8BitBuffer;
+
+	// Drawing
+	double frameIdsPerMillisecond;
+	int frameCount;
+	int frameId;
 };
