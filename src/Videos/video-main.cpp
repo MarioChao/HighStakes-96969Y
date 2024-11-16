@@ -15,15 +15,11 @@ namespace {
 	std::vector< std::vector<VideoInfo *> > videoObjects = {
 		{},
 		{&teamLogo},
-		{&yoruNiKakeru, &badApple_suika, &yoruNiKakeru, &badApple_suika},
 		{&badApple_image},
-		{&marioFlag},
 		{&ningning1, &ningning2, &ningning3},
 	};
 	std::vector< std::vector< std::pair<int, int> > > videoObjectPositions = {
 		{},
-		{{0, 0}},
-		{{0, 0}, {240, 0}, {0, 120}, {240, 120}},
 		{{0, 0}},
 		{{0, 0}},
 		{{0, 0}, {167, 60}, {345, 120}},
