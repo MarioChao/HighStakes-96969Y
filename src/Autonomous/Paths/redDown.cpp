@@ -29,7 +29,7 @@ void autonpaths::runAutonRedDown() {
 	// Grab goal
 	turnToAngle(-130.0);
 	setIntakeState(-1);
-	setIntakeState(0, 0.2);
+	setIntakeState(0, 0.1);
 	setGoalClampState(1, 0.85);
 	driveAndTurnDistanceTiles(-1.25, -130.0, 60.0, 50.0, defaultMoveTilesErrorRange, 1.5);
 
@@ -44,10 +44,10 @@ void autonpaths::runAutonRedDown() {
 	task::sleep(400);
 
 	// Score on alliance wall stake
-	driveAndTurnDistanceTiles(-2.10, -170.0, 60.0, 50.0, defaultMoveTilesErrorRange, 2.0);
-	turnToAngle(-60.0);
+	driveAndTurnDistanceTiles(-2.15, -170.0, 60.0, 50.0, defaultMoveTilesErrorRange, 2.0);
+	turnToAngle(-57.0);
 	setIntakeState(0);
-	driveAndTurnDistanceTiles(0.5, -60.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(0.5, -57.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 	setArmHangState(0);
 	task::sleep(100);
 
