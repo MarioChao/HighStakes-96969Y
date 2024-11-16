@@ -14,10 +14,6 @@ namespace {
 	double toArmHookVelocityPct = 40.0;
 	double toArmHookReverseVelocityPct = 70.0;
 
-	/* Derived values (don't change) */
-
-	double intakeVelocityVolt = genutil::pctToVolt(intakeVelocityPct);
-
 	/* Factors */
 
 	double hookFactor = 1.0;
@@ -91,6 +87,14 @@ namespace botintake {
 
 	void preauton() {
 
+	}
+
+	void setIntakeVelocity(double velocityPct) {
+		intakeVelocityPct = velocityPct;
+	}
+
+	double getIntakeVelocity() {
+		return intakeVelocityPct;
 	}
 
 	void setState(int state, double delaySec) {
@@ -194,13 +198,13 @@ namespace {
 		switch (resolveState) {
 			case 1:
 				// Forward
-				IntakeMotor1.spin(fwd, intakeVelocityVolt, volt);
-				IntakeMotor2.spin(fwd, intakeVelocityVolt, volt);
+				IntakeMotor1.spin(fwd, genutil::pctToVolt(intakeVelocityPct), volt);
+				IntakeMotor2.spin(fwd, genutil::pctToVolt(intakeVelocityPct), volt);
 				break;
 			case -1:
 				// Reversed
-				IntakeMotor1.spin(fwd, -intakeVelocityVolt, volt);
-				IntakeMotor2.spin(fwd, -intakeVelocityVolt, volt);
+				IntakeMotor1.spin(fwd, -genutil::pctToVolt(intakeVelocityPct), volt);
+				IntakeMotor2.spin(fwd, -genutil::pctToVolt(intakeVelocityPct), volt);
 				break;
 			default:
 				IntakeMotor1.stop(brakeType::coast);

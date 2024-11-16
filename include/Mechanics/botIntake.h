@@ -5,6 +5,9 @@ namespace botintake {
 
 	void preauton();
 
+	void setIntakeVelocity(double);
+	double getIntakeVelocity();
+
 	void setState(int, double = 0);
 
 	void switchMode();
