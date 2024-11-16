@@ -18,9 +18,6 @@ extern double motSpeedRpm, motAimSpeedRpm;
 // Intake info
 extern int intakePart;
 
-// Video info
-extern int playingVideoId;
-
 // Timer
 extern timer drivingTimer;
 

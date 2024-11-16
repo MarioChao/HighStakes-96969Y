@@ -1,7 +1,18 @@
-#include "Videos/VideoInfos/yoruNiKakeru.h"
-#include "main.h"
+#include "Videos/video-objects.h"
 
-std::vector< std::vector< std::vector<int> > > yoruNiKakeru_video = {{
+/*
+24 x 12
+round RGB: 1
+
+Start frame: 0
+Frame count: 1
+Frame step: 10
+FPS: 30
+*/
+
+namespace {
+
+std::vector< std::vector< std::vector<int> > > video = {{
 {7704720,7114887,7114887,7114887,7114887,8296857,8296857,15953022,16545159,16545159,16545159,16545159,
 16545159,16545159,16545159,16545159,16545159,16545159,8296857,7112583,7112583,6522750,7704720,7112583,
 
@@ -547,4 +558,8 @@ std::vector< std::vector< std::vector<int> > > yoruNiKakeru_video = {{
 },},
 };
 
-VideoInfo yoruNiKakeru(30, 8, &yoruNiKakeru_video);
+std::vector< std::vector<uint8_t> > videoBuffer = {};
+
+}
+
+VideoInfo yoruNiKakeru(30, 8, &::video, 240, 120);

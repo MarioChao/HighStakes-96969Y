@@ -2,7 +2,7 @@
 #include "Graphics/BrainScreen.h"
 #include "Mechanics/botLift.h"
 #include "Utilities/debugFunctions.h"
-#include "Videos/brainVideos.h"
+#include "Videos/video-main.h"
 #include "main.h"
 
 namespace {
@@ -77,6 +77,7 @@ namespace {
 			Brain.Screen.printAt(240, 120, "%5.2f sec", bufferTimer.value());
 			task::sleep(20);
 		}
+
 		// Shrinking circle
 		Brain.Screen.setFillColor(color::transparent);
 		Brain.Screen.setPenWidth(1);
@@ -95,13 +96,11 @@ namespace {
 			// Exit when i is 1
 			if (fabs(i - 1) <= 1e-8) break;
 		}
+
 		// Brain Screen
+		video::startThread();
 		task brainScreen([]() -> int {
 			brainScreenThread();
-			return 1;
-		});
-		task brainVideos([]() -> int {
-			brainVideosThread();
 			return 1;
 		});
 	}

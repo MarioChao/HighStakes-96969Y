@@ -8,6 +8,7 @@
 #include "Graphics/GUIs/ShapesGui.h"
 #include "Graphics/GUIs/SlidersGui.h"
 #include "Graphics/GUIs/DocksGui.h"
+#include "Videos/video-main.h"
 #include "main.h"
 
 // File-local Functions & Variables
@@ -88,13 +89,13 @@ void brainScreenThread() {
 
 	// Screen size is 480 px by 240 px
 	while (true) {
-		if (playingVideoId == 0) {
+		if (video::getCurrentVideoId() == 0) {
 			// Draw the main dock
 			mainDock->check();
 		} else {
 			// Disable the main dock until no video is playing
 			mainDock->setEnabled(false);
-			waitUntil(playingVideoId == 0);
+			waitUntil(video::getCurrentVideoId() == 0);
 			task::sleep(30);
 			mainDock->setEnabled(true);
 		}
