@@ -5,7 +5,7 @@ void autonpaths::runAutonSkills() {
 	timer autontimer;
 	setRotation(-90.0);
 
-	// Score Preload at alliance wall stake
+	// Score preload at alliance wall stake
 	setArmHangState(1);
 	driveAndTurnDistanceTiles(-0.2, -90.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	task::sleep(200);
@@ -14,44 +14,44 @@ void autonpaths::runAutonSkills() {
 	task::sleep(200);
 
 	// Grab bottom mobile goal
-	driveAndTurnDistanceTiles(-0.55, -90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-0.5, -90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	turnToAngle(0);
-	driveAndTurnDistanceTiles(-0.96, 0, 40.0, 100.0, defaultMoveTilesErrorRange, 2.0);
-	setGoalClampState(1);
+	setGoalClampState(1, 0.7);
+	driveAndTurnDistanceTiles(-0.96, 0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 
 	// Take in 2 rings & score
 	turnToAngle(90.0);
 	setIntakeState(1);
-	driveAndTurnDistanceTiles(0.98, 90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(0.85, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 	turnToAngle(143.0);
-	driveAndTurnDistanceTiles(1.65, 143.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(1.65, 143.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 
 	// Take in 3 rings in a row & score
 	driveAndTurnDistanceTiles(-0.40, 143.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 	turnToAngle(270.0);
-	driveAndTurnDistanceTiles(2.10, 270.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(2.10, 270.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 
 	// Take in 1 ring to arm
 	turnToAngle(270.0);
-	turnToAngle(180.0, halfRobotLengthIn * 0.8);
+	turnToAngle(180.0, halfRobotLengthIn * 1.0);
 	setIntakeHookMode(1);
-	driveAndTurnDistanceTiles(1.02, 180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(0.6, 180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Place mobile goal in corner
 	turnToAngle(85.0);
 	setGoalClampState(0);
-	driveAndTurnDistanceTiles(-0.60, 85.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(-0.60, 85.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Go to & face neutral wall stake
 	setIntakeState(0);
 	setIntakeHookMode(0);
-	turnToAngle(90.0);
+	turnToAngle(85.0);
 	setArmHangState(1);
-	driveAndTurnDistanceTiles(2.40, 85.0, 70.0, 100.0, defaultMoveTilesErrorRange, 2.0);
-	turnToAngle(173.0);
+	driveAndTurnDistanceTiles(2.46, 85.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.5);
+	turnToAngleVelocity(180.0, 60.0);
 
 	// Score ring at neutral wall stake
-	driveAndTurnDistanceTiles(0.6, 173.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(0.6, 180.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	setArmHangState(0);
 	task::sleep(200);
 
@@ -63,43 +63,45 @@ void autonpaths::runAutonSkills() {
 	turnToAngle(90.0);
 	setIntakeHookMode(1);
 	setIntakeState(1);
-	driveAndTurnDistanceTiles(1.1, 90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(1.0, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Store 1 ring
 	turnToAngle(0.0);
 	setIntakeBottomState(1);
 	setIntakeTopState(0);
-	driveAndTurnDistanceTiles(1.0, 0.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(1.0, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Grab bottom mobile goal w/ blue ring
 	turnToAngle(-90.0);
-	driveAndTurnDistanceTiles(-0.9, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(-0.6, -90.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	setGoalClampState(1);
+	driveAndTurnDistanceTiles(-0.9, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	setGoalClampState(1, 0.6);
+	driveAndTurnDistanceTiles(-0.6, -90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Put mobile goal in corner
-	turnToAngle(-20.0);
+	turnToAngle(-15.0);
 	setGoalClampState(0);
-	driveAndTurnDistanceTiles(-1.45, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-1.55, -10.0, 90.0, 100.0, defaultMoveTilesErrorRange, 1.3);
 
 	/* Blue up */
 
 	// Go to middle mobile goal
 	setIntakeState(0);
-	turnToAngle(-26.0);
-	driveAndTurnDistanceTiles(1.58, -26.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(0.4, -20.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(-20.0);
+	driveAndTurnDistanceTiles(1.28, -20.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Grab middle mobile goal
 	turnToAngle(-180.0);
-	driveAndTurnDistanceTiles(-0.60, -180.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	setGoalClampState(1);
+	setGoalClampState(1, 0.7);
+	driveAndTurnDistanceTiles(-0.70, -180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Score 1 ring at neutral wall stake
 	setArmHangState(1);
 	turnToAngle(-270.0);
-	driveAndTurnDistanceTiles(0.58, -270.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(0.53, -270.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 	setArmHangState(0);
 	task::sleep(400);
+	driveAndTurnDistanceTiles(-0.3, -270.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Score 1 stored ring
 	setIntakeState(1);
@@ -107,13 +109,16 @@ void autonpaths::runAutonSkills() {
 	// Take in 3 rings & score 
 	turnToAngle(-270.0);
 	setRotation(90.0);
-	turnToAngle(-54.0);
-	driveAndTurnDistanceTiles(1.86, -54.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	// First ring
+	turnToAngle(-50.0);
+	driveAndTurnDistanceTiles(1.86, -50.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	// Second ring
 	turnToAngle(-135.0);
 	setIntakeTopState(0);
-	driveAndTurnDistanceTiles(1.25, -135.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(-1.25, -135.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(1.0, -135.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-1.1, -135.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	setIntakeTopState(1);
+	// Third ring
 	turnToAngle(0);
 	driveAndTurnDistanceTiles(0.98, 0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
