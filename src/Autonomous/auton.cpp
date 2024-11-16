@@ -133,6 +133,7 @@ namespace auton {
 				autonpaths::runAutonBlueUpSafe();
 				break;
 			case autonomousType::BlueDownSafe:
+				autonpaths::runAutonBlueDownOld();
 				break;
 			case autonomousType::AutonSkills:
 				autonpaths::runAutonSkills();

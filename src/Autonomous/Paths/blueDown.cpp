@@ -1,50 +1,60 @@
 #include "Autonomous/autonPaths.h"
 
-/// @brief Run the 15-seconds blue-down autonomous.
+/// @brief Run the 15-seconds new blue-down autonomous.
 void autonpaths::runAutonBlueDown() {
-	// Mirrored from RedDown
+	// Mirrored from red down
 
 	timer autontimer;
-	setRotation(90.0);
-
-	/* Start facing left */
+	setRotation(75.0);
 
 	// Grab middle goal
-	turnToAngle(90.0);
-	driveAndTurnDistanceTiles(-1.30, 90.0, 100.0);
-	turnToAngle(120.0, -halfRobotLengthIn * 0.5);
-	setGoalClampState(1, 0.7);
-	driveAndTurnDistanceTiles(-0.74, 120.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
-
-	// Score 1 ring
-	task::sleep(200);
-	setIntakeState(1);
-	task::sleep(700);
-
-	// Drop goal & face bottom ring
-	turnToAngleVelocity(55, 50.0, -halfRobotLengthIn * 0.85);
-	setGoalClampState(0);
-	setIntakeState(0);
-
-	// Intake bottom ring
-	setIntakeTopState(0);
-	setIntakeBottomState(1);
-	setIntakeBottomState(0, 0.5);
-	driveAndTurnDistanceTiles(0.6, 55, 60.0, 100.0);
-
-	// Grab bottom goal
-	turnToAngle(180.0);
-	driveAndTurnDistanceTiles(-0.75, 180.0, 30.0);
+	driveAndTurnDistanceTiles(-1.47, 74.0, 100.0, 50.0, defaultMoveTilesErrorRange, 2.0);
+	turnToAngle(57.0, halfRobotLengthIn * 2.7);
 	setGoalClampState(1);
+	task::sleep(200);
 
-	// Score 1 ring
+	// Score preload
 	setIntakeState(1);
-	task::sleep(750);
+	turnToAngle(75.0, halfRobotLengthIn * 1.3);
 
-	// Face the ladder
-	turnToAngle(270.0);
+	// Take in ring to arm
+	turnToAngleVelocity(-125, -80.0, 0.0, defaultTurnAngleErrorRange, 2.0);
+	setIntakeHookMode(1);
+	setIntakeTopState(0);
+	driveAndTurnDistanceTiles(0.3, 125.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Drop goal near our side
+	turnToAngle(90.0);
+	setGoalClampState(0, 0.2);
+	driveAndTurnDistanceTiles(1.3, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Grab goal
+	turnToAngle(130.0);
+	setIntakeState(-1);
+	setIntakeState(0, 0.1);
+	setGoalClampState(1, 0.85);
+	driveAndTurnDistanceTiles(-1.25, 130.0, 60.0, 50.0, defaultMoveTilesErrorRange, 1.5);
+
+	// Take in corner
+	setIntakeHookMode(0);
+	setIntakeState(1);
+	setArmHangState(1);
+	turnToAngle(133.0);
+	driveAndTurnDistanceTiles(2.0, 133.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.3);
+	task::sleep(200);
+	driveAndTurnDistanceTiles(1.0, 135.0, 40.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+	task::sleep(400);
+
+	// Score on alliance wall stake
+	driveAndTurnDistanceTiles(-2.15, 170.0, 60.0, 50.0, defaultMoveTilesErrorRange, 2.0);
+	turnToAngle(57.0);
 	setIntakeState(0);
+	driveAndTurnDistanceTiles(0.5, 57.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	setArmHangState(0);
+	task::sleep(100);
 
-	// Touch the ladder
-	driveAndTurnDistanceTiles(0.9, 270.0, 30.0, 100.0);
+	// Touch ladder
+	turnToAngle(60.0);
+	driveAndTurnDistanceTiles(-2.0, 100.0, 100.0, 25.0, defaultMoveTilesErrorRange, 2.0);
+	turnToAngle(115.0);
 }

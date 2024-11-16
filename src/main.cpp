@@ -92,7 +92,7 @@ void autonomous(void) {
 
 	// Switch to a random video
 	task switchVideo([]() -> int {
-		video::switchVideoState(5);
+		video::switchVideoState(1);
 		return 1;
 	});
 
