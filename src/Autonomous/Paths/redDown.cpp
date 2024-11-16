@@ -46,8 +46,8 @@ void autonpaths::runAutonRedDown() {
 	// Score on alliance wall stake
 	driveAndTurnDistanceTiles(-2.15, -170.0, 60.0, 50.0, defaultMoveTilesErrorRange, 2.0);
 	turnToAngle(-57.0);
-	setIntakeState(0);
 	driveAndTurnDistanceTiles(0.5, -57.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	setIntakeState(0);
 	setArmHangState(0);
 	task::sleep(100);
 
