@@ -244,7 +244,7 @@ namespace {
 		if (previousRingDetected && !ringDetected) {
 			if (detectedRingColor == filterOutColor) {
 				// Filter out
-				wait(45, msec);
+				wait(40, msec);
 				IntakeMotor2.spin(fwd, 0, volt);
 				wait(300, msec);
 				return;
