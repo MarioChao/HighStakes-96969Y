@@ -7,7 +7,7 @@ void autonpaths::runAutonRedDown() {
 
 	// Grab middle goal
 	driveAndTurnDistanceTiles(-1.47, -74.0, 100.0, 50.0, defaultMoveTilesErrorRange, 2.0);
-	turnToAngle(-56, -halfRobotLengthIn * 2.7);
+	turnToAngle(-57.0, -halfRobotLengthIn * 2.7);
 	setGoalClampState(1);
 	task::sleep(200);
 
