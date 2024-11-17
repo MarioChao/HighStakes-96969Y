@@ -51,7 +51,7 @@ void autonpaths::runAutonSkills() {
 	turnToAngleVelocity(180.0, 60.0);
 
 	// Score ring at neutral wall stake
-	driveAndTurnDistanceTiles(0.6, 180.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(0.7, 180.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	setArmHangState(0);
 	driveAndTurnDistanceTiles(0.1, 180.0, 50.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	task::sleep(200);
@@ -94,11 +94,11 @@ void autonpaths::runAutonSkills() {
 	// Grab middle mobile goal
 	turnToAngle(-180.0);
 	setGoalClampState(1, 0.7);
-	driveAndTurnDistanceTiles(-0.70, -180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-0.80, -180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Score 1 ring at blue wall stake
 	setArmHangState(1);
-	turnToAngle(-270.0);
+	turnToAngle(-280.0);
 	driveAndTurnDistanceTiles(0.53, -270.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 	setArmHangState(0);
 	task::sleep(400);
