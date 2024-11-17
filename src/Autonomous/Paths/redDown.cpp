@@ -6,7 +6,7 @@ void autonpaths::runAutonRedDown() {
 	setRotation(-75.0);
 
 	// Grab middle goal
-	driveAndTurnDistanceTiles(-1.55, -71.0, 100.0, 50.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(-1.55, -70.0, 100.0, 50.0, defaultMoveTilesErrorRange, 2.0);
 	driveAndTurnDistanceTiles(-0.55, -57.0, 80.0, 40.0, defaultMoveTilesErrorRange, 1.0);
 	setGoalClampState(1);
 	task::sleep(200);
@@ -16,10 +16,10 @@ void autonpaths::runAutonRedDown() {
 	turnToAngle(-75.0, -halfRobotLengthIn * 1.3);
 
 	// Take in ring to arm
-	turnToAngleVelocity(-125, 80.0, 0.0, defaultTurnAngleErrorRange, 2.0);
+	turnToAngleVelocity(-123, 80.0, 0.0, defaultTurnAngleErrorRange, 2.0);
 	setIntakeHookMode(1);
 	setIntakeTopState(0);
-	driveAndTurnDistanceTiles(0.3, -125.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(0.4, -123.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Drop goal near our side
 	turnToAngle(-90.0);
