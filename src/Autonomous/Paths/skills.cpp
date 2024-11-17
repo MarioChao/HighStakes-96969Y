@@ -96,7 +96,7 @@ void autonpaths::runAutonSkills() {
 	setGoalClampState(1, 0.7);
 	driveAndTurnDistanceTiles(-0.70, -180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
-	// Score 1 ring at neutral wall stake
+	// Score 1 ring at blue wall stake
 	setArmHangState(1);
 	turnToAngle(-270.0);
 	driveAndTurnDistanceTiles(0.53, -270.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
@@ -112,45 +112,46 @@ void autonpaths::runAutonSkills() {
 	setRotation(90.0);
 	// First ring
 	turnToAngle(-50.0);
-	driveAndTurnDistanceTiles(1.86, -50.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(1.86, -50.0, 90.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	// Second ring
 	turnToAngle(-135.0);
 	setIntakeTopState(0);
-	driveAndTurnDistanceTiles(1.0, -135.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(-1.1, -135.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(1.0, -135.0, 90.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-1.1, -135.0, 90.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	setIntakeTopState(1);
 	// Third ring
 	turnToAngle(0);
-	driveAndTurnDistanceTiles(0.98, 0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(1.03, 0, 90.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Take in 2 rings in a row & score
 	turnToAngle(90.0);
-	driveAndTurnDistanceTiles(1.68, 90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(1.68, 90.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Take in 1 ring to arm
 	turnToAngle(90.0);
-	turnToAngle(0, halfRobotLengthIn * 0.8);
+	turnToAngle(0, halfRobotLengthIn * 1.0);
 	setIntakeHookMode(1);
 	driveAndTurnDistanceTiles(0.5, 0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Put mobile goal in corner
-	turnToAngle(-120.0);
+	turnToAngle(-100.0);
 	setGoalClampState(0);
-	driveAndTurnDistanceTiles(-0.7, -120.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(-0.7, -100.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Go to neutral wall stake & store 1 ring
 	setIntakeHookMode(0);
 	setIntakeBottomState(1);
 	setIntakeTopState(0);
-	turnToAngle(-93.4);
-	driveAndTurnDistanceTiles(2.51, -93.4, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	turnToAngle(-95);
+	driveAndTurnDistanceTiles(2.46, -95, 80.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 
 	// Score ring at neutral wall stake
 	turnToAngle(0);
 	setArmHangState(1);
 	task::sleep(400);
-	driveAndTurnDistanceTiles(1.0, 0.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	driveAndTurnDistanceTiles(1.0, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	setArmHangState(0);
+	driveAndTurnDistanceTiles(0.1, 0.0, 50.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	task::sleep(200);
 
 	/* Red up */
