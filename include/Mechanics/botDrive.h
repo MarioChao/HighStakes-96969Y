@@ -11,4 +11,7 @@ namespace botdrive {
 	void switchDriveMode();
 
 	void control();
+
+	void setMaxDriveVelocity(double velocityPct);
+	double getMaxDriveVelocity();
 }

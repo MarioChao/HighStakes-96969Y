@@ -53,6 +53,7 @@ void autonpaths::runAutonSkills() {
 	// Score ring at neutral wall stake
 	driveAndTurnDistanceTiles(0.6, 180.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	setArmHangState(0);
+	driveAndTurnDistanceTiles(0.1, 180.0, 50.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	task::sleep(200);
 
 	/* Blue down */
