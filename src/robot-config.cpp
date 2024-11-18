@@ -16,11 +16,11 @@ controller Controller2(partner);
 
 // Wheel motors
 
-motor LeftMotorA(PORT1, ratio6_1, true);
-motor LeftMotorB(PORT18, ratio6_1, true);
-motor LeftMotorC(PORT17, ratio6_1);
-motor RightMotorA(PORT2, ratio6_1);
-motor RightMotorB(PORT21, ratio6_1);
+motor LeftMotorA(PORT15, ratio6_1, true);
+motor LeftMotorB(PORT17, ratio6_1, true);
+motor LeftMotorC(PORT16, ratio6_1);
+motor RightMotorA(PORT20, ratio6_1);
+motor RightMotorB(PORT18, ratio6_1);
 motor RightMotorC(PORT19, ratio6_1, true);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
@@ -28,13 +28,13 @@ motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA, Rig
 
 // Intake motors
 
-motor IntakeMotor1(PORT15, ratio6_1, true);
-motor IntakeMotor2(PORT16, ratio6_1);
+motor IntakeMotor1(PORT1, ratio6_1);
+motor IntakeMotor2(PORT4, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 //arm motor
 
-motor ArmMotor(PORT14, ratio36_1);
+motor ArmMotor(emptyPort, ratio36_1);
 
 // Expander
 
@@ -48,22 +48,23 @@ pneumatics RightWingPneumatic(Expander1.C);
 
 pneumatics IntakeLiftPneumatic(Expander1.B);
 pneumatics HangPneumatic(Expander1.E);
-pneumatics GoalClampPneumatic(Brain.ThreeWirePort.A);
-pneumatics BotArmPneumatics(Brain.ThreeWirePort.B);
-pneumatics SwordPneumatics(Brain.ThreeWirePort.C);
+pneumatics GoalClampPneumatic(Brain.ThreeWirePort.C);
+pneumatics BotArmPneumatics(Expander1.B);
+pneumatics SwordPneumatics(Brain.ThreeWirePort.D);
 
 
 // Sensors
 
-encoder LookEncoder(Expander1.C); // .G .H
-rotation LookRotation(PORT20);
-rotation RightRotation(PORT3);
+encoder LookEncoder(Expander1.A);
+encoder RightEncoder(Brain.ThreeWirePort.A);
+rotation LookRotation(PORT14);
+rotation RightRotation(emptyPort);
 
-inertial InertialSensor(PORT9);
+inertial InertialSensor(PORT13);
 distance DistanceSensor(emptyPort);
 
-distance RingDistanceSensor(PORT8);
-optical RingOpticalSensor(PORT7);
+distance RingDistanceSensor(emptyPort);
+optical RingOpticalSensor(emptyPort);
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
