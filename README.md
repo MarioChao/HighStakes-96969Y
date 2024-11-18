@@ -1,6 +1,6 @@
 # VEX Highstakes
 
-The repository for team 96969Y's robot program in 2024-25 VEX Robotics - High Stakes.
+The repository for team 96969Y's prototype-4 robot program in 2024-25 VEX Robotics - High Stakes.
 
 ## Configuration
 
