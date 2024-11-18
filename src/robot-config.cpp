@@ -60,7 +60,7 @@ encoder RightEncoder(Brain.ThreeWirePort.A);
 rotation LookRotation(PORT14);
 rotation RightRotation(emptyPort);
 
-inertial InertialSensor(emptyPort);
+inertial InertialSensor(PORT13);
 distance DistanceSensor(emptyPort);
 
 distance RingDistanceSensor(emptyPort);

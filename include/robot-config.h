@@ -35,6 +35,7 @@ extern pneumatics BotArmPneumatics;
 extern pneumatics SwordPneumatics;
 
 extern encoder LookEncoder;
+extern encoder RightEncoder;
 extern rotation LookRotation;
 extern rotation RightRotation;
 
