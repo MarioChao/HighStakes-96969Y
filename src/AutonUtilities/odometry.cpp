@@ -33,7 +33,8 @@ Odometry::Odometry() {
 	positionFactor = 1;
 	isStarted = false;
 
-	x = y = angle = 0;
+	x = y = 0;
+	fieldAngle_degrees = 0;
 }
 
 void Odometry::addPositionSensor2D(double polarAngle, double (*revolutionCallback)(), double sensorToWheel_gearRatio, double wheelDiameter_inches, double normalRotateRadius_inches) {
@@ -119,20 +120,21 @@ void Odometry::odometryFrame() {
 	/* Measurement differences */
 
 	// Get rotation difference from averages
-	double deltaAngle_degrees = getDeltaAngle_degrees();
+	double deltaPolarAngle_degrees = getDeltaPolarAngle_degrees();
 
 	// Get local distance difference from averages, multiplied by position factor
-	double localDeltaRight = getLocalDeltaX_inches(deltaAngle_degrees) * positionFactor;
-	double localDeltaLook = getLocalDeltaY_inches(deltaAngle_degrees) * positionFactor;
+	double localDeltaRight = getLocalDeltaX_inches(deltaPolarAngle_degrees) * positionFactor;
+	double localDeltaLook = getLocalDeltaY_inches(deltaPolarAngle_degrees) * positionFactor;
 
 
 	/* Local to Absolute */
 
 	// Rotate to absolute difference
-	double averageAngleDegrees = angle + deltaAngle_degrees / 2;
-	double localToGlobalRotateAngle = genutil::toRadians(90 - averageAngleDegrees);
+	double averageAngleDegrees = getPolarAngle_degrees() + deltaPolarAngle_degrees / 2;
+	double localToGlobalRotateAngle = genutil::toRadians(averageAngleDegrees);
 	double absoluteDeltaRight = localDeltaRight * cos(localToGlobalRotateAngle) - localDeltaLook * sin(localToGlobalRotateAngle);
 	double absoluteDeltaLook = localDeltaRight * sin(localToGlobalRotateAngle) + localDeltaLook * cos(localToGlobalRotateAngle);
+	printf("test: %.3f %.3f %.3f\n", genutil::toDegrees(localToGlobalRotateAngle), absoluteDeltaRight, absoluteDeltaLook);
 
 
 	/* Update */
@@ -144,20 +146,24 @@ void Odometry::odometryFrame() {
 	// Update odometry values
 	x += absoluteDeltaRight;
 	y += absoluteDeltaLook;
-	angle += deltaAngle_degrees;
+	fieldAngle_degrees -= deltaPolarAngle_degrees;
 }
 
-void Odometry::setValues(double x, double y, double polarAngles) {
+void Odometry::setValues(double x, double y, double fieldAngles) {
 	this->x = x;
 	this->y = y;
-	this->angle = polarAngles;
+	this->fieldAngle_degrees = fieldAngles;
 }
 
 double Odometry::getX() { return x; }
 
 double Odometry::getY() { return y; }
 
-double Odometry::getAngle() { return angle; }
+double Odometry::getFieldAngle_degrees() { return fieldAngle_degrees; }
+
+double Odometry::getPolarAngle_degrees() {
+	return 90 - fieldAngle_degrees;
+}
 
 
 // Private functions
@@ -182,7 +188,7 @@ void Odometry::getNewInertialSensorMeasurements() {
 	}
 }
 
-double Odometry::getDeltaAngle_degrees() {
+double Odometry::getDeltaPolarAngle_degrees() {
 	double totalDeltaAngle = 0;
 	for (int i = 0; i < inertialSensor_count; i++) {
 		totalDeltaAngle += inertialSensor_newMeasurements[i] - inertialSensor_oldMeasurements[i];
@@ -190,7 +196,7 @@ double Odometry::getDeltaAngle_degrees() {
 	return totalDeltaAngle / inertialSensor_count;
 }
 
-double Odometry::getLocalDeltaX_inches(double deltaAngle_degrees) {
+double Odometry::getLocalDeltaX_inches(double deltaPolarAngle_degrees) {
 	double totalDeltaX_inches = 0;
 	int validSensorsCount = 0;
 	for (int i = 0; i < positionSensor_count; i++) {
@@ -210,7 +216,7 @@ double Odometry::getLocalDeltaX_inches(double deltaAngle_degrees) {
 		measuredDeltaDistance *= M_PI * positionSensor_wheelDiameters_inches[i]; // wheel travel distance
 
 		// Decrease by rotated arc distance
-		double rotatedDeltaDistance = positionSensor_normalRotateRadii_inches[i] * genutil::toRadians(deltaAngle_degrees);
+		double rotatedDeltaDistance = positionSensor_normalRotateRadii_inches[i] * genutil::toRadians(deltaPolarAngle_degrees);
 		double sensorDeltaTranslate = measuredDeltaDistance - rotatedDeltaDistance;
 
 		// Add to total
