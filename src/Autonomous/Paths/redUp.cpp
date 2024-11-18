@@ -37,7 +37,7 @@ void autonpaths::runAutonRedUp() {
 	turnToAngle(-50.0);
 	driveAndTurnDistanceTiles(0.95, -50.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 	task::sleep(200);
-	driveAndTurnDistanceTiles(1.0, -45.0, 40.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+	driveAndTurnDistanceTiles(1.0, -45.0, 50.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	task::sleep(600);
 	driveAndTurnDistanceTiles(-0.50, -42.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
@@ -48,5 +48,5 @@ void autonpaths::runAutonRedUp() {
 	}
 	setArmHangState(0, 0.5);
 	setIntakeState(0, 0.5);
-	driveAndTurnDistanceTiles(-2.24, -42.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.6);
+	driveAndTurnDistanceTiles(-2.28, -42.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.6);
 }

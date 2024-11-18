@@ -15,6 +15,9 @@ namespace {
 	// Drive mode
 	controlType driveMode = controlType::ArcadeTwoStick;
 	bool driveModeDebounce = false;
+
+	// Drive config
+	double maxDriveVelocityPct = 100.0;
 }
 
 namespace botdrive {
@@ -60,6 +63,14 @@ namespace botdrive {
 				break;
 		}
 	}
+
+	void setMaxDriveVelocity(double velocityPct) {
+		maxDriveVelocityPct = velocityPct;
+	}
+
+	double getMaxDriveVelocity() {
+		return maxDriveVelocityPct;
+	}
 }
 
 namespace {
@@ -97,7 +108,7 @@ namespace {
 		double rightPct = initRightPct + rightPolarRotatePct;
 
 		// Scale percentages if overshoot
-		double scaleFactor = 100.0 / fmax(100.0, fmax(fabs(leftPct), fabs(rightPct)));
+		double scaleFactor = maxDriveVelocityPct / fmax(maxDriveVelocityPct, fmax(fabs(leftPct), fabs(rightPct)));
 		leftPct *= scaleFactor;
 		rightPct *= scaleFactor;
 

@@ -7,6 +7,7 @@
 #include "Mechanics/swing.h"
 // #include "Mechanics/botWings.h"
 #include "Mechanics/goalClamp.h"
+#include "Utilities/debugFunctions.h"
 
 #include "Controller/controls.h"
 #include "main.h"
@@ -25,6 +26,8 @@ namespace controls {
 		Controller2.ButtonX.pressed([]() -> void {
 			botdrive::switchDriveMode();
 		});
+
+		// Controller 1
 		Controller1.ButtonX.pressed([]() -> void {
 			if (intakePart == 1) botintake::switchMode();
 			else botintake2::switchMode();
@@ -38,6 +41,13 @@ namespace controls {
 				}
 			}
 		});
+		Controller1.ButtonA.pressed([]() -> void {
+			swing::switchState();
+		});
+		Controller1.ButtonB.pressed([]() -> void {
+			if (intakePart == 1) botintake::switchFilterColor();
+			else botintake2::switchFilterColor();
+		});
 		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
@@ -47,12 +57,14 @@ namespace controls {
 				botarmpneu::switchState();
 			}
 		});
-		Controller1.ButtonB.pressed([]() -> void {
-			if (intakePart == 1) botintake::switchFilterColor();
-			else botintake2::switchFilterColor();
-		});
-		Controller1.ButtonA.pressed([]() -> void {
-			swing::switchState();
+		Controller1.ButtonUp.pressed([]() -> void {
+			if (botdrive::getMaxDriveVelocity() >= 99.0) {
+				botdrive::setMaxDriveVelocity(50.0);
+				debug::printOnController("50\% drive speed");
+			} else {
+				botdrive::setMaxDriveVelocity(100.0);
+				debug::printOnController("100\% drive speed");
+			}
 		});
 
 	}

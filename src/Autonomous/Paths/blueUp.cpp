@@ -16,7 +16,7 @@ void autonpaths::runAutonBlueUp() {
 
 	// Grab goal
 	setGoalClampState(1, 1.4);
-	driveAndTurnDistanceTiles(-1.73, 115.0, 38.0, 15.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(-1.65, 115.0, 42.0, 15.0, defaultMoveTilesErrorRange, 2.0);
 	task::sleep(200);
 
 	// Take in middle up
