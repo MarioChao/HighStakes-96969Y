@@ -50,7 +50,7 @@ void pre_auton(void) {
 
 	// Odometry
 	mainOdometry.addPositionSensor2D(-90, []() {return LookRotation.position(rev);}, 1, 2, 0);
-	mainOdometry.addPositionSensor2D(0, []() {return RightRotation.position(rev);}, 1, 4, 0);
+	mainOdometry.addPositionSensor2D(0, []() {return RightEncoder.position(rev);}, 1, 4, 0);
 	mainOdometry.addInertialSensor(InertialSensor, -3.276, 3.651);
 	mainOdometry.setPositionFactor(1.0 / field::tileLengthIn);
 	task odometryTask([]() -> int {
