@@ -37,8 +37,8 @@ namespace {
 	bool useRotationSensorForPid = false;
 	bool useEncoderForPid = false;
 
-	DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
-	// DriftCorrection driftCorrector(InertialSensor, 0, 0);
+	// DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
+	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 }
 
 namespace autonfunctions {

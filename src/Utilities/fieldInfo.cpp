@@ -1,5 +1,5 @@
 #include "Utilities/fieldInfo.h"
 
 namespace field {
-	double tileLengthIn = 23.5625;
+	double tileLengthIn = 23 + 13.0 / 16;
 }

@@ -23,7 +23,7 @@ public:
 	 * @param revolutionCallback A function pointer for getting the sensor's immediate value in revolutions.
 	 * @param sensorToWheel_gearRatio The ratio `sensorGearTeeth` / `wheelGearTeeth`, or (sensor gear) / (farther gear) * (close gear) / (far gear) * ... * () / ().
 	 * @param wheelDiameter_inches The diameter of the driven wheel in inches.
-	 * @param normalRotateRadius_inches The distance between the sensor's measuring line and a parallel line passing through the tracking center. Positive means the sensor is measuring forward to the left of the tracking center.
+	 * @param normalRotateRadius_inches The distance between the sensor's measuring line and a parallel line passing through the tracking center. Positive means the sensor is measuring forward to the right of the tracking center.
 	 */
 	void addPositionSensor2D(double polarAngle, double (*revolutionCallback)(), double sensorToWheel_gearRatio, double wheelDiameter_inches, double normalRotateRadius_inches);
 
@@ -73,7 +73,7 @@ public:
 	 * 
 	 * @param x Horizontal position with position factor.
 	 * @param y Vertical position with position factor.
-	 * @param fieldAngles Robot's front direction. Field angle rotation in degrees.
+	 * @param fieldAngles Robot's front/look direction. Field angle rotation in degrees.
 	 */
 	void setValues(double x, double y, double fieldAngles);
 
@@ -118,6 +118,6 @@ private:
 	void getNewInertialSensorMeasurements();
 
 	double getDeltaPolarAngle_degrees();
-	double getLocalDeltaX_inches(double deltaAngle_degrees);
-	double getLocalDeltaY_inches(double deltaAngle_degrees);
+	double getLocalDeltaX_inches(double deltaPolarAngle_degrees);
+	double getLocalDeltaY_inches(double deltaPolarAngle_degrees);
 };
