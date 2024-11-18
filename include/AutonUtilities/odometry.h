@@ -73,13 +73,14 @@ public:
 	 * 
 	 * @param x Horizontal position with position factor.
 	 * @param y Vertical position with position factor.
-	 * @param polarAngles Robot's front direction. Polar angle rotation in degrees.
+	 * @param fieldAngles Robot's front direction. Field angle rotation in degrees.
 	 */
-	void setValues(double x, double y, double polarAngles);
+	void setValues(double x, double y, double fieldAngles);
 
 	double getX();
 	double getY();
-	double getAngle();
+	double getFieldAngle_degrees();
+	double getPolarAngle_degrees();
 
 private:
 	// Position sensors
@@ -108,7 +109,7 @@ private:
 	bool isStarted = false;
 
 	// Tracked values
-	double x, y, angle;
+	double x, y, fieldAngle_degrees;
 
 	// Functions
 	void odometryThread();
@@ -116,7 +117,7 @@ private:
 	void getNewPositionSensorMeasurements();
 	void getNewInertialSensorMeasurements();
 
-	double getDeltaAngle_degrees();
+	double getDeltaPolarAngle_degrees();
 	double getLocalDeltaX_inches(double deltaAngle_degrees);
 	double getLocalDeltaY_inches(double deltaAngle_degrees);
 };

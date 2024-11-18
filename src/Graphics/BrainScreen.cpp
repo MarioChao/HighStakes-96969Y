@@ -605,7 +605,7 @@ namespace {
 		return mainOdometry.getY();
 	}
 	double getRobotAngle() {
-		return mainOdometry.getAngle();
+		return mainOdometry.getFieldAngle_degrees();
 	}
 	double getMotorExpectedSpeed() {
 		return motSpeedRpm;
