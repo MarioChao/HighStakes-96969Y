@@ -55,8 +55,8 @@ pneumatics SwordPneumatics(Brain.ThreeWirePort.D);
 
 // Sensors
 
-encoder LookEncoder(Expander1.A); // .G .H
-encoder RightEncoder(Brain.ThreeWirePort.A); // .G .H
+encoder LookEncoder(Expander1.A);
+encoder RightEncoder(Brain.ThreeWirePort.A);
 rotation LookRotation(PORT14);
 rotation RightRotation(emptyPort);
 
