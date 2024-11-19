@@ -1,5 +1,7 @@
 #include "AutonUtilities/odometry.h"
+
 #include "AutonUtilities/driftCorrection.h"
+#include "AutonUtilities/linegular.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
@@ -162,6 +164,10 @@ double Odometry::getFieldAngle_degrees() { return fieldAngle_degrees; }
 
 double Odometry::getPolarAngle_degrees() {
 	return 90 - fieldAngle_degrees;
+}
+
+Linegular Odometry::getLinegular() {
+	return Linegular(x, y, getPolarAngle_degrees());
 }
 
 

@@ -3,6 +3,7 @@
 #include "main.h"
 
 class DriftCorrection;
+class Linegular;
 
 class Odometry {
 public:
@@ -56,16 +57,10 @@ public:
 	 */
 	void startThreads();
 
-	/**
-	 * @brief Starts tracking the robot's position.
-	 * 
-	 */
+	/// @brief Starts tracking the robot's position.
 	void start();
 
-	/**
-	 * @brief Calculate robot's new position from the change in sensor measurements since the last call.
-	 * 
-	 */
+	/// @brief Calculate robot's new position from the change in sensor measurements since the last call.
 	void odometryFrame();
 
 	/**
@@ -81,6 +76,8 @@ public:
 	double getY();
 	double getFieldAngle_degrees();
 	double getPolarAngle_degrees();
+
+	Linegular getLinegular();
 
 private:
 	// Position sensors
