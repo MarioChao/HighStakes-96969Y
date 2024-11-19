@@ -19,6 +19,9 @@
 
 #include "Videos/video-main.h"
 
+#include "AutonUtilities/linegular.h"
+#include "AutonUtilities/ramseteController.h"
+
 
 // ---------- Variables ----------
 
@@ -44,6 +47,14 @@ Odometry mainOdometry;
 
 void pre_auton(void) {
 	vexcodeInit();
+
+	/* Testing Start */
+	RamseteController ramsete;
+	Linegular lg1(0, 0, 70);
+	Linegular lg2(5, 5, 0);
+	std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, 80, 0);
+	printf("LR: %.3f, %.3f\n", lrVelocity.first, lrVelocity.second);
+	/* Testing End */
 
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...

@@ -11,4 +11,9 @@ namespace angle {
 		ret += min;
 		return ret;
 	}
+
+	double sinc(double x) {
+		x = fabs(x) + 1e-14;
+		return sin(x) / x;
+	}
 }
