@@ -127,15 +127,18 @@ void Odometry::odometryFrame() {
 	// Get local distance difference from averages, multiplied by position factor
 	double localDeltaRight = getLocalDeltaX_inches(deltaPolarAngle_degrees) * positionFactor;
 	double localDeltaLook = getLocalDeltaY_inches(deltaPolarAngle_degrees) * positionFactor;
+	Linegular deltaDistances(localDeltaRight, localDeltaLook, deltaPolarAngle_degrees);
 
 
 	/* Local to Absolute */
 
+	// Rotate with pose exponential
+	deltaDistances.rotateExponentialBy(genutil::toRadians(deltaPolarAngle_degrees));
+
 	// Rotate to absolute difference
 	double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees()) + deltaPolarAngle_degrees / 2;
 	double localToGlobalRotateAngle = genutil::toRadians(averageAngleDegrees);
-	double absoluteDeltaRight = localDeltaRight * cos(localToGlobalRotateAngle) - localDeltaLook * sin(localToGlobalRotateAngle);
-	double absoluteDeltaLook = localDeltaRight * sin(localToGlobalRotateAngle) + localDeltaLook * cos(localToGlobalRotateAngle);
+	deltaDistances.rotateXYBy(localToGlobalRotateAngle);
 
 
 	/* Update */
@@ -145,8 +148,8 @@ void Odometry::odometryFrame() {
 	inertialSensor_oldMeasurements = inertialSensor_newMeasurements;
 
 	// Update odometry values
-	x += absoluteDeltaRight;
-	y += absoluteDeltaLook;
+	x += deltaDistances.getX();
+	y += deltaDistances.getY();
 	right_fieldAngle_degrees -= deltaPolarAngle_degrees;
 }
 

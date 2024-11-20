@@ -1,6 +1,7 @@
 #include "AutonUtilities/linegular.h"
 
 #include <cmath>
+#include "Utilities/angleUtility.h"
 #include "Utilities/generalUtility.h"
 
 Linegular::Linegular(double x, double y, double polarTheta_degrees) {
@@ -28,6 +29,14 @@ double Linegular::getTheta_radians() {
 void Linegular::rotateXYBy(double polarRotate_radians) {
 	double newX = x * cos(polarRotate_radians) - y * sin(polarRotate_radians);
 	double newY = x * sin(polarRotate_radians) + y * cos(polarRotate_radians);
+	x = newX;
+	y = newY;
+}
+
+void Linegular::rotateExponentialBy(double polarRotate_radians) {
+	// Check pose exponential in https://file.tavsys.net/control/controls-engineering-in-frc.pdf
+	double newX = x * angle::sinc(polarRotate_radians) + y * angle::cosm1_x(polarRotate_radians);
+	double newY = x * -angle::cosm1_x(polarRotate_radians) + y * angle::sinc(polarRotate_radians);
 	x = newX;
 	y = newY;
 }
