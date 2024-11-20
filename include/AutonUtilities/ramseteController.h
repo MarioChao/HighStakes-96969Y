@@ -6,8 +6,12 @@ class Linegular;
 
 class RamseteController {
 public:
-	RamseteController(double b = 0.1, double damp = 0.2);
+	RamseteController(double b = 2.0, double damp = 0.7);
 
+	std::pair<double, double> getLeftRightVelocity_pct(
+		Linegular actual, Linegular desired,
+		bool isAnglesPolar = true
+	);
 	std::pair<double, double> getLeftRightVelocity_pct(
 		Linegular actual, Linegular desired,
 		double desiredLinearVelocity, double desiredAngularVelocity,
