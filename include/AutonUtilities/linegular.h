@@ -2,6 +2,13 @@
 
 class Linegular {
 public:
+	/**
+	 * @brief Construct a new Linegular object.
+	 * 
+	 * @param x The right-left position on the plane.
+	 * @param y The forward-backward position on the plane.
+	 * @param polarTheta_degrees The polar rotation in degrees.
+	 */
 	Linegular(double x, double y, double polarTheta_degrees);
 
 	double getX();

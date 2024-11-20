@@ -8,7 +8,7 @@
 #include "Mechanics/botIntake2.h"
 #include "Mechanics/botArmPneumatics.h"
 #include "Mechanics/goalClamp.h"
-#include "Utilities/angleFunctions.h"
+#include "Utilities/angleUtility.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"

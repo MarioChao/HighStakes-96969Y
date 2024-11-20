@@ -11,5 +11,8 @@ namespace angle {
 	 */
 	double modRange(double num, double mod, double min);
 
+	double swapFieldPolar_degrees(double degrees);
+
 	double sinc(double x);
+	double cosm1_x(double x);
 }

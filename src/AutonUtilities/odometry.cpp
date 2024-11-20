@@ -2,7 +2,7 @@
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/linegular.h"
-#include "Utilities/robotInfo.h"
+#include "Utilities/angleUtility.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
 #include "main.h"
@@ -36,7 +36,7 @@ Odometry::Odometry() {
 	isStarted = false;
 
 	x = y = 0;
-	fieldAngle_degrees = 0;
+	right_fieldAngle_degrees = 0;
 }
 
 void Odometry::addPositionSensor2D(double polarAngle, double (*revolutionCallback)(), double sensorToWheel_gearRatio, double wheelDiameter_inches, double normalRotateRadius_inches) {
@@ -132,8 +132,8 @@ void Odometry::odometryFrame() {
 	/* Local to Absolute */
 
 	// Rotate to absolute difference
-	double averageAngleDegrees = getPolarAngle_degrees() + deltaPolarAngle_degrees / 2;
-	double localToGlobalRotateAngle = genutil::toRadians(averageAngleDegrees - 90);
+	double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees()) + deltaPolarAngle_degrees / 2;
+	double localToGlobalRotateAngle = genutil::toRadians(averageAngleDegrees);
 	double absoluteDeltaRight = localDeltaRight * cos(localToGlobalRotateAngle) - localDeltaLook * sin(localToGlobalRotateAngle);
 	double absoluteDeltaLook = localDeltaRight * sin(localToGlobalRotateAngle) + localDeltaLook * cos(localToGlobalRotateAngle);
 
@@ -147,27 +147,36 @@ void Odometry::odometryFrame() {
 	// Update odometry values
 	x += absoluteDeltaRight;
 	y += absoluteDeltaLook;
-	fieldAngle_degrees -= deltaPolarAngle_degrees;
+	right_fieldAngle_degrees -= deltaPolarAngle_degrees;
 }
 
-void Odometry::setValues(double x, double y, double fieldAngles) {
+void Odometry::setPosition(double x, double y) {
 	this->x = x;
 	this->y = y;
-	this->fieldAngle_degrees = fieldAngles;
+}
+
+void Odometry::setLookAngle(double fieldAngles) {
+	this->right_fieldAngle_degrees = fieldAngles + 90.0;
+}
+
+void Odometry::setRightAngle(double fieldAngles) {
+	this->right_fieldAngle_degrees = fieldAngles;
 }
 
 double Odometry::getX() { return x; }
 
 double Odometry::getY() { return y; }
 
-double Odometry::getFieldAngle_degrees() { return fieldAngle_degrees; }
-
-double Odometry::getPolarAngle_degrees() {
-	return 90 - fieldAngle_degrees;
+double Odometry::getLookFieldAngle_degrees() {
+	return right_fieldAngle_degrees - 90.0;
 }
 
-Linegular Odometry::getLinegular() {
-	return Linegular(x, y, getPolarAngle_degrees());
+double Odometry::getRightFieldAngle_degrees() {
+	return right_fieldAngle_degrees;
+}
+
+Linegular Odometry::getLookLinegular() {
+	return Linegular(x, y, angle::swapFieldPolar_degrees(getLookFieldAngle_degrees()));
 }
 
 

@@ -64,20 +64,33 @@ public:
 	void odometryFrame();
 
 	/**
-	 * @brief Sets the robot's position and polar angle in a 2D plane.
+	 * @brief Sets the robot's position in a 2D plane.
 	 * 
 	 * @param x Horizontal position with position factor.
 	 * @param y Vertical position with position factor.
+	 */
+	void setPosition(double x, double y);
+
+	/**
+	 * @brief Sets the robot's rotation (look direction) in a 2D plane.
+	 * 
 	 * @param fieldAngles Robot's front/look direction. Field angle rotation in degrees.
 	 */
-	void setValues(double x, double y, double fieldAngles);
+	void setLookAngle(double fieldAngles);
+
+	/**
+	 * @brief Sets the robot's rotation (look direction) in a 2D plane.
+	 * 
+	 * @param fieldAngles Robot's right direction. Field angle rotation in degrees.
+	 */
+	void setRightAngle(double fieldAngles);
 
 	double getX();
 	double getY();
-	double getFieldAngle_degrees();
-	double getPolarAngle_degrees();
+	double getLookFieldAngle_degrees();
+	double getRightFieldAngle_degrees();
 
-	Linegular getLinegular();
+	Linegular getLookLinegular();
 
 private:
 	// Position sensors
@@ -106,7 +119,8 @@ private:
 	bool isStarted = false;
 
 	// Tracked values
-	double x, y, fieldAngle_degrees;
+	double x, y;
+	double right_fieldAngle_degrees;
 
 	// Functions
 	void odometryThread();
