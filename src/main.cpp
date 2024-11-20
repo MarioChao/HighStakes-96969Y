@@ -21,6 +21,8 @@
 
 #include "AutonUtilities/linegular.h"
 #include "AutonUtilities/ramseteController.h"
+#include "Simulation/robotSimulator.h"
+#include "Utilities/generalUtility.h"
 
 
 // ---------- Variables ----------
@@ -34,6 +36,36 @@ int intakePart = 1;
 timer drivingTimer;
 
 Odometry mainOdometry;
+
+// Test functions
+
+void test1() {
+	RamseteController ramsete;
+	RobotSimulator simulator;
+	simulator.position = Vector3(0, 0, 0);
+	simulator.angularPosition = genutil::toRadians(90.0);
+	Linegular lg2(5 * field::tileLengthIn, 5 * field::tileLengthIn, 0);
+	while (1) {
+		Linegular lg1(simulator.position.x, simulator.position.y, genutil::toDegrees(simulator.angularPosition));
+		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2);
+		double scaleFactorLR = genutil::getScaleFactor(1200.0, {lrVelocity.first, lrVelocity.second});
+		lrVelocity.first *= scaleFactorLR;
+		lrVelocity.second *= scaleFactorLR;
+
+		double velocity = (lrVelocity.first + lrVelocity.second) / 2;
+		double angularVelocity = (lrVelocity.second - lrVelocity.first) / 2;
+		double scaleFactorAV = genutil::getScaleFactor(genutil::toRadians(180.0), {angularVelocity});
+		angularVelocity *= scaleFactorAV;
+
+		double lookAngle = simulator.angularPosition;
+		printf("POS: %.3f, %.3f, ANG: %.3f\n", simulator.position.x, simulator.position.y, genutil::toDegrees(lookAngle));
+		printf("LR: %.3f, %.3f\n", lrVelocity.first, lrVelocity.second);
+		simulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
+		simulator.angularVelocity = angularVelocity;
+		simulator.updatePhysics();
+		wait(20, msec);
+	}
+}
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -49,11 +81,7 @@ void pre_auton(void) {
 	vexcodeInit();
 
 	/* Testing Start */
-	RamseteController ramsete;
-	Linegular lg1(0, 0, 70);
-	Linegular lg2(5, 5, 0);
-	std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, 80, 0);
-	printf("LR: %.3f, %.3f\n", lrVelocity.first, lrVelocity.second);
+	test1();
 	/* Testing End */
 
 	// All activities that occur before the competition starts
@@ -65,7 +93,8 @@ void pre_auton(void) {
 	mainOdometry.addInertialSensor(InertialSensor, -3.276, 3.651);
 	mainOdometry.setPositionFactor(1.0 / field::tileLengthIn);
 	task odometryTask([]() -> int {
-		mainOdometry.setValues(0, 0, 0);
+		mainOdometry.setPosition(0, 0);
+		mainOdometry.setLookAngle(0);
 		mainOdometry.start();
 		while (true) {
 			mainOdometry.odometryFrame();

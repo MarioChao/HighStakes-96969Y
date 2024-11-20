@@ -27,4 +27,29 @@ namespace genutil {
 	double toDegrees(double radians) {
 		return radians * 180.0 / M_PI;
 	}
+
+	double rangeMap(double x, double inMin, double inMax, double outMin, double outMax) {
+		return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+	}
+
+	double scaleToMax(double x, double rangeMax) {
+		return x * rangeMax / x;
+	}
+
+	double getScaleFactor(double scaleToMax, std::initializer_list<double> list) {
+		scaleToMax = fabs(scaleToMax);
+		return scaleToMax / fmax(scaleToMax, maxAbsolute(list));
+	}
+
+	double maxAbsolute(std::initializer_list<double> list) {
+		// Get maximum absolute
+		double result = 0;
+		for (double element : list) {
+			double value = fabs(element);
+			if (value > result) {
+				result = value;
+			}
+		}
+		return result;
+	}
 }
