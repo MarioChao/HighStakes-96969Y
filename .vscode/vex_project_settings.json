@@ -1,16 +1,16 @@
 {
 	"extension": {
-		"version": "0.5.0",
+		"version": "0.6.1",
 		"json": 2
 	},
 	"project": {
 		"name": "highStakesV5_96969Y",
 		"description": "",
-		"creationDate": "6/12/2024, 12:24:28 PM",
+		"creationDate": "Tue, 19 Nov 2024 15:16:22 GMT",
 		"platform": "V5",
 		"language": "cpp",
 		"slot": 2,
-		"sdkVersion": "V5_20240223_11_00_00",
+		"sdkVersion": "V5_20240802_15_00_00",
 		"cpp": {
 			"includePath": [],
 			"printf_float": true
