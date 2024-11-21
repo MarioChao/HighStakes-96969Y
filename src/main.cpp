@@ -24,6 +24,8 @@
 #include "Simulation/robotSimulator.h"
 #include "Utilities/generalUtility.h"
 
+// #include "GraphUtilities/copiedBezier.h"
+
 
 // ---------- Variables ----------
 
@@ -37,32 +39,59 @@ timer drivingTimer;
 
 Odometry mainOdometry;
 
+RobotSimulator robotSimulator;
+
 // Test functions
 
 void test1() {
+	// Initialize controller
 	RamseteController ramsete;
-	RobotSimulator simulator;
-	simulator.position = Vector3(0, 0, 0);
-	simulator.angularPosition = genutil::toRadians(90.0);
-	Linegular lg2(5 * field::tileLengthIn, 5 * field::tileLengthIn, 0);
+	// Create a path
+	// bezier::Bezier<5> bezierCurve({
+	// 	{0, 0},
+	// 	{0, 2},
+	// 	{0, 4},
+	// 	{2, 7},
+	// 	{3, 1},
+	// 	{5, 5}
+	// });
+	// Set initial position
+	robotSimulator.position = Vector3(0, 0, 0);
+	robotSimulator.angularPosition = genutil::toRadians(90.0);
+	// Set goal linegular
+	task::sleep(1000);
+	robotSimulator.resetTimer();
+	timer curveTimer;
 	while (1) {
-		Linegular lg1(simulator.position.x, simulator.position.y, genutil::toDegrees(simulator.angularPosition));
+		// Get time
+		double t = curveTimer.value() * 0.2;
+		if (t > 1) {
+			break;
+		}
+
+		// Get actual & desired linegular
+		Linegular lg1(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
+		Linegular lg2(0, 0, 0);
+		// bezier::Point point = bezierCurve.valueAt(t);
+		// Linegular lg2(point.x, point.y, bezierCurve.tangentAt(t).angleDeg());
+		// Linegular lg2(point.x, point.y, bezierCurve.tangentAt(t).angleDeg());
+		// Control
 		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2);
-		double scaleFactorLR = genutil::getScaleFactor(1200.0, {lrVelocity.first, lrVelocity.second});
+		double scaleFactorLR = genutil::getScaleFactor(50.0, {lrVelocity.first, lrVelocity.second});
 		lrVelocity.first *= scaleFactorLR;
 		lrVelocity.second *= scaleFactorLR;
 
 		double velocity = (lrVelocity.first + lrVelocity.second) / 2;
 		double angularVelocity = (lrVelocity.second - lrVelocity.first) / 2;
-		double scaleFactorAV = genutil::getScaleFactor(genutil::toRadians(180.0), {angularVelocity});
+		double scaleFactorAV = genutil::getScaleFactor(genutil::toRadians(360.0), {angularVelocity});
 		angularVelocity *= scaleFactorAV;
 
-		double lookAngle = simulator.angularPosition;
-		printf("POS: %.3f, %.3f, ANG: %.3f\n", simulator.position.x, simulator.position.y, genutil::toDegrees(lookAngle));
+		double lookAngle = robotSimulator.angularPosition;
+		printf("POS: %.3f, %.3f, ANG: %.3f\n", robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(lookAngle));
 		printf("LR: %.3f, %.3f\n", lrVelocity.first, lrVelocity.second);
-		simulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
-		simulator.angularVelocity = angularVelocity;
-		simulator.updatePhysics();
+		robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
+		robotSimulator.angularVelocity = angularVelocity;
+		robotSimulator.updatePhysics();
 		wait(20, msec);
 	}
 }
@@ -79,10 +108,6 @@ void test1() {
 
 void pre_auton(void) {
 	vexcodeInit();
-
-	/* Testing Start */
-	test1();
-	/* Testing End */
 
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...
@@ -116,6 +141,10 @@ void pre_auton(void) {
 
 	// Debug
 	auton::showAutonRunType();
+
+	/* Testing Start */
+	test1();
+	/* Testing End */
 }
 
 /*---------------------------------------------------------------------------*/

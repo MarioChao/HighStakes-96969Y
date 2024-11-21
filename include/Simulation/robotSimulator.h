@@ -7,6 +7,7 @@ class RobotSimulator {
 public:
 	RobotSimulator();
 
+	void resetTimer();
 	void updatePhysics();
  
 	Vector3 position, velocity, acceleration, jerk;

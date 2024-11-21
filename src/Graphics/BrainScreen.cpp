@@ -8,6 +8,9 @@
 #include "Graphics/GUIs/ShapesGui.h"
 #include "Graphics/GUIs/SlidersGui.h"
 #include "Graphics/GUIs/DocksGui.h"
+#include "Simulation/robotSimulator.h"
+#include "Utilities/angleUtility.h"
+#include "Utilities/generalUtility.h"
 #include "Videos/video-main.h"
 #include "main.h"
 
@@ -36,9 +39,9 @@ namespace {
 	void initQRCodes();
 
 	// Getters
-	double getRobotX();
-	double getRobotY();
-	double getRobotAngle();
+	double getRobotX_tiles();
+	double getRobotY_tiles();
+	double getRobotPolarAngle_degrees();
 	double getMotorActualSpeed();
 	double getMotorExpectedSpeed();
 
@@ -71,6 +74,9 @@ namespace {
 
 	// Colors
 	color ownColor, oppColor;
+
+	// Robot visual config
+	bool showSimulator = true;
 }
 
 // Global Functions
@@ -157,15 +163,15 @@ namespace {
 		// Robot coordinate
 		double scaleX = width / (6 * tileSizeCm);
 		double scaleY = height / (6 * tileSizeCm);
-		double botX = x + (getRobotX() + 0.5 * tileSizeCm) * scaleX;
+		double botX = x + (getRobotX_tiles() * tileSizeCm + 0.5 * tileSizeCm) * scaleX;
 		if (botX + 1 >= x + width - 1) botX = x + width - 2;
 		else if (botX - 1 <= x + 1) botX = x + 2;
-		double botY = y + height - (getRobotY() + 0.5 * tileSizeCm) * scaleY;
+		double botY = y + height - (getRobotY_tiles() * tileSizeCm + 0.5 * tileSizeCm) * scaleY;
 		if (botY + 1 >= y + height - 1) botY = y + height - 2;
 		else if (botY - 1 <= y + 1) botY = y + 2;
 		// Shooting path
 		//  Get flywheel angle
-		double botAng = 90 - getRobotAngle();
+		double botAng = getRobotPolarAngle_degrees();
 		//  Calculate x and y components
 		double dx, dy;
 		if (cos(botAng * DegToRad) > 0) dx = x + width - botX;
@@ -598,14 +604,23 @@ namespace {
 	}
 
 	// Getters
-	double getRobotX() {
+	double getRobotX_tiles() {
+		if (showSimulator) {
+			return robotSimulator.position.x;
+		}
 		return mainOdometry.getX();
 	}
-	double getRobotY() {
+	double getRobotY_tiles() {
+		if (showSimulator) {
+			return robotSimulator.position.y;
+		}
 		return mainOdometry.getY();
 	}
-	double getRobotAngle() {
-		return mainOdometry.getFieldAngle_degrees();
+	double getRobotPolarAngle_degrees() {
+		if (showSimulator) {
+			return genutil::toDegrees(robotSimulator.angularPosition);
+		}
+		return angle::swapFieldPolar_degrees(mainOdometry.getLookFieldAngle_degrees());
 	}
 	double getMotorExpectedSpeed() {
 		return motSpeedRpm;
@@ -618,11 +633,11 @@ namespace {
 	void drawInfo() {
 		Brain.Screen.setPenColor(color::green);
 		Brain.Screen.setFillColor(color::transparent);
-		Brain.Screen.printAt(10, 35, 1, "X: %s, Y: %s", leadTrailZero(4, 3, getRobotX()).c_str(), leadTrailZero(4, 3, getRobotY()).c_str());
+		Brain.Screen.printAt(10, 35, 1, "X: %s, Y: %s", leadTrailZero(4, 3, getRobotX_tiles()).c_str(), leadTrailZero(4, 3, getRobotY_tiles()).c_str());
 
 		Brain.Screen.setPenColor(color::green);
 		Brain.Screen.setFillColor(color::transparent);
-		Brain.Screen.printAt(240, 35, 1, "BotAng: %s", leadTrailZero(3, 3, getRobotAngle()).c_str());
+		Brain.Screen.printAt(240, 35, 1, "BotAng: %s", leadTrailZero(3, 3, getRobotPolarAngle_degrees()).c_str());
 
 		// Brain.Screen.setPenColor(color(255, 190, 0));
 		// Brain.Screen.setFillColor(color::transparent);

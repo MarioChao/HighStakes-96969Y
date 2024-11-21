@@ -3,6 +3,10 @@
 #include <cmath>
 
 RobotSimulator::RobotSimulator() {
+	resetTimer();
+}
+
+void RobotSimulator::resetTimer() {
 	physicsTimer.clear();
 	lastUpdateTime = 0;
 }
