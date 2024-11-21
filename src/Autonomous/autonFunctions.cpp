@@ -2,7 +2,6 @@
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/pidControl.h"
-#include "AutonUtilities/motionProfile.h"
 
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botIntake2.h"
@@ -125,17 +124,6 @@ namespace autonfunctions {
 	/// @param maxTurnVelocityPct Maximum rotational velocity of the drive. (can > 100)
 	/// @param errorRange The allowed tile errors from the target distance.
 	/// @param runTimeout Maximum seconds the function will run for.
-	void driveAndTurnDistanceTilesMotionProfile(double distanceTiles, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double errorRange, double runTimeout) {
-		driveAndTurnDistanceWithInchesMotionProfile(distanceTiles * tileLengthIn, targetRotation, maxVelocityPct, maxTurnVelocityPct, errorRange * tileLengthIn, runTimeout);
-	}
-
-	/// @brief Drive the robot for a specified tile distance and rotate it to a specified rotation in degrees.
-	/// @param distanceTiles Distance in units of tiles.
-	/// @param targetRotation The target angle to face in degrees.
-	/// @param maxVelocityPct Maximum velocity of the drive. (can > 100)
-	/// @param maxTurnVelocityPct Maximum rotational velocity of the drive. (can > 100)
-	/// @param errorRange The allowed tile errors from the target distance.
-	/// @param runTimeout Maximum seconds the function will run for.
 	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double errorRange, double runTimeout) {
 		driveAndTurnDistanceWithInches(distanceTiles * tileLengthIn, targetRotation, maxVelocityPct, maxTurnVelocityPct, errorRange * tileLengthIn, runTimeout);
 	}
@@ -148,10 +136,6 @@ namespace autonfunctions {
 	/// @param errorRange The allowed inch errors from the target distance.
 	/// @param runTimeout Maximum seconds the function will run for.
 	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double errorRange, double runTimeout) {
-		// Test
-		// driveAndTurnDistanceInchesMotionProfile(distanceInches, targetRotation, maxVelocityPct, maxTurnVelocityPct, errorRange, runTimeout);
-		// return;
-
 		// Set corrector
 		driftCorrector.setInitial();
 
@@ -250,103 +234,6 @@ namespace autonfunctions {
 
 		// Correct
 		driftCorrector.correct();
-	}
-
-	/// @brief Drive the robot for a specified distance in inches and rotate it to a specified rotation in degrees.
-	/// @param distanceInches Distance in units of inches.
-	/// @param targetRotation The target angle to face in degrees.
-	/// @param maxVelocityPct Maximum velocity of the drive. (can > 100)
-	/// @param maxTurnVelocityPct Maximum rotational velocity of the drive. (can > 100)
-	/// @param errorRange The allowed inch errors from the target distance.
-	/// @param runTimeout Maximum seconds the function will run for.
-	void driveAndTurnDistanceWithInchesMotionProfile(double distanceInches, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double errorRange, double runTimeout) {
-		// Variables
-		double leftMotorInitRev = LeftMotors.position(rev);
-		double rightMotorInitRev = RightMotors.position(rev);
-		double lookEncoderInitialRevolution = LookEncoder.rotation(rev);
-		double lookRotationInitialRevolution = LookRotation.position(rev);
-
-		// PID
-		// TODO: Tune pid
-		PIDControl driveTargetDistancePid(5.2, 0, 0.1, errorRange);
-		PIDControl rotateTargetAnglePid(0.6, 0, 0, defaultTurnAngleErrorRange);
-
-		// Motion profile
-		MotionProfile driveSpeedMotionProfile;
-		double maxVelocityInchesPerSecond = (maxVelocityPct / 100.0) * (600.0 / 60.0) * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
-		driveSpeedMotionProfile.setModeAcceleration(maxVelocityInchesPerSecond * 1.30, maxVelocityInchesPerSecond * 1.30, maxVelocityInchesPerSecond);
-		// driveSpeedMotionProfile.createProfile(motorTargetDistanceRev * driveMotorRevToPercentSecFactor);
-		driveSpeedMotionProfile.createProfile(distanceInches);
-		driveSpeedMotionProfile.start();
-		printf(" --- Motion running for %.3f seconds. ---\n", driveSpeedMotionProfile.getMotionEndTime());
-
-		// TODO: modify this function to make it fast and precise
-		timer timeout;
-		while (!(driveSpeedMotionProfile.isDone() && driveTargetDistancePid.isSettled() && rotateTargetAnglePid.isSettled()) && timeout.value() < runTimeout) {
-			// Compute linear distance error
-			double distanceError;
-			double targetDistanceInches = driveSpeedMotionProfile.getNextSectionDistance();
-			if (useRotationSensorForPid) {
-				// Compute current revolutions
-				double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
-
-				// Convert current revolutions into distance inches
-				double currentTravelDistanceInches = lookCurrentRevolution * (1.0 / trackingLookWheelSensorGearRatio) * (trackingLookWheelCircumIn / 1.0);
-
-				// Compute error
-				distanceError = targetDistanceInches - currentTravelDistanceInches;
-			} else if (useEncoderForPid) {
-				// Compute current encoder revolutions
-				double lookEncoderCurrentRevolution = LookEncoder.rotation(rev) - lookEncoderInitialRevolution;
-
-				// Convert current revolutions into distance inches
-				double currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / trackingLookWheelSensorGearRatio) * (trackingLookWheelCircumIn / 1.0);
-
-				// Compute error
-				distanceError = targetDistanceInches - currentTravelDistanceInches;
-			} else {
-				// Compute average traveled motor revolutions
-				double leftTravelRev = LeftMotors.position(rev) - leftMotorInitRev;
-				double rightTravelRev = RightMotors.position(rev) - rightMotorInitRev;
-				double averageTravelRev = (leftTravelRev + rightTravelRev) / 2;
-
-				// Convert current revolutions into distance inches
-				double currentTravelDistanceInches = averageTravelRev * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
-
-				// Compute error
-				distanceError = targetDistanceInches - currentTravelDistanceInches;
-			}
-
-			// Compute target velocity from motion profile
-			double targetVelocityInchesPerSecond = driveSpeedMotionProfile.getVelocity();
-			double targetVelocityPct = targetVelocityInchesPerSecond * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio / 1.0) * (60.0 / 600.0) * 100.0;
-
-			// Compute additional velocity pid-value from distance error
-			driveTargetDistancePid.computeFromError(distanceError);
-			double velocityFromDistancePid = driveTargetDistancePid.getValue();
-
-			// Compute motor velocity from pid-values
-			double linearVelocityPct = targetVelocityPct + (velocityFromDistancePid - targetVelocityPct) * fabs(distanceError / 10.0);
-			linearVelocityPct = fmin(maxVelocityPct, fmax(-maxVelocityPct, linearVelocityPct));
-			printf("ProfVel%%: %.3f, LinVel%%: %.3f, DisErr: %.3f, DisPid: %.3f\n", targetVelocityPct, linearVelocityPct, distanceError, velocityFromDistancePid);
-
-			// Compute heading pid-value from error
-			double rotateError = (targetRotation - InertialSensor.rotation());
-			rotateTargetAnglePid.computeFromError(rotateError);
-			double rotateVelocityPct = fmin(maxTurnVelocityPct, fmax(-maxTurnVelocityPct, rotateTargetAnglePid.getValue()));
-
-			// Compute final motor velocities
-			double leftVelocityPct = linearVelocityPct + rotateVelocityPct;
-			double rightVelocityPct = linearVelocityPct - rotateVelocityPct;
-
-			// Drive with voltage
-			driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
-
-			task::sleep(20);
-		}
-
-		// Stop
-		LeftRightMotors.stop(brake);
 	}
 
 	/// @brief Set the state of the intake.
