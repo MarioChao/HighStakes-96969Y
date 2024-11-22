@@ -16,7 +16,7 @@ RamseteController::RamseteController(double b, double damp) {
 }
 
 std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
-	Linegular actual, Linegular desired, bool isAnglesPolar
+	Linegular actual, Linegular desired
 ) {
 	// Get local error
 	Linegular error = desired - actual;
@@ -27,8 +27,18 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 
 std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	Linegular actual, Linegular desired,
-	double desiredLinearVelocity, double desiredAngularVelocity,
-	bool isAnglesPolar
+	double desiredLinearVelocity
+) {
+	// Get local error
+	Linegular error = desired - actual;
+	error.rotateXYBy(genutil::toRadians(90 - actual.getTheta_degrees()));
+
+	return getLeftRightVelocity_pct(actual, desired, desiredLinearVelocity, smallScalar * error.getTheta_radians());
+}
+
+std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
+	Linegular actual, Linegular desired,
+	double desiredLinearVelocity, double desiredAngularVelocity
 ) {
 	// Get local error
 	Linegular error = desired - actual;
@@ -39,7 +49,9 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	auto &w_desired = desiredAngularVelocity;
 	auto e_right = error.getX();
 	auto e_look = error.getY();
-	auto e_theta = error.getTheta_radians();
+	// auto e_theta = error.getTheta_radians();
+	auto e_theta = genutil::toRadians(angle::modRange(error.getTheta_degrees(), 360, -180));
+	// printf("ANG ERR: %.f\n", genutil::toDegrees(e_theta));
 
 	// Compute gain value
 	// refer to https://wiki.purduesigbots.com/software/control-algorithms/ramsete
@@ -47,15 +59,13 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 
 	// Compute output velocities
 	double outputLinearVelocity = (v_desired * cos(e_theta)) + (k * e_look);
-	double outputAngularVelocity = (w_desired) + (k * e_theta) + (b * v_desired * angle::sinc(e_theta) * e_right);
+	double outputAngularVelocity = -(w_desired) + (k * e_theta) - (b * v_desired * angle::sinc(e_theta) * e_right);
 
 	// Compute left and right velocities
-	if (isAnglesPolar) {
-		outputAngularVelocity *= -1;
-	}
+	// outputAngularVelocity *= -1; // for polar angles
 	double leftVelocity = outputLinearVelocity - outputAngularVelocity;
 	double rightVelocity = outputLinearVelocity + outputAngularVelocity;
-	// printf("outlin: %.3f, outang: %.3f\n", outputLinearVelocity, outputAngularVelocity);
+	printf("outlin: %.3f, outang: %.3f\n", outputLinearVelocity, outputAngularVelocity);
 
 	// Return velocities
 	std::pair<double, double> result = std::make_pair(leftVelocity, rightVelocity);

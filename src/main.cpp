@@ -24,7 +24,8 @@
 #include "Simulation/robotSimulator.h"
 #include "Utilities/generalUtility.h"
 
-// #include "GraphUtilities/copiedBezier.h"
+#include "GraphUtilities/matrix.h"
+#include "GraphUtilities/cubicSpline.h"
 
 
 // ---------- Variables ----------
@@ -47,36 +48,52 @@ void test1() {
 	// Initialize controller
 	RamseteController ramsete;
 	// Create a path
-	// bezier::Bezier<5> bezierCurve({
-	// 	{0, 0},
-	// 	{0, 2},
-	// 	{0, 4},
-	// 	{2, 7},
-	// 	{3, 1},
-	// 	{5, 5}
-	// });
+	CubicSpline curve1( // {p0, p1, p2, p3}
+		cspline::bezier_character_matrix,
+		Matrix({{0}, {0}, {4}, {5}}),
+		Matrix({{0}, {4}, {0}, {5}})
+	);
+	// CubicSpline curve1( // {p0, v0, p1, v1}
+	// 	cspline::hermite_character_matrix,
+	// 	Matrix({{0}, {0}, {5}, {0}}),
+	// 	Matrix({{0}, {10}, {5}, {10}})
+	// );
+	// CubicSpline curve1( // {p0, p1, p2, p3}
+	// 	cspline::catmull_rom_character_matrix,
+	// 	Matrix({{0}, {0}, {5}, {0}}),
+	// 	Matrix({{-5}, {0}, {5}, {5}})
+	// );
+	// CubicSpline curve1( // {p0, p1, p2, p3}
+	// 	cspline::b_spline_character_matrix,
+	// 	Matrix({{0}, {0}, {5}, {5}}),
+	// 	Matrix({{0}, {5}, {0}, {5}})
+	// );
 	// Set initial position
-	robotSimulator.position = Vector3(0, 0, 0);
-	robotSimulator.angularPosition = genutil::toRadians(90.0);
+	std::pair<double, double> pos = curve1.getPositionAtT(0);
+	std::pair<double, double> vel = curve1.getVelocityAtT(0);
+	robotSimulator.position = Vector3(pos.first, pos.second, 0);
+	robotSimulator.angularPosition = atan2(vel.second, vel.first);
+	// robotSimulator.position = Vector3(0, 0, 0);
+	// robotSimulator.angularPosition = genutil::toRadians(90.0);
 	// Set goal linegular
 	task::sleep(1000);
 	robotSimulator.resetTimer();
 	timer curveTimer;
 	while (1) {
 		// Get time
-		double t = curveTimer.value() * 0.2;
+		double t = curveTimer.value() * 0.3;
 		if (t > 1) {
 			break;
 		}
 
 		// Get actual & desired linegular
 		Linegular lg1(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
-		Linegular lg2(0, 0, 0);
-		// bezier::Point point = bezierCurve.valueAt(t);
-		// Linegular lg2(point.x, point.y, bezierCurve.tangentAt(t).angleDeg());
-		// Linegular lg2(point.x, point.y, bezierCurve.tangentAt(t).angleDeg());
+		// Linegular lg2(0, 0, 0);
+		std::pair<double, double> pos = curve1.getPositionAtT(t);
+		std::pair<double, double> vel = curve1.getVelocityAtT(t);
+		Linegular lg2(pos.first, pos.second, genutil::toDegrees(atan2(vel.second, vel.first)));
 		// Control
-		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2);
+		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, sqrt(vel.first * vel.first + vel.second * vel.second));
 		double scaleFactorLR = genutil::getScaleFactor(50.0, {lrVelocity.first, lrVelocity.second});
 		lrVelocity.first *= scaleFactorLR;
 		lrVelocity.second *= scaleFactorLR;
@@ -87,13 +104,34 @@ void test1() {
 		angularVelocity *= scaleFactorAV;
 
 		double lookAngle = robotSimulator.angularPosition;
-		printf("POS: %.3f, %.3f, ANG: %.3f\n", robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(lookAngle));
-		printf("LR: %.3f, %.3f\n", lrVelocity.first, lrVelocity.second);
+		// printf("POS: %.3f, %.3f, ANG: %.3f\n", robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(lookAngle));
+		// printf("LR: %.3f, %.3f, ANG: %7.3f\n", lrVelocity.first, lrVelocity.second, angularVelocity);
 		robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
 		robotSimulator.angularVelocity = angularVelocity;
+
+		// Test curve
+		// pos = curve1.getPositionAtT(t);
+		// vel = curve1.getVelocityAtT(t);
+		// robotSimulator.position = Vector3(pos.first, pos.second);
+		// robotSimulator.angularPosition = atan2(vel.second, vel.first);
+
 		robotSimulator.updatePhysics();
 		wait(20, msec);
 	}
+}
+
+void test2() {
+	// Matrix m1({
+	// 	{1, 2},
+	// 	{3, 4},
+	// });
+	// Matrix m2({
+	// 	{5, 6},
+	// 	{7, 8},
+	// });
+	// auto m3 = m1;
+	// m3 *= 5;
+	// printf("%s\n", m1.getString().c_str());
 }
 
 /*---------------------------------------------------------------------------*/
@@ -143,6 +181,7 @@ void pre_auton(void) {
 	auton::showAutonRunType();
 
 	/* Testing Start */
+	// test2();
 	test1();
 	/* Testing End */
 }
