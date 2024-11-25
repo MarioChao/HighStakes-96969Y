@@ -27,6 +27,9 @@ public:
 
 	void setPoints(std::vector<std::vector<double>> points);
 
+	cspline::SplineType getSplineType();
+	std::vector<std::vector<double>> getControlPoints();
+
 	Matrix &getCharacteristicMatrix();
 	Matrix &getStoringMatrix();
 
@@ -36,8 +39,8 @@ public:
 private:
 	cspline::SplineType splineType;
 
-	std::vector<std::vector<double>> stored_points;
 	std::vector<std::vector<double>> control_points;
+	std::vector<std::vector<double>> stored_points;
 };
 
 namespace cspline {

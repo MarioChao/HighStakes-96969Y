@@ -25,7 +25,7 @@
 #include "Utilities/generalUtility.h"
 
 #include "GraphUtilities/matrix.h"
-#include "GraphUtilities/cubicSplineSegment.h"
+#include "GraphUtilities/uniformCubicSpline.h"
 
 
 // ---------- Variables ----------
@@ -47,34 +47,22 @@ RobotSimulator robotSimulator;
 void test1() {
 	// Initialize controller
 	RamseteController ramsete;
+
 	// Create a path
-	CubicSplineSegment curve1( // {p0, p1, p2, p3}
-		cspline::SplineType::Bezier,
-		{
+	UniformCubicSpline spline({
+		CubicSplineSegment(cspline::SplineType::B_Spline, {
 			{0, 0},
-			{0, 4},
-			{4, 0},
-			{4, 5},
-		}
-	);
-	// CubicSpline curve1( // {p0, v0, p1, v1}
-	// 	cspline::hermite_character_matrix,
-	// 	Matrix({{0}, {0}, {5}, {0}}),
-	// 	Matrix({{0}, {10}, {5}, {10}})
-	// );
-	// CubicSpline curve1( // {p0, p1, p2, p3}
-	// 	cspline::catmull_rom_character_matrix,
-	// 	Matrix({{0}, {0}, {5}, {0}}),
-	// 	Matrix({{-5}, {0}, {5}, {5}})
-	// );
-	// CubicSpline curve1( // {p0, p1, p2, p3}
-	// 	cspline::b_spline_character_matrix,
-	// 	Matrix({{0}, {0}, {5}, {5}}),
-	// 	Matrix({{0}, {5}, {0}, {5}})
-	// );
+			{0, 3},
+			{3, 0},
+			{3, 3},
+		})
+	});
+	spline.extendPoint({3, 6});
+	spline.extendPoint({6, 3});
+	spline.extendPoint({6, 6});
 	// Set initial position
-	std::pair<double, double> pos = curve1.getPositionAtT(0);
-	std::pair<double, double> vel = curve1.getVelocityAtT(0);
+	std::pair<double, double> pos = spline.getPositionAtT(0);
+	std::pair<double, double> vel = spline.getVelocityAtT(0);
 	robotSimulator.position = Vector3(pos.first, pos.second, 0);
 	robotSimulator.angularPosition = atan2(vel.second, vel.first);
 	// robotSimulator.position = Vector3(0, 0, 0);
@@ -85,16 +73,16 @@ void test1() {
 	timer curveTimer;
 	while (1) {
 		// Get time
-		double t = curveTimer.value() * 0.3;
-		if (t > 1) {
+		double t = curveTimer.value() * 0.5;
+		if (t > 4) {
 			break;
 		}
 
 		// Get actual & desired linegular
 		Linegular lg1(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
 		// Linegular lg2(0, 0, 0);
-		std::pair<double, double> pos = curve1.getPositionAtT(t);
-		std::pair<double, double> vel = curve1.getVelocityAtT(t);
+		std::pair<double, double> pos = spline.getPositionAtT(t);
+		std::pair<double, double> vel = spline.getVelocityAtT(t);
 		Linegular lg2(pos.first, pos.second, genutil::toDegrees(atan2(vel.second, vel.first)));
 		// Control
 		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, sqrt(vel.first * vel.first + vel.second * vel.second));
@@ -114,10 +102,10 @@ void test1() {
 		robotSimulator.angularVelocity = angularVelocity;
 
 		// Test curve
-		// pos = curve1.getPositionAtT(t);
-		// vel = curve1.getVelocityAtT(t);
-		// robotSimulator.position = Vector3(pos.first, pos.second);
-		// robotSimulator.angularPosition = atan2(vel.second, vel.first);
+		pos = spline.getPositionAtT(t);
+		vel = spline.getVelocityAtT(t);
+		robotSimulator.position = Vector3(pos.first, pos.second);
+		robotSimulator.angularPosition = atan2(vel.second, vel.first);
 
 		robotSimulator.updatePhysics();
 		wait(20, msec);

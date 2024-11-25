@@ -1,7 +1,5 @@
 #include "GraphUtilities/cubicSplineSegment.h"
 
-#include <stdio.h>
-
 CubicSplineSegment::CubicSplineSegment() {
 	setPoints(std::vector<std::vector<double>>(4, std::vector<double>(2)));
 }
@@ -15,6 +13,14 @@ void CubicSplineSegment::setPoints(std::vector<std::vector<double>> points) {
 	control_points = points;
 	Matrix matrix_data(points);
 	stored_points = getStoringMatrix().multiply(matrix_data).data;
+}
+
+cspline::SplineType CubicSplineSegment::getSplineType() {
+	return splineType;
+}
+
+std::vector<std::vector<double>> CubicSplineSegment::getControlPoints() {
+	return control_points;
 }
 
 Matrix &CubicSplineSegment::getCharacteristicMatrix() {

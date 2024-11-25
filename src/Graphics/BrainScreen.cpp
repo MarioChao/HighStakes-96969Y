@@ -163,10 +163,10 @@ namespace {
 		// Robot coordinate
 		double scaleX = width / (6 * tileSizeCm);
 		double scaleY = height / (6 * tileSizeCm);
-		double botX = x + (getRobotX_tiles() * tileSizeCm + 0.5 * tileSizeCm) * scaleX;
+		double botX = x + (getRobotX_tiles() * tileSizeCm) * scaleX;
 		if (botX + 1 >= x + width - 1) botX = x + width - 2;
 		else if (botX - 1 <= x + 1) botX = x + 2;
-		double botY = y + height - (getRobotY_tiles() * tileSizeCm + 0.5 * tileSizeCm) * scaleY;
+		double botY = y + height - (getRobotY_tiles() * tileSizeCm) * scaleY;
 		if (botY + 1 >= y + height - 1) botY = y + height - 2;
 		else if (botY - 1 <= y + 1) botY = y + 2;
 		// Shooting path
