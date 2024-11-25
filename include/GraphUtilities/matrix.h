@@ -20,6 +20,8 @@ public:
 
 	std::vector<std::vector<double>> data;
 
+	static Matrix identity(int dim);
+
 private:
 	std::pair<int, int> shape;
 };

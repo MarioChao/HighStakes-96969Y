@@ -25,7 +25,7 @@
 #include "Utilities/generalUtility.h"
 
 #include "GraphUtilities/matrix.h"
-#include "GraphUtilities/cubicSpline.h"
+#include "GraphUtilities/cubicSplineSegment.h"
 
 
 // ---------- Variables ----------
@@ -48,10 +48,14 @@ void test1() {
 	// Initialize controller
 	RamseteController ramsete;
 	// Create a path
-	CubicSpline curve1( // {p0, p1, p2, p3}
-		cspline::bezier_character_matrix,
-		Matrix({{0}, {0}, {4}, {5}}),
-		Matrix({{0}, {4}, {0}, {5}})
+	CubicSplineSegment curve1( // {p0, p1, p2, p3}
+		cspline::SplineType::Bezier,
+		{
+			{0, 0},
+			{0, 4},
+			{4, 0},
+			{4, 5},
+		}
 	);
 	// CubicSpline curve1( // {p0, v0, p1, v1}
 	// 	cspline::hermite_character_matrix,

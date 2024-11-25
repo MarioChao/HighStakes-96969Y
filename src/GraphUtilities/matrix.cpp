@@ -13,15 +13,15 @@ Matrix::Matrix(std::vector<std::vector<double>> matrix_data) {
 	// Get maximum column
 	int d1 = (int) matrix_data.size();
 	int d2 = 0;
-	for (int i = 0; i < d1; i++) {
-		int tmp_d2 = (int) matrix_data[i].size();
+	for (int row = 0; row < d1; row++) {
+		int tmp_d2 = (int) matrix_data[row].size();
 		d2 = std::max(tmp_d2, d2);
 	}
 
 	// Resize matrix to d1 x d2
 	data = matrix_data;
-	for (int i = 0; i < d1; i++) {
-		data[i].resize(d2, 0);
+	for (int row = 0; row < d1; row++) {
+		data[row].resize(d2, 0);
 	}
 	shape = std::make_pair(d1, d2);
 }
@@ -86,6 +86,14 @@ std::string Matrix::getString() {
 			result += num;
 		}
 		result += "\n";
+	}
+	return result;
+}
+
+Matrix Matrix::identity(int dim) {
+	Matrix result(dim, dim);
+	for (int i = 0; i < dim; i++) {
+		result.data[i][i] = 1;
 	}
 	return result;
 }
