@@ -34,7 +34,7 @@ motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 //arm motor
 
-motor ArmMotor(emptyPort, ratio36_1);
+motor ArmMotor(PORT10, ratio36_1);
 
 // Expander
 

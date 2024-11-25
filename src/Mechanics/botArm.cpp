@@ -18,7 +18,7 @@ namespace {
 	int armStateDegrees = 0;
 	int armStateDirection = 0;
 
-	bool useDirection = false;
+	bool useDirection = true;
 
 	bool controlState = true;
 }
@@ -108,7 +108,7 @@ namespace {
 
 		switch (armStateDirection) {
 			case 1:
-				if (ArmMotor.position(deg) > 340.0) {
+				if (ArmMotor.position(deg) > 1000.0) {
 					ArmMotor.stop(hold);
 				} else {
 					ArmMotor.spin(forward, armUpVelocityPct, volt);

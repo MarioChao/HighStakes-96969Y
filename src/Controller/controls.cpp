@@ -19,7 +19,7 @@ namespace controls {
 		} else {
 			task intakeTask([]() -> int { botintake2::runThread(); return 1; });
 		}
-		// task armTask([] () -> int { botarm::runThread(); return 1; });
+		task armTask([] () -> int { botarm::runThread(); return 1; });
 	}
 
 	void setUpKeybinds() {
@@ -92,6 +92,6 @@ namespace controls {
 				/*This is not used =>*/ (int) Controller1.ButtonX.pressing()
 			);
 		}
-		// botarm::control((int) Controller1.ButtonUp.pressing() - (int) Controller1.ButtonDown.pressing());
+		botarm::control((int) Controller1.ButtonL1.pressing() - (int) Controller1.ButtonDown.pressing());
 	}
 }
