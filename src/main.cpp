@@ -61,10 +61,10 @@ void test1() {
 	spline.extendPoint({6, 3});
 	spline.extendPoint({6, 6});
 	// Set initial position
-	std::pair<double, double> pos = spline.getPositionAtT(0);
-	std::pair<double, double> vel = spline.getVelocityAtT(0);
-	robotSimulator.position = Vector3(pos.first, pos.second, 0);
-	robotSimulator.angularPosition = atan2(vel.second, vel.first);
+	std::vector<double> pos = spline.getPositionAtT(0);
+	std::vector<double> vel = spline.getVelocityAtT(0);
+	robotSimulator.position = Vector3(pos[0], pos[1], 0);
+	robotSimulator.angularPosition = atan2(vel[1], vel[0]);
 	// robotSimulator.position = Vector3(0, 0, 0);
 	// robotSimulator.angularPosition = genutil::toRadians(90.0);
 	// Set goal linegular
@@ -81,11 +81,11 @@ void test1() {
 		// Get actual & desired linegular
 		Linegular lg1(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
 		// Linegular lg2(0, 0, 0);
-		std::pair<double, double> pos = spline.getPositionAtT(t);
-		std::pair<double, double> vel = spline.getVelocityAtT(t);
-		Linegular lg2(pos.first, pos.second, genutil::toDegrees(atan2(vel.second, vel.first)));
+		std::vector<double> pos = spline.getPositionAtT(t);
+		std::vector<double> vel = spline.getVelocityAtT(t);
+		Linegular lg2(pos[0], pos[1], genutil::toDegrees(atan2(vel[1], vel[0])));
 		// Control
-		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, sqrt(vel.first * vel.first + vel.second * vel.second));
+		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, sqrt(vel[0] * vel[0] + vel[1] * vel[1]));
 		double scaleFactorLR = genutil::getScaleFactor(50.0, {lrVelocity.first, lrVelocity.second});
 		lrVelocity.first *= scaleFactorLR;
 		lrVelocity.second *= scaleFactorLR;
@@ -102,10 +102,10 @@ void test1() {
 		robotSimulator.angularVelocity = angularVelocity;
 
 		// Test curve
-		pos = spline.getPositionAtT(t);
-		vel = spline.getVelocityAtT(t);
-		robotSimulator.position = Vector3(pos.first, pos.second);
-		robotSimulator.angularPosition = atan2(vel.second, vel.first);
+		// pos = spline.getPositionAtT(t);
+		// vel = spline.getVelocityAtT(t);
+		// robotSimulator.position = Vector3(pos[0], pos[1]);
+		// robotSimulator.angularPosition = atan2(vel[1], vel[0]);
 
 		robotSimulator.updatePhysics();
 		wait(20, msec);

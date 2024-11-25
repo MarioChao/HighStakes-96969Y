@@ -33,8 +33,8 @@ public:
 	Matrix &getCharacteristicMatrix();
 	Matrix &getStoringMatrix();
 
-	std::pair<double, double> getPositionAtT(double t);
-	std::pair<double, double> getVelocityAtT(double t);
+	std::vector<double> getPositionAtT(double t);
+	std::vector<double> getVelocityAtT(double t);
 
 private:
 	cspline::SplineType splineType;

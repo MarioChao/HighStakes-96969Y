@@ -28,7 +28,7 @@ CubicSplineSegment &UniformCubicSpline::getSegment(int id) {
 	return segments[id];
 }
 
-std::pair<double, double> UniformCubicSpline::getPositionAtT(double t) {
+std::vector<double> UniformCubicSpline::getPositionAtT(double t) {
 	// Get segment info
 	int segment_id = floor(t);
 	double segment_t = t - segment_id;
@@ -42,7 +42,7 @@ std::pair<double, double> UniformCubicSpline::getPositionAtT(double t) {
 	return segments[segment_id].getPositionAtT(segment_t);
 }
 
-std::pair<double, double> UniformCubicSpline::getVelocityAtT(double t) {
+std::vector<double> UniformCubicSpline::getVelocityAtT(double t) {
 	// Get segment info
 	int segment_id = floor(t);
 	double segment_t = t - segment_id;

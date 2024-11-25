@@ -19,8 +19,8 @@ public:
 	void extendPoint(std::vector<double> newPoint);
 
 	CubicSplineSegment &getSegment(int id);
-	std::pair<double, double> getPositionAtT(double t);
-	std::pair<double, double> getVelocityAtT(double t);
+	std::vector<double> getPositionAtT(double t);
+	std::vector<double> getVelocityAtT(double t);
 
 private:
 	std::vector<CubicSplineSegment> segments;

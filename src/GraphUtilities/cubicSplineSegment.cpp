@@ -49,18 +49,18 @@ Matrix &CubicSplineSegment::getStoringMatrix() {
 	}
 }
 
-std::pair<double, double> CubicSplineSegment::getPositionAtT(double t) {
+std::vector<double> CubicSplineSegment::getPositionAtT(double t) {
 	Matrix t_matrix({{1, t, t*t, t*t*t}});
 	Matrix point_matrix = Matrix(stored_points);
 	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
-	return std::make_pair(point[0], point[1]);
+	return point;
 }
 
-std::pair<double, double> CubicSplineSegment::getVelocityAtT(double t) {
+std::vector<double> CubicSplineSegment::getVelocityAtT(double t) {
 	Matrix t_matrix({{0, 1, 2*t, 3*t*t}});
 	Matrix point_matrix = Matrix(stored_points);
 	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
-	return std::make_pair(point[0], point[1]);
+	return point;
 }
 
 namespace cspline {
