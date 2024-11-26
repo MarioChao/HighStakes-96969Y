@@ -6,7 +6,7 @@ class Linegular;
 
 class RamseteController {
 public:
-	RamseteController(double b = 2.0, double damp = 0.7);
+	RamseteController(double b = 50.0, double damp = 0.8);
 
 	std::pair<double, double> getLeftRightVelocity_pct(
 		Linegular actual, Linegular desired

@@ -18,10 +18,7 @@ public:
 	void setUniformCubicSpline(UniformCubicSpline &spline);
 	std::vector<double> _getCurvePosition(double t);
 
-	void calculateByResolution(double t_start, double t_end, int resolution = 30);
-
-	void calculateByBisection(double t_start, double t_end, double maxDistance = 0.01);
-	double _bisectionRecursion(double maxDistance, double cumulativeDistance, double t_start, double t_end, std::vector<double> startPosition, std::vector<double> endPosition);
+	void calculateByResolution(int resolution = 30);
 
 	double paramToDistance(double t);
 

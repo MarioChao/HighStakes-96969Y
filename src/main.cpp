@@ -47,7 +47,7 @@ RobotSimulator robotSimulator;
 
 void test1() {
 	// Initialize controller
-	RamseteController ramsete;
+	RamseteController ramsete(50.0, 0.8);
 
 	// Create a path
 	UniformCubicSpline spline({
@@ -63,9 +63,8 @@ void test1() {
 	spline.extendPoint({6, 6});
 
 	// Preprocess the path
-	CurveSampler splineSampler;
-	splineSampler.setUniformCubicSpline(spline);
-	splineSampler.calculateByResolution(0, spline.getTRange().second, 30);
+	CurveSampler splineSampler(spline);
+	splineSampler.calculateByResolution(30);
 
 	// Set initial position
 	std::vector<double> pos = spline.getPositionAtT(0);
@@ -80,9 +79,9 @@ void test1() {
 	timer curveTimer;
 	while (1) {
 		// Get time
-		double x = curveTimer.value() * 0.5;
-		double t = splineSampler.distanceToParam(x);
-		// printf("X: %.3f, t: %.3f\n", x, t);
+		double s = curveTimer.value() * 1;
+		// double s = robotSimulator.
+		double t = splineSampler.distanceToParam(s);
 		// double t = curveTimer.value() * 0.5;
 		// if (t > 4) {
 		// 	break;

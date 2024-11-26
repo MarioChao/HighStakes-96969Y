@@ -25,7 +25,12 @@ std::vector<double> CurveSampler::_getCurvePosition(double t) {
 	return spline.getPositionAtT(t);
 }
 
-void CurveSampler::calculateByResolution(double t_start, double t_end, int resolution) {
+void CurveSampler::calculateByResolution(int resolution) {
+	// Get t interval
+	std::pair<double, double> tRange = spline.getTRange();
+	double t_start = tRange.first;
+	double t_end = tRange.second;
+
 	t_cumulativeDistances.clear();
 	t_cumulativeDistances.push_back(std::make_pair(t_start, 0));
 
@@ -50,37 +55,6 @@ void CurveSampler::calculateByResolution(double t_start, double t_end, int resol
 		// Update
 		previousPoint = currentPoint;
 	}
-}
-
-void CurveSampler::calculateByBisection(double t_start, double t_end, double maxDistance) {
-	t_cumulativeDistances.clear();
-	t_cumulativeDistances.push_back(std::make_pair(t_start, 0));
-	double pathLength = _bisectionRecursion(0, maxDistance, t_start, t_end, _getCurvePosition(t_start), _getCurvePosition(t_end));
-	t_cumulativeDistances.push_back(std::make_pair(t_end, pathLength));
-}
-
-double CurveSampler::_bisectionRecursion(double cumulativeDistance, double maxDistance, double t_start, double t_end, std::vector<double> startPosition, std::vector<double> endPosition) {
-	// Get middle position
-	double t_mid = t_start + (t_end - t_start) / 2;
-	std::vector<double> midPosition = _getCurvePosition(t_mid);
-
-	// Estimate path length
-	double startEndPathLength = (
-		genutil::euclideanDistance(startPosition, midPosition)
-		+ genutil::euclideanDistance(midPosition, endPosition)
-	);
-
-	// Stop condition
-	if (startEndPathLength <= maxDistance) {
-		double endPointDistance = cumulativeDistance + startEndPathLength;
-		t_cumulativeDistances.push_back(std::make_pair(t_end, endPointDistance));
-		return startEndPathLength;
-	}
-
-	// Recursion
-	double pathLength1 = _bisectionRecursion(cumulativeDistance, maxDistance, t_start, t_mid, startPosition, midPosition);
-	double pathLength2 =_bisectionRecursion(cumulativeDistance + pathLength1, maxDistance, t_mid, t_end, midPosition, endPosition);
-	return pathLength1 + pathLength2;
 }
 
 double CurveSampler::paramToDistance(double t) {
@@ -143,7 +117,7 @@ double CurveSampler::distanceToParam(double distance) {
 	while (bL <= bR) {
 		// Get midpoint
 		int bM1 = bL + (bR - bL) / 2;
-		int bM2 = bM2 + 1;
+		int bM2 = bM1 + 1;
 
 		// Check if value is in range
 		std::pair<double, double> t_distance1 = t_cumulativeDistances[bM1];
@@ -152,7 +126,6 @@ double CurveSampler::distanceToParam(double distance) {
 			t_distance1.second <= distance
 			&& distance <= t_distance2.second
 		);
-		// printf("L: %.3f, R: %.3f, M: %.3f\n", bL, bR, bM1);
 
 		// Update endpoints
 		if (isInRange) {
@@ -162,9 +135,9 @@ double CurveSampler::distanceToParam(double distance) {
 				t_distance1.first, t_distance2.first
 			);
 		} else if (distance < t_distance1.second) {
-			bL = bM1 + 1;
-		} else {
 			bR = bM1 - 1;
+		} else {
+			bL = bM1 + 1;
 		}
 	}
 

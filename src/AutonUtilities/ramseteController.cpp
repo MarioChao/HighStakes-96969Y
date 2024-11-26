@@ -49,8 +49,8 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	auto &w_desired = desiredAngularVelocity;
 	auto e_right = error.getX();
 	auto e_look = error.getY();
-	// auto e_theta = error.getTheta_radians();
-	auto e_theta = genutil::toRadians(angle::modRange(error.getTheta_degrees(), 360, -180));
+	auto e_theta = error.getTheta_radians();
+	// auto e_theta = genutil::toRadians(angle::modRange(error.getTheta_degrees(), 360, -180));
 	// printf("ANG ERR: %.f\n", genutil::toDegrees(e_theta));
 
 	// Compute gain value
