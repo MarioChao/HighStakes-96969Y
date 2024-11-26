@@ -47,10 +47,10 @@ RobotSimulator robotSimulator;
 
 void test1() {
 	// Initialize controller
-	RamseteController ramsete(50.0, 0.8);
+	RamseteController ramsete(5.0, 0.8);
 
 	// Create a path
-	UniformCubicSpline spline({
+	UniformCubicSpline spline1({
 		CubicSplineSegment(cspline::SplineType::B_Spline, {
 			{0, 0},
 			{0, 3},
@@ -58,30 +58,49 @@ void test1() {
 			{3, 3},
 		})
 	});
-	spline.extendPoint({3, 6});
-	spline.extendPoint({6, 3});
-	spline.extendPoint({6, 6});
+	spline1.extendPoint({3, 6});
+	spline1.extendPoint({6, 3});
+	spline1.extendPoint({6, 6});
+	UniformCubicSpline splineR1 = spline1.getReversed();
 
 	// Preprocess the path
-	CurveSampler splineSampler(spline);
-	splineSampler.calculateByResolution(30);
+	CurveSampler splineSampler1(spline1);
+	splineSampler1.calculateByResolution(30);
+	CurveSampler splineSamplerR1(splineR1);
+	splineSamplerR1.calculateByResolution(30);
+
+	// Simulator splines
+	UniformCubicSpline &spline = spline1;
+	CurveSampler &splineSampler = splineSampler1;
 
 	// Set initial position
 	std::vector<double> pos = spline.getPositionAtT(0);
 	std::vector<double> vel = spline.getVelocityAtT(0);
 	robotSimulator.position = Vector3(pos[0], pos[1], 0);
-	robotSimulator.angularPosition = atan2(vel[1], vel[0]);
+	robotSimulator.angularPosition = spline.getLinegularAt(0, true).getTheta_radians();
+	robotSimulator.setDistance(0);
 	// robotSimulator.position = Vector3(0, 0, 0);
 	// robotSimulator.angularPosition = genutil::toRadians(90.0);
 	// Set goal linegular
 	task::sleep(1000);
 	robotSimulator.resetTimer();
 	timer curveTimer;
+
+	int id = 0;
 	while (1) {
 		// Get time
-		double s = curveTimer.value() * 1;
-		// double s = robotSimulator.
-		double t = splineSampler.distanceToParam(s);
+		// double s = curveTimer.value() * 1;
+		double s = robotSimulator.travelledDistance;
+		double t = splineSampler1.distanceToParam(s);
+		if (t >= spline.getTRange().second) {
+			if (id == 0) {
+				spline = splineR1;
+				splineSampler = splineSamplerR1;
+				robotSimulator.setDistance(0);
+			}
+			id++;
+			continue;
+		}
 		// double t = curveTimer.value() * 0.5;
 		// if (t > 4) {
 		// 	break;
@@ -90,11 +109,11 @@ void test1() {
 		// Get actual & desired linegular
 		Linegular lg1(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
 		// Linegular lg2(0, 0, 0);
-		std::vector<double> pos = spline.getPositionAtT(t);
-		std::vector<double> vel = spline.getVelocityAtT(t);
-		Linegular lg2(pos[0], pos[1], genutil::toDegrees(atan2(vel[1], vel[0])));
+		Linegular lg2 = spline.getLinegularAt(t, true);
+		// std::vector<double> pos = spline.getPositionAtT(t);
+		// std::vector<double> vel = spline.getVelocityAtT(t);
 		// Control
-		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, sqrt(vel[0] * vel[0] + vel[1] * vel[1]));
+		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, 1);
 		double scaleFactorLR = genutil::getScaleFactor(50.0, {lrVelocity.first, lrVelocity.second});
 		lrVelocity.first *= scaleFactorLR;
 		lrVelocity.second *= scaleFactorLR;
@@ -117,6 +136,7 @@ void test1() {
 		// robotSimulator.angularPosition = atan2(vel[1], vel[0]);
 
 		robotSimulator.updatePhysics();
+		robotSimulator.updateDistance();
 		wait(20, msec);
 	}
 }

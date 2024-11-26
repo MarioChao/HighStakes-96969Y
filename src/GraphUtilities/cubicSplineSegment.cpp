@@ -1,12 +1,24 @@
 #include "GraphUtilities/cubicSplineSegment.h"
 
+#include <algorithm>
+#include <stdio.h>
+
 CubicSplineSegment::CubicSplineSegment() {
+	setSplineType(cspline::SplineType::Bezier);
 	setPoints(std::vector<std::vector<double>>(4, std::vector<double>(2)));
 }
 
 CubicSplineSegment::CubicSplineSegment(cspline::SplineType splineType, std::vector<std::vector<double>> points) {
-	this->splineType = splineType;
+	setSplineType(splineType);
 	setPoints(points);
+}
+
+void CubicSplineSegment::setSplineType(cspline::SplineType splineType) {
+	if (splineType == this->splineType) {
+		return;
+	}
+
+	this->splineType = splineType;
 }
 
 void CubicSplineSegment::setPoints(std::vector<std::vector<double>> points) {
@@ -61,6 +73,20 @@ std::vector<double> CubicSplineSegment::getVelocityAtT(double t) {
 	Matrix point_matrix = Matrix(stored_points);
 	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
 	return point;
+}
+
+CubicSplineSegment CubicSplineSegment::getReversed() {
+	// Create new segment of same type
+	CubicSplineSegment resultSegment;
+	resultSegment.setSplineType(splineType);
+
+	// Set reversed control points
+	std::vector<std::vector<double>> newControlPoints = control_points;
+	std::reverse(newControlPoints.begin(), newControlPoints.end());
+	resultSegment.setPoints(newControlPoints);
+
+	// Return segment
+	return resultSegment;
 }
 
 namespace cspline {

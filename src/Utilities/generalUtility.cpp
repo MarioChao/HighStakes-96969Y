@@ -4,6 +4,16 @@
 #include <algorithm>
 
 namespace genutil {
+	double modRange(double num, double mod, double min) {
+		// Offset from minimum
+		double ret = fmod(num - min, mod);
+		// Get positive
+		if (ret < 0) ret += fabs(mod);
+		// Offset to minimum
+		ret += min;
+		return ret;
+	}
+
 	double clamp(double value, double min, double max) {
 		return fmin(max, fmax(min, value));
 	}

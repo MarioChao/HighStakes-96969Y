@@ -25,6 +25,7 @@ public:
 	CubicSplineSegment();
 	CubicSplineSegment(cspline::SplineType splineType, std::vector<std::vector<double>> points);
 
+	void setSplineType(cspline::SplineType splineType);
 	void setPoints(std::vector<std::vector<double>> points);
 
 	cspline::SplineType getSplineType();
@@ -35,6 +36,8 @@ public:
 
 	std::vector<double> getPositionAtT(double t);
 	std::vector<double> getVelocityAtT(double t);
+
+	CubicSplineSegment getReversed();
 
 private:
 	cspline::SplineType splineType;

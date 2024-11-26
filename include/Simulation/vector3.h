@@ -7,8 +7,13 @@ public:
 	Vector3 operator+(const Vector3 &other);
 	Vector3 &operator+=(const Vector3 &other);
 
+	Vector3 operator-(const Vector3 &other);
+	Vector3 &operator-=(const Vector3 &other);
+
 	Vector3 operator*(double s);
 	Vector3 &operator*=(double s);
+
+	double getMagnitude();
 
 	double x, y, z;
 };

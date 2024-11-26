@@ -1,6 +1,10 @@
 #include "GraphUtilities/uniformCubicSpline.h"
 
+#include "AutonUtilities/linegular.h"
+#include "Utilities/generalUtility.h"
 #include <cmath>
+#include <algorithm>
+#include <stdio.h>
 
 UniformCubicSpline::UniformCubicSpline() {
 	this->segments.clear();
@@ -13,12 +17,16 @@ UniformCubicSpline::UniformCubicSpline(std::vector<CubicSplineSegment> segments)
 void UniformCubicSpline::extendPoint(std::vector<double> newPoint) {
 	CubicSplineSegment lastSegment = getSegment((int) segments.size() - 1);
 	std::vector<std::vector<double>> points = lastSegment.getControlPoints();
-	this->segments.push_back(CubicSplineSegment(
+	attachSegment(CubicSplineSegment(
 		lastSegment.getSplineType(),
 		{
 			points[1], points[2], points[3], newPoint
 		}
 	));
+}
+
+void UniformCubicSpline::attachSegment(CubicSplineSegment newSegment) {
+	this->segments.push_back(newSegment);
 }
 
 CubicSplineSegment &UniformCubicSpline::getSegment(int id) {
@@ -60,6 +68,41 @@ std::vector<double> UniformCubicSpline::getVelocityAtT(double t) {
 	return segments[segment_id].getVelocityAtT(segment_t);
 }
 
+double UniformCubicSpline::getPolarAngleRadiansAt(double t) {
+	std::vector<double> velocity = getVelocityAtT(t);
+	return atan2(velocity[1], velocity[0]);
+}
+
 std::pair<double, double> UniformCubicSpline::getTRange() {
 	return std::make_pair(0, (int) segments.size());
+}
+
+UniformCubicSpline UniformCubicSpline::getReversed() {
+	// Create new spline
+	UniformCubicSpline resultSpline;
+
+	// Append reversed segments
+	for (CubicSplineSegment &segment : this->segments) {
+		resultSpline.attachSegment(segment.getReversed());
+	}
+
+	// Reverse segments order
+	std::reverse(resultSpline.segments.begin(), resultSpline.segments.end());
+
+	// Return spline
+	return resultSpline;
+}
+
+Linegular UniformCubicSpline::getLinegularAt(double t, bool reverseHeading) {
+	// Get position
+	std::vector<double> position = getPositionAtT(t);
+
+	// Get angle
+	double angle_radians = getPolarAngleRadiansAt(t);
+	double finalAngle_degrees = genutil::toDegrees(angle_radians) + reverseHeading * 180.0;
+	finalAngle_degrees = genutil::modRange(finalAngle_degrees, 360, -180);
+
+	// Create and return linegular
+	Linegular lg(position[0], position[1], finalAngle_degrees);
+	return lg;
 }

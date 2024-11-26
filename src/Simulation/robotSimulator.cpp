@@ -4,6 +4,7 @@
 
 RobotSimulator::RobotSimulator() {
 	resetTimer();
+	travelledDistance = 0;
 }
 
 void RobotSimulator::resetTimer() {
@@ -26,4 +27,17 @@ void RobotSimulator::updatePhysics() {
 	angularPosition += angularVelocity * deltaTime;
 	angularVelocity += angularAcceleration * deltaTime;
 	angularAcceleration += angularJerk * deltaTime;
+}
+
+void RobotSimulator::setDistance(double distance) {
+	previousPosition = position;
+	travelledDistance = distance;
+}
+
+void RobotSimulator::updateDistance() {
+	// Update distance
+	travelledDistance += (position - previousPosition).getMagnitude();
+
+	// Update previous
+	previousPosition = position;
 }
