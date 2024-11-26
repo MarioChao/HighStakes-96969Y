@@ -1,5 +1,7 @@
 #include "Utilities/generalUtility.h"
-#include "main.h"
+
+#include <cmath>
+#include <algorithm>
 
 namespace genutil {
 	double clamp(double value, double min, double max) {
@@ -18,6 +20,16 @@ namespace genutil {
 
 	bool isWithin(double value, double target, double withinRange) {
 		return fabs(value - target) <= withinRange;
+	}
+
+	double euclideanDistance(std::vector<double> point1, std::vector<double> point2) {
+		int dimCount = std::min((int) point1.size(), (int) point2.size());
+		double squaredSum = 0;
+		for (int i = 0; i < dimCount; i++) {
+			double delta = point1[i] - point2[i];
+			squaredSum += delta * delta;
+		}
+		return sqrt(squaredSum);
 	}
 
 	double toRadians(double degrees) {

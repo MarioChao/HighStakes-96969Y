@@ -26,6 +26,7 @@
 
 #include "GraphUtilities/matrix.h"
 #include "GraphUtilities/uniformCubicSpline.h"
+#include "GraphUtilities/curveSampler.h"
 
 
 // ---------- Variables ----------
@@ -60,6 +61,12 @@ void test1() {
 	spline.extendPoint({3, 6});
 	spline.extendPoint({6, 3});
 	spline.extendPoint({6, 6});
+
+	// Preprocess the path
+	CurveSampler splineSampler;
+	splineSampler.setUniformCubicSpline(spline);
+	splineSampler.calculateByResolution(0, spline.getTRange().second, 30);
+
 	// Set initial position
 	std::vector<double> pos = spline.getPositionAtT(0);
 	std::vector<double> vel = spline.getVelocityAtT(0);
@@ -73,10 +80,13 @@ void test1() {
 	timer curveTimer;
 	while (1) {
 		// Get time
-		double t = curveTimer.value() * 0.5;
-		if (t > 4) {
-			break;
-		}
+		double x = curveTimer.value() * 0.5;
+		double t = splineSampler.distanceToParam(x);
+		// printf("X: %.3f, t: %.3f\n", x, t);
+		// double t = curveTimer.value() * 0.5;
+		// if (t > 4) {
+		// 	break;
+		// }
 
 		// Get actual & desired linegular
 		Linegular lg1(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));

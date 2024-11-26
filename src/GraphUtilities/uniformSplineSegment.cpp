@@ -2,6 +2,10 @@
 
 #include <cmath>
 
+UniformCubicSpline::UniformCubicSpline() {
+	this->segments.clear();
+}
+
 UniformCubicSpline::UniformCubicSpline(std::vector<CubicSplineSegment> segments) {
 	this->segments = segments;
 }
@@ -54,4 +58,8 @@ std::vector<double> UniformCubicSpline::getVelocityAtT(double t) {
 		return segments.back().getVelocityAtT(1);
 	}
 	return segments[segment_id].getVelocityAtT(segment_t);
+}
+
+std::pair<double, double> UniformCubicSpline::getTRange() {
+	return std::make_pair(0, (int) segments.size());
 }

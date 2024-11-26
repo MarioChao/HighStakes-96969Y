@@ -9,6 +9,7 @@
 
 class UniformCubicSpline {
 public:
+	UniformCubicSpline();
 	UniformCubicSpline(std::vector<CubicSplineSegment> segments);
 
 	/**
@@ -21,6 +22,8 @@ public:
 	CubicSplineSegment &getSegment(int id);
 	std::vector<double> getPositionAtT(double t);
 	std::vector<double> getVelocityAtT(double t);
+
+	std::pair<double, double> getTRange();
 
 private:
 	std::vector<CubicSplineSegment> segments;

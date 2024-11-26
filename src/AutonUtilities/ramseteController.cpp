@@ -65,7 +65,7 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	// outputAngularVelocity *= -1; // for polar angles
 	double leftVelocity = outputLinearVelocity - outputAngularVelocity;
 	double rightVelocity = outputLinearVelocity + outputAngularVelocity;
-	printf("outlin: %.3f, outang: %.3f\n", outputLinearVelocity, outputAngularVelocity);
+	// printf("outlin: %.3f, outang: %.3f\n", outputLinearVelocity, outputAngularVelocity);
 
 	// Return velocities
 	std::pair<double, double> result = std::make_pair(leftVelocity, rightVelocity);

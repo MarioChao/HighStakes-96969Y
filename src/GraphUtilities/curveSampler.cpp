@@ -1,0 +1,173 @@
+#include "GraphUtilities/curveSampler.h"
+
+#include "Utilities/generalUtility.h"
+
+#include <stdio.h>
+
+CurveSampler::CurveSampler() {
+	_onInit();
+}
+
+CurveSampler::CurveSampler(UniformCubicSpline &spline) {
+	setUniformCubicSpline(spline);
+	_onInit();
+}
+
+void CurveSampler::_onInit() {
+	t_cumulativeDistances.clear();
+}
+
+void CurveSampler::setUniformCubicSpline(UniformCubicSpline &spline) {
+	this->spline = spline;
+}
+
+std::vector<double> CurveSampler::_getCurvePosition(double t) {
+	return spline.getPositionAtT(t);
+}
+
+void CurveSampler::calculateByResolution(double t_start, double t_end, int resolution) {
+	t_cumulativeDistances.clear();
+	t_cumulativeDistances.push_back(std::make_pair(t_start, 0));
+
+	// Initialize variables
+	std::vector<double> previousPoint, currentPoint;
+	previousPoint = _getCurvePosition(t_start);
+	double pathLength = 0;
+
+	// Look through each segment
+	for (int i = 1; i <= resolution; i++) {
+		// Get spline point
+		double t = genutil::rangeMap(i, 0, resolution, t_start, t_end);
+		currentPoint = _getCurvePosition(t);
+
+		// Add segment length to path length
+		double segmentLength = genutil::euclideanDistance(previousPoint, currentPoint);
+		pathLength += segmentLength;
+
+		// Store distance
+		t_cumulativeDistances.push_back(std::make_pair(t, pathLength));
+
+		// Update
+		previousPoint = currentPoint;
+	}
+}
+
+void CurveSampler::calculateByBisection(double t_start, double t_end, double maxDistance) {
+	t_cumulativeDistances.clear();
+	t_cumulativeDistances.push_back(std::make_pair(t_start, 0));
+	double pathLength = _bisectionRecursion(0, maxDistance, t_start, t_end, _getCurvePosition(t_start), _getCurvePosition(t_end));
+	t_cumulativeDistances.push_back(std::make_pair(t_end, pathLength));
+}
+
+double CurveSampler::_bisectionRecursion(double cumulativeDistance, double maxDistance, double t_start, double t_end, std::vector<double> startPosition, std::vector<double> endPosition) {
+	// Get middle position
+	double t_mid = t_start + (t_end - t_start) / 2;
+	std::vector<double> midPosition = _getCurvePosition(t_mid);
+
+	// Estimate path length
+	double startEndPathLength = (
+		genutil::euclideanDistance(startPosition, midPosition)
+		+ genutil::euclideanDistance(midPosition, endPosition)
+	);
+
+	// Stop condition
+	if (startEndPathLength <= maxDistance) {
+		double endPointDistance = cumulativeDistance + startEndPathLength;
+		t_cumulativeDistances.push_back(std::make_pair(t_end, endPointDistance));
+		return startEndPathLength;
+	}
+
+	// Recursion
+	double pathLength1 = _bisectionRecursion(cumulativeDistance, maxDistance, t_start, t_mid, startPosition, midPosition);
+	double pathLength2 =_bisectionRecursion(cumulativeDistance + pathLength1, maxDistance, t_mid, t_end, midPosition, endPosition);
+	return pathLength1 + pathLength2;
+}
+
+double CurveSampler::paramToDistance(double t) {
+	// Check extreme
+	if (t <= t_cumulativeDistances.front().first) {
+		return t_cumulativeDistances.front().second;
+	}
+	if (t >= t_cumulativeDistances.back().first) {
+		return t_cumulativeDistances.back().second;
+	}
+
+	// Binary search for t
+	int bL, bR;
+	bL = 0;
+	bR = (int) t_cumulativeDistances.size() - 2;
+	while (bL <= bR) {
+		// Get midpoint
+		int bM1 = bL + (bR - bL) / 2;
+		int bM2 = bM2 + 1;
+
+		// Check if value is in range
+		std::pair<double, double> t_distance1 = t_cumulativeDistances[bM1];
+		std::pair<double, double> t_distance2 = t_cumulativeDistances[bM2];
+		bool isInRange = (
+			t_distance1.first <= t
+			&& t <= t_distance2.first
+		);
+
+		// Update endpoints
+		if (isInRange) {
+			return genutil::rangeMap(
+				t,
+				t_distance1.first, t_distance2.first,
+				t_distance1.second, t_distance2.second
+			);
+		} else if (t < t_distance1.first) {
+			bL = bM1 + 1;
+		} else {
+			bR = bM1 - 1;
+		}
+	}
+
+	// Return 0 if fails
+	return 0;
+}
+
+double CurveSampler::distanceToParam(double distance) {
+	// Check extreme
+	if (distance <= t_cumulativeDistances.front().second) {
+		return t_cumulativeDistances.front().first;
+	}
+	if (distance >= t_cumulativeDistances.back().second) {
+		return t_cumulativeDistances.back().first;
+	}
+
+	// Binary search for t
+	int bL, bR;
+	bL = 0;
+	bR = (int) t_cumulativeDistances.size() - 2;
+	while (bL <= bR) {
+		// Get midpoint
+		int bM1 = bL + (bR - bL) / 2;
+		int bM2 = bM2 + 1;
+
+		// Check if value is in range
+		std::pair<double, double> t_distance1 = t_cumulativeDistances[bM1];
+		std::pair<double, double> t_distance2 = t_cumulativeDistances[bM2];
+		bool isInRange = (
+			t_distance1.second <= distance
+			&& distance <= t_distance2.second
+		);
+		// printf("L: %.3f, R: %.3f, M: %.3f\n", bL, bR, bM1);
+
+		// Update endpoints
+		if (isInRange) {
+			return genutil::rangeMap(
+				distance,
+				t_distance1.second, t_distance2.second,
+				t_distance1.first, t_distance2.first
+			);
+		} else if (distance < t_distance1.second) {
+			bL = bM1 + 1;
+		} else {
+			bR = bM1 - 1;
+		}
+	}
+
+	// Return 0 if fails
+	return 0;
+}
