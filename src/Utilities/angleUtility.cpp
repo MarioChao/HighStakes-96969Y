@@ -3,16 +3,6 @@
 #include <cmath>
 
 namespace angle {
-	double modRange(double num, double mod, double min) {
-		// Offset from minimum
-		double ret = fmod(num - min, mod);
-		// Get positive
-		if (ret < 0) ret += fabs(mod);
-		// Offset to minimum
-		ret += min;
-		return ret;
-	}
-
 	double swapFieldPolar_degrees(double degrees) {
 		return 90 - degrees;
 	}

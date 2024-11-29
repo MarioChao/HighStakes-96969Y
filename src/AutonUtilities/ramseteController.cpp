@@ -15,6 +15,14 @@ RamseteController::RamseteController(double b, double damp) {
 	this->zeta = damp;
 }
 
+bool RamseteController::setDirection(bool isReversed) {
+	if (isReversed) {
+		directionFactor = -1;
+	} else {
+		directionFactor = 1;
+	}
+}
+
 std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	Linegular actual, Linegular desired
 ) {
@@ -38,19 +46,19 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 
 std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	Linegular actual, Linegular desired,
-	double desiredLinearVelocity, double desiredAngularVelocity
+	double desiredLinearVelocity, double desiredAngularVelocity_radiansPerSecond
 ) {
 	// Get local error
 	Linegular error = desired - actual;
 	error.rotateXYBy(genutil::toRadians(90 - actual.getTheta_degrees()));
 
 	// Get value alias
-	auto &v_desired = desiredLinearVelocity;
-	auto &w_desired = desiredAngularVelocity;
+	double v_desired = fabs(desiredLinearVelocity) * directionFactor;
+	auto &w_desired = desiredAngularVelocity_radiansPerSecond;
 	auto e_right = error.getX();
 	auto e_look = error.getY();
-	auto e_theta = error.getTheta_radians();
-	// auto e_theta = genutil::toRadians(angle::modRange(error.getTheta_degrees(), 360, -180));
+	// auto e_theta = error.getTheta_radians();
+	auto e_theta = genutil::toRadians(genutil::modRange(error.getTheta_degrees(), 360, -180));
 	// printf("ANG ERR: %.f\n", genutil::toDegrees(e_theta));
 
 	// Compute gain value
