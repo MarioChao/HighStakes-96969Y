@@ -15,7 +15,7 @@ RamseteController::RamseteController(double b, double damp) {
 	this->zeta = damp;
 }
 
-bool RamseteController::setDirection(bool isReversed) {
+void RamseteController::setDirection(bool isReversed) {
 	if (isReversed) {
 		directionFactor = -1;
 	} else {

@@ -12,9 +12,6 @@ namespace {
 	double armVelocityPct = 90;
 	double armUpVelocityPct = 70;
 
-	double armVelocityVolt = armVelocityPct / 100.0 * 12.0;
-	double armUpVelocityVolt = armUpVelocityPct / 100.0 * 12.0;
-
 	int armStateDegrees = 0;
 	int armStateDirection = 0;
 
@@ -111,7 +108,7 @@ namespace {
 				if (ArmMotor.position(deg) > 1000.0) {
 					ArmMotor.stop(hold);
 				} else {
-					ArmMotor.spin(forward, armUpVelocityPct, volt);
+					ArmMotor.spin(forward, genutil::pctToVolt(armUpVelocityPct), volt);
 				}
 				break;
 
@@ -119,7 +116,7 @@ namespace {
 				if (ArmMotor.position(deg) < 10.0) {
 					ArmMotor.stop();
 				} else {
-					ArmMotor.spin(forward, -armVelocityVolt, volt);
+					ArmMotor.spin(forward, -genutil::pctToVolt(armVelocityPct), volt);
 				}
 				break;
 
