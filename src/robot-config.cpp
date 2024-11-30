@@ -52,6 +52,7 @@ pneumatics HangPneumatic(Expander1.E);
 pneumatics GoalClampPneumatic(Brain.ThreeWirePort.C);
 pneumatics BotArmPneumatics(Expander1.B);
 pneumatics SwordPneumatics(Brain.ThreeWirePort.F);
+pneumatics RedirectPneumatics(Brain.ThreeWirePort.D);
 
 // Sensors
 
