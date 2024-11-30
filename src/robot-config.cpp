@@ -24,7 +24,8 @@ motor RightMotorB(PORT18, ratio6_1);
 motor RightMotorC(PORT19, ratio6_1, true);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
-motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA, RightMotorB, RightMotorC);
+motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA,
+                            RightMotorB, RightMotorC);
 
 // Intake motors
 
@@ -32,7 +33,7 @@ motor IntakeMotor1(PORT1, ratio6_1);
 motor IntakeMotor2(PORT4, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
-//arm motor
+// arm motor
 
 motor ArmMotor(PORT10, ratio36_1);
 
@@ -50,8 +51,7 @@ pneumatics IntakeLiftPneumatic(Expander1.B);
 pneumatics HangPneumatic(Expander1.E);
 pneumatics GoalClampPneumatic(Brain.ThreeWirePort.C);
 pneumatics BotArmPneumatics(Expander1.B);
-pneumatics SwordPneumatics(Brain.ThreeWirePort.D);
-
+pneumatics SwordPneumatics(Brain.ThreeWirePort.F);
 
 // Sensors
 
@@ -72,5 +72,5 @@ optical RingOpticalSensor(emptyPort);
  * This should be called at the start of your int main function.
  */
 void vexcodeInit(void) {
-	// Nothing to initialize
+  // Nothing to initialize
 }
