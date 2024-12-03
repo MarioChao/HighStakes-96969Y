@@ -1,18 +1,18 @@
 #pragma once
 
 namespace redirect {
-void runThread();
+	void runThread();
 
-void preauton();
+	void preauton();
 
-void setState(int, double = 0);
+	void setState(int, double = 0);
 
-void switchState();
+	void switchState();
 
-void control(int);
+	void control(int);
 
-bool canControl();
+	bool canControl();
 
-extern int _taskState;
-extern double _taskDelay;
+	extern int _taskState;
+	extern double _taskDelay;
 }  // namespace redirect
