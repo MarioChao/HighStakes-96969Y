@@ -40,6 +40,8 @@ extern encoder RightEncoder;
 extern rotation LookRotation;
 extern rotation RightRotation;
 
+extern rotation ArmRotationSensor;
+
 extern inertial InertialSensor;
 extern distance DistanceSensor;
 

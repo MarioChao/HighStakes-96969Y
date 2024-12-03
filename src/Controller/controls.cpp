@@ -33,6 +33,7 @@ namespace controls {
 
 	void setUpKeybinds() {
 		Controller2.ButtonX.pressed([]() -> void { botdrive::switchDriveMode(); });
+		Controller2.ButtonY.pressed([]() -> void { botarm::resetArmEncoder(); });
 
 		// Controller 1
 		Controller1.ButtonX.pressed([]() -> void {
@@ -51,20 +52,25 @@ namespace controls {
 			}
 		});
 		Controller1.ButtonA.pressed([]() -> void { swing::switchState(); });
-		/*
-		Controller1.ButtonB.pressed([]() -> void {
-						if (intakePart == 1) botintake::switchFilterColor();
-						else botintake2::switchFilterColor();
-		});*/
+		// Controller1.ButtonB.pressed([]() -> void {
+		// 	if (intakePart == 1) botintake::switchFilterColor();
+		// 	else botintake2::switchFilterColor();
+		// });
 		Controller1.ButtonB.pressed([]() -> void { redirect::switchState(); });
 		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
 		});
 		Controller1.ButtonL1.pressed([]() -> void {
-			if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
-				botarmpneu::switchState();
-			}
+			// if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
+			// 	botarmpneu::switchState();
+			// }
+			int stage = botarm::getArmStage();
+			stage++;
+			botarm::setArmStage(stage);
+		});
+		Controller1.ButtonDown.pressed([]() -> void {
+			botarm::setArmStage(0);
 		});
 		Controller1.ButtonUp.pressed([]() -> void {
 			if (botdrive::getMaxDriveVelocity() >= 99.0) {
@@ -79,26 +85,34 @@ namespace controls {
 
 	void preauton() {
 		botdrive::preauton();
-		// botarm::preauton();
+		botarm::preauton();
 		goalclamp::preauton();
 	}
 
-	void resetStates() { LeftRightMotors.setStopping(brake); }
+	void resetStates() {
+		LeftRightMotors.setStopping(brake);
+
+		// Reset arm encoder
+		task resetArm([] () -> int {
+			botarm::resetArmEncoder();
+			return 1;
+		});
+	}
 
 	void doControls() {
 		botdrive::control();
 		if (intakePart == 1) {
 			botintake::control(
-					(int)Controller1.ButtonR1.pressing() -
-							(int)Controller1.ButtonR2.pressing(),
-					/*This is not used =>*/ (int)Controller1.ButtonX.pressing());
+				(int)Controller1.ButtonR1.pressing() -
+				(int)Controller1.ButtonR2.pressing(),
+				/*This is not used =>*/ (int)Controller1.ButtonX.pressing());
 		} else {
 			botintake2::control(
-					(int)Controller1.ButtonR1.pressing() -
-							(int)Controller1.ButtonR2.pressing(),
-					/*This is not used =>*/ (int)Controller1.ButtonX.pressing());
+				(int)Controller1.ButtonR1.pressing() -
+				(int)Controller1.ButtonR2.pressing(),
+				/*This is not used =>*/ (int)Controller1.ButtonX.pressing());
 		}
-		botarm::control((int)Controller1.ButtonL1.pressing() -
-										(int)Controller1.ButtonDown.pressing());
+		// botarm::control((int)Controller1.ButtonL1.pressing() -
+		// 				(int)Controller1.ButtonDown.pressing());
 	}
 }  // namespace controls

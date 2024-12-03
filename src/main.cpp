@@ -226,6 +226,7 @@ void autonomous(void) {
 		video::switchVideoState(1);
 		return 1;
 	});
+	controls::resetStates();
 
 	// ..........................................................................
 	auton::runAutonomous();

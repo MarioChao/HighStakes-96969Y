@@ -3,12 +3,16 @@
 
 PIDControl::PIDControl(double kP, double kI, double kD, double settleRange, double settleFrameCount) {
 	kProp = kP, kInteg = kI, kDeriv = kD;
-	cumulativeError = deltaError = 0;
-	currentError = previousError = 2e17;
+	resetErrorToZero();
 
 	settleErrorRange = fabs(settleRange);
 	settleMinFrameCount = settleFrameCount;
 	settledFrames = 0;
+}
+
+void PIDControl::resetErrorToZero() {
+	previousError = currentError = 2e17;
+	cumulativeError = deltaError = 0;
 }
 
 void PIDControl::computeFromError(double error) {

@@ -7,15 +7,21 @@ namespace {
 	void resolveArmDegrees();
 	void resolveArmDirection();
 
-	PIDControl armMaintainPositionPid(0.4, 0.01, 0.0);
+	void setArmPosition(double position_degrees);
+	void spinArmMotor(double velocityPct);
 
-	double armVelocityPct = 90;
-	double armUpVelocityPct = 70;
+	PIDControl armPositionPid(1.0, 0.0, 0.1);
 
-	int armStateDegrees = 0;
+	std::vector<double> armStages_degrees = {-10, 195.0, 360.0};
+	int currentArmStage = 0;
+
+	double armVelocityPct = 100;
+	double armUpVelocityPct = 100;
+
+	double armStateTargetAngle_degrees = 0;
 	int armStateDirection = 0;
 
-	bool useDirection = true;
+	bool useDirection = false;
 
 	bool controlState = true;
 }
@@ -38,12 +44,12 @@ namespace botarm {
 		ArmMotor.setPosition(0, degrees);
 	}
 
-	void setState(int state, double delaySec) {
+	void setState(double state, double delaySec) {
 		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here
-			armMaintainPositionPid.setErrorI(0);
-			armStateDegrees = state;
+			armPositionPid.setErrorI(0);
+			armStateTargetAngle_degrees = state;
 
 			return;
 		}
@@ -61,11 +67,34 @@ namespace botarm {
 			task::sleep(taskDelay * 1000);
 
 			// Set state here
-			armMaintainPositionPid.setErrorI(0);
-			armStateDegrees = taskState;
+			armPositionPid.setErrorI(0);
+			armStateTargetAngle_degrees = taskState;
 
 			return 1;
 		});
+	}
+
+	void setArmStage(int stageId, double delaySec) {
+		if (!(0 <= stageId && stageId < (int) armStages_degrees.size())) {
+			return;
+		}
+		currentArmStage = stageId;
+		setState(armStages_degrees[stageId], delaySec);
+	}
+
+	int getArmStage() {
+		return currentArmStage;
+	}
+
+	void resetArmEncoder() {
+		// Spin downward for 1 second
+		currentArmStage = 100;
+		armStateTargetAngle_degrees = -1000;
+		task::sleep(1000);
+
+		// Set the position as stage 0
+		setArmPosition(0);
+		setArmStage(0);
 	}
 
 	void control(int state) {
@@ -79,25 +108,30 @@ namespace botarm {
 		return controlState;
 	}
 
-	int _taskState;
+	double _taskState;
 	double _taskDelay;
 }
 
 namespace {
 	void resolveArmDegrees() {
 		// Calculate error
-		double degreesError = armStateDegrees - ArmMotor.position(degrees);
+		double currentPosition_degrees = ArmRotationSensor.position(degrees);
+		double error_degrees = armStateTargetAngle_degrees - currentPosition_degrees;
+		printf("Err: %.3f\n", error_degrees);
 
 		// Get pid value
-		armMaintainPositionPid.computeFromError(degreesError);
-		double motorDeltaVelocityPct = armMaintainPositionPid.getValue();
+		armPositionPid.computeFromError(error_degrees);
+		// double motorDeltaVelocityPct = armPositionPid.getValue();
+		double motorVelocityPct = armPositionPid.getValue();
 
 		// Get final value
-		double motorVelocityPct = ArmMotor.velocity(pct) + motorDeltaVelocityPct;
+		// double motorVelocityPct = ArmMotor.velocity(pct) + motorDeltaVelocityPct;
+		printf("PIDVal: %.3f\n", motorVelocityPct);
 		motorVelocityPct = genutil::clamp(motorVelocityPct, -armVelocityPct, armVelocityPct);
+		printf("MotVal: %.3f\n", motorVelocityPct);
 
 		// Set velocity
-		ArmMotor.spin(forward, motorVelocityPct / 100.0 * 12.0, volt);
+		spinArmMotor(motorVelocityPct);
 	}
 
 	void resolveArmDirection() {
@@ -124,5 +158,18 @@ namespace {
 				ArmMotor.stop(hold);
 				break;
 		}
+	}
+
+	void setArmPosition(double position_degrees) {
+		ArmRotationSensor.setPosition(position_degrees, degrees);
+		armPositionPid.resetErrorToZero();
+	}
+
+	void spinArmMotor(double velocityPct) {
+		// Spin
+		double velocityVolt = genutil::pctToVolt(velocityPct);
+		velocityVolt = genutil::clamp(velocityVolt, -10, 10);
+		ArmMotor.spin(forward, velocityVolt, volt);
+		// ArmMotor.spin(forward, velocityPct, pct);
 	}
 }

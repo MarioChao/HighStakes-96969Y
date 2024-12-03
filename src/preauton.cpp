@@ -54,10 +54,6 @@ namespace {
 		}
 		printf("Calibrated!\n");
 
-		// Reset encoder
-		LookEncoder.resetRotation();
-		LookRotation.resetPosition();
-
 		// Increase optical sensor brightness
 		RingOpticalSensor.setLight(ledState::on);
 		RingOpticalSensor.setLightPower(30);

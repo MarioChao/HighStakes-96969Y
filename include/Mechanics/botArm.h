@@ -5,7 +5,11 @@ namespace botarm {
 
 	void preauton();
 
-	void setState(int, double = 0);
+	void setState(double, double = 0);
+
+	void setArmStage(int stageId, double delaySec = 0);
+	int getArmStage();
+	void resetArmEncoder();
 
 	void switchState();
 
@@ -13,6 +17,6 @@ namespace botarm {
 
 	bool canControl();
 
-	extern int _taskState;
+	extern double _taskState;
 	extern double _taskDelay;
 }
