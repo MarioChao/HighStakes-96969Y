@@ -39,6 +39,7 @@ namespace botarm {
 			if (useDirection) {
 				resolveArmDirection();
 			} else {
+				// printf("armvolt: %.3f\n", ArmMotor.voltage(volt));
 				resolveArmDegrees();
 			}
 
@@ -144,7 +145,7 @@ namespace {
 			// Check patience
 			armUpPatience.computePatience(currentPosition_degrees);
 			if (armUpPatience.isExhuasted()) {
-				ArmMotor.stop(hold);
+				spinArmMotor(5);
 				return;
 			}
 
@@ -157,7 +158,7 @@ namespace {
 			// Check patience
 			armDownPatience.computePatience(currentPosition_degrees);
 			if (armDownPatience.isExhuasted()) {
-				ArmMotor.stop(hold);
+				spinArmMotor(-5);
 				return;
 			}
 

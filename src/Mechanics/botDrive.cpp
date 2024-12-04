@@ -1,6 +1,7 @@
 #include "Mechanics/botDrive.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
+#include "Utilities/generalUtility.h"
 #include "main.h"
 
 namespace {
@@ -117,12 +118,12 @@ namespace {
 		if (fabs(leftPct) < 5) {
 			LeftMotors.stop();
 		} else {
-			LeftMotors.spin(fwd, 12.0 * (leftPct / 100.0), volt);
+			LeftMotors.spin(fwd, genutil::pctToVolt(leftPct), volt);
 		}
 		if (fabs(rightPct) < 5) {
 			RightMotors.stop();
 		} else {
-			RightMotors.spin(fwd, 12.0 * (rightPct / 100.0), volt);
+			RightMotors.spin(fwd, genutil::pctToVolt(rightPct), volt);
 		}
 	}
 }
