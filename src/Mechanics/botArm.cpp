@@ -1,4 +1,4 @@
-#include "AutonUtilities/pidControl.h"
+#include "AutonUtilities/pidController.h"
 #include "AutonUtilities/patienceController.h"
 #include "Mechanics/botArm.h"
 #include "Utilities/generalUtility.h"
@@ -14,7 +14,7 @@ namespace {
 	void setArmPosition(double position_degrees);
 	void spinArmMotor(double velocityPct);
 
-	PIDControl armPositionPid(1.0, 0, 0);
+	PIDController armPositionPid(1.0, 0, 0);
 	PatienceController armUpPatience(50, 1.0, true);
 	PatienceController armDownPatience(50, 1.0, false);
 

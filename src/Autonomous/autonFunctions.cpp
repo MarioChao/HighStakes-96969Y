@@ -1,7 +1,7 @@
 #include "Autonomous/autonFunctions.h"
 
 #include "AutonUtilities/driftCorrection.h"
-#include "AutonUtilities/pidControl.h"
+#include "AutonUtilities/pidController.h"
 
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botIntake2.h"
@@ -82,7 +82,7 @@ namespace autonfunctions {
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDControl rotateTargetAnglePid(1.8, 0.002, 1.7, errorRange);
+		PIDController rotateTargetAnglePid(1.8, 0.002, 1.7, errorRange);
 		timer timeout;
 		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
@@ -149,9 +149,9 @@ namespace autonfunctions {
 
 		// PID
 		// TODO: Tune pid
-		PIDControl driveTargetDistancePid(12.5, 0, 80, errorRange);
-		PIDControl rotateTargetAnglePid(1.0, 0.001, 0.5, defaultTurnAngleErrorRange);
-		PIDControl synchronizeVelocityPid(0.4, 0, 0, 5.0);
+		PIDController driveTargetDistancePid(12.5, 0, 80, errorRange);
+		PIDController rotateTargetAnglePid(1.0, 0.001, 0.5, defaultTurnAngleErrorRange);
+		PIDController synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
 		timer timeout;
 		printf("Drive with inches\n");

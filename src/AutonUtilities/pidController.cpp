@@ -1,7 +1,7 @@
-#include "AutonUtilities/pidControl.h"
+#include "AutonUtilities/pidController.h"
 #include "main.h"
 
-PIDControl::PIDControl(double kP, double kI, double kD, double settleRange, double settleFrameCount) {
+PIDController::PIDController(double kP, double kI, double kD, double settleRange, double settleFrameCount) {
 	kProp = kP, kInteg = kI, kDeriv = kD;
 	resetErrorToZero();
 
@@ -10,12 +10,12 @@ PIDControl::PIDControl(double kP, double kI, double kD, double settleRange, doub
 	settledFrames = 0;
 }
 
-void PIDControl::resetErrorToZero() {
+void PIDController::resetErrorToZero() {
 	previousError = currentError = 2e17;
 	cumulativeError = deltaError = 0;
 }
 
-void PIDControl::computeFromError(double error) {
+void PIDController::computeFromError(double error) {
 	// Previous error
 	if (previousError > 1e17) {
 		previousError = error;
@@ -42,18 +42,18 @@ void PIDControl::computeFromError(double error) {
 	}
 }
 
-void PIDControl::setErrorI(double errorI) {
+void PIDController::setErrorI(double errorI) {
 	cumulativeError = errorI;
 }
 
-double PIDControl::getValue(bool useP, bool useI, bool useD) {
+double PIDController::getValue(bool useP, bool useI, bool useD) {
 	double valP = useP ? (currentError * kProp) : 0;
 	double valI = useI ? (cumulativeError * kInteg) : 0;
 	double valD = useD ? (deltaError * kDeriv) : 0;
 	return valP + valI + valD;
 }
 
-bool PIDControl::isSettled() {
+bool PIDController::isSettled() {
 	if (fabs(currentError) < settleErrorRange && settledFrames >= settleMinFrameCount) {
 		return true;
 	} else {
