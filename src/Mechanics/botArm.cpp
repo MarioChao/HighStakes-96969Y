@@ -1,18 +1,24 @@
 #include "AutonUtilities/pidControl.h"
+#include "AutonUtilities/patienceController.h"
 #include "Mechanics/botArm.h"
 #include "Utilities/generalUtility.h"
 #include "main.h"
 
 namespace {
+	void resolveArmExtreme();
 	void resolveArmDegrees();
 	void resolveArmDirection();
+
+	bool isExtreme();
 
 	void setArmPosition(double position_degrees);
 	void spinArmMotor(double velocityPct);
 
-	PIDControl armPositionPid(1.0, 0.0, 0.1);
+	PIDControl armPositionPid(1.0, 0, 0);
+	PatienceController armUpPatience(50, 1.0, true);
+	PatienceController armDownPatience(50, 1.0, false);
 
-	std::vector<double> armStages_degrees = {-10, 195.0, 360.0};
+	std::vector<double> armStages_degrees = {220.0};
 	int currentArmStage = 0;
 
 	double armVelocityPct = 100;
@@ -75,11 +81,24 @@ namespace botarm {
 	}
 
 	void setArmStage(int stageId, double delaySec) {
-		if (!(0 <= stageId && stageId < (int) armStages_degrees.size())) {
+		if (!(0 <= stageId && stageId < (int) armStages_degrees.size() + 2)) {
 			return;
 		}
 		currentArmStage = stageId;
-		setState(armStages_degrees[stageId], delaySec);
+		
+		// Extreme case
+		if (stageId == 0) {
+			armDownPatience.reset();
+			setState(-1e7, delaySec);
+			return;
+		} else if (stageId == (int) armStages_degrees.size() + 1) {
+			armUpPatience.reset();
+			setState(1e7, delaySec);
+			return;
+		}
+
+		// Stage case
+		setState(armStages_degrees[stageId - 1], delaySec);
 	}
 
 	int getArmStage() {
@@ -113,22 +132,59 @@ namespace botarm {
 }
 
 namespace {
-	void resolveArmDegrees() {
+	void resolveArmExtreme() {
 		// Calculate error
 		double currentPosition_degrees = ArmRotationSensor.position(degrees);
 		double error_degrees = armStateTargetAngle_degrees - currentPosition_degrees;
-		printf("Err: %.3f\n", error_degrees);
+
+		// Spin up or down
+		if (error_degrees > 0) {
+			/* Elevate */
+
+			// Check patience
+			armUpPatience.computePatience(currentPosition_degrees);
+			if (armUpPatience.isExhuasted()) {
+				ArmMotor.stop(hold);
+				return;
+			}
+
+			// Spin
+			spinArmMotor(armVelocityPct);
+			
+		} else if (error_degrees < 0) {
+			/* Descend */
+
+			// Check patience
+			armDownPatience.computePatience(currentPosition_degrees);
+			if (armDownPatience.isExhuasted()) {
+				ArmMotor.stop(hold);
+				return;
+			}
+
+			// Spin
+			spinArmMotor(-armVelocityPct);
+		}
+	}
+
+	void resolveArmDegrees() {
+		// Extreme case
+		if (isExtreme()) {
+			resolveArmExtreme();
+			return;
+		}
+
+		// Calculate error
+		double currentPosition_degrees = ArmRotationSensor.position(degrees);
+		double error_degrees = armStateTargetAngle_degrees - currentPosition_degrees;
+		// printf("Err: %.3f\n", error_degrees);
 
 		// Get pid value
 		armPositionPid.computeFromError(error_degrees);
-		// double motorDeltaVelocityPct = armPositionPid.getValue();
 		double motorVelocityPct = armPositionPid.getValue();
 
 		// Get final value
-		// double motorVelocityPct = ArmMotor.velocity(pct) + motorDeltaVelocityPct;
-		printf("PIDVal: %.3f\n", motorVelocityPct);
 		motorVelocityPct = genutil::clamp(motorVelocityPct, -armVelocityPct, armVelocityPct);
-		printf("MotVal: %.3f\n", motorVelocityPct);
+		// printf("MotVal: %.3f\n", motorVelocityPct);
 
 		// Set velocity
 		spinArmMotor(motorVelocityPct);
@@ -158,6 +214,10 @@ namespace {
 				ArmMotor.stop(hold);
 				break;
 		}
+	}
+
+	bool isExtreme() {
+		return (currentArmStage == 0) || (currentArmStage == (int) armStages_degrees.size() + 1);
 	}
 
 	void setArmPosition(double position_degrees) {
