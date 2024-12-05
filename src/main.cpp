@@ -73,11 +73,15 @@ void test1() {
 	UniformCubicSpline &spline = spline1;
 	CurveSampler &splineSampler = splineSampler1;
 
+	// Direction
+	bool isReversed = true;
+
 	// Set initial position
 	std::vector<double> pos = spline.getPositionAtT(0);
 	std::vector<double> vel = spline.getVelocityAtT(0);
 	robotSimulator.position = Vector3(pos[0], pos[1], 0);
-	robotSimulator.angularPosition = spline.getLinegularAt(0, true).getTheta_radians();
+	robotSimulator.angularPosition = spline.getLinegularAt(0, isReversed).getTheta_radians();
+	ramsete.setDirection(isReversed);
 	robotSimulator.setDistance(0);
 	// robotSimulator.position = Vector3(0, 0, 0);
 	// robotSimulator.angularPosition = genutil::toRadians(90.0);
@@ -90,15 +94,19 @@ void test1() {
 	while (1) {
 		// Get time
 		// double s = curveTimer.value() * 1;
-		double s = robotSimulator.travelledDistance;
-		double t = splineSampler1.distanceToParam(s);
+		double s = robotSimulator.travelledDistance + 0.2;
+		double t = splineSampler.distanceToParam(s);
+		// printf("t: %.3f\n", t);
 		if (t >= spline.getTRange().second) {
 			if (id == 0) {
 				spline = splineR1;
 				splineSampler = splineSamplerR1;
+				isReversed = false;
+				ramsete.setDirection(isReversed);
 				robotSimulator.setDistance(0);
 			}
 			id++;
+			wait(20, msec);
 			continue;
 		}
 		// double t = curveTimer.value() * 0.5;
@@ -109,7 +117,7 @@ void test1() {
 		// Get actual & desired linegular
 		Linegular lg1(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
 		// Linegular lg2(0, 0, 0);
-		Linegular lg2 = spline.getLinegularAt(t, true);
+		Linegular lg2 = spline.getLinegularAt(t, isReversed);
 		// std::vector<double> pos = spline.getPositionAtT(t);
 		// std::vector<double> vel = spline.getVelocityAtT(t);
 		// Control

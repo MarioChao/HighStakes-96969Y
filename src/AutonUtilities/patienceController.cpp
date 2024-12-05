@@ -43,7 +43,11 @@ void PatienceController::computePatience(double value) {
 	}
 }
 
-bool PatienceController::isExhuasted() {
+void PatienceController::exhaustNow() {
+	patience = maxPatienceLevel;
+}
+
+bool PatienceController::isExhausted() {
 	return patience >= maxPatienceLevel;
 }
 

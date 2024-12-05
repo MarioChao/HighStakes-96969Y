@@ -7,7 +7,8 @@ public:
 	void reset();
 	void computePatience(double value);
 
-	bool isExhuasted();
+	void exhaustNow();
+	bool isExhausted();
 
 	void printDebug();
 

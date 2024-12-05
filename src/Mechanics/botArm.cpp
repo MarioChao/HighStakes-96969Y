@@ -18,8 +18,10 @@ namespace {
 	PatienceController armUpPatience(50, 1.0, true);
 	PatienceController armDownPatience(50, 1.0, false);
 
-	std::vector<double> armStages_degrees = {220.0};
+	std::vector<double> armStages_degrees = {0, 0, 220.0, 0};
+	std::vector<int> extremeStages_values = {-1, -2, 0, 2};
 	int currentArmStage = 0;
+	bool releaseOnExhausted = true;
 
 	double armVelocityPct = 100;
 	double armUpVelocityPct = 100;
@@ -39,7 +41,7 @@ namespace botarm {
 			if (useDirection) {
 				resolveArmDirection();
 			} else {
-				// printf("armvolt: %.3f\n", ArmMotor.voltage(volt));
+				printf("st: %d, armvolt: %.3f\n", currentArmStage, ArmMotor.voltage(volt));
 				resolveArmDegrees();
 			}
 
@@ -82,24 +84,39 @@ namespace botarm {
 	}
 
 	void setArmStage(int stageId, double delaySec) {
-		if (!(0 <= stageId && stageId < (int) armStages_degrees.size() + 2)) {
-			return;
-		}
+		stageId = genutil::clamp(stageId, 0, (int) armStages_degrees.size() - 1);
 		currentArmStage = stageId;
 		
-		// Extreme case
-		if (stageId == 0) {
+		// Extreme cases
+		int stage_value = extremeStages_values[stageId];
+		if (stage_value == -2) {
+			// Down, hold
 			armDownPatience.reset();
+			releaseOnExhausted = false;
 			setState(-1e7, delaySec);
 			return;
-		} else if (stageId == (int) armStages_degrees.size() + 1) {
+		} else if (stage_value == -1) {
+			// Down, release
+			armDownPatience.reset();
+			releaseOnExhausted = true;
+			setState(-1e7, delaySec);
+			return;
+		} else if (stage_value == 1) {
+			// Up, release
 			armUpPatience.reset();
+			releaseOnExhausted = true;
+			setState(1e7, delaySec);
+			return;
+		} else if (stage_value == 2) {
+			// Up, hold
+			armUpPatience.reset();
+			releaseOnExhausted = false;
 			setState(1e7, delaySec);
 			return;
 		}
 
-		// Stage case
-		setState(armStages_degrees[stageId - 1], delaySec);
+		// PID stage case
+		setState(armStages_degrees[stageId], delaySec);
 	}
 
 	int getArmStage() {
@@ -108,13 +125,23 @@ namespace botarm {
 
 	void resetArmEncoder() {
 		// Spin downward for 1 second
-		currentArmStage = 100;
-		armStateTargetAngle_degrees = -1000;
-		task::sleep(1000);
+		// currentArmStage = 100;
+		// armStateTargetAngle_degrees = -1000;
+		// task::sleep(1000);
 
-		// Set the position as stage 0
+		// Spin downward until exhausted
+		setArmStage(1);
+		while (!armDownPatience.isExhausted()) {
+			task::sleep(20);
+		}
+
+		// Set the position as 0 degrees
 		setArmPosition(0);
+
+		// Initialize to stage 0
 		setArmStage(0);
+		armDownPatience.computePatience(ArmRotationSensor.position(degrees));
+		armDownPatience.exhaustNow();
 	}
 
 	void control(int state) {
@@ -144,8 +171,12 @@ namespace {
 
 			// Check patience
 			armUpPatience.computePatience(currentPosition_degrees);
-			if (armUpPatience.isExhuasted()) {
-				spinArmMotor(5);
+			if (armUpPatience.isExhausted()) {
+				if (releaseOnExhausted) {
+					ArmMotor.stop(coast);
+				} else {
+					spinArmMotor(3);
+				}
 				return;
 			}
 
@@ -157,8 +188,12 @@ namespace {
 
 			// Check patience
 			armDownPatience.computePatience(currentPosition_degrees);
-			if (armDownPatience.isExhuasted()) {
-				spinArmMotor(-5);
+			if (armDownPatience.isExhausted()) {
+				if (releaseOnExhausted) {
+					ArmMotor.stop(coast);
+				} else {
+					spinArmMotor(-3);
+				}
 				return;
 			}
 
@@ -218,7 +253,10 @@ namespace {
 	}
 
 	bool isExtreme() {
-		return (currentArmStage == 0) || (currentArmStage == (int) armStages_degrees.size() + 1);
+		if (!(0 <= currentArmStage && currentArmStage < (int) armStages_degrees.size())) {
+			return false;
+		}
+		return extremeStages_values[currentArmStage] != 0;
 	}
 
 	void setArmPosition(double position_degrees) {
