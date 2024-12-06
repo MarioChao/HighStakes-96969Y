@@ -267,9 +267,9 @@ namespace {
 	void spinArmMotor(double velocityPct) {
 		// Spin
 		double velocityVolt = genutil::pctToVolt(velocityPct);
-		velocityVolt = genutil::clamp(velocityVolt, -10, 10);
+		velocityVolt = genutil::clamp(velocityVolt, -11, 11);
 		ArmMotor.spin(forward, velocityVolt, volt);
-		// printf("VVolt: %.3f\n", velocityVolt);
+		// printf("VVolt: %.3f, temp: %.3f°C\n", velocityVolt, ArmMotor.temperature(celsius));
 		// ArmMotor.spin(forward, velocityPct, pct);
 	}
 }
