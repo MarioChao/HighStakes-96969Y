@@ -37,29 +37,31 @@ namespace controls {
 
 		// Controller 1
 		Controller1.ButtonX.pressed([]() -> void {
-			if (intakePart == 1)
+			if (intakePart == 1) {
 				// botintake::switchMode();
 				// Alliance wall stake
 				botarm::setArmStage(2);
-			else
+				botintake::setColorFiltering(true);
+			} else {
 				botintake2::switchMode();
-		});
-		Controller1.ButtonY.pressed([]() -> void {
-			if (intakePart == 1) {
-				if (botintake::getIntakeVelocity() == 100) {
-					botintake::setIntakeVelocity(80);
-				} else {
-					botintake::setIntakeVelocity(100);
-				}
 			}
+		});
+		// Controller1.ButtonY.pressed([]() -> void {
+		// 	if (intakePart == 1) {
+		// 		if (botintake::getIntakeVelocity() == 100) {
+		// 			botintake::setIntakeVelocity(80);
+		// 		} else {
+		// 			botintake::setIntakeVelocity(100);
+		// 		}
+		// 	}
+		// });
+		Controller1.ButtonY.pressed([]() -> void {
+			if (intakePart == 1) botintake::switchFilterColor();
+			else botintake2::switchFilterColor();
 		});
 		Controller1.ButtonA.pressed([]() -> void {
 			swing::switchState();
 		});
-		// Controller1.ButtonB.pressed([]() -> void {
-		// 	if (intakePart == 1) botintake::switchFilterColor();
-		// 	else botintake2::switchFilterColor();
-		// });
 		Controller1.ButtonB.pressed([]() -> void {
 			if (intakePart == 1) {
 				if (botintake::isColorFiltering()) {
@@ -81,9 +83,11 @@ namespace controls {
 			// }
 			// Neutral wall stake
 			botarm::setArmStage(3);
+			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonDown.pressed([]() -> void {
 			botarm::setArmStage(0);
+			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonUp.pressed([]() -> void {
 			if (botdrive::getMaxDriveVelocity() >= 99.0) {

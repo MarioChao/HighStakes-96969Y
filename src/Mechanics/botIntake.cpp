@@ -81,7 +81,7 @@ namespace botintake {
 				resolveIntake();
 			}
 
-			task::sleep(5);
+			wait(1, msec);
 		}
 	}
 
