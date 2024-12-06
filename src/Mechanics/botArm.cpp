@@ -18,7 +18,7 @@ namespace {
 	PatienceController armUpPatience(50, 1.0, true);
 	PatienceController armDownPatience(50, 1.0, false);
 
-	std::vector<double> armStages_degrees = {0, 0, 220.0, 0};
+	std::vector<double> armStages_degrees = {0, 0, 210.0, 0};
 	std::vector<int> extremeStages_values = {-1, -2, 0, 2};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
@@ -41,7 +41,7 @@ namespace botarm {
 			if (useDirection) {
 				resolveArmDirection();
 			} else {
-				printf("st: %d, armvolt: %.3f\n", currentArmStage, ArmMotor.voltage(volt));
+				// printf("st: %d, armvolt: %.3f\n", currentArmStage, ArmMotor.voltage(volt));
 				resolveArmDegrees();
 			}
 
@@ -53,7 +53,7 @@ namespace botarm {
 		ArmMotor.setPosition(0, degrees);
 	}
 
-	void setState(double state, double delaySec) {
+	void setTargetAngle(double state, double delaySec) {
 		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here
@@ -67,7 +67,7 @@ namespace botarm {
 		_taskState = state;
 		_taskDelay = delaySec;
 
-		task setState([]() -> int {
+		task setTargetAngle([]() -> int {
 			// Get global variables
 			int taskState = _taskState;
 			double taskDelay = _taskDelay;
@@ -93,30 +93,30 @@ namespace botarm {
 			// Down, hold
 			armDownPatience.reset();
 			releaseOnExhausted = false;
-			setState(-1e7, delaySec);
+			setTargetAngle(-1e7, delaySec);
 			return;
 		} else if (stage_value == -1) {
 			// Down, release
 			armDownPatience.reset();
 			releaseOnExhausted = true;
-			setState(-1e7, delaySec);
+			setTargetAngle(-1e7, delaySec);
 			return;
 		} else if (stage_value == 1) {
 			// Up, release
 			armUpPatience.reset();
 			releaseOnExhausted = true;
-			setState(1e7, delaySec);
+			setTargetAngle(1e7, delaySec);
 			return;
 		} else if (stage_value == 2) {
 			// Up, hold
 			armUpPatience.reset();
 			releaseOnExhausted = false;
-			setState(1e7, delaySec);
+			setTargetAngle(1e7, delaySec);
 			return;
 		}
 
 		// PID stage case
-		setState(armStages_degrees[stageId], delaySec);
+		setTargetAngle(armStages_degrees[stageId], delaySec);
 	}
 
 	int getArmStage() {
@@ -269,6 +269,7 @@ namespace {
 		double velocityVolt = genutil::pctToVolt(velocityPct);
 		velocityVolt = genutil::clamp(velocityVolt, -10, 10);
 		ArmMotor.spin(forward, velocityVolt, volt);
+		// printf("VVolt: %.3f\n", velocityVolt);
 		// ArmMotor.spin(forward, velocityPct, pct);
 	}
 }
