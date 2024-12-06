@@ -38,7 +38,9 @@ namespace controls {
 		// Controller 1
 		Controller1.ButtonX.pressed([]() -> void {
 			if (intakePart == 1)
-				botintake::switchMode();
+				// botintake::switchMode();
+				// Alliance wall stake
+				botarm::setArmStage(2);
 			else
 				botintake2::switchMode();
 		});
@@ -51,12 +53,24 @@ namespace controls {
 				}
 			}
 		});
-		Controller1.ButtonA.pressed([]() -> void { swing::switchState(); });
+		Controller1.ButtonA.pressed([]() -> void {
+			swing::switchState();
+		});
 		// Controller1.ButtonB.pressed([]() -> void {
 		// 	if (intakePart == 1) botintake::switchFilterColor();
 		// 	else botintake2::switchFilterColor();
 		// });
-		Controller1.ButtonB.pressed([]() -> void { redirect::switchState(); });
+		Controller1.ButtonB.pressed([]() -> void {
+			if (intakePart == 1) {
+				if (botintake::isColorFiltering()) {
+					botintake::setColorFiltering(false);
+					redirect::setState(1);
+					botarm::setArmStage(1);
+				} else {
+					botintake::setColorFiltering(true);
+				}
+			}
+		});
 		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
@@ -65,9 +79,8 @@ namespace controls {
 			// if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
 			// 	botarmpneu::switchState();
 			// }
-			int stage = botarm::getArmStage();
-			stage++;
-			botarm::setArmStage(stage);
+			// Neutral wall stake
+			botarm::setArmStage(3);
 		});
 		Controller1.ButtonDown.pressed([]() -> void {
 			botarm::setArmStage(0);
