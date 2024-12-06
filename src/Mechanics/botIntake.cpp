@@ -1,4 +1,6 @@
 #include "Mechanics/botIntake.h"
+
+#include "Mechanics/redirect.h"
 #include "Utilities/debugFunctions.h"
 #include "Utilities/generalUtility.h"
 #include "main.h"
@@ -7,7 +9,6 @@
 
 namespace {
 	void resolveIntake();
-	void resolveIntakeToArm();
 
 	double intakeVelocityPct = 100;
 
@@ -16,10 +17,7 @@ namespace {
 
 	/* Factors */
 
-	double hookFactor = 1.0;
-	int hookMode = 0;
-
-	bool autoHookSwitchMode = true;
+	bool colorFilterEnabled = true;
 
 	int resolveState = 0;
 
@@ -56,9 +54,11 @@ namespace botintake {
 				// debug::printOnController("Blue ring");
 			}
 
-			// Intake loop
-			if (hookMode == 0) {
-				// Normal intake
+			/* Intake loop */
+
+			// Normal intake
+			if (false) {
+				// Detect stuck
 				if (IntakeMotor2.torque() > 0.41) {
 					if (!isStuck) {
 						stuckTime.clear();
@@ -68,6 +68,8 @@ namespace botintake {
 					isStuck = false;
 				}
 				isStuck = false;
+
+				// Reverse on stuck
 				if (isStuck && stuckTime.value() > 0.08) {
 					resolveState = -1;
 					resolveIntake();
@@ -75,9 +77,8 @@ namespace botintake {
 				} else {
 					resolveIntake();
 				}
-			} else if (hookMode == 1) {
-				// Intake to arm
-				resolveIntakeToArm();
+			} else {
+				resolveIntake();
 			}
 
 			task::sleep(5);
@@ -125,22 +126,12 @@ namespace botintake {
 		});
 	}
 
-	void switchMode() {
-		setHookMode(!hookMode);
+	bool isColorFiltering() {
+		return colorFilterEnabled;
 	}
 
-	void setHookMode(int mode) {
-		hookMode = mode;
-		switch (hookMode) {
-			case 0:
-				debug::printOnController("Intake normal");
-				// hookFactor = 1.0;
-				break;
-			case 1:
-				debug::printOnController("Intake to arm");
-				// hookFactor = 0.5;
-				break;
-		}
+	void setColorFiltering(bool isEnabled) {
+		colorFilterEnabled = isEnabled;
 	}
 
 	void switchFilterColor() {
@@ -183,14 +174,17 @@ namespace {
 		resolveState = (resolveState > 0) - (resolveState < 0);
 
 		// Filter out on some detection
-		if (previousRingDetected && !ringDetected) {
+		if (colorFilterEnabled) {
 			if (detectedRingColor == filterOutColor) {
 				// Filter out
-				wait(45, msec);
-				IntakeMotor1.spin(fwd, 0, volt);
-				IntakeMotor2.spin(fwd, 0, volt);
-				wait(300, msec);
-				return;
+				if (redirect::getState() == 0) {
+					redirect::setState(1);
+				}
+			} else {
+				// Remove filter
+				if (redirect::getState() == 1) {
+					redirect::setState(0);
+				}
 			}
 		}
 
@@ -210,19 +204,6 @@ namespace {
 				IntakeMotor1.stop(brakeType::coast);
 				IntakeMotor2.stop(brakeType::coast);
 				break;
-		}
-	}
-
-	void resolveIntakeToArm() {
-		// Reverse hook on some detection
-		if (previousRingDetected && !ringDetected) {
-			if (autoHookSwitchMode) {
-				hookMode = 0;
-			}
-		}
-		// Otherwise spin hook normally
-		else {
-			// Spin both
 		}
 	}
 }

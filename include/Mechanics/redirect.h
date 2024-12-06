@@ -5,6 +5,7 @@ namespace redirect {
 
 	void preauton();
 
+	int getState();
 	void setState(int, double = 0);
 
 	void switchState();

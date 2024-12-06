@@ -10,9 +10,8 @@ namespace botintake {
 
 	void setState(int, double = 0);
 
-	void switchMode();
-
-	void setHookMode(int);
+	bool isColorFiltering();
+	void setColorFiltering(bool isEnabled);
 
 	void switchFilterColor();
 

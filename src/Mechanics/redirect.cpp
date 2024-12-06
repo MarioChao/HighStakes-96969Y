@@ -17,6 +17,10 @@ namespace redirect {
 
 	void preauton() {}
 
+	int getState() {
+		return RedirectPneumatics.value();
+	}
+
 	void setState(int state, double delaySec) {
 		// Check for instant set
 		if (delaySec <= 1e-9) {
