@@ -56,7 +56,7 @@ namespace {
 
 		// Increase optical sensor brightness
 		RingOpticalSensor.setLight(ledState::on);
-		RingOpticalSensor.setLightPower(30);
+		RingOpticalSensor.setLightPower(100);
 
 		initComponentFinished = true;
 	}
