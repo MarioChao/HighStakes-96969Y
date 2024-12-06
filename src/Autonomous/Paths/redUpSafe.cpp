@@ -7,8 +7,6 @@ void autonpaths::runAutonRedUpSafe() {
 	timer autontimer;
 	setRotation(-120.0);
 
-	waitUntil(isArmResetted());
-
 	// Grab goal
 	setGoalClampState(1, 1.4);
 	driveAndTurnDistanceTiles(-1.32, -115.0, 38.0, 15.0, defaultMoveTilesErrorRange, 2.0);

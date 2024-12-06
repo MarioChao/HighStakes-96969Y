@@ -38,8 +38,10 @@ void autonpaths::runAutonBlueDown() {
 	// Take in corner
 	setIntakeToArm(0);
 	setIntakeState(1);
-	setArmHangState(1);
+	// setArmHangState(1);
+	setArmStage(2);
 	turnToAngle(135.0);
+	setIntakeState(0);
 	driveAndTurnDistanceTiles(2.2, 135.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.3);
 	task::sleep(200);
 	driveAndTurnDistanceTiles(1.0, 135.0, 40.0, 100.0, defaultMoveTilesErrorRange, 0.5);
@@ -50,7 +52,8 @@ void autonpaths::runAutonBlueDown() {
 	turnToAngle(57.0);
 	driveAndTurnDistanceTiles(0.5, 57.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 	setIntakeState(0);
-	setArmHangState(0);
+	// setArmHangState(0);
+	setArmStage(0);
 	task::sleep(100);
 
 	// Touch ladder
