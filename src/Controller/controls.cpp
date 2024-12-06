@@ -8,6 +8,7 @@
 #include "Mechanics/swing.h"
 // #include "Mechanics/botWings.h"
 #include "Controller/controls.h"
+#include "Controller/rumble.h"
 #include "Mechanics/goalClamp.h"
 #include "Utilities/debugFunctions.h"
 #include "main.h"
@@ -29,6 +30,12 @@ namespace controls {
 			botarm::runThread();
 			return 1;
 		});
+
+		task rumbleTask([]() -> int {
+			rumble::runThread();
+			return 1;
+		});
+		rumble::setString(".");
 	}
 
 	void setUpKeybinds() {
@@ -56,6 +63,8 @@ namespace controls {
 		// 	}
 		// });
 		Controller1.ButtonY.pressed([]() -> void {
+			rumble::setConstantRumbling(false);
+			rumble::setString("-");
 			if (intakePart == 1) botintake::switchFilterColor();
 			else botintake2::switchFilterColor();
 		});
@@ -97,7 +106,11 @@ namespace controls {
 			// 	botdrive::setMaxDriveVelocity(100.0);
 			// 	debug::printOnController("100\% drive speed");
 			// }
-			if (intakePart == 1) botintake::setFilterColor("none");
+			if (intakePart == 1) {
+				botintake::setFilterColor("none");
+				debug::printOnController("filter none");
+				rumble::setConstantRumbling(true);
+			}
 		});
 	}
 
