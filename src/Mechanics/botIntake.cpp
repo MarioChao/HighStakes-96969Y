@@ -18,7 +18,7 @@ namespace {
 	/* Factors */
 
 	bool colorFilterEnabled = true;
-	const bool disableColorFilter = true;
+	const bool disableColorFilter = false;
 
 	int resolveState = 0;
 
@@ -27,7 +27,7 @@ namespace {
 
 	char *filterOutColor = "none";
 	char *detectedRingColor;
-	bool isDetectingRingColor;
+	bool isDetectingRing;
 
 	bool controlState = true;
 }
@@ -50,15 +50,14 @@ namespace botintake {
 			// Update detected ring color
 			if (RingOpticalSensor.hue() <= 20 || RingOpticalSensor.hue() >= 340) {
 				detectedRingColor = "red";
-				isDetectingRingColor = true;
 				// debug::printOnController("Red ring");
 			} else if (190 <= RingOpticalSensor.hue() && RingOpticalSensor.hue() <= 230) {
 				detectedRingColor = "blue";
-				isDetectingRingColor = true;
 				// debug::printOnController("Blue ring");
-			} else {
-				isDetectingRingColor = false;
 			}
+
+			// Update detecting ring
+			isDetectingRing = RingOpticalSensor.isNearObject();
 
 			/* Intake loop */
 
@@ -185,7 +184,7 @@ namespace {
 				if (redirect::getState() == 1) {
 					redirect::setState(0);
 				}
-			} else if (isDetectingRingColor) {
+			} else if (isDetectingRing) {
 				if (detectedRingColor == filterOutColor) {
 					// Filter out
 					if (redirect::getState() == 0) {

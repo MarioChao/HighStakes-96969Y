@@ -21,6 +21,8 @@ namespace autonfunctions {
 	void setArmHangState(int, double = 0);
 	void setArmStage(int, double = 0);
 
+	bool isArmResetted();
+
 	void setFrontWingsState(bool state, double delaySec = 0);
 	void setLeftWingState(bool state, double delaySec = 0);
 	void setRightWingState(bool state, double delaySec = 0);

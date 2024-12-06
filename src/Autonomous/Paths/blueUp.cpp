@@ -7,11 +7,17 @@ void autonpaths::runAutonBlueUp() {
 	timer autontimer;
 	setRotation(120.0);
 
+	waitUntil(isArmResetted());
+
 	// Score preload
-	setArmHangState(1);
+	// setArmHangState(1);
+	setArmStage(2);
 	task::sleep(700);
 	driveAndTurnDistanceTiles(0.45, 120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	setArmHangState(0);
+	driveAndTurnDistanceTiles(-0.1, 120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+	turnToAngle(120.0);
+	// setArmHangState(0);
+	setArmStage(0);
 	task::sleep(200);
 
 	// Grab goal
@@ -35,8 +41,10 @@ void autonpaths::runAutonBlueUp() {
 	driveAndTurnDistanceTiles(1.3, 80.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Take in corner
-	setArmHangState(1);
+	// setArmHangState(1);
+	setArmStage(2);
 	turnToAngle(50.0);
+	setIntakeState(0);
 	driveAndTurnDistanceTiles(0.95, 50.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 	task::sleep(400);
 	driveAndTurnDistanceTiles(1.0, 45.0, 40.0, 100.0, defaultMoveTilesErrorRange, 0.5);
@@ -48,7 +56,8 @@ void autonpaths::runAutonBlueUp() {
 	while (autontimer.value() < 13.0) {
 		task::sleep(20);
 	}
-	setArmHangState(0, 0.5);
+	// setArmHangState(0, 0.5);
+	setArmStage(0);
 	setIntakeState(0, 0.5);
 	driveAndTurnDistanceTiles(-2.32, 42.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.6);
 }

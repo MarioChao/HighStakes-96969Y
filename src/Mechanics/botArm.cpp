@@ -14,18 +14,25 @@ namespace {
 	void setArmPosition(double position_degrees);
 	void spinArmMotor(double velocityPct);
 
+	// Stage controllers
 	PIDController armPositionPid(1.0, 0, 0);
 	PatienceController armUpPatience(50, 1.0, true);
 	PatienceController armDownPatience(50, 1.0, false);
 
+	// Stage config
 	std::vector<double> armStages_degrees = {0, 0, 210.0, 0};
 	std::vector<int> extremeStages_values = {-1, -2, 0, 2};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
 
+	// Reset arm info
+	bool armResetted = false;
+
+	// Speed config
 	double armVelocityPct = 100;
 	double armUpVelocityPct = 100;
 
+	// PID or direction
 	double armStateTargetAngle_degrees = 0;
 	int armStateDirection = 0;
 
@@ -124,10 +131,7 @@ namespace botarm {
 	}
 
 	void resetArmEncoder() {
-		// Spin downward for 1 second
-		// currentArmStage = 100;
-		// armStateTargetAngle_degrees = -1000;
-		// task::sleep(1000);
+		armResetted = false;
 
 		// Spin downward until exhausted
 		setArmStage(1);
@@ -142,6 +146,12 @@ namespace botarm {
 		setArmStage(0);
 		armDownPatience.computePatience(ArmRotationSensor.position(degrees));
 		armDownPatience.exhaustNow();
+
+		armResetted = true;
+	}
+
+	bool isArmResetted() {
+		return armResetted;
 	}
 
 	void control(int state) {
@@ -267,7 +277,7 @@ namespace {
 	void spinArmMotor(double velocityPct) {
 		// Spin
 		double velocityVolt = genutil::pctToVolt(velocityPct);
-		velocityVolt = genutil::clamp(velocityVolt, -11, 11);
+		velocityVolt = genutil::clamp(velocityVolt, -12, 12);
 		ArmMotor.spin(forward, velocityVolt, volt);
 		// printf("VVolt: %.3f, temp: %.3f°C\n", velocityVolt, ArmMotor.temperature(celsius));
 		// ArmMotor.spin(forward, velocityPct, pct);

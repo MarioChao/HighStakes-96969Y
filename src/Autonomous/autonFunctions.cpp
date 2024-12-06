@@ -35,7 +35,7 @@ namespace {
 	bool setRightWing_RightWingState;
 	bool setWings_WingsState;
 
-	bool useRotationSensorForPid = true;
+	bool useRotationSensorForPid = false;
 	bool useEncoderForPid = false;
 
 	// DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
@@ -280,6 +280,10 @@ namespace autonfunctions {
 
 	void setArmStage(int stage, double delaySec) {
 		botarm::setArmStage(stage, delaySec);
+	}
+
+	bool isArmResetted() {
+		return botarm::isArmResetted();
 	}
 
 	/// @brief Set the state of Left Wing's pneumatic.
