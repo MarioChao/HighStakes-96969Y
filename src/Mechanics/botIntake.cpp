@@ -142,10 +142,10 @@ namespace botintake {
 	void switchFilterColor() {
 		if (filterOutColor == "red") {
 			filterOutColor = "blue";
-			debug::printOnController("filter blue");
+			debug::printOnController("filter out blue");
 		} else {
 			filterOutColor = "red";
-			debug::printOnController("filter red");
+			debug::printOnController("filter out red");
 		}
 	}
 

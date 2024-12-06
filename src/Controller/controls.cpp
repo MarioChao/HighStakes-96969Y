@@ -90,13 +90,14 @@ namespace controls {
 			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonUp.pressed([]() -> void {
-			if (botdrive::getMaxDriveVelocity() >= 99.0) {
-				botdrive::setMaxDriveVelocity(50.0);
-				debug::printOnController("50\% drive speed");
-			} else {
-				botdrive::setMaxDriveVelocity(100.0);
-				debug::printOnController("100\% drive speed");
-			}
+			// if (botdrive::getMaxDriveVelocity() >= 99.0) {
+			// 	botdrive::setMaxDriveVelocity(50.0);
+			// 	debug::printOnController("50\% drive speed");
+			// } else {
+			// 	botdrive::setMaxDriveVelocity(100.0);
+			// 	debug::printOnController("100\% drive speed");
+			// }
+			if (intakePart == 1) botintake::setFilterColor("none");
 		});
 	}
 

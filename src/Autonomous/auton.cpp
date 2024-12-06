@@ -143,6 +143,7 @@ namespace auton {
 				break;
 			case autonomousType::Test:
 				autonpaths::autonTest();
+				break;
 			default:
 				break;
 		}
