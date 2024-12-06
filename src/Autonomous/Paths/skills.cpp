@@ -34,7 +34,7 @@ void autonpaths::runAutonSkills() {
 	// Take in 1 ring to arm
 	turnToAngle(270.0);
 	turnToAngle(180.0, halfRobotLengthIn * 1.0);
-	setIntakeHookMode(1);
+	setIntakeToArm(1);
 	driveAndTurnDistanceTiles(0.6, 180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Place mobile goal in corner
@@ -44,7 +44,7 @@ void autonpaths::runAutonSkills() {
 
 	// Go to & face neutral wall stake
 	setIntakeState(0);
-	setIntakeHookMode(0);
+	setIntakeToArm(0);
 	turnToAngle(85.0);
 	setArmHangState(1);
 	driveAndTurnDistanceTiles(2.46, 85.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.5);
@@ -62,7 +62,7 @@ void autonpaths::runAutonSkills() {
 	turnToAngle(180.0);
 	driveAndTurnDistanceTiles(-0.5, 180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	turnToAngle(90.0);
-	setIntakeHookMode(1);
+	setIntakeToArm(1);
 	setIntakeState(1);
 	driveAndTurnDistanceTiles(1.0, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
@@ -130,7 +130,7 @@ void autonpaths::runAutonSkills() {
 	// Take in 1 ring to arm
 	turnToAngle(90.0);
 	turnToAngle(0, halfRobotLengthIn * 1.0);
-	setIntakeHookMode(1);
+	setIntakeToArm(1);
 	driveAndTurnDistanceTiles(0.5, 0, 70.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Put mobile goal in corner
@@ -139,7 +139,7 @@ void autonpaths::runAutonSkills() {
 	driveAndTurnDistanceTiles(-0.7, -100.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 	// Go to neutral wall stake & store 1 ring
-	setIntakeHookMode(0);
+	setIntakeToArm(0);
 	setIntakeBottomState(1);
 	setIntakeTopState(0);
 	turnToAngle(-95);

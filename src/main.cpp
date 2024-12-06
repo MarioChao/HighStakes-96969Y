@@ -37,6 +37,8 @@ double motSpeedRpm, motAimSpeedRpm = 0;
 
 int intakePart = 1;
 
+bool isArmPneumatic = false;
+
 timer drivingTimer;
 
 Odometry mainOdometry;

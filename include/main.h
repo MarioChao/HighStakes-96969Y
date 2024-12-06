@@ -19,6 +19,9 @@ extern double motSpeedRpm, motAimSpeedRpm;
 // Intake info
 extern int intakePart;
 
+// Arm info
+extern bool isArmPneumatic;
+
 // Timer
 extern timer drivingTimer;
 

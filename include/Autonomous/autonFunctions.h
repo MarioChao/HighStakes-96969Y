@@ -16,9 +16,10 @@ namespace autonfunctions {
 	void setIntakeState(int state, double delaySec = 0);
 	void setIntakeTopState(int, double = 0);
 	void setIntakeBottomState(int, double = 0);
-	void setIntakeHookMode(int);
+	void setIntakeToArm(int);
 
 	void setArmHangState(int, double = 0);
+	void setArmStage(int, double = 0);
 
 	void setFrontWingsState(bool state, double delaySec = 0);
 	void setLeftWingState(bool state, double delaySec = 0);

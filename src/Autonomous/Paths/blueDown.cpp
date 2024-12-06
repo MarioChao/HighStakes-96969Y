@@ -19,7 +19,7 @@ void autonpaths::runAutonBlueDown() {
 
 	// Take in ring to arm
 	turnToAngleVelocity(123, 80.0, 0.0, defaultTurnAngleErrorRange, 2.0);
-	setIntakeHookMode(1);
+	setIntakeToArm(1);
 	setIntakeTopState(0);
 	driveAndTurnDistanceTiles(0.4, 123.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
@@ -36,7 +36,7 @@ void autonpaths::runAutonBlueDown() {
 	driveAndTurnDistanceTiles(-1.25, 130.0, 60.0, 50.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Take in corner
-	setIntakeHookMode(0);
+	setIntakeToArm(0);
 	setIntakeState(1);
 	setArmHangState(1);
 	turnToAngle(135.0);

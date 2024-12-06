@@ -5,8 +5,10 @@
 
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botIntake2.h"
+#include "Mechanics/botArm.h"
 #include "Mechanics/botArmPneumatics.h"
 #include "Mechanics/goalClamp.h"
+#include "Mechanics/redirect.h"
 #include "Utilities/angleUtility.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
@@ -33,7 +35,7 @@ namespace {
 	bool setRightWing_RightWingState;
 	bool setWings_WingsState;
 
-	bool useRotationSensorForPid = false;
+	bool useRotationSensorForPid = true;
 	bool useEncoderForPid = false;
 
 	// DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
@@ -264,13 +266,20 @@ namespace autonfunctions {
 
 	/// @brief Set the hook mode of the intake.
 	/// @param state Normal: 0, to arm: 1
-	void setIntakeHookMode(int state) {
-		if (intakePart == 1) return;
-		else botintake2::setHookMode(state);
+	void setIntakeToArm(int state) {
+		if (intakePart == 1) {
+			botintake::setColorFiltering(false);
+			redirect::setState(1);
+			botarm::setArmStage(1);
+		} else botintake2::setHookMode(state);
 	}
 
 	void setArmHangState(int state, double delaySec) {
 		botarmpneu::setState(state, delaySec);
+	}
+
+	void setArmStage(int stage, double delaySec) {
+		botarm::setArmStage(stage, delaySec);
 	}
 
 	/// @brief Set the state of Left Wing's pneumatic.
