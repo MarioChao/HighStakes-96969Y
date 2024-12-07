@@ -3,37 +3,22 @@
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/pidController.h"
 
-#include "Mechanics/botIntake.h"
-#include "Mechanics/botIntake2.h"
-#include "Mechanics/botArm.h"
-#include "Mechanics/botArmPneumatics.h"
-#include "Mechanics/goalClamp.h"
-#include "Mechanics/redirect.h"
-#include "Utilities/angleUtility.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
+
 #include "main.h"
 
 namespace {
-	using namespace angle;
-	using namespace botinfo;
-	using namespace field;
-	using std::vector;
+	using botinfo::halfRobotLengthIn;
+	using botinfo::trackingLookWheelSensorGearRatio, botinfo::trackingLookWheelCircumIn;
+	using botinfo::driveWheelMotorGearRatio, botinfo::driveWheelCircumIn;
+	using field::tileLengthIn;
 
-	vector<double> getMotorRevolutions();
-	double getAverageDifference(vector<double> vector1, vector<double> vector2);
+	std::vector<double> getMotorRevolutions();
+	double getAverageDifference(std::vector<double> vector1, std::vector<double> vector2);
 	void driveVelocity(double leftVelocityPct, double rightVelocityPct);
 	void driveVoltage(double leftVoltagePct, double rightVoltagePct, double clampMaxVoltage);
-
-	double setFrontWings_DelaySec;
-	double setLeftWing_DelaySec;
-	double setRightWing_DelaySec;
-	double setWings_DelaySec;
-	bool setFrontWings_WingState;
-	bool setLeftWing_LeftWingState;
-	bool setRightWing_RightWingState;
-	bool setWings_WingsState;
 
 	bool useRotationSensorForPid = false;
 	bool useEncoderForPid = false;
@@ -43,12 +28,6 @@ namespace {
 }
 
 namespace autonfunctions {
-	/// @brief Set the inertial sensor's absolute angle reading to a specified value. Doesn't turn the robot.
-	/// @param rotation The angle (in degrees) to be set for the current orientation.
-	void setRotation(double rotation) {
-		InertialSensor.setRotation(rotation, deg);
-	}
-
 	/// @brief Turn the robot to face a specified angle.
 	/// @param rotation The target angle to face in degrees.
 	/// @param rotateCenterOffsetIn The offset of the center of rotation.
@@ -143,7 +122,7 @@ namespace autonfunctions {
 
 		// Variables
 		// double motorTargetDistanceRev = distanceInches * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio);
-		vector<double> initRevolutions = getMotorRevolutions();
+		std::vector<double> initRevolutions = getMotorRevolutions();
 		// double lookEncoderTargetDistanceRevolution = distanceInches * (1.0 / trackingLookWheelCircumIn) * (trackingLookWheelEncoderGearRatio);
 		double lookEncoderInitialRevolution = LookEncoder.rotation(rev);
 		double lookRotationInitialRevolution = LookRotation.position(rev);
@@ -184,7 +163,7 @@ namespace autonfunctions {
 				distanceError = targetDistanceInches - currentTravelDistanceInches;
 			} else {
 				// Compute average traveled motor revolutions
-				vector<double> travelRevolutions = getMotorRevolutions();
+				std::vector<double> travelRevolutions = getMotorRevolutions();
 				double averageTravelRev = getAverageDifference(initRevolutions, travelRevolutions);
 
 				// Convert current revolutions into distance inches
@@ -237,142 +216,13 @@ namespace autonfunctions {
 		// Correct
 		driftCorrector.correct();
 	}
-
-	/// @brief Set the state of the intake.
-	/// @param state Forward: 1, released: 0, reversed: -1
-	/// @param delaySec Number of seconds to wait before setting the state (in a task).
-	void setIntakeState(int state, double delaySec) {
-		if (intakePart == 1) botintake::setState(state, delaySec);
-		else botintake2::setState(state, delaySec);
-	}
-
-
-	/// @brief Set the state of the top intake.
-	/// @param state Forward: 1, released: 0, reversed: -1
-	/// @param delaySec Number of seconds to wait before setting the state (in a task).
-	void setIntakeTopState(int state, double delaySec) {
-		if (intakePart == 1) return;
-		else botintake2::setState2(state, delaySec);
-	}
-
-
-	/// @brief Set the state of the bottom intake.
-	/// @param state Forward: 1, released: 0, reversed: -1
-	/// @param delaySec Number of seconds to wait before setting the state (in a task).
-	void setIntakeBottomState(int state, double delaySec) {
-		if (intakePart == 1) return;
-		else botintake2::setState3(state, delaySec);
-	}
-
-	/// @brief Set the hook mode of the intake.
-	/// @param state Normal: 0, to arm: 1
-	void setIntakeToArm(int state) {
-		if (intakePart == 1) {
-			botintake::setColorFiltering(false);
-			redirect::setState(1);
-			botarm::setArmStage(1);
-		} else botintake2::setHookMode(state);
-	}
-
-	void setArmHangState(int state, double delaySec) {
-		botarmpneu::setState(state, delaySec);
-	}
-
-	void setArmStage(int stage, double delaySec) {
-		botarm::setArmStage(stage, delaySec);
-	}
-
-	bool isArmResetted() {
-		return botarm::isArmResetted();
-	}
-
-	/// @brief Set the state of Left Wing's pneumatic.
-   /// @param state Expanded: true, retracted: false.
-   /// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
-	void setGoalClampState(bool state, double delaySec) {
-		goalclamp::setState(state, delaySec);
-	}
-
-	/// @brief Set the state of Front Wings's pneumatic.
-	/// @param state Expanded: true, retracted: false.
-	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
-	void setFrontWingsState(bool state, double delaySec) {
-		setFrontWings_WingState = state;
-		setFrontWings_DelaySec = delaySec;
-		task setPneumaticState([]() -> int {
-			int taskState = setFrontWings_WingState;
-
-			if (setFrontWings_DelaySec > 1e-9) {
-				task::sleep(setFrontWings_DelaySec * 1000);
-			}
-			FrontWingsPneumatic.set(taskState);
-			return 1;
-		});
-	}
-
-	/// @brief Set the state of Left Wing's pneumatic.
-	/// @param state Expanded: true, retracted: false.
-	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
-	void setLeftWingState(bool state, double delaySec) {
-		setLeftWing_LeftWingState = state;
-		setLeftWing_DelaySec = delaySec;
-		task setPneumaticState([]() -> int {
-			int taskState = setLeftWing_LeftWingState;
-
-			if (setLeftWing_DelaySec > 1e-9) {
-				task::sleep(setLeftWing_DelaySec * 1000);
-			}
-			LeftWingPneumatic.set(taskState);
-			return 1;
-		});
-	}
-
-	/// @brief Set the state of Right Wing's pneumatic.
-	/// @param state Expanded: true, retracted: false.
-	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
-	void setRightWingState(bool state, double delaySec) {
-		setRightWing_RightWingState = state;
-		setRightWing_DelaySec = delaySec;
-		task setPneumaticState([]() -> int {
-			int taskState = setRightWing_RightWingState;
-
-			if (setRightWing_DelaySec > 1e-9) {
-				task::sleep(setRightWing_DelaySec * 1000);
-			}
-			RightWingPneumatic.set(taskState);
-			return 1;
-		});
-	}
-
-	/// @brief Set the state of Left and Right Wing's pneumatic.
-	/// @param state Expanded: true, retracted: false.
-	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
-	void setBackWingsState(bool state, double delaySec) {
-		setWings_WingsState = state;
-		setWings_DelaySec = delaySec;
-		task setPneumaticsState([]() -> int {
-			int taskState = setWings_WingsState;
-
-			if (setWings_DelaySec > 1e-9) {
-				task::sleep(setWings_DelaySec * 1000);
-			}
-			LeftWingPneumatic.set(taskState);
-			RightWingPneumatic.set(taskState);
-			return 1;
-		});
-	}
-
-	/// @brief Set the state of the lift's pneumatic.
-	/// @param state Lifted: true, lowered: false
-	void setIntakeLiftState(bool state) {
-		IntakeLiftPneumatic.set(state);
-	}
 }
+
 
 namespace {
 	/* Can remove these two functions*/
-	vector<double> getMotorRevolutions() {
-		vector<double> ret = {
+	std::vector<double> getMotorRevolutions() {
+		std::vector<double> ret = {
 			LeftMotorB.position(rev),
 			LeftMotorC.position(rev),
 			RightMotorB.position(rev),
@@ -381,7 +231,7 @@ namespace {
 		return ret;
 	}
 	/// @brief Returns the average value of vector2[i] - vector1[i].
-	double getAverageDifference(vector<double> vector1, vector<double> vector2) {
+	double getAverageDifference(std::vector<double> vector1, std::vector<double> vector2) {
 		int vectorSize = std::min((int) vector1.size(), (int) vector2.size());
 		double totalDifference = 0;
 		for (int i = 0; i < vectorSize; i++) {
