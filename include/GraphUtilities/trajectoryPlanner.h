@@ -30,6 +30,8 @@ public:
 
 	std::vector<double> getMotionAtTime(double time);
 
+	double getTotalTime();
+
 private:
 	std::vector<std::pair<double, std::vector<double>>> distance_motionConstraints;
 

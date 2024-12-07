@@ -2,6 +2,10 @@
 
 #include <stdio.h>
 
+namespace {
+	bool debugPrint;
+}
+
 TrajectoryPlanner::TrajectoryPlanner(double totalDistance) {
 	_onInit(totalDistance);
 }
@@ -219,13 +223,14 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 
 	// Get minimized kinematics
 	for (auto &distance_kinematics : merged_distance_kinematics) {
-		// printf("K: %.3f, %d, %d\n", distance_kinematics.first, distance_kinematics.second.first.first, distance_kinematics.second.second.first);
+		if (debugPrint) printf("K: %.3f, %d, %d\n", distance_kinematics.first, distance_kinematics.second.first.first, distance_kinematics.second.second.first);
 
 		// Check if intersection occured before distance
 		const double distanceStart = distance_kinematics.first;
 		if (lastDistance < lastIntersectionDistance && lastIntersectionDistance < distanceStart) {
 			// Push backward kinematics at intersection
 			combined_distance_kinematics.push_back({lastIntersectionDistance, backwardTravellingKinematics});
+			if (debugPrint) printf("inxt: %.3f, %.3f\n", lastIntersectionDistance, backwardTravellingKinematics[0]);
 		}
 
 		// Calculate travel distance
@@ -261,16 +266,16 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 		// Push new kinematics info
 		if (combined_distance_kinematics.empty()) {
 			combined_distance_kinematics.push_back({distanceStart, {forwardTravellingKinematics}});
-			// printf("1st: %.3f, %.3f\n", distanceStart, forwardTravellingKinematics[0]);
+			if (debugPrint) printf("1st: %.3f, %.3f\n", distanceStart, forwardTravellingKinematics[0]);
 		} else {
-			// printf("start1: %.3f, %.3f, %.3f\n", distanceStart, forwardTravellingKinematics[0], forwardTravellingKinematics[1]);
-			// printf("start2: %.3f, %.3f, %.3f\n", distanceStart, backwardTravellingKinematics[0], backwardTravellingKinematics[1]);
+			if (debugPrint) printf("start1: %.3f, %.3f, %.3f\n", distanceStart, forwardTravellingKinematics[0], forwardTravellingKinematics[1]);
+			if (debugPrint) printf("start2: %.3f, %.3f, %.3f\n", distanceStart, backwardTravellingKinematics[0], backwardTravellingKinematics[1]);
 			if (v < u) {
 				combined_distance_kinematics.push_back({distanceStart, {forwardTravellingKinematics}});
-				// printf("chose 1\n");
+				if (debugPrint) printf("chose 1\n");
 			} else {
 				combined_distance_kinematics.push_back({distanceStart, {backwardTravellingKinematics}});
-				// printf("chose 2\n");
+				if (debugPrint) printf("chose 2\n");
 			}
 		}
 
@@ -299,26 +304,27 @@ void TrajectoryPlanner::calculateMotion() {
 	double cumulativeTime = 0;
 
 	// Convert kinematics based on time
-	// t = Δv / a = 2d / (vi + vf)
+	// t = Δv / a = 2Δd / (vi + vf)
 	const int segmentCount = (int) combined_distance_kinematics.size();
 	for (int segmentIndex = 0; segmentIndex < segmentCount; segmentIndex++) {
 		// Get kinematics info
 		auto &distance_kinematics = combined_distance_kinematics[segmentIndex];
-		const double d = distance_kinematics.first;
+		const double d1 = distance_kinematics.first;
+		const double d2 = (segmentIndex == segmentCount - 1) ? totalDistance : combined_distance_kinematics[segmentIndex + 1].first; 
 		const double v = distance_kinematics.second[0];
 		const double u = (segmentIndex == segmentCount - 1) ? 0 : combined_distance_kinematics[segmentIndex + 1].second[0];
 		const double a = distance_kinematics.second[1];
 
 		// Push time kinematics
-		time_kinematics.push_back({cumulativeTime, {d, v, a}});
-		// printf("%.3f, %.3f, %.3f, %.3f\n", cumulativeTime, d, v, a);
+		time_kinematics.push_back({cumulativeTime, {d1, v, a}});
+		// printf("%.3f, %.3f, %.3f, %.3f\n", cumulativeTime, d1, v, a);
 
 		// Get and update time
 		if (v + u == 0 && a == 0) {
 			printf("Error in trajectory!\n");
 			return;
 		}
-		const double time = (a != 0) ? (u - v) / a : 2 * d / (v + u);
+		const double time = (a != 0) ? (u - v) / a : 2 * (d2 - d1) / (v + u);
 		cumulativeTime += time;
 	}
 
@@ -358,9 +364,13 @@ std::vector<double> TrajectoryPlanner::getMotionAtTime(double time) {
 	std::vector<double> nodeKinematics = time_kinematics[foundL].second;
 	std::vector<double> motion(3);
 	motion[2] = nodeKinematics[2];
-	motion[1] = nodeKinematics[1] + motion[2] * segmentDeltaTime;
-	motion[0] = nodeKinematics[0] + motion[1] * segmentDeltaTime + 0.5 * motion[2] * pow(segmentDeltaTime, 2);
+	motion[1] = nodeKinematics[1] + nodeKinematics[2] * segmentDeltaTime;
+	motion[0] = nodeKinematics[0] + nodeKinematics[1] * segmentDeltaTime + 0.5 * nodeKinematics[2] * pow(segmentDeltaTime, 2);
 
 	// Return result
 	return motion;
+}
+
+double TrajectoryPlanner::getTotalTime() {
+	return time_kinematics.back().first;
 }
