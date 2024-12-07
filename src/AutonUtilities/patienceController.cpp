@@ -26,7 +26,7 @@ void PatienceController::computePatience(double value) {
 	// Calculate improvement
 	double delta = value - storedValue;
 	bool willResetPatience = positiveImprovement && delta > absoluteMinDelta;
-	willResetPatience &= (!positiveImprovement && delta < -absoluteMinDelta);
+	willResetPatience |= (!positiveImprovement && delta < -absoluteMinDelta);
 
 	// Modify patience
 	if (willResetPatience) {

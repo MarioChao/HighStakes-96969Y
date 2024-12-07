@@ -86,7 +86,7 @@ namespace botintake {
 				resolveIntake();
 			}
 
-			wait(1, msec);
+			wait(5, msec);
 		}
 	}
 
