@@ -27,6 +27,7 @@
 #include "GraphUtilities/matrix.h"
 #include "GraphUtilities/uniformCubicSpline.h"
 #include "GraphUtilities/curveSampler.h"
+#include "GraphUtilities/trajectoryPlanner.h"
 
 
 // ---------- Variables ----------
@@ -44,6 +45,10 @@ timer drivingTimer;
 Odometry mainOdometry;
 
 RobotSimulator robotSimulator;
+
+TrajectoryPlanner trajectoryPlan;
+
+timer trajectoryTestTimer;
 
 // Test functions
 
@@ -71,6 +76,17 @@ void test1() {
 	CurveSampler splineSamplerR1(splineR1);
 	splineSamplerR1.calculateByResolution(30);
 
+	// Preprocess trajectory plan
+	double dist = splineSampler1.paramToDistance(spline1.getTRange().second);
+	trajectoryPlan._onInit(dist);
+	printf("Spline distance: %.3f\n", dist);
+	trajectoryPlan.addDesiredMotionConstraints(0, 8, 20, 20);
+	trajectoryPlan.addDesiredMotionConstraints(2, 4, 5, 5);
+	trajectoryPlan.addDesiredMotionConstraints(5, 15, 5, 50);
+	trajectoryPlan.addDesiredMotionConstraints(8, 10, 10, 10);
+	trajectoryPlan.calculateMotion();
+	trajectoryTestTimer.reset();
+
 	// Simulator splines
 	UniformCubicSpline &spline = spline1;
 	CurveSampler &splineSampler = splineSampler1;
@@ -90,13 +106,15 @@ void test1() {
 	// Set goal linegular
 	task::sleep(1000);
 	robotSimulator.resetTimer();
-	timer curveTimer;
+	trajectoryTestTimer.reset();
 
 	int id = 0;
 	while (1) {
 		// Get time
-		// double s = curveTimer.value() * 1;
-		double s = robotSimulator.travelledDistance + 0.2;
+		// double s = trajectoryTestTimer.value() * 1;
+		std::vector<double> motion = trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value());
+		double s = motion[0];
+		double v = motion[1];
 		double t = splineSampler.distanceToParam(s);
 		// printf("t: %.3f\n", t);
 		if (t >= spline.getTRange().second) {
@@ -111,7 +129,7 @@ void test1() {
 			wait(20, msec);
 			continue;
 		}
-		// double t = curveTimer.value() * 0.5;
+		// double t = trajectoryTestTimer.value() * 0.5;
 		// if (t > 4) {
 		// 	break;
 		// }
@@ -123,7 +141,7 @@ void test1() {
 		// std::vector<double> pos = spline.getPositionAtT(t);
 		// std::vector<double> vel = spline.getVelocityAtT(t);
 		// Control
-		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, 1);
+		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, v);
 		double scaleFactorLR = genutil::getScaleFactor(50.0, {lrVelocity.first, lrVelocity.second});
 		lrVelocity.first *= scaleFactorLR;
 		lrVelocity.second *= scaleFactorLR;

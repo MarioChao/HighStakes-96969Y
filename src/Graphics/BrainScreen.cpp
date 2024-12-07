@@ -3,6 +3,7 @@
 #include "Graphics/BrainScreen.h"
 #include "Autonomous/auton.h"
 #include "AutonUtilities/odometry.h"
+#include "GraphUtilities/trajectoryPlanner.h"
 #include "Graphics/GraphicMain.h"
 #include "Graphics/GUIs/ButtonsGui.h"
 #include "Graphics/GUIs/ShapesGui.h"
@@ -222,20 +223,28 @@ namespace {
 		Brain.Screen.setPenWidth(1);
 		Brain.Screen.setPenColor(color::yellow);
 		fw_newRealY = y + height / 2.0 - actualSpeed * scale;
-		if (fw_prevRealY >= 0 && fw_drawX > 0) {
-			Brain.Screen.drawLine(fw_drawX - 1, fw_prevRealY, fw_drawX, fw_newRealY);
-		} else Brain.Screen.drawPixel(fw_drawX, fw_newRealY);
+		// if (fw_prevRealY >= 0 && fw_drawX > 0) {
+		// 	Brain.Screen.drawLine(fw_drawX - 1, fw_prevRealY, fw_drawX, fw_newRealY);
+		// } else Brain.Screen.drawPixel(fw_drawX, fw_newRealY);
 
 		// Goal rpm
 		Brain.Screen.setPenColor(color::green);
 		fw_newAimY = y + height / 2.0 - aimSpeed * scale;
-		if (fw_prevAimY >= 0 && fw_drawX > x) {
-			Brain.Screen.drawLine(fw_drawX - 1, fw_prevAimY, fw_drawX, fw_newAimY);
-		} else Brain.Screen.drawPixel(fw_drawX, fw_newAimY);
-		fw_drawX++;
-		if (fw_drawX > x + width) fw_drawX = x;
+		// if (fw_prevAimY >= 0 && fw_drawX > x) {
+		// 	Brain.Screen.drawLine(fw_drawX - 1, fw_prevAimY, fw_drawX, fw_newAimY);
+		// } else Brain.Screen.drawPixel(fw_drawX, fw_newAimY);
+
+		// Normal graph
+		Brain.Screen.setPenColor(color::orange);
+		double gph_x, gph_y;
+		gph_x = fw_drawX;
+		gph_y = y + height - (trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1]) / 15 * height;
+		// printf("Vel: %.3f\n", trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1]);
+		Brain.Screen.drawPixel(gph_x, gph_y);
 
 		// Update
+		fw_drawX++;
+		if (fw_drawX > x + width) fw_drawX = x;
 		fw_prevRealY = fw_newRealY;
 		fw_prevAimY = fw_newAimY;
 	}

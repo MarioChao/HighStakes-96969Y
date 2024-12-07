@@ -7,6 +7,7 @@
 // Forward declaration
 class Odometry;
 class RobotSimulator;
+class TrajectoryPlanner;
 
 // Global variables
 
@@ -30,3 +31,7 @@ extern Odometry mainOdometry;
 
 // Simulator
 extern RobotSimulator robotSimulator;
+
+// Trajectory
+extern TrajectoryPlanner trajectoryPlan;
+extern timer trajectoryTestTimer;
