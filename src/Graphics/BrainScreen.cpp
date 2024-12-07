@@ -237,9 +237,10 @@ namespace {
 		// Normal graph
 		Brain.Screen.setPenColor(color::orange);
 		double gph_x, gph_y;
+		double trajectoryValue = trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
 		gph_x = fw_drawX;
-		gph_y = y + height - (trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1]) / 15 * height;
-		// printf("Vel: %.3f\n", trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1]);
+		gph_y = y + height - (trajectoryValue) / 15 * height;
+		// printf("Vel: %.3f\n", trajectoryValue);
 		Brain.Screen.drawPixel(gph_x, gph_y);
 
 		// Update

@@ -79,13 +79,12 @@ void test1() {
 	// Preprocess trajectory plan
 	double dist = splineSampler1.paramToDistance(spline1.getTRange().second);
 	trajectoryPlan._onInit(dist);
-	printf("Spline distance: %.3f\n", dist);
-	trajectoryPlan.addDesiredMotionConstraints(0, 8, 20, 20);
-	trajectoryPlan.addDesiredMotionConstraints(2, 4, 5, 5);
-	trajectoryPlan.addDesiredMotionConstraints(5, 15, 5, 50);
-	trajectoryPlan.addDesiredMotionConstraints(8, 10, 10, 10);
+	// printf("Spline distance: %.3f\n", dist);
+	trajectoryPlan.addDesiredMotionConstraints(0, 2.2, 2, 2);
+	trajectoryPlan.addDesiredMotionConstraints(2, 1.5, 2, 2);
+	trajectoryPlan.addDesiredMotionConstraints(5, 3, 2, 2);
+	trajectoryPlan.addDesiredMotionConstraints(8, 2.5, 2, 2);
 	trajectoryPlan.calculateMotion();
-	trajectoryTestTimer.reset();
 
 	// Simulator splines
 	UniformCubicSpline &spline = spline1;
@@ -97,8 +96,8 @@ void test1() {
 	// Set initial position
 	std::vector<double> pos = spline.getPositionAtT(0);
 	std::vector<double> vel = spline.getVelocityAtT(0);
-	robotSimulator.position = Vector3(pos[0], pos[1], 0);
-	robotSimulator.angularPosition = spline.getLinegularAt(0, isReversed).getTheta_radians();
+	// robotSimulator.position = Vector3(pos[0], pos[1], 0);
+	// robotSimulator.angularPosition = spline.getLinegularAt(0, isReversed).getTheta_radians();
 	ramsete.setDirection(isReversed);
 	robotSimulator.setDistance(0);
 	// robotSimulator.position = Vector3(0, 0, 0);
@@ -112,18 +111,20 @@ void test1() {
 	while (1) {
 		// Get time
 		// double s = trajectoryTestTimer.value() * 1;
-		std::vector<double> motion = trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value());
+		double time = trajectoryTestTimer.value();
+		std::vector<double> motion = trajectoryPlan.getMotionAtTime(time);
 		double s = motion[0];
 		double v = motion[1];
 		double t = splineSampler.distanceToParam(s);
 		// printf("t: %.3f\n", t);
-		if (t >= spline.getTRange().second) {
+		if (time > trajectoryPlan.getTotalTime()) {
 			if (id == 0) {
 				spline = splineR1;
 				splineSampler = splineSamplerR1;
 				isReversed = false;
 				ramsete.setDirection(isReversed);
 				robotSimulator.setDistance(0);
+				trajectoryTestTimer.reset();
 			}
 			id++;
 			wait(20, msec);
@@ -140,9 +141,10 @@ void test1() {
 		Linegular lg2 = spline.getLinegularAt(t, isReversed);
 		// std::vector<double> pos = spline.getPositionAtT(t);
 		// std::vector<double> vel = spline.getVelocityAtT(t);
+
 		// Control
 		std::pair<double, double> lrVelocity = ramsete.getLeftRightVelocity_pct(lg1, lg2, v);
-		double scaleFactorLR = genutil::getScaleFactor(50.0, {lrVelocity.first, lrVelocity.second});
+		double scaleFactorLR = genutil::getScaleFactor(3.0, {lrVelocity.first, lrVelocity.second});
 		lrVelocity.first *= scaleFactorLR;
 		lrVelocity.second *= scaleFactorLR;
 
