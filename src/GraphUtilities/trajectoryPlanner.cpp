@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 namespace {
-	bool debugPrint;
+	bool debugPrint = false;
 }
 
 TrajectoryPlanner::TrajectoryPlanner(double totalDistance) {
@@ -231,9 +231,16 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 		// Check if intersection occured before distance
 		const double distanceStart = distance_kinematics.first;
 		if (lastDistance < lastIntersectionDistance && lastIntersectionDistance < distanceStart) {
+			// Calculate intersection velocity
+			double intersectionAccel = backwardTravellingKinematics[1];
+			double intersectionVelocity = std::sqrt(
+				std::pow(backwardTravellingKinematics[0], 2)
+				+ 2 * intersectionAccel * (lastIntersectionDistance - lastDistance)
+			);
+
 			// Push backward kinematics at intersection
-			combined_distance_kinematics.push_back({lastIntersectionDistance, backwardTravellingKinematics});
-			if (debugPrint) printf("inxt: %.3f, %.3f\n", lastIntersectionDistance, backwardTravellingKinematics[0]);
+			combined_distance_kinematics.push_back({lastIntersectionDistance, {intersectionVelocity, intersectionAccel}});
+			if (debugPrint) printf("inxt: %.3f, %.3f\n", lastIntersectionDistance, intersectionVelocity);
 		}
 
 		// Calculate travel distance
@@ -320,7 +327,7 @@ TrajectoryPlanner &TrajectoryPlanner::calculateMotion() {
 
 		// Push time kinematics
 		time_kinematics.push_back({cumulativeTime, {d1, v, a}});
-		// printf("%.3f, %.3f, %.3f, %.3f\n", cumulativeTime, d1, v, a);
+		if (debugPrint) printf("%.3f, %.3f, %.3f, %.3f\n", cumulativeTime, d1, v, a);
 
 		// Get and update time
 		if (v + u == 0 && a == 0) {
