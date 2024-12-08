@@ -14,9 +14,6 @@ class TrajectoryPlanner;
 // Competition instance
 extern competition Competition;
 
-// Drive info
-extern double motSpeedRpm, motAimSpeedRpm;
-
 // Intake info
 extern int intakePart;
 

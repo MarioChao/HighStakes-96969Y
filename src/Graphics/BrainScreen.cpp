@@ -29,6 +29,7 @@ namespace {
 	using namespace auton;
 
 	// The field and the robot
+	void _drawVexField(int x, int y, int width, int height);
 	void drawCoordinate(int x, int y, int width, int height);
 	// Flywheel speed graph
 	void drawFlywheel(int x, int y, int width, int height);
@@ -51,8 +52,6 @@ namespace {
 	double getRobotX_tiles();
 	double getRobotY_tiles();
 	double getRobotPolarAngle_degrees();
-	double getMotorActualSpeed();
-	double getMotorExpectedSpeed();
 
 	// Draw info
 	void drawInfo();
@@ -120,12 +119,7 @@ void brainScreenThread() {
 }
 
 namespace {
-	/// @brief Draw the field and robot on a grid system
-	/// @param x The left edge of the grid.
-	/// @param y The right edge of the grid.
-	/// @param width The horizontal length of the grid.
-	/// @param height The vertical length of the grid.
-	void drawCoordinate(int x, int y, int width, int height) {
+	void _drawVexField(int x, int y, int width, int height) {
 		// Tiles
 		Brain.Screen.setPenWidth(2);
 		Brain.Screen.setPenColor(color(128, 128, 128));
@@ -167,39 +161,59 @@ namespace {
 		Brain.Screen.drawLine(x + 2 * lengthX, y, x + 2 * lengthX, y + lengthY);
 		Brain.Screen.drawLine(x + 2 * lengthX, y + lengthY, x + 4 * lengthX, y + lengthY);
 		Brain.Screen.drawLine(x + 4 * lengthX, y, x + 4 * lengthX, y + lengthY);
+	}
 
-		// Robot
+	/// @brief Draw the field and robot on a grid system
+	/// @param x The left edge of the grid.
+	/// @param y The top edge of the grid.
+	/// @param width The horizontal length of the grid.
+	/// @param height The vertical length of the grid.
+	void drawCoordinate(int x, int y, int width, int height) {
+		_drawVexField(x, y, width, height);
+
+		/* Robot */
 		// Robot coordinate
-		double scaleX = width / (6 * tileSizeCm);
-		double scaleY = height / (6 * tileSizeCm);
-		double botX = x + (getRobotX_tiles() * tileSizeCm) * scaleX;
-		if (botX + 1 >= x + width - 1) botX = x + width - 2;
-		else if (botX - 1 <= x + 1) botX = x + 2;
-		double botY = y + height - (getRobotY_tiles() * tileSizeCm) * scaleY;
-		if (botY + 1 >= y + height - 1) botY = y + height - 2;
-		else if (botY - 1 <= y + 1) botY = y + 2;
-		// Shooting path
-		//  Get flywheel angle
-		double botAng = getRobotPolarAngle_degrees();
-		//  Calculate x and y components
-		double dx, dy;
-		if (cos(botAng * DegToRad) > 0) dx = x + width - botX;
-		else if (cos(botAng * DegToRad) < 0) dx = x - botX;
-		else dx = 0;
-		if (sin(botAng * DegToRad) > 0) dy = botY - y;
-		else if (sin(botAng * DegToRad) < 0) dy = botY - (y + height);
-		else dy = 0;
-		//  Scale down to the smaller one
-		if (cos(botAng * DegToRad) != 0 && fabs(dx * tan(botAng * DegToRad)) < fabs(dy)) dy = dx * tan(botAng * DegToRad);
-		if (sin(botAng * DegToRad) != 0 && fabs(dy * cos(botAng * DegToRad) / sin(botAng * DegToRad)) < fabs(dx)) dx = dy * cos(botAng * DegToRad) / sin(botAng * DegToRad);
-		//  Calculate end coordinate
-		double endX = botX + dx;
-		double endY = botY - dy;
-		//  Draw path
+		double scaleX = width / 6.0; // tile to width
+		double scaleY = height / 6.0;
+		double botX = x + getRobotX_tiles() * scaleX;
+		double botY = y + height - getRobotY_tiles() * scaleY;
+		botX = genutil::clamp(botX, x + 2, x + width - 2);
+		botY = genutil::clamp(botY, y + 2, y + height - 2);
+
+		/* Heading path */
+		// Get heading angle
+		double botAngle_degrees = getRobotPolarAngle_degrees();
+		double botAngle_radians = genutil::toRadians(botAngle_degrees);
+
+		// Calculate x and y components
+		double deltaX, deltaY;
+		deltaX = genutil::signum(cos(botAngle_radians)) * width;
+		deltaX = genutil::clamp(deltaX, x - botX, x + width - botX);
+		deltaY = genutil::signum(sin(botAngle_radians)) * height;
+		deltaY = genutil::clamp(deltaY, botY - (y + height), botY - y);
+
+		// Scale down to the smaller one
+		if (!(deltaX == 0 || deltaY == 0)) {
+			// Scale y
+			double derivedY = deltaX * tan(botAngle_radians);
+			if (fabs(derivedY) < fabs(deltaY)) deltaY = derivedY;
+
+			// Scale x
+			double derivedX = deltaY / tan(botAngle_radians);
+			if (fabs(derivedX) < fabs(deltaX)) deltaX = derivedX;
+		}
+
+		// Calculate end coordinate
+		double endX = botX + deltaX;
+		double endY = botY - deltaY;
+
+		/* Draw */
+		// Draw path
 		Brain.Screen.setPenWidth(1);
 		Brain.Screen.setPenColor(color::yellow);
 		Brain.Screen.drawLine(botX, botY, endX, endY);
-		// Robot center
+
+		// Draw robot's center
 		Brain.Screen.setPenColor(color::green);
 		Brain.Screen.drawCircle(botX, botY, 2, color::green);
 	}
@@ -216,18 +230,18 @@ namespace {
 		Brain.Screen.setFillColor(color::transparent);
 		Brain.Screen.drawRectangle(x - 2, y - 2, width + 4, height + 4);
 
-		// Clear line
+		// Clear column
 		Brain.Screen.setPenWidth(1);
 		Brain.Screen.setPenColor(color::black);
 		Brain.Screen.drawLine(fw_drawX, y, fw_drawX, y + height);
 
 		// Variables
 		double scale = height / 1200.0;
-		double actualSpeed = fmin(fmax(getMotorActualSpeed(), -600), 600);
-		double aimSpeed = fmin(fmax(getMotorExpectedSpeed(), -600), 600);
-		fw_drawX = fmin(fmax(fw_drawX, x), x + width);
+		double actualSpeed = genutil::clamp(0, -600, 600);
+		double aimSpeed = genutil::clamp(0, -600, 600);
+		fw_drawX = genutil::clamp(fw_drawX, x, x + width);
 
-		// Velocity error
+		// Real velocity
 		Brain.Screen.setPenWidth(1);
 		Brain.Screen.setPenColor(color::yellow);
 		fw_newRealY = y + height / 2.0 - actualSpeed * scale;
@@ -235,7 +249,7 @@ namespace {
 		// 	Brain.Screen.drawLine(fw_drawX - 1, fw_prevRealY, fw_drawX, fw_newRealY);
 		// } else Brain.Screen.drawPixel(fw_drawX, fw_newRealY);
 
-		// Goal rpm
+		// Target velocity
 		Brain.Screen.setPenColor(color::green);
 		fw_newAimY = y + height / 2.0 - aimSpeed * scale;
 		// if (fw_prevAimY >= 0 && fw_drawX > x) {
@@ -247,8 +261,12 @@ namespace {
 		Brain.Screen.drawPixel(fw_drawX, y + height / 2.0);
 		Brain.Screen.setPenColor(color::orange);
 		double gph_x, gph_y;
-		// double trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
-		double trajectoryValue = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[1];
+		double trajectoryValue;
+		if (mainUseSimulator && !autonfunctions::_pathFollowStarted) {
+			trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
+		} else {
+			trajectoryValue = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[1];
+		}
 		gph_x = fw_drawX;
 		gph_y = y + height / 2.0 - (trajectoryValue / 7 * height);
 		// printf("Vel: %.3f\n", trajectoryValue);
@@ -643,22 +661,16 @@ namespace {
 		}
 		return angle::swapFieldPolar_degrees(mainOdometry.getLookFieldAngle_degrees());
 	}
-	double getMotorExpectedSpeed() {
-		return motSpeedRpm;
-	}
-	double getMotorActualSpeed() {
-		return motAimSpeedRpm;
-	}
 
 	// Draws info
 	void drawInfo() {
 		Brain.Screen.setPenColor(color::green);
 		Brain.Screen.setFillColor(color::transparent);
-		Brain.Screen.printAt(10, 35, 1, "X: %s, Y: %s", leadTrailZero(4, 3, getRobotX_tiles()).c_str(), leadTrailZero(4, 3, getRobotY_tiles()).c_str());
+		Brain.Screen.printAt(10, 35, 1, "X: %08.3f, Y: %08.3f", getRobotX_tiles(), getRobotY_tiles());
 
 		Brain.Screen.setPenColor(color::green);
 		Brain.Screen.setFillColor(color::transparent);
-		Brain.Screen.printAt(240, 35, 1, "BotAng: %s", leadTrailZero(3, 3, getRobotPolarAngle_degrees()).c_str());
+		Brain.Screen.printAt(240, 35, 1, "BotAng: %07.3f", getRobotPolarAngle_degrees());
 
 		// Brain.Screen.setPenColor(color(255, 190, 0));
 		// Brain.Screen.setFillColor(color::transparent);

@@ -34,8 +34,6 @@
 
 competition Competition;
 
-double motSpeedRpm, motAimSpeedRpm = 0;
-
 int intakePart = 1;
 
 bool isArmPneumatic = false;
@@ -45,7 +43,7 @@ timer drivingTimer;
 Odometry mainOdometry;
 
 RobotSimulator robotSimulator;
-bool mainUseSimulator = false;
+bool mainUseSimulator = true;
 
 TrajectoryPlanner testTrajectoryPlan;
 timer trajectoryTestTimer;
@@ -257,7 +255,7 @@ void pre_auton(void) {
 
 	/* Testing Start */
 	// test2();
-	// test1();
+	test1();
 	/* Testing End */
 }
 

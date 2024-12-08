@@ -34,6 +34,7 @@ namespace autonfunctions {
 		_splinePath = splinePath;
 		_trajectoryPlan = trajectoryPlan;
 		_curveSampler = curveSampler;
+		_pathFollowStarted = false;
 		_pathFollowCompleted = false;
 		_reverseHeading = false;
 	}
@@ -44,6 +45,7 @@ namespace autonfunctions {
 
 	void followSplinePath(bool reverseHeading) {
 		// Initialize config
+		_pathFollowStarted = true;
 		_pathFollowCompleted = false;
 		_reverseHeading = reverseHeading;
 		robotController.setDirection(reverseHeading);
@@ -122,5 +124,6 @@ namespace autonfunctions {
 	CurveSampler _curveSampler;
 	bool _reverseHeading;
 	double _pathToPctFactor = autonvals::tilesPerSecond_to_pct;
+	bool _pathFollowStarted;
 	bool _pathFollowCompleted;
 }

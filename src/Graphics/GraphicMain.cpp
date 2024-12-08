@@ -2,10 +2,6 @@
 #include "Graphics/GraphicMain.h"
 
 namespace gfxmain {
-	// Variables
-	const double pi = acos(-1), DegToRad = (pi / 180.0);
-	double tileSizeCm = field::tileLengthIn * 2.54;
-
 	// Functions
 	// Returns the euclidean distance between point (x0, y0) and (x1, y1)
 	double EuclideanDist(double x0, double y0, double x1, double y1) {
@@ -61,23 +57,6 @@ namespace gfxmain {
 		g = fmax(fmin(g, 255), 0);
 		b = fmax(fmin(b, 255), 0);
 		return color(r, g, b);
-	}
-
-	// Returns a string with leading and trailing zeroes
-	string leadTrailZero(int leadLen, int trailLen, double num) {
-		// Create format
-		char formatTmp[4 + (int) log10(leadLen - 1) + 3 + (int) log10(trailLen) + 1];
-		sprintf(formatTmp, "%%c%%0%dd%%.%df", leadLen - 1, trailLen);
-		const char *form = ((string) formatTmp).c_str();
-		// free(formatTmp);
-		// Create string with leading and trailing zeroes
-		char tmp[1 + leadLen + 1 + trailLen];
-		char sign = ((Signum(num) > 0) ? '+' : '-');
-		num = fabs(num);
-		sprintf(tmp, form, sign, (int) num / 10, num - (int) (num / 10) * 10);
-		string ret = tmp;
-		// Return
-		return ret;
 	}
 
 	// Calculates and returns the intersection point of two lines

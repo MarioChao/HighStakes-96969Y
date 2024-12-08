@@ -44,6 +44,7 @@ namespace autonfunctions {
 	extern CurveSampler _curveSampler;
 	extern bool _reverseHeading;
 	extern double _pathToPctFactor;
+	extern bool _pathFollowStarted;
 	extern bool _pathFollowCompleted;
 
 
