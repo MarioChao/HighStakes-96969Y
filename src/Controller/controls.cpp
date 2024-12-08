@@ -64,7 +64,7 @@ namespace controls {
 		// });
 		Controller1.ButtonY.pressed([]() -> void {
 			rumble::setConstantRumbling(false);
-			rumble::setString("-");
+			rumble::setString(".");
 			if (intakePart == 1) botintake::switchFilterColor();
 			else botintake2::switchFilterColor();
 		});

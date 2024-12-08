@@ -21,7 +21,7 @@ namespace rumble {
 				;
 			}
 
-			wait(100, msec);
+			wait(200, msec);
 		}
 	}
 

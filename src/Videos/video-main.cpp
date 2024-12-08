@@ -16,7 +16,7 @@ namespace {
 		{},
 		{&teamLogo},
 		{&badApple_image},
-		{&ningning1, &ningning2, &ningning3},
+		{&ningning3, &ningning3, &ningning3},
 	};
 	std::vector< std::vector< std::pair<int, int> > > videoObjectPositions = {
 		{},
