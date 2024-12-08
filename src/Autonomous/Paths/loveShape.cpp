@@ -12,7 +12,8 @@ namespace {
 		.extendPoint({2.49, 1.34})
 		.extendPoint({1.54, 0.48})
 		.extendPoint({0.48, 0.05});
-	CurveSampler loveSplineSampler = CurveSampler(loveSpline).calculateByResolution(loveSpline.getTRange().second * 7);
+	CurveSampler loveSplineSampler = CurveSampler(loveSpline)
+		.calculateByResolution(loveSpline.getTRange().second * 7);
 	TrajectoryPlanner loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
 		.addDesiredMotionConstraints(0, 0.5, maxAccel, maxAccel)
 		.addDesiredMotionConstraints(1.2, 0.5, maxAccel, maxAccel)
@@ -20,30 +21,6 @@ namespace {
 		.addDesiredMotionConstraints(3.2, 0.5, maxAccel, maxAccel)
 		.addDesiredMotionConstraints(3.8, 0.5, maxAccel, maxAccel)
 		.calculateMotion();
-}
-
-void autonpaths::runAllianceWallStake() {
-	timer autontimer;
-	setRotation(-180.0);
-
-
-	// Go back 1 tile
-	driveAndTurnDistanceTiles(-1.0, -180.0);
-
-
-	// Score
-	turnToAngle(-90.0);
-	setIntakeState(1);
-
-	while (autontimer.value() < 12.0) {
-		task::sleep(20);
-	}
-
-
-	setIntakeState(0);
-
-
-	driveAndTurnDistanceTiles(2.0, -90.0, 30.0, 100.0);
 }
 
 void autonpaths::runLoveShape() {
