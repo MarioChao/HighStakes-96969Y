@@ -1,7 +1,11 @@
 #include "Mechanics/botDrive.h"
+
+#include "AutonUtilities/pidController.h"
+
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "Utilities/generalUtility.h"
+
 #include "main.h"
 
 namespace {
@@ -18,6 +22,10 @@ namespace {
 
 	// Drive config
 	double maxDriveVelocityPct = 100.0;
+
+	// Velocity controller
+	const double kP = 0.10;
+	PIDController driveVelocityLeftMotorPID(kP), driveVelocityRightMotorPID(kP);
 }
 
 namespace botdrive {
@@ -72,15 +80,35 @@ namespace botdrive {
 		return maxDriveVelocityPct;
 	}
 
-	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
+	void driveVelocity(double leftVelocityPct, double rightVelocityPct, bool useCustomPid) {
 		// Scale percentages if overshoot
 		double scaleFactor = genutil::getScaleFactor(100.0, {leftVelocityPct, rightVelocityPct});
 		leftVelocityPct *= scaleFactor;
 		rightVelocityPct *= scaleFactor;
 
-		// Spin motors
-		LeftMotors.spin(fwd, leftVelocityPct, pct);
-		RightMotors.spin(fwd, rightVelocityPct, pct);
+		if (useCustomPid) {
+			// Calculate velocity errors
+			double leftVelocity_error = leftVelocityPct - LeftMotors.velocity(pct);
+			double rightVelocity_error = rightVelocityPct - RightMotors.velocity(pct);
+
+			// Compute needed voltage to maintain velocity
+			driveVelocityLeftMotorPID.computeFromError(leftVelocity_error);
+			driveVelocityRightMotorPID.computeFromError(rightVelocity_error);
+			double leftDeltaVolt = driveVelocityLeftMotorPID.getValue();
+			double rightDeltaVolt = driveVelocityRightMotorPID.getValue();
+
+			// Compute final voltage
+			double leftVelocity_volt = LeftMotors.voltage(volt) + leftDeltaVolt;
+			double rightVelocity_volt = RightMotors.voltage(volt) + rightDeltaVolt;
+
+			// Drive at volt
+			driveVoltage(leftVelocity_volt, rightVelocity_volt, 11);
+			printf("Err: %.3f, %.3f, Lvolt: %.3f, Rvolt: %.3f\n", leftVelocity_error, rightVelocity_error, leftVelocity_volt, rightVelocity_volt);
+		} else {
+			// Spin motors
+			LeftMotors.spin(fwd, leftVelocityPct, pct);
+			RightMotors.spin(fwd, rightVelocityPct, pct);
+		}
 	}
 
 	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage) {
@@ -139,6 +167,7 @@ namespace {
 
 		if (true) {
 			// Drive
+			// botdrive::driveVelocity(leftPct, rightPct);
 			botdrive::driveVoltage(genutil::pctToVolt(leftPct), genutil::pctToVolt(rightPct), 12);
 		} else {
 			// Scale percentages if overshoot

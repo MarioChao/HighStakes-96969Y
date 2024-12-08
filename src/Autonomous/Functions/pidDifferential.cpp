@@ -31,7 +31,7 @@ namespace autonfunctions {
 	/// @param errorRange The allowed degree errors the target angle.
 	/// @param runTimeout Maximum seconds the function will run for.
 	void turnToAngle(double rotation, double rotateCenterOffsetIn, double errorRange, double runTimeout) {
-		turnToAngleVelocity(rotation, 100.0, rotateCenterOffsetIn, errorRange, runTimeout);
+		turnToAngleVelocity(rotation, 70.0, rotateCenterOffsetIn, errorRange, runTimeout);
 	}
 
 	/// @brief Turn the robot to face a specified angle.
@@ -60,7 +60,8 @@ namespace autonfunctions {
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDController rotateTargetAnglePid(1.8, 0.002, 1.7, errorRange);
+		// PIDController rotateTargetAnglePid(1.8, 0.002, 1.7, errorRange);
+		PIDController rotateTargetAnglePid(0.4, 0.0, 1.5, errorRange);
 		timer timeout;
 		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
@@ -69,13 +70,21 @@ namespace autonfunctions {
 			rotateTargetAnglePid.computeFromError(rotateError);
 
 			// Compute motor rotate velocities
-			double averageMotorVelocityPct = fmin(maxVelocityPct, fmax(-maxVelocityPct, rotateTargetAnglePid.getValue()));
+			double averageMotorVelocityPct = rotateTargetAnglePid.getValue();
 			double leftMotorVelocityPct = leftVelocityFactor * averageMotorVelocityPct;
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
+			// Scale velocity to maximum
+			double scaleFactor = genutil::getScaleFactor(maxVelocityPct, {leftMotorVelocityPct, rightMotorVelocityPct});
+			leftMotorVelocityPct *= scaleFactor;
+			rightMotorVelocityPct *= scaleFactor;
+
 			// Drive with velocities
-			// botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
-			botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
+			if (genutil::maxAbsolute({leftMotorVelocityPct, rightMotorVelocityPct}) < 30.0) {
+				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
+			} else {
+				botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+			}
 
 			task::sleep(20);
 		}

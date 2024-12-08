@@ -45,7 +45,7 @@ timer drivingTimer;
 Odometry mainOdometry;
 
 RobotSimulator robotSimulator;
-bool mainUseSimulator = true;
+bool mainUseSimulator = false;
 
 TrajectoryPlanner testTrajectoryPlan;
 timer trajectoryTestTimer;

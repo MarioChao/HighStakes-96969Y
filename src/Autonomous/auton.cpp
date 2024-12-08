@@ -13,7 +13,7 @@ namespace {
 	using debug::printOnController;
 
 	bool userRunningAutonomous = false;
-	autonomousType auton_runType = autonomousType::FieldTour;
+	autonomousType auton_runType = autonomousType::Test;
 	int auton_allianceId;
 }
 
