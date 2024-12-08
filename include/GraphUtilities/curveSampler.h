@@ -15,13 +15,19 @@ public:
 
 	void _onInit();
 
+	// Configure spline
 	void setUniformCubicSpline(UniformCubicSpline &spline);
 	std::vector<double> _getCurvePosition(double t);
 
-	void calculateByResolution(int resolution = 30);
+	// Preprocess the spline to enable sampling
+	CurveSampler &calculateByResolution(int resolution = 30);
 
+	// Spline data
+	std::pair<double, double> getTRange();
+	std::pair<double, double> getDistanceRange();
+
+	// Sampling
 	double paramToDistance(double t);
-
 	double distanceToParam(double distance);
 
 private:

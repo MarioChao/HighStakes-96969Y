@@ -17,7 +17,7 @@ public:
 	void _onInit(double totalDistance);
 
 	// Add motion constraints. Call in ascending order of `startDistance` please.
-	void addDesiredMotionConstraints(
+	TrajectoryPlanner &addDesiredMotionConstraints(
 		double startDistance, double maxVelocity,
 		double maxAccel, double maxDecel
 	);
@@ -26,7 +26,7 @@ public:
 	std::vector<std::pair<double, std::vector<double>>> _getBackwardKinematics();
 	trajectory::merged_kinematics _getMergedForwardBackward();
 	std::vector<std::pair<double, std::vector<double>>> _getCombinedKinematics();
-	void calculateMotion();
+	TrajectoryPlanner &calculateMotion();
 
 	std::vector<double> getMotionAtTime(double time);
 

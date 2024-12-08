@@ -137,15 +137,15 @@ namespace {
 		double leftPct = initLeftPct - leftPolarRotatePct;
 		double rightPct = initRightPct + rightPolarRotatePct;
 
-		// Scale percentages if overshoot
-		double scaleFactor = genutil::getScaleFactor(maxDriveVelocityPct, {leftPct, rightPct});
-		leftPct *= scaleFactor;
-		rightPct *= scaleFactor;
-
 		if (true) {
 			// Drive
 			botdrive::driveVoltage(genutil::pctToVolt(leftPct), genutil::pctToVolt(rightPct), 12);
 		} else {
+			// Scale percentages if overshoot
+			double scaleFactor = genutil::getScaleFactor(maxDriveVelocityPct, {leftPct, rightPct});
+			leftPct *= scaleFactor;
+			rightPct *= scaleFactor;
+
 			// Spin motors at volt
 			// LeftMotors.spin(fwd, leftPct, pct);
 			// RightMotors.spin(fwd, rightPct, pct);

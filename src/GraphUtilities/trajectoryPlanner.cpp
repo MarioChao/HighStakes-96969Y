@@ -11,16 +11,19 @@ TrajectoryPlanner::TrajectoryPlanner(double totalDistance) {
 }
 
 void TrajectoryPlanner::_onInit(double totalDistance) {
-	// distance_motionConstraints.clear();
+	distance_motionConstraints.clear();
 	this->totalDistance = totalDistance;
 }
 
-void TrajectoryPlanner::addDesiredMotionConstraints(
+TrajectoryPlanner &TrajectoryPlanner::addDesiredMotionConstraints(
 	double startDistance, double maxVelocity,
 	double maxAccel, double maxDecel
 ) {
 	std::pair<double, std::vector<double>> constraint = {startDistance, {maxVelocity, maxAccel, maxDecel}};
 	distance_motionConstraints.push_back(constraint);
+
+	// Method chaining
+	return *this;
 }
 
 std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getForwardKinematics() {
@@ -295,7 +298,7 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 	return combined_distance_kinematics;
 }
 
-void TrajectoryPlanner::calculateMotion() {
+TrajectoryPlanner &TrajectoryPlanner::calculateMotion() {
 	// Get combined kinematics
 	std::vector<std::pair<double, std::vector<double>>> combined_distance_kinematics = _getCombinedKinematics();
 
@@ -322,7 +325,7 @@ void TrajectoryPlanner::calculateMotion() {
 		// Get and update time
 		if (v + u == 0 && a == 0) {
 			printf("Error in trajectory!\n");
-			return;
+			return *this;
 		}
 		const double time = (a != 0) ? (u - v) / a : 2 * (d2 - d1) / (v + u);
 		cumulativeTime += time;
@@ -330,6 +333,9 @@ void TrajectoryPlanner::calculateMotion() {
 
 	// Final zero time
 	time_kinematics.push_back({cumulativeTime, {totalDistance, 0, 0}});
+
+	// Method chaining
+	return *this;
 }
 
 std::vector<double> TrajectoryPlanner::getMotionAtTime(double time) {

@@ -25,7 +25,7 @@ std::vector<double> CurveSampler::_getCurvePosition(double t) {
 	return spline.getPositionAtT(t);
 }
 
-void CurveSampler::calculateByResolution(int resolution) {
+CurveSampler &CurveSampler::calculateByResolution(int resolution) {
 	// Get t interval
 	std::pair<double, double> tRange = spline.getTRange();
 	double t_start = tRange.first;
@@ -55,6 +55,17 @@ void CurveSampler::calculateByResolution(int resolution) {
 		// Update
 		previousPoint = currentPoint;
 	}
+
+	// Method chaining
+	return *this;
+}
+
+std::pair<double, double> CurveSampler::getTRange() {
+	return spline.getTRange();
+}
+
+std::pair<double, double> CurveSampler::getDistanceRange() {
+	return std::make_pair(t_cumulativeDistances.front().second, t_cumulativeDistances.back().second);
 }
 
 double CurveSampler::paramToDistance(double t) {

@@ -22,9 +22,9 @@ public:
 	 * Only use for B-Spline or Catmull-Rom.
 	 * 
 	 */
-	void extendPoint(std::vector<double> newPoint);
+	UniformCubicSpline &extendPoint(std::vector<double> newPoint);
 
-	void attachSegment(CubicSplineSegment newSegment);
+	UniformCubicSpline &attachSegment(CubicSplineSegment newSegment);
 
 	CubicSplineSegment &getSegment(int id);
 	std::vector<double> getPositionAtT(double t);

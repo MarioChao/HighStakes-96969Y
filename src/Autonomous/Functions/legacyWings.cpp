@@ -13,7 +13,6 @@ namespace {
 	bool setWings_WingsState;
 }
 
-
 namespace autonfunctions {
 	/// @brief Set the state of Front Wings's pneumatic.
 	/// @param state Expanded: true, retracted: false.

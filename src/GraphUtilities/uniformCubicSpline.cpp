@@ -14,7 +14,7 @@ UniformCubicSpline::UniformCubicSpline(std::vector<CubicSplineSegment> segments)
 	this->segments = segments;
 }
 
-void UniformCubicSpline::extendPoint(std::vector<double> newPoint) {
+UniformCubicSpline &UniformCubicSpline::extendPoint(std::vector<double> newPoint) {
 	CubicSplineSegment lastSegment = getSegment((int) segments.size() - 1);
 	std::vector<std::vector<double>> points = lastSegment.getControlPoints();
 	attachSegment(CubicSplineSegment(
@@ -23,10 +23,16 @@ void UniformCubicSpline::extendPoint(std::vector<double> newPoint) {
 			points[1], points[2], points[3], newPoint
 		}
 	));
+
+	// Method chaining
+	return *this;
 }
 
-void UniformCubicSpline::attachSegment(CubicSplineSegment newSegment) {
+UniformCubicSpline &UniformCubicSpline::attachSegment(CubicSplineSegment newSegment) {
 	this->segments.push_back(newSegment);
+
+	// Method chaining
+	return *this;
 }
 
 CubicSplineSegment &UniformCubicSpline::getSegment(int id) {

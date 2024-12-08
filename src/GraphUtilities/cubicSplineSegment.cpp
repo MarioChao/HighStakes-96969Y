@@ -1,6 +1,5 @@
 #include "GraphUtilities/cubicSplineSegment.h"
 
-#include <algorithm>
 #include <stdio.h>
 
 CubicSplineSegment::CubicSplineSegment() {
