@@ -301,6 +301,23 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 		}
 	}
 
+	// Check for final intersection before total distance
+	{
+		const double distanceStart = totalDistance;
+		if (lastDistance < lastIntersectionDistance && lastIntersectionDistance < distanceStart) {
+			// Calculate intersection velocity
+			double intersectionAccel = backwardTravellingKinematics[1];
+			double intersectionVelocity = std::sqrt(
+				std::pow(backwardTravellingKinematics[0], 2)
+				+ 2 * intersectionAccel * (lastIntersectionDistance - lastDistance)
+			);
+
+			// Push backward kinematics at intersection
+			combined_distance_kinematics.push_back({lastIntersectionDistance, {intersectionVelocity, intersectionAccel}});
+			if (debugPrint) printf("inxt: %.3f, %.3f\n", lastIntersectionDistance, intersectionVelocity);
+		}
+	}
+
 	// Return result
 	return combined_distance_kinematics;
 }

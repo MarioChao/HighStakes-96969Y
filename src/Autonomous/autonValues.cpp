@@ -14,6 +14,7 @@ namespace autonvals {
 		* (1.0 / botinfo::driveWheelCircumIn) // wheel's rev / sec
 		* (60.0 / 1.0) // wheel's rev / min
 		* (botinfo::driveWheelMotorGearRatio / 1.0) // motor's rev / min
-		* (1.0 / botinfo::chassisMotorRpm) // motor's pct
+		* (1.0 / botinfo::chassisMotorRpm) // motor's pct [0-1]
+		* (100.0 / 1.0) // motor's pct [0-100]
 	);
 }
