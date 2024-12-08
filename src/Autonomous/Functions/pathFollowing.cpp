@@ -90,7 +90,8 @@ namespace autonfunctions {
 
 				// Drive
 				if (!useSimulator) {
-					botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
+					botdrive::driveVelocity(leftVelocityPct, rightVelocityPct);
+					// botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
 					// printf("L: %07.3f, R: %07.3f\n", leftVelocityPct, rightVelocityPct);
 				} else if (useSimulator) {
 					// robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
