@@ -1,6 +1,10 @@
 #pragma once
 
 #include "Autonomous/autonFunctions.h"
+#include "GraphUtilities/uniformCubicSpline.h"
+#include "GraphUtilities/curveSampler.h"
+#include "GraphUtilities/trajectoryPlanner.h"
+
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "main.h"
@@ -20,5 +24,7 @@ namespace autonpaths {
 	void runAutonBlueDown();
 	void runAutonBlueDownOld();
 	void runAutonSkills();
+
 	void runAllianceWallStake();
+	void runLoveShape();
 }

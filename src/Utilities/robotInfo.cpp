@@ -3,20 +3,17 @@
 
 namespace botinfo {
 	// Robot info
-	double robotLengthHoles = 27.0; // Left wheel to right wheel
-	double robotLengthIn = robotLengthHoles * (1.0 / 2.0);
-	double halfRobotLengthIn = robotLengthIn / 2; // Used for off-center rotation
+	const double robotLengthHoles = 27.0; // Left wheel to right wheel
+	const double robotLengthIn = robotLengthHoles * (1.0 / 2.0);
+	const double halfRobotLengthIn = robotLengthIn / 2;
 
-	double driveWheelDiameterIn = 4;
-	double driveWheelCircumIn = M_PI * driveWheelDiameterIn;
-	double driveWheelMotorGearRatio = (84.0 / 60.0); // Wheel to Motor
+	const double driveWheelDiameterIn = 4;
+	const double driveWheelCircumIn = M_PI * driveWheelDiameterIn;
+	const double driveWheelMotorGearRatio = (84.0 / 60.0); // Wheel to Motor
 
-	// Velocity from pct to rev/s
-	// 100% = 600/60 rev/s
-	// 100.0 * 60.0 / 600.0 (%s/rev) = 1
-	double driveMotorRevToPercentSecFactor = 100.0 * 60.0 / 600.0; // Used for motion profile auton (not used for now)
+	const double trackingLookWheelDiameterIn = 2.00; // Look wheel -> spins in the forward/backward direction
+	const double trackingLookWheelCircumIn = M_PI * trackingLookWheelDiameterIn;
+	const double trackingLookWheelSensorGearRatio = 1.0; // Wheel to Encoder / Rotation
 
-	double trackingLookWheelDiameterIn = 2.00; // Look wheel -> spins in the forward/backward direction
-	double trackingLookWheelCircumIn = M_PI * trackingLookWheelDiameterIn;
-	double trackingLookWheelSensorGearRatio = 1.0; // Wheel to Encoder / Rotation
+	const double chassisMotorRpm = 600.0;
 }

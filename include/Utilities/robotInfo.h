@@ -2,17 +2,17 @@
 
 namespace botinfo {
 	// Robot info
-	extern double robotLengthHoles;
-	extern double robotLengthIn;
-	extern double halfRobotLengthIn;
+	extern const double robotLengthHoles;
+	extern const double robotLengthIn;
+	extern const double halfRobotLengthIn; // Used for off-center rotation
 
-	extern double driveWheelDiameterIn;
-	extern double driveWheelCircumIn;
-	extern double driveWheelMotorGearRatio;
+	extern const double driveWheelDiameterIn;
+	extern const double driveWheelCircumIn;
+	extern const double driveWheelMotorGearRatio;
 
-	extern double driveMotorRevToPercentSecFactor;
+	extern const double trackingLookWheelDiameterIn;
+	extern const double trackingLookWheelCircumIn;
+	extern const double trackingLookWheelSensorGearRatio;
 
-	extern double trackingLookWheelDiameterIn;
-	extern double trackingLookWheelCircumIn;
-	extern double trackingLookWheelSensorGearRatio;
+	extern const double chassisMotorRpm;
 }
