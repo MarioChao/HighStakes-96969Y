@@ -691,7 +691,7 @@ namespace {
 		double rightCC = RightMotorC.temperature(celsius);
 		// double rightDC = RightMotorD.temperature(celsius);
 		Brain.Screen.printAt(10, 40, 1, "Left1: %07.3f°C, Rght1: %07.3f°C", leftAC, rightAC);
-		Brain.Screen.printAt(10, 65, 1, "Left2: %07.3f°C, Rght2: %07.3f°C", leftBC, rightAC);
+		Brain.Screen.printAt(10, 65, 1, "Left2: %07.3f°C, Rght2: %07.3f°C", leftBC, rightBC);
 		Brain.Screen.printAt(10, 90, 1, "Left3: %07.3f°C, Rght3: %07.3f°C", leftCC, rightCC);
 		// Brain.Screen.printAt(10, 115, 1, "Left4: %07.3f°C, Rght4: %07.3f°C", leftDC, rightDC);
 
