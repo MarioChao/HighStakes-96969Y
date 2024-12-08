@@ -14,12 +14,14 @@
 
 #include "Simulation/robotSimulator.h"
 
+#include "main.h"
+
 namespace {
 	// Controller
 	RamseteController robotController;
 
 	// Simulator
-	bool useSimulator = false;
+	bool useSimulator = mainUseSimulator;
 }
 
 namespace autonfunctions {

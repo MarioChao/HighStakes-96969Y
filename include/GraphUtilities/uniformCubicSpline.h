@@ -2,6 +2,7 @@
 
 #include "GraphUtilities/cubicSplineSegment.h"
 
+#include <initializer_list>
 #include <vector>
 
 
@@ -23,6 +24,8 @@ public:
 	 * 
 	 */
 	UniformCubicSpline &extendPoint(std::vector<double> newPoint);
+
+	UniformCubicSpline &extendPoints(std::initializer_list<std::vector<double>> newPoints);
 
 	UniformCubicSpline &attachSegment(CubicSplineSegment newSegment);
 

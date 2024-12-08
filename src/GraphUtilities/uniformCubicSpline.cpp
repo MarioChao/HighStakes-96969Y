@@ -28,6 +28,15 @@ UniformCubicSpline &UniformCubicSpline::extendPoint(std::vector<double> newPoint
 	return *this;
 }
 
+UniformCubicSpline &UniformCubicSpline::extendPoints(std::initializer_list<std::vector<double>> newPoints) {
+	for (std::vector<double> point : newPoints) {
+		extendPoint(point);
+	}
+
+	// Method chaining
+	return *this;
+}
+
 UniformCubicSpline &UniformCubicSpline::attachSegment(CubicSplineSegment newSegment) {
 	this->segments.push_back(newSegment);
 

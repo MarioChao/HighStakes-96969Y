@@ -31,6 +31,7 @@ extern Odometry mainOdometry;
 
 // Simulator
 extern RobotSimulator robotSimulator;
+extern bool mainUseSimulator;
 
 // Trajectory
 extern TrajectoryPlanner testTrajectoryPlan;

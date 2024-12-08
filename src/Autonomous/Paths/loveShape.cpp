@@ -7,11 +7,9 @@ namespace {
 		.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
 			{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}
 		}))
-		.extendPoint({1.54, 1.8})
-		.extendPoint({2.06, 1.95})
-		.extendPoint({2.49, 1.34})
-		.extendPoint({1.54, 0.48})
-		.extendPoint({0.48, 0.05});
+		.extendPoints({
+			{1.54, 1.8}, {2.06, 1.95}, {2.49, 1.34}, {1.54, 0.48}, {0.48, 0.05},
+		});
 	CurveSampler loveSplineSampler = CurveSampler(loveSpline)
 		.calculateByResolution(loveSpline.getTRange().second * 7);
 	TrajectoryPlanner loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)

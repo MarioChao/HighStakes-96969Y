@@ -1,17 +1,25 @@
 // Brain Screen Painter
 
 #include "Graphics/BrainScreen.h"
+
 #include "Autonomous/auton.h"
+#include "Autonomous/autonFunctions.h"
+
 #include "AutonUtilities/odometry.h"
+
 #include "GraphUtilities/trajectoryPlanner.h"
+
 #include "Graphics/GraphicMain.h"
 #include "Graphics/GUIs/ButtonsGui.h"
 #include "Graphics/GUIs/ShapesGui.h"
 #include "Graphics/GUIs/SlidersGui.h"
 #include "Graphics/GUIs/DocksGui.h"
+
 #include "Simulation/robotSimulator.h"
+
 #include "Utilities/angleUtility.h"
 #include "Utilities/generalUtility.h"
+
 #include "Videos/video-main.h"
 #include "main.h"
 
@@ -77,7 +85,7 @@ namespace {
 	color ownColor, oppColor;
 
 	// Robot visual config
-	bool showSimulator = false;
+	bool showSimulator = mainUseSimulator;
 }
 
 // Global Functions
@@ -239,7 +247,8 @@ namespace {
 		Brain.Screen.drawPixel(fw_drawX, y + height / 2.0);
 		Brain.Screen.setPenColor(color::orange);
 		double gph_x, gph_y;
-		double trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
+		// double trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
+		double trajectoryValue = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[1];
 		gph_x = fw_drawX;
 		gph_y = y + height / 2.0 - (trajectoryValue / 7 * height);
 		// printf("Vel: %.3f\n", trajectoryValue);
