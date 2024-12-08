@@ -33,5 +33,5 @@ extern Odometry mainOdometry;
 extern RobotSimulator robotSimulator;
 
 // Trajectory
-extern TrajectoryPlanner trajectoryPlan;
+extern TrajectoryPlanner testTrajectoryPlan;
 extern timer trajectoryTestTimer;

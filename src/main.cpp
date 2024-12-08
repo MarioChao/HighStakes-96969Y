@@ -46,7 +46,7 @@ Odometry mainOdometry;
 
 RobotSimulator robotSimulator;
 
-TrajectoryPlanner trajectoryPlan;
+TrajectoryPlanner testTrajectoryPlan;
 
 timer trajectoryTestTimer;
 
@@ -77,32 +77,55 @@ void test1() {
 	splineSamplerR1.calculateByResolution(30);
 
 	// Preprocess trajectory plan
-	double dist = splineSampler1.paramToDistance(spline1.getTRange().second);
-	trajectoryPlan._onInit(dist);
+	double dist = splineSampler1.getDistanceRange().second;
+	testTrajectoryPlan._onInit(dist);
 	// printf("Spline distance: %.3f\n", dist);
-	trajectoryPlan.addDesiredMotionConstraints(0, 2.2, 2, 2);
-	trajectoryPlan.addDesiredMotionConstraints(2, 1.5, 2, 2);
-	trajectoryPlan.addDesiredMotionConstraints(5, 3, 2, 2);
-	trajectoryPlan.addDesiredMotionConstraints(8, 2.5, 2, 2);
-	trajectoryPlan.calculateMotion();
+	testTrajectoryPlan.addDesiredMotionConstraints(0, 2.2, 2, 2);
+	testTrajectoryPlan.addDesiredMotionConstraints(2, 1.5, 2, 2);
+	testTrajectoryPlan.addDesiredMotionConstraints(5, 3, 2, 2);
+	testTrajectoryPlan.addDesiredMotionConstraints(8, 2.5, 2, 2);
+	testTrajectoryPlan.calculateMotion();
 
 	// Simulator splines
 	UniformCubicSpline &spline = spline1;
 	CurveSampler &splineSampler = splineSampler1;
 
 	// Direction
-	bool isReversed = true;
+	bool isReversed = false;
 
 	// Set initial position
-	std::vector<double> pos = spline.getPositionAtT(0);
-	std::vector<double> vel = spline.getVelocityAtT(0);
+	std::vector<double> pos, vel;
+	pos = spline.getPositionAtT(0);
+	vel = spline.getVelocityAtT(0);
 	// robotSimulator.position = Vector3(pos[0], pos[1], 0);
 	// robotSimulator.angularPosition = spline.getLinegularAt(0, isReversed).getTheta_radians();
-	ramsete.setDirection(isReversed);
+	// ramsete.setDirection(isReversed);
 	robotSimulator.setDistance(0);
-	// robotSimulator.position = Vector3(0, 0, 0);
-	// robotSimulator.angularPosition = genutil::toRadians(90.0);
-	// Set goal linegular
+
+	// Overwrite splines
+	UniformCubicSpline loveSpline = UniformCubicSpline()
+		.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
+			{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}
+		}))
+		.extendPoint({1.54, 1.8})
+		.extendPoint({2.06, 1.95})
+		.extendPoint({2.49, 1.34})
+		.extendPoint({1.54, 0.48})
+		.extendPoint({0.48, 0.05});
+	CurveSampler loveSplineSampler = CurveSampler(loveSpline).calculateByResolution(loveSpline.getTRange().second * 7);
+	TrajectoryPlanner loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
+		.addDesiredMotionConstraints(0, 2, 2, 2)
+		.addDesiredMotionConstraints(1.2, 1.0, 2, 2)
+		.addDesiredMotionConstraints(1.8, 0.5, 2, 2)
+		.addDesiredMotionConstraints(3.2, 1.0, 2, 2)
+		.addDesiredMotionConstraints(3.8, 2, 2, 2)
+		.calculateMotion();
+	// printf("Spline distance: %.3f\n", loveSplineSampler.getDistanceRange().second);
+	spline = loveSpline;
+	splineSampler = loveSplineSampler;
+	testTrajectoryPlan = loveSplineTrajectoryPlan;
+
+	// Start route after 1 second
 	task::sleep(1000);
 	robotSimulator.resetTimer();
 	trajectoryTestTimer.reset();
@@ -112,20 +135,20 @@ void test1() {
 		// Get time
 		// double s = trajectoryTestTimer.value() * 1;
 		double time = trajectoryTestTimer.value();
-		std::vector<double> motion = trajectoryPlan.getMotionAtTime(time);
+		std::vector<double> motion = testTrajectoryPlan.getMotionAtTime(time);
 		double s = motion[0];
 		double v = motion[1];
 		double t = splineSampler.distanceToParam(s);
 		// printf("t: %.3f\n", t);
-		if (time > trajectoryPlan.getTotalTime()) {
-			if (id == 0) {
-				spline = splineR1;
-				splineSampler = splineSamplerR1;
-				isReversed = false;
-				ramsete.setDirection(isReversed);
-				robotSimulator.setDistance(0);
-				trajectoryTestTimer.reset();
-			}
+		if (time > testTrajectoryPlan.getTotalTime()) {
+			// if (id == 0) {
+			// 	spline = splineR1;
+			// 	splineSampler = splineSamplerR1;
+			// 	isReversed = false;
+			// 	ramsete.setDirection(isReversed);
+			// 	robotSimulator.setDistance(0);
+			// 	trajectoryTestTimer.reset();
+			// }
 			id++;
 			wait(20, msec);
 			continue;
@@ -160,10 +183,10 @@ void test1() {
 		robotSimulator.angularVelocity = angularVelocity;
 
 		// Test curve
-		// pos = spline.getPositionAtT(t);
-		// vel = spline.getVelocityAtT(t);
-		// robotSimulator.position = Vector3(pos[0], pos[1]);
-		// robotSimulator.angularPosition = atan2(vel[1], vel[0]);
+		pos = spline.getPositionAtT(t);
+		vel = spline.getVelocityAtT(t);
+		robotSimulator.position = Vector3(pos[0], pos[1]);
+		robotSimulator.angularPosition = atan2(vel[1], vel[0]);
 
 		robotSimulator.updatePhysics();
 		robotSimulator.updateDistance();
@@ -253,7 +276,7 @@ void autonomous(void) {
 
 	// Switch to a random video
 	task switchVideo([]() -> int {
-		video::switchVideoState(1);
+		// video::switchVideoState(1);
 		return 1;
 	});
 	controls::resetStates();

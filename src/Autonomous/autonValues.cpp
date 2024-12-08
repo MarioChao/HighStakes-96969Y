@@ -1,8 +1,19 @@
-#include "Utilities/fieldInfo.h"
 #include "Autonomous/autonValues.h"
+
+#include "Utilities/fieldInfo.h"
+#include "Utilities/robotInfo.h"
 
 namespace autonvals {
 	const double defaultMoveTilesErrorRange = 0.065;
 	const double defaultMoveWithInchesErrorRange = defaultMoveTilesErrorRange * field::tileLengthIn;
 	const double defaultTurnAngleErrorRange = 7;
+
+	const double tilesPerSecond_to_pct = (
+		// input: travel tiles per second
+		(field::tileLengthIn / 1.0) // travel inches / sec
+		* (1.0 / botinfo::driveWheelCircumIn) // wheel's rev / sec
+		* (60.0 / 1.0) // wheel's rev / min
+		* (botinfo::driveWheelMotorGearRatio / 1.0) // motor's rev / min
+		* (1.0 / botinfo::chassisMotorRpm) // motor's pct
+	);
 }
