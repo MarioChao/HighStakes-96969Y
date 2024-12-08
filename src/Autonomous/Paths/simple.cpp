@@ -1,6 +1,8 @@
 #include "Autonomous/autonPaths.h"
 
 namespace {
+	double maxAccel = 1;
+
 	UniformCubicSpline loveSpline = UniformCubicSpline()
 		.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
 			{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}
@@ -12,11 +14,11 @@ namespace {
 		.extendPoint({0.48, 0.05});
 	CurveSampler loveSplineSampler = CurveSampler(loveSpline).calculateByResolution(loveSpline.getTRange().second * 7);
 	TrajectoryPlanner loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
-		.addDesiredMotionConstraints(0, 2, 2, 2)
-		.addDesiredMotionConstraints(1.2, 1.0, 2, 2)
-		.addDesiredMotionConstraints(1.8, 0.5, 2, 2)
-		.addDesiredMotionConstraints(3.2, 1.0, 2, 2)
-		.addDesiredMotionConstraints(3.8, 2, 2, 2)
+		.addDesiredMotionConstraints(0, 0.5, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(1.2, 0.5, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(1.8, 0.4, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(3.2, 0.5, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(3.8, 0.5, maxAccel, maxAccel)
 		.calculateMotion();
 }
 
@@ -60,7 +62,7 @@ void autonpaths::runLoveShape() {
 	printf("done\n");
 
 	// Follow path again
-	printf("master spark\n");
+	printf("<3 ❤️\n");
 	followSplinePath();
 
 	// Wait
