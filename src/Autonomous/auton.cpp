@@ -13,7 +13,7 @@ namespace {
 	using debug::printOnController;
 
 	bool userRunningAutonomous = false;
-	autonomousType auton_runType = autonomousType::LoveShape;
+	autonomousType auton_runType = autonomousType::OdometryRadiusTest;
 	int auton_allianceId;
 }
 
@@ -144,8 +144,14 @@ namespace auton {
 			case autonomousType::LoveShape:
 				autonpaths::runLoveShape();
 				break;
+			case autonomousType::FieldTour:
+				autonpaths::runFieldTour();
+				break;
 			case autonomousType::Test:
 				autonpaths::autonTest();
+				break;
+			case autonomousType::OdometryRadiusTest:
+				autonpaths::odometryRadiusTest();
 				break;
 			default:
 				break;

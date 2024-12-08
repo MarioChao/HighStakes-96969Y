@@ -9,8 +9,8 @@ namespace auton {
 		RedUpSafe, RedDownSafe,
 		BlueUpSafe, BlueDownSafe,
 		AutonSkills, DrivingSkills,
-		AllianceWallStake, LoveShape,
-		Test,
+		AllianceWallStake, LoveShape, FieldTour,
+		Test, OdometryRadiusTest,
 		None
 	};
 

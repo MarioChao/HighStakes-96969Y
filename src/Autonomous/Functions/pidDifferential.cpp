@@ -74,7 +74,8 @@ namespace autonfunctions {
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
 			// Drive with velocities
-			botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+			// botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+			botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
 
 			task::sleep(20);
 		}

@@ -226,8 +226,8 @@ void pre_auton(void) {
 	// Example: clearing encoders, setting servo positions, ...
 
 	// Odometry
-	mainOdometry.addPositionSensor2D(-90, []() {return LookRotation.position(rev);}, 1, 2, 0);
-	mainOdometry.addPositionSensor2D(0, []() {return RightEncoder.position(rev);}, 1, 2.75, 0);
+	mainOdometry.addPositionSensor2D(-90, []() {return LookRotation.position(rev);}, 1, 2, 0.0197);
+	mainOdometry.addPositionSensor2D(0, []() {return RightEncoder.position(rev);}, 1, 2.75, 0.4235);
 	mainOdometry.addInertialSensor(InertialSensor, -3.276, 3.651);
 	mainOdometry.setPositionFactor(1.0 / field::tileLengthIn);
 	task odometryTask([]() -> int {

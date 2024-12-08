@@ -14,6 +14,7 @@ namespace autonpaths {
 	using namespace botinfo;
 
 	void autonTest();
+	void odometryRadiusTest();
 
 	void runAutonRedUp();
 	void runAutonRedUpSafe();
@@ -27,4 +28,5 @@ namespace autonpaths {
 
 	void runAllianceWallStake();
 	void runLoveShape();
+	void runFieldTour();
 }

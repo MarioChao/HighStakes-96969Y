@@ -92,6 +92,8 @@ public:
 
 	Linegular getLookLinegular();
 
+	void printDebug();
+
 private:
 	// Position sensors
 	std::vector<double> positionSensor_polarAngles_degrees;

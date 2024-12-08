@@ -183,6 +183,20 @@ Linegular Odometry::getLookLinegular() {
 	return Linegular(x, y, angle::swapFieldPolar_degrees(getLookFieldAngle_degrees()));
 }
 
+void Odometry::printDebug() {
+	// Print position sensor readings
+	for (int i = 0; i < positionSensor_count; i++) {
+		double m = positionSensor_newMeasurements[i];
+		printf("POS %2d: %07.3f\n", i, m);
+	}
+
+	// Print inertial sensor readings
+	for (int i = 0; i < inertialSensor_count; i++) {
+		double m = inertialSensor_newMeasurements[i];
+		printf("INR %2d: %07.3f\n", i, m);
+	}
+}
+
 
 // Private functions
 

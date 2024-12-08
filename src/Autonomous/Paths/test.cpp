@@ -28,3 +28,13 @@ void autonpaths::autonTest() {
 	task::sleep(200);
 	turnToAngle(0);
 }
+
+void autonpaths::odometryRadiusTest() {
+	setRotation(0.0);
+
+	mainOdometry.printDebug();
+
+	turnToAngleVelocity(360.0 * 10.0, 15.0, 0.0, defaultTurnAngleErrorRange, 30.0);
+
+	mainOdometry.printDebug();
+}
