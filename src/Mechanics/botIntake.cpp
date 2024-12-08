@@ -25,8 +25,8 @@ namespace {
 	bool previousRingDetected = false;
 	bool ringDetected = false;
 
-	char *filterOutColor = "none";
-	char *detectedRingColor;
+	std::string filterOutColor = "none";
+	std::string detectedRingColor;
 	bool isDetectingRing;
 
 	bool controlState = true;
@@ -149,7 +149,7 @@ namespace botintake {
 		}
 	}
 
-	void setFilterColor(char *colorText) {
+	void setFilterColor(std::string colorText) {
 		filterOutColor = colorText;
 		// debug::printOnController(colorText);
 	}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace botintake {
 	void runThread();
 
@@ -15,7 +17,7 @@ namespace botintake {
 
 	void switchFilterColor();
 
-	void setFilterColor(char *);
+	void setFilterColor(std::string);
 
 	void control(int, int);
 

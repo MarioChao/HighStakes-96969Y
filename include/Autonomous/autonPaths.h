@@ -1,9 +1,6 @@
 #pragma once
 
 #include "Autonomous/autonFunctions.h"
-#include "Mechanics/botIntake.h"
-#include "Mechanics/botIntake2.h"
-#include "Mechanics/swing.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "main.h"
