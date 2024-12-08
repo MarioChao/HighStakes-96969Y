@@ -57,20 +57,27 @@ namespace autonfunctions {
 		LeftRightMotors.setStopping(brake);
 
 		// PID
+		bool useVolt = maxVelocityPct > 25.0;
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		// PIDController rotateTargetAnglePid(1.8, 0.002, 1.7, errorRange);
-		PIDController rotateTargetAnglePid(0.4, 0.0, 1.5, errorRange);
+		PIDController rotateTargetAngleVoltPid(1.8, 0.002, 1.7, errorRange);
+		PIDController rotateTargetAngleVelocityPctPid(0.4, 0.0, 1.5, errorRange);
 		timer timeout;
-		while (!rotateTargetAnglePid.isSettled() && timeout.value() < runTimeout) {
+		while (!rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout) {
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
 			// Compute rotate error
 			double rotateError = rotation - InertialSensor.rotation();
-			rotateTargetAnglePid.computeFromError(rotateError);
+			rotateTargetAngleVoltPid.computeFromError(rotateError);
+			rotateTargetAngleVelocityPctPid.computeFromError(rotateError);
 
 			// Compute motor rotate velocities
-			double averageMotorVelocityPct = rotateTargetAnglePid.getValue();
+			double averageMotorVelocityPct;
+			if (useVolt) {
+				averageMotorVelocityPct = rotateTargetAngleVoltPid.getValue();
+			} else {
+				averageMotorVelocityPct = rotateTargetAngleVelocityPctPid.getValue();
+			}
 			double leftMotorVelocityPct = leftVelocityFactor * averageMotorVelocityPct;
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
@@ -80,10 +87,10 @@ namespace autonfunctions {
 			rightMotorVelocityPct *= scaleFactor;
 
 			// Drive with velocities
-			if (genutil::maxAbsolute({leftMotorVelocityPct, rightMotorVelocityPct}) < 30.0) {
-				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
-			} else {
+			if (useVolt) {
 				botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+			} else {
+				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
 			}
 
 			task::sleep(20);

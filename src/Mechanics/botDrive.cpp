@@ -102,7 +102,7 @@ namespace botdrive {
 			double rightVelocity_volt = RightMotors.voltage(volt) + rightDeltaVolt;
 
 			// Drive at volt
-			driveVoltage(leftVelocity_volt, rightVelocity_volt, 11);
+			botdrive::driveVoltage(leftVelocity_volt, rightVelocity_volt, 11);
 			printf("Err: %.3f, %.3f, Lvolt: %.3f, Rvolt: %.3f\n", leftVelocity_error, rightVelocity_error, leftVelocity_volt, rightVelocity_volt);
 		} else {
 			// Spin motors

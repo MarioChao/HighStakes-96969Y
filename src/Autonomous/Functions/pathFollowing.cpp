@@ -95,7 +95,7 @@ namespace autonfunctions {
 					botdrive::driveVelocity(leftVelocityPct, rightVelocityPct);
 					// botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
 					// printf("L: %07.3f, R: %07.3f\n", leftVelocityPct, rightVelocityPct);
-				} else if (useSimulator) {
+				} else {
 					// robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
 					// robotSimulator.angularPosition = targetLg.getTheta_radians();
 					double velocity = (leftRightVelocity.first + leftRightVelocity.second) / 2;
