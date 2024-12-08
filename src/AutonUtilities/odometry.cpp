@@ -136,7 +136,8 @@ void Odometry::odometryFrame() {
 	deltaDistances.rotateExponentialBy(genutil::toRadians(deltaPolarAngle_degrees));
 
 	// Rotate to absolute difference
-	double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees()) + deltaPolarAngle_degrees / 2;
+	// double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees()) + deltaPolarAngle_degrees / 2;
+	double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees());
 	double localToGlobalRotateAngle = genutil::toRadians(averageAngleDegrees);
 	deltaDistances.rotateXYBy(localToGlobalRotateAngle);
 

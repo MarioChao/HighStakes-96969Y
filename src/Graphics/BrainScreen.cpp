@@ -235,11 +235,13 @@ namespace {
 		// } else Brain.Screen.drawPixel(fw_drawX, fw_newAimY);
 
 		// Normal graph
+		Brain.Screen.setPenColor(color::red);
+		Brain.Screen.drawPixel(fw_drawX, y + height / 2.0);
 		Brain.Screen.setPenColor(color::orange);
 		double gph_x, gph_y;
 		double trajectoryValue = trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
 		gph_x = fw_drawX;
-		gph_y = y + height - (trajectoryValue) / 15 * height;
+		gph_y = y + height / 2.0 - (trajectoryValue / 7 * height);
 		// printf("Vel: %.3f\n", trajectoryValue);
 		Brain.Screen.drawPixel(gph_x, gph_y);
 
