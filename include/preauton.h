@@ -1,5 +1,7 @@
 #pragma once
 
-void preautonControllerThread();
-void runPreauton();
-bool isPreautonFinished();
+namespace preauton {
+	void controllerThread();
+	void run();
+	bool isFinished();
+}

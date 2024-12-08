@@ -242,20 +242,21 @@ void pre_auton(void) {
 	// Tasks
 	controls::startThreads();
 	// odometry::startThreads();
-	task rum([]() -> int { preautonControllerThread(); return 1; });
+	// preauton::controllerThread();
+	task rum([]() -> int { preauton::controllerThread(); return 1; });
 
 	// Brake-types
 	controls::preauton();
 
 	// Sensors
-	runPreauton();
+	preauton::run();
 
 	// Debug
 	auton::showAutonRunType();
 
 	/* Testing Start */
 	// test2();
-	test1();
+	// test1();
 	/* Testing End */
 }
 
@@ -293,7 +294,7 @@ void autonomous(void) {
 void userRunAutonomous() {
 	// Wait until sensors are initialized
 	task::sleep(1500);
-	while (!isPreautonFinished()) {
+	while (!preauton::isFinished()) {
 		task::sleep(10);
 	}
 

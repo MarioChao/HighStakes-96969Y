@@ -6,7 +6,8 @@ class Linegular;
 
 class RamseteController {
 public:
-	RamseteController(double b = 3.25, double damp = 0.8);
+	RamseteController();
+	RamseteController(double b, double damp);
 
 	void setDirection(bool isReversed);
 

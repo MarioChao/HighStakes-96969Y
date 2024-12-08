@@ -12,23 +12,24 @@ namespace {
 	bool initComponentFinished = false;
 }
 
+namespace preauton {
+	void controllerThread() {
+		debug::printOnController("No auton selected!");
+	}
 
-void preautonControllerThread() {
-	debug::printOnController("No auton selected!");
-}
+	void run() {
+		// Buffer screen task
+		task bufferTask([]() -> int {
+			bufferScreen();
+			return 1;
+		});
+		// Initialize components
+		initComponents();
+	}
 
-void runPreauton() {
-	// Buffer screen task
-	task bufferTask([]() -> int {
-		bufferScreen();
-		return 1;
-	});
-	// Initialize components
-	initComponents();
-}
-
-bool isPreautonFinished() {
-	return initComponentFinished;
+	bool isFinished() {
+		return initComponentFinished;
+	}
 }
 
 namespace {

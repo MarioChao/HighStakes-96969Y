@@ -7,8 +7,14 @@
 #include <stdio.h>
 
 namespace {
+	const double defaultB = 2.0; // 3.25
+	const double defaultDamp = 0.8;
+
 	double smallScalar = 0.1;
 }
+
+RamseteController::RamseteController()
+: RamseteController(defaultB, defaultDamp) {}
 
 RamseteController::RamseteController(double b, double damp) {
 	this->b = b;
