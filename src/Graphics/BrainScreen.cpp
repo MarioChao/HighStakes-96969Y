@@ -77,7 +77,7 @@ namespace {
 	color ownColor, oppColor;
 
 	// Robot visual config
-	bool showSimulator = true;
+	bool showSimulator = false;
 }
 
 // Global Functions
@@ -239,7 +239,7 @@ namespace {
 		Brain.Screen.drawPixel(fw_drawX, y + height / 2.0);
 		Brain.Screen.setPenColor(color::orange);
 		double gph_x, gph_y;
-		double trajectoryValue = trajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
+		double trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
 		gph_x = fw_drawX;
 		gph_y = y + height / 2.0 - (trajectoryValue / 7 * height);
 		// printf("Vel: %.3f\n", trajectoryValue);

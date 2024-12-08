@@ -17,6 +17,9 @@
 namespace {
 	// Controller
 	RamseteController robotController;
+
+	// Simulator
+	bool useSimulator = false;
 }
 
 namespace autonfunctions {
@@ -48,6 +51,10 @@ namespace autonfunctions {
 			// Reset timer
 			_splinePathTimer.reset();
 
+			if (useSimulator) {
+				robotSimulator.resetTimer();
+			}
+
 			// Follow path
 			while (true) {
 				// Get time
@@ -69,6 +76,10 @@ namespace autonfunctions {
 				Linegular robotLg = mainOdometry.getLookLinegular();
 				Linegular targetLg = _splinePath.getLinegularAt(traj_tvalue, _reverseHeading);
 
+				if (useSimulator) {
+					robotLg = Linegular(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
+				}
+
 				// Get robot motion
 				std::pair<double, double> leftRightVelocity = robotController.getLeftRightVelocity_pct(robotLg, targetLg, traj_velocity);
 
@@ -76,12 +87,25 @@ namespace autonfunctions {
 				double leftVelocityPct, rightVelocityPct;
 				leftVelocityPct = leftRightVelocity.first * _pathToPctFactor;
 				rightVelocityPct = leftRightVelocity.second * _pathToPctFactor;
-				robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
-				robotSimulator.angularPosition = targetLg.getTheta_radians();
-				// printf("LPct: %07.3f, RPct: %07.3f\n", leftVelocityPct, rightVelocityPct);
 
 				// Drive
-				botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
+				if (!useSimulator) {
+					botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
+					// printf("L: %07.3f, R: %07.3f\n", leftVelocityPct, rightVelocityPct);
+				} else if (useSimulator) {
+					// robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
+					// robotSimulator.angularPosition = targetLg.getTheta_radians();
+					double velocity = (leftRightVelocity.first + leftRightVelocity.second) / 2;
+					double angularVelocity = (leftRightVelocity.second - leftRightVelocity.first) / 2;
+					double lookAngle = robotSimulator.angularPosition;
+					robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
+					robotSimulator.angularVelocity = angularVelocity;
+					robotSimulator.updatePhysics();
+					robotSimulator.updateDistance();
+				}
+
+				// Wait
+				wait(20, msec);
 			}
 
 			// Return int
@@ -94,6 +118,6 @@ namespace autonfunctions {
 	TrajectoryPlanner _trajectoryPlan;
 	CurveSampler _curveSampler;
 	bool _reverseHeading;
-	double _pathToPctFactor;
+	double _pathToPctFactor = autonvals::tilesPerSecond_to_pct;
 	bool _pathFollowCompleted;
 }

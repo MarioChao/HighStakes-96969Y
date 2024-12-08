@@ -99,7 +99,7 @@ void test1() {
 	vel = spline.getVelocityAtT(0);
 	// robotSimulator.position = Vector3(pos[0], pos[1], 0);
 	// robotSimulator.angularPosition = spline.getLinegularAt(0, isReversed).getTheta_radians();
-	// ramsete.setDirection(isReversed);
+	ramsete.setDirection(isReversed);
 	robotSimulator.setDistance(0);
 
 	// Overwrite splines
@@ -141,14 +141,15 @@ void test1() {
 		double t = splineSampler.distanceToParam(s);
 		// printf("t: %.3f\n", t);
 		if (time > testTrajectoryPlan.getTotalTime()) {
-			// if (id == 0) {
-			// 	spline = splineR1;
-			// 	splineSampler = splineSamplerR1;
-			// 	isReversed = false;
-			// 	ramsete.setDirection(isReversed);
-			// 	robotSimulator.setDistance(0);
-			// 	trajectoryTestTimer.reset();
-			// }
+			break;
+			if (id == 0) {
+				spline = splineR1;
+				splineSampler = splineSamplerR1;
+				isReversed = false;
+				ramsete.setDirection(isReversed);
+				robotSimulator.setDistance(0);
+				trajectoryTestTimer.reset();
+			}
 			id++;
 			wait(20, msec);
 			continue;
@@ -183,10 +184,10 @@ void test1() {
 		robotSimulator.angularVelocity = angularVelocity;
 
 		// Test curve
-		pos = spline.getPositionAtT(t);
-		vel = spline.getVelocityAtT(t);
-		robotSimulator.position = Vector3(pos[0], pos[1]);
-		robotSimulator.angularPosition = atan2(vel[1], vel[0]);
+		// pos = spline.getPositionAtT(t);
+		// vel = spline.getVelocityAtT(t);
+		// robotSimulator.position = Vector3(pos[0], pos[1]);
+		// robotSimulator.angularPosition = atan2(vel[1], vel[0]);
 
 		robotSimulator.updatePhysics();
 		robotSimulator.updateDistance();
@@ -256,7 +257,7 @@ void pre_auton(void) {
 
 	/* Testing Start */
 	// test2();
-	test1();
+	// test1();
 	/* Testing End */
 }
 
