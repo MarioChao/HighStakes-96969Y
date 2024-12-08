@@ -83,7 +83,7 @@ namespace controls {
 			}
 		});
 		Controller1.ButtonL2.pressed([]() -> void {
-			printf("Goal pneu: %d\n", GoalClampPneumatic.value());
+			printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
 		});
 		Controller1.ButtonL1.pressed([]() -> void {

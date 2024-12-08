@@ -32,7 +32,6 @@ void UniformCubicSpline::attachSegment(CubicSplineSegment newSegment) {
 CubicSplineSegment &UniformCubicSpline::getSegment(int id) {
 	// Validate
 	if (!(0 <= id && id < (int) segments.size())) {
-		CubicSplineSegment emptySegment;
 		return emptySegment;
 	}
 
@@ -106,3 +105,5 @@ Linegular UniformCubicSpline::getLinegularAt(double t, bool reverseHeading) {
 	Linegular lg(position[0], position[1], finalAngle_degrees);
 	return lg;
 }
+
+CubicSplineSegment UniformCubicSpline::emptySegment;

@@ -39,4 +39,5 @@ public:
 
 private:
 	std::vector<CubicSplineSegment> segments;
+	static CubicSplineSegment emptySegment;
 };

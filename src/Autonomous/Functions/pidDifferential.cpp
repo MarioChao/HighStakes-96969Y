@@ -10,9 +10,6 @@
 #include "main.h"
 
 namespace {
-	using botinfo::halfRobotLengthIn;
-	using botinfo::trackingLookWheelSensorGearRatio, botinfo::trackingLookWheelCircumIn;
-	using botinfo::driveWheelMotorGearRatio, botinfo::driveWheelCircumIn;
 	using field::tileLengthIn;
 
 	std::vector<double> getMotorRevolutions();
@@ -48,8 +45,8 @@ namespace autonfunctions {
 		driftCorrector.setInitial();
 
 		// Center of rotations
-		double leftRotateRadiusIn = halfRobotLengthIn + rotateCenterOffsetIn;
-		double rightRotateRadiusIn = halfRobotLengthIn - rotateCenterOffsetIn;
+		double leftRotateRadiusIn = botinfo::halfRobotLengthIn + rotateCenterOffsetIn;
+		double rightRotateRadiusIn = botinfo::halfRobotLengthIn - rotateCenterOffsetIn;
 		double averageRotateRadiusIn = (leftRotateRadiusIn + rightRotateRadiusIn) / 2;
 
 		// Velocity factors
@@ -123,10 +120,10 @@ namespace autonfunctions {
 		// Variables
 		// double motorTargetDistanceRev = distanceInches * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio);
 		std::vector<double> initRevolutions = getMotorRevolutions();
-		// double lookEncoderTargetDistanceRevolution = distanceInches * (1.0 / trackingLookWheelCircumIn) * (trackingLookWheelEncoderGearRatio);
+		// double lookEncoderTargetDistanceRevolution = distanceInches * (1.0 / botinfo::trackingLookWheelCircumIn) * (botinfo::trackingLookWheelEncoderGearRatio);
 		double lookEncoderInitialRevolution = LookEncoder.rotation(rev);
 		double lookRotationInitialRevolution = LookRotation.position(rev);
-		double rightRotationInitialRevolution = RightRotation.position(rev);
+		// double rightRotationInitialRevolution = RightRotation.position(rev);
 
 		// PID
 		// TODO: Tune pid
@@ -146,7 +143,7 @@ namespace autonfunctions {
 				double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
 
 				// Convert current revolutions into distance inches
-				double currentTravelDistanceInches = lookCurrentRevolution * (1.0 / trackingLookWheelSensorGearRatio) * (trackingLookWheelCircumIn / 1.0);
+				double currentTravelDistanceInches = lookCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
 
 				// Compute error
 				distanceError = targetDistanceInches - currentTravelDistanceInches;
@@ -155,7 +152,7 @@ namespace autonfunctions {
 				double lookEncoderCurrentRevolution = LookEncoder.rotation(rev) - lookEncoderInitialRevolution;
 
 				// Convert current revolutions into distance inches
-				double currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / trackingLookWheelSensorGearRatio) * (trackingLookWheelCircumIn / 1.0);
+				double currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
 
 				// Compute error
 				// double revolutionError = (lookEncoderTargetDistanceRevolution - lookEncoderCurrentRevolution);
@@ -167,7 +164,7 @@ namespace autonfunctions {
 				double averageTravelRev = getAverageDifference(initRevolutions, travelRevolutions);
 
 				// Convert current revolutions into distance inches
-				double currentTravelDistanceInches = averageTravelRev * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
+				double currentTravelDistanceInches = averageTravelRev * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 
 				// Compute error
 				// double revolutionError = (motorTargetDistanceRev - averageTravelRev);
@@ -190,9 +187,9 @@ namespace autonfunctions {
 
 			// Compute value to synchronize velocity
 			double velocityDifferencePct = LeftMotors.velocity(pct) - RightMotors.velocity(pct);
-			double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
+			double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 			double finalVelocityDifferencePct = leftVelocityPct - rightVelocityPct;
-			double finalVelocityDifferenceInchesPerSecond = (finalVelocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
+			double finalVelocityDifferenceInchesPerSecond = (finalVelocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 
 			// Compute final delta motor velocities
 			double velocityDifferenceError = finalVelocityDifferenceInchesPerSecond - velocityDifferenceInchesPerSecond;
@@ -220,16 +217,19 @@ namespace autonfunctions {
 
 
 namespace {
-	/* Can remove these two functions*/
+	/// @brief Returns the current encoder readings of each chassis motor
 	std::vector<double> getMotorRevolutions() {
 		std::vector<double> ret = {
+			LeftMotorA.position(rev),
 			LeftMotorB.position(rev),
 			LeftMotorC.position(rev),
+			RightMotorA.position(rev),
 			RightMotorB.position(rev),
 			RightMotorC.position(rev),
 		};
 		return ret;
 	}
+
 	/// @brief Returns the average value of vector2[i] - vector1[i].
 	double getAverageDifference(std::vector<double> vector1, std::vector<double> vector2) {
 		int vectorSize = std::min((int) vector1.size(), (int) vector2.size());
@@ -252,6 +252,7 @@ namespace {
 		LeftMotors.spin(fwd, leftVelocityPct, pct);
 		RightMotors.spin(fwd, rightVelocityPct, pct);
 	}
+
 	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage) {
 		double maxVoltage = 12.0;
 

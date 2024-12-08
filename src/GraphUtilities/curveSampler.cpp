@@ -73,7 +73,7 @@ double CurveSampler::paramToDistance(double t) {
 	while (bL <= bR) {
 		// Get midpoint
 		int bM1 = bL + (bR - bL) / 2;
-		int bM2 = bM2 + 1;
+		int bM2 = bM1 + 1;
 
 		// Check if value is in range
 		std::pair<double, double> t_distance1 = t_cumulativeDistances[bM1];

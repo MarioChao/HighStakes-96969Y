@@ -12,9 +12,6 @@ namespace {
 
 	double intakeVelocityPct = 100;
 
-	double toArmHookVelocityPct = 40.0;
-	double toArmHookReverseVelocityPct = 70.0;
-
 	/* Factors */
 
 	bool colorFilterEnabled = true;
