@@ -3,6 +3,8 @@
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/pidController.h"
 
+#include "Mechanics/botDrive.h"
+
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
@@ -14,8 +16,6 @@ namespace {
 
 	std::vector<double> getMotorRevolutions();
 	double getAverageDifference(std::vector<double> vector1, std::vector<double> vector2);
-	void driveVelocity(double leftVelocityPct, double rightVelocityPct);
-	void driveVoltage(double leftVoltagePct, double rightVoltagePct, double clampMaxVoltage);
 
 	bool useRotationSensorForPid = false;
 	bool useEncoderForPid = false;
@@ -74,7 +74,7 @@ namespace autonfunctions {
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
 			// Drive with velocities
-			driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+			botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
 
 			task::sleep(20);
 		}
@@ -201,7 +201,7 @@ namespace autonfunctions {
 			rightVelocityPct -= finalDeltaVelocityPct;
 
 			// Drive with velocities
-			driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
+			botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
 			// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
 
 			task::sleep(20);
@@ -240,33 +240,5 @@ namespace {
 		}
 		double averageDifference = totalDifference / vectorSize;
 		return averageDifference;
-	}
-
-	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
-		// Scale percentages if overshoot
-		double scaleFactor = 100.0 / fmax(100.0, fmax(fabs(leftVelocityPct), fabs(rightVelocityPct)));
-		leftVelocityPct *= scaleFactor;
-		rightVelocityPct *= scaleFactor;
-
-		// Spin motors
-		LeftMotors.spin(fwd, leftVelocityPct, pct);
-		RightMotors.spin(fwd, rightVelocityPct, pct);
-	}
-
-	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage) {
-		double maxVoltage = 12.0;
-
-		// Scale voltages if overshoot
-		double scaleFactor = maxVoltage / fmax(maxVoltage, fmax(fabs(leftVoltageVolt), fabs(rightVoltageVolt)));
-		leftVoltageVolt *= scaleFactor;
-		rightVoltageVolt *= scaleFactor;
-
-		// Clamp
-		leftVoltageVolt = genutil::clamp(leftVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
-		rightVoltageVolt = genutil::clamp(rightVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
-
-		// Spin motors
-		LeftMotors.spin(fwd, leftVoltageVolt, volt);
-		RightMotors.spin(fwd, rightVoltageVolt, volt);
 	}
 }

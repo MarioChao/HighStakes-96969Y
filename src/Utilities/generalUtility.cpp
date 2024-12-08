@@ -54,10 +54,6 @@ namespace genutil {
 		return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 	}
 
-	double scaleToMax(double x, double rangeMax) {
-		return x * rangeMax / x;
-	}
-
 	double getScaleFactor(double scaleToMax, std::initializer_list<double> list) {
 		scaleToMax = fabs(scaleToMax);
 		return scaleToMax / fmax(scaleToMax, maxAbsolute(list));

@@ -27,7 +27,6 @@ namespace genutil {
 
 	double rangeMap(double x, double inMin, double inMax, double outMin, double outMax);
 
-	double scaleToMax(double x, double rangeMax);
 	double getScaleFactor(double scaleToMax, std::initializer_list<double> list);
 
 	double maxAbsolute(std::initializer_list<double> list);

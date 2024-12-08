@@ -14,4 +14,7 @@ namespace botdrive {
 
 	void setMaxDriveVelocity(double velocityPct);
 	double getMaxDriveVelocity();
+
+	void driveVelocity(double leftVelocityPct, double rightVelocityPct);
+	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage);
 }

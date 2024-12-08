@@ -107,7 +107,7 @@ void brainScreenThread() {
 			mainDock->setEnabled(true);
 		}
 
-		task::sleep(10);
+		task::sleep(20);
 	}
 }
 
@@ -681,7 +681,7 @@ namespace {
 		Brain.Screen.setFillColor(color::transparent);
 		Brain.Screen.setFont(fontType::mono20);
 
-		// Celsius temperatures
+		// Chassis temperatures
 		double leftAC = LeftMotorA.temperature(celsius);
 		double leftBC = LeftMotorB.temperature(celsius);
 		double leftCC = LeftMotorC.temperature(celsius);
@@ -690,10 +690,17 @@ namespace {
 		double rightBC = RightMotorB.temperature(celsius);
 		double rightCC = RightMotorC.temperature(celsius);
 		// double rightDC = RightMotorD.temperature(celsius);
-		Brain.Screen.printAt(10, 40, 1, "L1: %s°C, R1: %s°C", leadTrailZero(3, 3, leftAC).c_str(), leadTrailZero(3, 3, rightAC).c_str());
-		Brain.Screen.printAt(10, 65, 1, "L2: %s°C, R2: %s°C", leadTrailZero(3, 3, leftBC).c_str(), leadTrailZero(3, 3, rightBC).c_str());
-		Brain.Screen.printAt(10, 90, 1, "L3: %s°C, R3: %s°C", leadTrailZero(3, 3, leftCC).c_str(), leadTrailZero(3, 3, rightCC).c_str());
-		// Brain.Screen.printAt(10, 115, 1, "L4: %s°C, R4: %s°C", leadTrailZero(3, 3, leftDC).c_str(), leadTrailZero(3, 3, rightDC).c_str());
+		Brain.Screen.printAt(10, 40, 1, "Left1: %07.3f°C, Rght1: %07.3f°C", leftAC, rightAC);
+		Brain.Screen.printAt(10, 65, 1, "Left2: %07.3f°C, Rght2: %07.3f°C", leftBC, rightAC);
+		Brain.Screen.printAt(10, 90, 1, "Left3: %07.3f°C, Rght3: %07.3f°C", leftCC, rightCC);
+		// Brain.Screen.printAt(10, 115, 1, "Left4: %07.3f°C, Rght4: %07.3f°C", leftDC, rightDC);
+
+		// Other temperatures
+		double intake1 = IntakeMotor1.temperature(celsius);
+		double intake2 = IntakeMotor2.temperature(celsius);
+		double arm1 = ArmMotor.temperature(celsius);
+		Brain.Screen.printAt(10, 115, 1, "Intk1: %07.3f°C, Intk2: %07.3f°C", intake1, intake2);
+		Brain.Screen.printAt(10, 140, 1, "Arm_1: %07.3f°C", arm1);
 	}
 	void drawMotorPower() {
 		// Get power info
@@ -714,7 +721,7 @@ namespace {
 		Brain.Screen.setPenColor(color::white);
 		Brain.Screen.setFillColor(color::transparent);
 		Brain.Screen.setFont(fontType::mono20);
-		Brain.Screen.printAt(10, 130, 1, "Lavg: %07.3f W, Ravg: %07.3f W", leftAvg_watt, rightAvg_watt);
-		Brain.Screen.printAt(10, 155, 1, "Intake 1: %07.3f W, Intake 2: %07.3f W", intake1_watt, intake2_watt);
+		Brain.Screen.printAt(10, 190, 1, "Lavg: %07.3f W, Ravg: %07.3f W", leftAvg_watt, rightAvg_watt);
+		Brain.Screen.printAt(10, 215, 1, "Intk1: %07.3f W, Intk2: %07.3f W", intake1_watt, intake2_watt);
 	}
 }

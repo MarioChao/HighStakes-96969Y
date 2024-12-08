@@ -71,6 +71,36 @@ namespace botdrive {
 	double getMaxDriveVelocity() {
 		return maxDriveVelocityPct;
 	}
+
+	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
+		// Scale percentages if overshoot
+		double scaleFactor = genutil::getScaleFactor(100.0, {leftVelocityPct, rightVelocityPct});
+		leftVelocityPct *= scaleFactor;
+		rightVelocityPct *= scaleFactor;
+
+		// Spin motors
+		LeftMotors.spin(fwd, leftVelocityPct, pct);
+		RightMotors.spin(fwd, rightVelocityPct, pct);
+	}
+
+	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage) {
+		// Preprocess config
+		double maxVoltage = 12.0;
+		clampMaxVoltage = fabs(clampMaxVoltage);
+
+		// Scale voltages if overshoot
+		double scaleFactor = genutil::getScaleFactor(maxVoltage, {leftVoltageVolt, rightVoltageVolt});
+		leftVoltageVolt *= scaleFactor;
+		rightVoltageVolt *= scaleFactor;
+
+		// Clamp
+		leftVoltageVolt = genutil::clamp(leftVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
+		rightVoltageVolt = genutil::clamp(rightVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
+
+		// Spin motors
+		LeftMotors.spin(fwd, leftVoltageVolt, volt);
+		RightMotors.spin(fwd, rightVoltageVolt, volt);
+	}
 }
 
 namespace {
@@ -108,22 +138,27 @@ namespace {
 		double rightPct = initRightPct + rightPolarRotatePct;
 
 		// Scale percentages if overshoot
-		double scaleFactor = maxDriveVelocityPct / fmax(maxDriveVelocityPct, fmax(fabs(leftPct), fabs(rightPct)));
+		double scaleFactor = genutil::getScaleFactor(maxDriveVelocityPct, {leftPct, rightPct});
 		leftPct *= scaleFactor;
 		rightPct *= scaleFactor;
 
-		// Spin motors at volt
-		// LeftMotors.spin(fwd, leftPct, pct);
-		// RightMotors.spin(fwd, rightPct, pct);
-		if (fabs(leftPct) < 5) {
-			LeftMotors.stop();
+		if (true) {
+			// Drive
+			botdrive::driveVoltage(genutil::pctToVolt(leftPct), genutil::pctToVolt(rightPct), 12);
 		} else {
-			LeftMotors.spin(fwd, genutil::pctToVolt(leftPct), volt);
-		}
-		if (fabs(rightPct) < 5) {
-			RightMotors.stop();
-		} else {
-			RightMotors.spin(fwd, genutil::pctToVolt(rightPct), volt);
+			// Spin motors at volt
+			// LeftMotors.spin(fwd, leftPct, pct);
+			// RightMotors.spin(fwd, rightPct, pct);
+			if (fabs(leftPct) < 5) {
+				LeftMotors.stop();
+			} else {
+				LeftMotors.spin(fwd, genutil::pctToVolt(leftPct), volt);
+			}
+			if (fabs(rightPct) < 5) {
+				RightMotors.stop();
+			} else {
+				RightMotors.spin(fwd, genutil::pctToVolt(rightPct), volt);
+			}
 		}
 	}
 }
