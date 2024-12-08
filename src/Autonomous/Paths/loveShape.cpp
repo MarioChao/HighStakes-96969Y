@@ -23,6 +23,7 @@ namespace {
 
 void autonpaths::runLoveShape() {
 	printf("master spark\n");
+
 	// Set robot position
 	mainOdometry.setPosition(1.5, 0.5);
 	mainOdometry.setLookAngle(0);
