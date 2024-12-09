@@ -19,7 +19,7 @@ namespace botintake2 {
 
 	void switchFilterColor();
 
-	void setFilterColor(std::string);
+	void setFilterOutColor(std::string);
 
 	void control(int, int);
 

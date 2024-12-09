@@ -54,6 +54,11 @@ namespace autonfunctions {
 		} else botintake2::setHookMode(state);
 	}
 
+	void setIntakeFilterOutColor(std::string colorText) {
+		if (intakePart == 1) botintake::setFilterOutColor(colorText);
+		else botintake2::setFilterOutColor(colorText);
+	}
+
 	void setArmHangState(int state, double delaySec) {
 		botarmpneu::setState(state, delaySec);
 	}

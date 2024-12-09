@@ -210,7 +210,7 @@ namespace botintake2 {
 		}
 	}
 
-	void setFilterColor(std::string colorText) {
+	void setFilterOutColor(std::string colorText) {
 		filterOutColor = colorText;
 		// debug::printOnController(colorText);
 	}

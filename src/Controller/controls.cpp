@@ -112,7 +112,7 @@ namespace controls {
 			// 	debug::printOnController("100\% drive speed");
 			// }
 			if (intakePart == 1) {
-				botintake::setFilterColor("none");
+				botintake::setFilterOutColor("none");
 				debug::printOnController("filter none");
 				rumble::setConstantRumbling(true);
 			}

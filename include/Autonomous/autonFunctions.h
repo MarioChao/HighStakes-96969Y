@@ -55,6 +55,8 @@ namespace autonfunctions {
 	void setIntakeBottomState(int, double = 0);
 	void setIntakeToArm(int);
 
+	void setIntakeFilterOutColor(std::string colorText);
+
 	void setArmHangState(int, double = 0);
 	void setArmStage(int, double = 0);
 
