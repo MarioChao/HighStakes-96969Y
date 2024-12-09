@@ -77,6 +77,11 @@ namespace controls {
 					botintake::setColorFiltering(false);
 					redirect::setState(1);
 					botarm::setArmStage(1);
+					task closeRedirect([]() -> int {
+						wait(5, sec);
+						botintake::setColorFiltering(true);
+						return 1;
+					});
 				} else {
 					botintake::setColorFiltering(true);
 				}

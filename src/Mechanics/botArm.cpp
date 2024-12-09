@@ -16,7 +16,7 @@ namespace {
 
 	// Stage controllers
 	PIDController armPositionPid(1.0, 0, 0);
-	PatienceController armUpPatience(15, 1.0, true);
+	PatienceController armUpPatience(30, 1.0, true);
 	PatienceController armDownPatience(15, 1.0, false);
 
 	// Stage config
@@ -49,6 +49,7 @@ namespace botarm {
 				resolveArmDirection();
 			} else {
 				// printf("st: %d, armvolt: %.3f\n", currentArmStage, ArmMotor.voltage(volt));
+				// printf("arm torque: %.3f Nm\n", ArmMotor.torque());
 				resolveArmDegrees();
 			}
 
@@ -279,7 +280,7 @@ namespace {
 		double velocityVolt = genutil::pctToVolt(velocityPct);
 		velocityVolt = genutil::clamp(velocityVolt, -12, 12);
 		ArmMotor.spin(forward, velocityVolt, volt);
-		// printf("VVolt: %.3f, temp: %.3f°C\n", velocityVolt, ArmMotor.temperature(celsius));
+		// printf("VVolt: %.3f, temp: %.3f C, torque: %.3f Nm\n", velocityVolt, ArmMotor.temperature(celsius), ArmMotor.torque());
 		// ArmMotor.spin(forward, velocityPct, pct);
 	}
 }
