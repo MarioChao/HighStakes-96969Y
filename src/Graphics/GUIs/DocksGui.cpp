@@ -9,6 +9,10 @@ DockGui::DockGui(double leftX, double topY, double width, double height, vector<
 	functions = functionList;
 }
 
+string DockGui::getClassName() {
+	return "DockGui";
+}
+
 void DockGui::addGui(GuiClass *gui) {
 	guis.push_back(gui);
 }
@@ -35,8 +39,11 @@ void DockGui::addFunction(void (*func)()) {
 void DockGui::draw() {
 	// Check if visible & usable
 	if (!isVisible() || !enabled) {
+		// printf(":(, %d, %d\n", !isVisible(), !enabled);
 		return;
 	}
+	// printf("DRAW S %d\n", (int) guis.size());
+
 	// Draw guis
 	for (GuiClass *gui : guis) {
 		gui->draw();
@@ -71,23 +78,33 @@ void DockGui::check() {
 void DockGui::setEnabled(bool enabled) {
 	this->enabled = enabled;
 	if (enabled) {
-		// printf("Enabled dock\n");
-		// On dock enabled
+		// Clear screen
 		clearDock();
-		// Set gui visibility & draw
+
+		// Show dock
+		this->setVisibility(true);
+
+		// Show guis
 		for (GuiClass *gui : guis) {
 			gui->setVisibility(true);
+			if (gui->getClassName() == "DockGui") {
+				((DockGui *) gui)->setEnabled(true);
+			}
 		}
 		draw();
+
 		// Enabled functions
 		for (void (*func)() : onEnabledFunctions) {
 			func();
 		}
 	} else {
-		// printf("Disabled dock\n");
-		// On dock disabled
+		// Hide guis
+		this->setVisibility(false);
 		for (GuiClass *gui : guis) {
 			gui->setVisibility(false);
+			if (gui->getClassName() == "DockGui") {
+				((DockGui *) gui)->setEnabled(false);
+			}
 		}
 	}
 }

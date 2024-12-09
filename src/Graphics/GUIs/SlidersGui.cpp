@@ -25,9 +25,8 @@ SliderGui::SliderGui(double lowLimit, double upLimit, vector<pair<double, ShapeG
 	finishY = upY;
 }
 
-// Adds a slider button to the slider
-void SliderGui::addSliderButton(double sliderVal, ShapeGui *sliderButton) {
-	values.push_back(make_pair(sliderVal, sliderButton));
+string SliderGui::getClassName() {
+	return "SliderGui";
 }
 
 // Draws the slider
@@ -51,6 +50,11 @@ void SliderGui::draw() {
 		updateCord(i);
 		values[i].second->draw();
 	}
+}
+
+// Adds a slider button to the slider
+void SliderGui::addSliderButton(double sliderVal, ShapeGui *sliderButton) {
+	values.push_back(make_pair(sliderVal, sliderButton));
 }
 
 // Returns the value represented by a position on the slider

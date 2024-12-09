@@ -15,21 +15,13 @@ namespace shape {
 using namespace shape;
 
 class ShapeGui : public GuiClass {
-private:
-	// Attributes
-	ShapeType shapeName;
-protected:
-	// Inherited attributes
-	double centerX, centerY;
-
-	color fillColor, outlineColor;
-	color displayedColor;
-	double outlineWidth;
 public:
 	// Constructor
 	ShapeGui(ShapeType shape, double x, double y, color fillCol, color outlineCol, double strokeWeight);
 
 	// Function
+	virtual string getClassName() override;
+
 	virtual void draw() override;
 	void draw(color fillCol);
 
@@ -40,6 +32,18 @@ public:
 	color getColor();
 
 	virtual bool isTouching(double x, double y);
+
+protected:
+	// Inherited attributes
+	double centerX, centerY;
+
+	color fillColor, outlineColor;
+	color displayedColor;
+	double outlineWidth;
+
+private:
+	// Attributes
+	ShapeType shapeName;
 };
 
 class Rectangle : public ShapeGui {

@@ -1,5 +1,9 @@
 #include "Graphics/GUIs/GuiClass.h"
 
+string GuiClass::getClassName() {
+	return "GuiClass";
+}
+
 void GuiClass::draw() {
 	printf("GuiClass draw\n");
 	return;

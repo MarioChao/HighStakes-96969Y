@@ -67,13 +67,11 @@ namespace {
 	double fw_prevAimY = -1, fw_newAimY;
 
 	// Guis
-	vector<GuiClass *> mainDockGuis;
-	vector<GuiClass *> autonDockGuis, autonSubdock1Guis, autonSubdock2Guis, autonSubdock3Guis;
-	vector<GuiClass *> qrCodeDockGuis, motTempDockGuis;
 	vector<ButtonGui *> mainDockButtons;
 	vector<ButtonGui *> autonDockButtons, allianceButtons, autonSubdock1Buttons, autonSubdock2Buttons, autonSubdock3Buttons;
 	SliderGui *slider;
-	DockGui *mainDock;
+	DockGui *mainDock, *mainDock_dockDock;
+	DockGui *simulationDock;
 	DockGui *autonDock, *autonSubdock1, *autonSubdock2, *autonSubdock3;
 	DockGui *qrCodeDock, *motTempDock;
 
@@ -304,25 +302,28 @@ namespace {
 
 		// Main Dock buttons
 		mainDockButtons = {};
-		mainDockButtons.push_back(new ButtonGui(new Rectangle(40, 10, 80, 20, color(0, 100, 0), color(50, 50, 50), 2), "General", white, [] {
+		mainDockButtons.push_back(new ButtonGui(new Rectangle(40, 10, 80, 20, color(0, 100, 0), color(50, 50, 50), 2), "Auton", white, [] {
 			mainDockDisable(0);
 			mainDockButtons[0]->enable();
+			mainDock_dockDock->setEnabled(false);
 			autonDock->setEnabled(true);
-			qrCodeDock->setEnabled(false);
-			motTempDock->setEnabled(false);
 		}));
-		mainDockButtons.push_back(new ButtonGui(new Rectangle(120, 10, 80, 20, color(200, 0, 0), color(50, 50, 50), 2), "Extra", white, [] {
+		mainDockButtons.push_back(new ButtonGui(new Rectangle(120, 10, 80, 20, color(0, 100, 0), color(50, 50, 50), 2), "Simulator", white, [] {
 			mainDockDisable(1);
 			mainDockButtons[1]->enable();
-			autonDock->setEnabled(false);
-			qrCodeDock->setEnabled(true);
-			motTempDock->setEnabled(false);
+			mainDock_dockDock->setEnabled(false);
+			simulationDock->setEnabled(true);
 		}));
-		mainDockButtons.push_back(new ButtonGui(new Rectangle(200, 10, 80, 20, color(100, 100, 0), color(50, 50, 50), 2), "Tempera", white, [] {
+		mainDockButtons.push_back(new ButtonGui(new Rectangle(200, 10, 80, 20, color(200, 0, 0), color(50, 50, 50), 2), "Extra", white, [] {
 			mainDockDisable(2);
 			mainDockButtons[2]->enable();
-			autonDock->setEnabled(false);
-			qrCodeDock->setEnabled(false);
+			mainDock_dockDock->setEnabled(false);
+			qrCodeDock->setEnabled(true);
+		}));
+		mainDockButtons.push_back(new ButtonGui(new Rectangle(280, 10, 80, 20, color(100, 100, 0), color(50, 50, 50), 2), "Tempera", white, [] {
+			mainDockDisable(3);
+			mainDockButtons[3]->enable();
+			mainDock_dockDock->setEnabled(false);
 			motTempDock->setEnabled(true);
 		}));
 
@@ -466,6 +467,7 @@ namespace {
 	void createDocks() {
 		// Main dock
 		mainDock = new DockGui(0, 0, 480, 240, {}, {});
+		mainDock_dockDock = new DockGui(0, 0, 0, 0, {}, {});
 		mainDock->addEnabledFunction([] {
 			mainDockButtons[0]->activateButtonFunction();
 			// autonDock->setEnabled(true);
@@ -475,11 +477,6 @@ namespace {
 
 		// Auton Dock
 		autonDock = new DockGui(0, 20, 480, 220, {}, {});
-		autonDock->addFunction([] {
-			drawCoordinate(20, 40, 100, 100);
-			drawFlywheel(20, 160, 100, 60);
-			// drawFlywheel(20, 40, 300, 160);
-		});
 		autonDock->addEnabledFunction([] {
 			autonDockButtons[0]->activateButtonFunction();
 			// autonSubdock1->setEnabled(true);
@@ -487,14 +484,20 @@ namespace {
 			// autonSubdock3->setEnabled(false);
 		});
 
-		// Auton Sub-dock 1
+		// Auton Sub-docks
 		autonSubdock1 = new DockGui(150, 40, 210, 180, {}, {});
-
-		// Auton Sub-dock 2
 		autonSubdock2 = new DockGui(150, 40, 210, 180, {}, {});
-
-		// Auton Sub-dock 3
 		autonSubdock3 = new DockGui(150, 40, 210, 180, {}, {});
+
+		// Simulation Dock
+		simulationDock = new DockGui(0, 20, 480, 220, {}, {});
+		simulationDock->addFunction([] {
+			drawCoordinate(20, 40, 200, 180);
+			// drawCoordinate(20, 40, 100, 100);
+			drawFlywheel(240, 40, 200, 180);
+			// drawFlywheel(20, 160, 100, 60);
+			// drawFlywheel(20, 40, 300, 160);
+		});
 
 		// QR-Code Dock
 		qrCodeDock = new DockGui(0, 20, 480, 220, {}, {});
@@ -516,58 +519,25 @@ namespace {
 	/// @brief Set the GUI variables corresponding to each dock.
 	void setDockGUIs() {
 		// Main Dock
-		mainDockGuis = {};
 		for (GuiClass *gui : mainDockButtons) {
-			mainDockGuis.push_back(gui);
+			mainDock->addGui(gui);
 		}
-		mainDockGuis.push_back(autonDock);
-		mainDockGuis.push_back(qrCodeDock);
-		mainDockGuis.push_back(motTempDock);
+		mainDock->addGuis({autonDock, simulationDock, qrCodeDock, motTempDock});
+		mainDock_dockDock->addGuis({autonDock, simulationDock, qrCodeDock, motTempDock});
 
 		// Auton Dock
-		autonDockGuis = {};
 		for (GuiClass *gui : autonDockButtons) {
-			autonDockGuis.push_back(gui);
+			autonDock->addGui(gui);
 		}
-		autonDockGuis.push_back(autonSubdock1);
-		autonDockGuis.push_back(autonSubdock2);
-		autonDockGuis.push_back(autonSubdock3);
+		autonDock->addGuis({autonSubdock1, autonSubdock2, autonSubdock3});
 
-		// Auton Subdock 1
-		autonSubdock1Guis = {};
-		for (GuiClass *gui : autonSubdock1Buttons) {
-			autonSubdock1Guis.push_back(gui);
-		}
-
-		// Auton Subdock 2
-		autonSubdock2Guis = {};
-		for (GuiClass *gui : autonSubdock2Buttons) {
-			autonSubdock2Guis.push_back(gui);
-		}
-
-		// Auton Subdock 3
-		autonSubdock3Guis = {};
-		for (GuiClass *gui : autonSubdock3Buttons) {
-			autonSubdock3Guis.push_back(gui);
-		}
+		// Auton Subdocks
+		for (GuiClass *gui : autonSubdock1Buttons) autonSubdock1->addGui(gui);
+		for (GuiClass *gui : autonSubdock2Buttons) autonSubdock2->addGui(gui);
+		for (GuiClass *gui : autonSubdock3Buttons) autonSubdock3->addGui(gui);
 
 		// QR-Code Dock
-		qrCodeDockGuis = {};
-		qrCodeDockGuis.push_back(slider);
-
-		// Set GUI variables
-		mainDock->addGuis(mainDockGuis);
-		autonDock->addGuis(autonDockGuis);
-		autonSubdock1->addGuis(autonSubdock1Guis);
-		autonSubdock2->addGuis(autonSubdock2Guis);
-		autonSubdock3->addGuis(autonSubdock3Guis);
-		qrCodeDock->addGuis(qrCodeDockGuis);
-
-		// Initialize Dock button states
-		mainDockButtons[1]->disable();
-		mainDockButtons[2]->disable();
-		autonDockButtons[1]->disable();
-		autonDockButtons[2]->disable();
+		qrCodeDock->addGuis({slider});
 	}
 
 	/// @brief Initialize the docks by disabling some of them.

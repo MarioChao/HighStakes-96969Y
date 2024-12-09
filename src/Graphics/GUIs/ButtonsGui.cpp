@@ -51,6 +51,10 @@ ButtonGui::ButtonGui() {
 	ButtonGui(0, 0, 20, 5, 1, color(100, 100, 100), color::black, 2, "Button", color::black, [] { return; });
 }
 
+string ButtonGui::getClassName() {
+	return "ButtonGui";
+}
+
 /// @brief Draw the button shape & text.
 void ButtonGui::draw() {
 	if (!isVisible()) {
@@ -136,4 +140,8 @@ bool ButtonGui::getUsability() {
 
 void ButtonGui::activateButtonFunction() {
 	runFunction();
+}
+
+string ButtonGui::getDisplayedText() {
+	return displayedText;
 }

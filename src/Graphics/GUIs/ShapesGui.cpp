@@ -12,6 +12,10 @@ ShapeGui::ShapeGui(ShapeType shape, double x, double y, color fillCol, color out
 	outlineWidth = strokeWeight;
 }
 
+string ShapeGui::getClassName() {
+	return "ShapeGui";
+}
+
 void ShapeGui::draw() {
 	printf("base draw\n");
 	return;
