@@ -106,6 +106,11 @@ void Odometry::start() {
 	}
 }
 
+void Odometry::restart() {
+	isStarted = false;
+	start();
+}
+
 void Odometry::odometryFrame() {
 	// Make sure started
 	if (!isStarted) {
@@ -184,6 +189,9 @@ Linegular Odometry::getLookLinegular() {
 }
 
 void Odometry::printDebug() {
+	// Print tracked values
+	printf("Track X: %07.3f, Y: %07.3f, Ang: %07.3f\n", getX(), getY(), getLookFieldAngle_degrees());
+
 	// Print position sensor readings
 	for (int i = 0; i < positionSensor_count; i++) {
 		double m = positionSensor_newMeasurements[i];

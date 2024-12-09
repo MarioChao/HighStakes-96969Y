@@ -347,6 +347,11 @@ int main() {
 	// Run the pre-autonomous function.
 	pre_auton();
 
+	// Start autonomous
+	if (auton::isRunningAutonUponStart()) {
+		userRunAutonomous();
+	}
+
 	// Prevent main from exiting with an infinite loop.
 	while (true) {
 		wait(100, msec);

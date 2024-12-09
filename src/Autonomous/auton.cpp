@@ -11,6 +11,7 @@ namespace {
 	using namespace auton;
 
 	bool userRunningAutonomous = false;
+	bool runningAutonUponStart = true;
 	autonomousType auton_runType = autonomousType::LoveShape;
 	int auton_allianceId;
 }
@@ -102,6 +103,10 @@ namespace auton {
 
 	bool isUserRunningAuton() {
 		return userRunningAutonomous;
+	}
+
+	bool isRunningAutonUponStart() {
+		return runningAutonUponStart;
 	}
 
 

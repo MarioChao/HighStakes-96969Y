@@ -25,12 +25,12 @@ namespace auton {
 	void showAutonRunType();
 
 	/// @brief Get the type of autonomous that is selected.
-	/// @return The type of autonomous currently selected.
 	autonomousType getAutonRunType();
 
-	/// @brief Return whether autonomous code should run when user control begins.
-	/// @return Whether auton will run when user control begins.
+	/// @brief Get whether autonomous code should run when user control begins.
 	bool isUserRunningAuton();
+
+	bool isRunningAutonUponStart();
 
 	/// @brief Run the autonomous set by setAutonRunType().
 	void runAutonomous();

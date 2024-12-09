@@ -60,6 +60,9 @@ public:
 	/// @brief Starts tracking the robot's position.
 	void start();
 
+	/// @brief Restarts tracking the robot's position.
+	void restart();
+
 	/// @brief Calculate robot's new position from the change in sensor measurements since the last call.
 	void odometryFrame();
 
