@@ -61,7 +61,7 @@ namespace autonfunctions {
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDController rotateTargetAngleVoltPid(1.8, 0.002, 1.7, errorRange);
+		PIDController rotateTargetAngleVoltPid(2.5, 0.002, 2.0, errorRange);
 		PIDController rotateTargetAngleVelocityPctPid(0.4, 0.0, 1.5, errorRange);
 		timer timeout;
 		while (!rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout) {

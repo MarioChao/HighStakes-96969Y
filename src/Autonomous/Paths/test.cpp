@@ -12,7 +12,7 @@ void autonpaths::autonTest() {
 
 	turnToAngle(45);
 	task::sleep(200);
-	turnToAngle(-45);
+	turnToAngleVelocity(-45, 15);
 	task::sleep(200);
 	turnToAngleVelocity(90, 30);
 	task::sleep(200);
@@ -34,7 +34,7 @@ void autonpaths::odometryRadiusTest() {
 
 	mainOdometry.printDebug();
 
-	turnToAngleVelocity(360.0 * 10.0, 15.0, 0.0, defaultTurnAngleErrorRange, 30.0);
+	turnToAngleVelocity(360.0 * 10.0, 15.0, 0.0, defaultTurnAngleErrorRange, 40.0);
 
 	mainOdometry.printDebug();
 }
