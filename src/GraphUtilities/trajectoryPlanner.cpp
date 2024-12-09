@@ -276,11 +276,14 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 		// Push new kinematics info
 		if (combined_distance_kinematics.empty()) {
 			combined_distance_kinematics.push_back({distanceStart, {forwardTravellingKinematics}});
-			if (debugPrint) printf("1st: %.3f, %.3f\n", distanceStart, forwardTravellingKinematics[0]);
+			if (debugPrint) printf("1st: %.3f, %.3f\n", distanceStart, v);
 		} else {
-			if (debugPrint) printf("start1: %.3f, %.3f, %.3f\n", distanceStart, forwardTravellingKinematics[0], forwardTravellingKinematics[1]);
-			if (debugPrint) printf("start2: %.3f, %.3f, %.3f\n", distanceStart, backwardTravellingKinematics[0], backwardTravellingKinematics[1]);
-			if (v < u) {
+			if (debugPrint) printf("start1: %.3f, %.6f, %.3f\n", distanceStart, v, a);
+			if (debugPrint) printf("start2: %.3f, %.6f, %.3f\n", distanceStart, u, b);
+			if (fabs(v - u) < 1e-5) {
+				combined_distance_kinematics.push_back({distanceStart, {backwardTravellingKinematics}});
+				if (debugPrint) printf("chose 2\n");
+			} else if (v < u) {
 				combined_distance_kinematics.push_back({distanceStart, {forwardTravellingKinematics}});
 				if (debugPrint) printf("chose 1\n");
 			} else {
