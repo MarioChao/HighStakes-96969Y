@@ -16,7 +16,7 @@ namespace {
 	CurveSampler splineSampler = CurveSampler(spline)
 		.calculateByResolution(spline.getTRange().second * 7);
 	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
-		.addDesiredMotionConstraints(0, 0.7, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(0, 1.5, maxAccel, maxAccel)
 		.calculateMotion();
 }
 

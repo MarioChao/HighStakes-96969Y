@@ -11,7 +11,7 @@ namespace {
 	using namespace auton;
 
 	bool userRunningAutonomous = false;
-	autonomousType auton_runType = autonomousType::Test;
+	autonomousType auton_runType = autonomousType::LoveShape;
 	int auton_allianceId;
 }
 

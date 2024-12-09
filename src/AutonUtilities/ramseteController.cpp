@@ -7,10 +7,10 @@
 #include <stdio.h>
 
 namespace {
-	const double defaultB = 2.0; // 3.25
+	const double defaultB = 1.0; // 3.28
 	const double defaultDamp = 0.8;
 
-	double smallScalar = 0.1;
+	double smallScalar = 0.0001;
 }
 
 RamseteController::RamseteController()
@@ -73,7 +73,7 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 
 	// Compute output velocities
 	double outputLinearVelocity = (v_desired * cos(e_theta)) + (k * e_look);
-	double outputAngularVelocity = -(w_desired) + (k * e_theta) - (b * v_desired * angle::sinc(e_theta) * e_right);
+	double outputAngularVelocity = (w_desired) + (k * e_theta) - (b * v_desired * angle::sinc(e_theta) * e_right);
 
 	// Compute left and right velocities
 	// outputAngularVelocity *= -1; // for polar angles

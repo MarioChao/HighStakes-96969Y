@@ -13,11 +13,11 @@ namespace {
 	CurveSampler loveSplineSampler = CurveSampler(loveSpline)
 		.calculateByResolution(loveSpline.getTRange().second * 7);
 	TrajectoryPlanner loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
-		.addDesiredMotionConstraints(0, 0.5, maxAccel, maxAccel)
-		.addDesiredMotionConstraints(1.2, 0.5, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(0, 1, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(1.2, 0.7, maxAccel, maxAccel)
 		.addDesiredMotionConstraints(1.8, 0.4, maxAccel, maxAccel)
-		.addDesiredMotionConstraints(3.2, 0.5, maxAccel, maxAccel)
-		.addDesiredMotionConstraints(3.8, 0.5, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(3.2, 0.7, maxAccel, maxAccel)
+		.addDesiredMotionConstraints(3.8, 1, maxAccel, maxAccel)
 		.calculateMotion();
 }
 
@@ -38,8 +38,8 @@ void autonpaths::runLoveShape() {
 	printf("done\n");
 
 	// Follow path again
-	printf("<3 ❤️\n");
-	followSplinePath();
+	printf("<3\n");
+	followSplinePath(true);
 
 	// Wait
 	waitUntil(_pathFollowCompleted);
