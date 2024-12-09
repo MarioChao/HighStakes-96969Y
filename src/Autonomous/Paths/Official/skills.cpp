@@ -1,44 +1,108 @@
 #include "Autonomous/autonPaths.h"
+#include "Simulation/robotSimulator.h"
+
+namespace {
+	double maxAccel = 1;
+	double avgVel = 1.5;
+
+	std::vector<UniformCubicSpline> splines;
+	std::vector<CurveSampler> splineSamplers;
+	std::vector<TrajectoryPlanner> splineTrajectoryPlans;
+
+	void loadSkillsSplines() {
+		if (splines.empty()) {
+			UniformCubicSpline spline = UniformCubicSpline()
+				.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
+					{-0.64, 2.86}, {0.29, 2.92}, {1, 2.04}, {0.96, 0.02}
+				}));
+			CurveSampler splineSampler = CurveSampler(spline)
+				.calculateByResolution(spline.getTRange().second * 7);
+			TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
+				.addDesiredMotionConstraints(0, avgVel, maxAccel, maxAccel)
+				.calculateMotion();
+			splines.push_back(spline);
+			splineSamplers.push_back(splineSampler);
+			splineTrajectoryPlans.push_back(splineTrajectoryPlan);
+
+			spline = UniformCubicSpline()
+				.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
+					{-0.17, 2.03}, {1, 2.03}, {1.98, 1.95}, {3.02, 1.15}
+				}))
+				.extendPoints({
+					{3.95, 1.01}, {3.1, 0.5}, {1.96, 1}, {0.48, 1.03}, {1.04, 0.49}, {2, 0.43}
+				});
+			splineSampler = CurveSampler(spline)
+				.calculateByResolution(spline.getTRange().second * 7);
+			splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
+				.addDesiredMotionConstraints(0, avgVel, maxAccel, maxAccel)
+				.calculateMotion();
+			splines.push_back(spline);
+			splineSamplers.push_back(splineSampler);
+			splineTrajectoryPlans.push_back(splineTrajectoryPlan);
+		}
+	}
+}
 
 /// @brief Run the skills autonomous.
 void autonpaths::runAutonSkills() {
+	/* Pre skills */
+	// Timer
 	timer autontimer;
+
+	// Pre-process
+	loadSkillsSplines();
+
+	// Set coordinate
+	mainOdometry.setPosition(1.0, 3);
+	mainOdometry.setLookAngle(-90.0);
+	mainOdometry.printDebug();
 	setRotation(-90.0);
+	mainOdometry.restart();
+	mainOdometry.printDebug();
+
+	// Wait for arm reset
+	waitUntil(isArmResetted());
+
+	/* Actual route */
 
 	// Score preload at alliance wall stake
-	setArmHangState(1);
-	driveAndTurnDistanceTiles(-0.2, -90.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	task::sleep(200);
-	driveAndTurnDistanceTiles(0.35, -90.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	setArmHangState(0);
-	task::sleep(200);
+	// setArmHangState(1);
+	setArmStage(2);
+	task::sleep(800);
+	driveAndTurnDistanceTiles(0.5, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(-0.3, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+	// setArmHangState(0);
+	setArmStage(1, 0.5);
 
-	// Grab bottom mobile goal
-	driveAndTurnDistanceTiles(-0.5, -90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	turnToAngle(0);
-	setGoalClampState(1, 0.7);
-	driveAndTurnDistanceTiles(-0.96, 0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	// Follow path
+	setSplinePath(splines[0], splineTrajectoryPlans[0], splineSamplers[0]);
+	followSplinePath(true);
 
-	// Take in 2 rings & score
+	// Wait
+	waitUntil(_pathFollowCompleted);
+
+	// Grab goal
+	setGoalClampState(1);
+	wait(200, msec);
+
+	// Start intake
 	turnToAngle(90.0);
 	setIntakeState(1);
-	driveAndTurnDistanceTiles(0.85, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.0);
-	turnToAngle(143.0);
-	driveAndTurnDistanceTiles(1.65, 143.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.0);
-
-	// Take in 3 rings in a row & score
-	driveAndTurnDistanceTiles(-0.40, 143.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-	turnToAngle(270.0);
-	driveAndTurnDistanceTiles(2.10, 270.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
-
-	// Take in 1 ring to arm
-	turnToAngle(270.0);
-	turnToAngle(180.0, halfRobotLengthIn * 1.0);
 	setIntakeToArm(1);
-	driveAndTurnDistanceTiles(0.6, 180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+
+	// Follow path
+	setSplinePath(splines[1], splineTrajectoryPlans[1], splineSamplers[1]);
+	followSplinePath();
+
+	// Wait and remove redirect
+	waitUntil(_trajectoryPlan.getMotionAtTime(_splinePathTimer.value())[0] >= 1.5);
+	setIntakeToArm(0);
+
+	// Wait
+	waitUntil(_pathFollowCompleted);
 
 	// Place mobile goal in corner
-	turnToAngle(85.0);
+	turnToAngle(70.0);
 	setGoalClampState(0);
 	driveAndTurnDistanceTiles(-0.60, 85.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
@@ -46,13 +110,15 @@ void autonpaths::runAutonSkills() {
 	setIntakeState(0);
 	setIntakeToArm(0);
 	turnToAngle(85.0);
-	setArmHangState(1);
+	// setArmHangState(1);
+	setArmStage(2);
 	driveAndTurnDistanceTiles(2.46, 85.0, 100.0, 100.0, defaultMoveTilesErrorRange, 2.5);
 	turnToAngleVelocity(180.0, 60.0);
 
 	// Score ring at neutral wall stake
 	driveAndTurnDistanceTiles(0.7, 180.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	setArmHangState(0);
+	// setArmHangState(0);
+	setArmStage(0);
 	driveAndTurnDistanceTiles(0.1, 180.0, 50.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	task::sleep(200);
 
@@ -97,10 +163,12 @@ void autonpaths::runAutonSkills() {
 	driveAndTurnDistanceTiles(-0.80, -180.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 
 	// Score 1 ring at blue wall stake
-	setArmHangState(1);
+	// setArmHangState(1);
+	setArmStage(2);
 	turnToAngle(-280.0);
 	driveAndTurnDistanceTiles(0.53, -270.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-	setArmHangState(0);
+	// setArmHangState(0);
+	setArmStage(0);
 	task::sleep(400);
 	driveAndTurnDistanceTiles(-0.3, -270.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
@@ -147,10 +215,12 @@ void autonpaths::runAutonSkills() {
 
 	// Score ring at neutral wall stake
 	turnToAngle(0);
-	setArmHangState(1);
+	// setArmHangState(1);
+	setArmStage(2);
 	task::sleep(400);
 	driveAndTurnDistanceTiles(1.0, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	setArmHangState(0);
+	// setArmHangState(0);
+	setArmStage(0);
 	driveAndTurnDistanceTiles(0.1, 0.0, 50.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	task::sleep(200);
 
@@ -187,7 +257,8 @@ void autonpaths::runAutonSkills() {
 	// Climb
 	setIntakeState(0);
 	turnToAngle(135.0);
-	setArmHangState(1);
+	// setArmHangState(1);
+	setArmStage(2);
 	driveAndTurnDistanceTiles(2.35, 135.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
 	driveAndTurnDistanceTiles(1.0, 135.0, 30.0, 100.0, defaultMoveTilesErrorRange, 1.5);
 	driveAndTurnDistanceTiles(-0.5, 135.0, 20.0, 100.0, defaultMoveTilesErrorRange, 1.5);
