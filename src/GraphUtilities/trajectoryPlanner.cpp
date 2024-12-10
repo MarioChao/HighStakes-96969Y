@@ -1,5 +1,9 @@
 #include "GraphUtilities/trajectoryPlanner.h"
 
+#include "GraphUtilities/curveSampler.h"
+
+#include "Utilities/generalUtility.h"
+
 #include <stdio.h>
 
 namespace {
@@ -13,6 +17,40 @@ TrajectoryPlanner::TrajectoryPlanner(double totalDistance) {
 void TrajectoryPlanner::_onInit(double totalDistance) {
 	distance_motionConstraints.clear();
 	this->totalDistance = totalDistance;
+}
+
+TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
+	CurveSampler sampler, double maxVelocity,
+	double maxAccel, double maxDecel,
+	int resolution
+) {
+	// Clear motion constraints
+	distance_motionConstraints.clear();
+
+	// Get sampler info
+	double pathStart = sampler.getDistanceRange().first;
+	double pathEnd = sampler.getDistanceRange().second;
+
+	// Set motion constraints for segments
+	for (int i = 0; i < resolution; i++) {
+		// Get the segment distance
+		double segmentDistance = genutil::rangeMap(i, 0, resolution, pathStart, pathEnd);
+
+		// Get curvature at distance
+		double curvature = sampler.getSpline().getCurvatureAt(sampler.distanceToParam(segmentDistance));
+		curvature = std::fabs(curvature);
+
+		// Calculate constraint values
+		double nonChangingFactor = 0.5;
+		double segmentMaxVelocity = maxVelocity * (nonChangingFactor / (nonChangingFactor + curvature));
+		// printf("d: %.3f, curva: %.3f, vel: %.3f\n", segmentDistance, curvature, segmentMaxVelocity);
+
+		// Add constraint
+		addDesiredMotionConstraints(segmentDistance, segmentMaxVelocity, maxAccel, maxDecel);
+	}
+
+	// Method chaining
+	return *this;
 }
 
 TrajectoryPlanner &TrajectoryPlanner::addDesiredMotionConstraints(
@@ -171,7 +209,7 @@ trajectory::merged_kinematics TrajectoryPlanner::_getMergedForwardBackward() {
 		const std::vector<double> &backward_kinematics = backward_distance_kinematics[backward_index].second;
 
 		// Push smaller distance
-		if (std::fabs(forward_distance - backward_distance) < 1e-7) {
+		if (genutil::isWithin(forward_distance, backward_distance, 1e-7)) {
 			bothside_distance_kinematics.push_back({forward_distance, {{1, forward_kinematics}, {1, backward_kinematics}}});
 			forward_index++;
 			backward_index++;
@@ -280,7 +318,7 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 		} else {
 			if (debugPrint) printf("start1: %.3f, %.6f, %.3f\n", distanceStart, v, a);
 			if (debugPrint) printf("start2: %.3f, %.6f, %.3f\n", distanceStart, u, b);
-			if (fabs(v - u) < 1e-5) {
+			if (genutil::isWithin(v, u, 1e-5)) {
 				combined_distance_kinematics.push_back({distanceStart, {backwardTravellingKinematics}});
 				if (debugPrint) printf("chose 2\n");
 			} else if (v < u) {

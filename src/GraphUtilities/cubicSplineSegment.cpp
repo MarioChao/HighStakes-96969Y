@@ -74,6 +74,13 @@ std::vector<double> CubicSplineSegment::getVelocityAtT(double t) {
 	return point;
 }
 
+std::vector<double> CubicSplineSegment::getSecondPrimeAtT(double t) {
+	Matrix t_matrix({{0, 0, 2, 6*t}});
+	Matrix point_matrix = Matrix(stored_points);
+	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
+	return point;
+}
+
 CubicSplineSegment CubicSplineSegment::getReversed() {
 	// Create new segment of same type
 	CubicSplineSegment resultSegment;

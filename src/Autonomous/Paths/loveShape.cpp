@@ -13,37 +13,31 @@ namespace {
 
 	void loadLoveSpline() {
 		if (loveSpline.getTRange().second == 0) {
-			loveSpline = UniformCubicSpline()
-				.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
-					{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}
-				}))
-				.extendPoints({
-					{1.54, 1.8}, {2.06, 1.95}, {2.49, 1.34}, {1.54, 0.48}, {0.48, 0.05},
+			loveSpline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+					{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}, {1.54, 1.8},
+					{2.06, 1.95}, {2.49, 1.34}, {1.54, 0.48}, {0.48, 0.05},
 				});
 			loveSplineSampler = CurveSampler(loveSpline)
-				.calculateByResolution(loveSpline.getTRange().second * 7);
+				.calculateByResolution(loveSpline.getTRange().second * 10);
 			loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
-				.addDesiredMotionConstraints(0, 1, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(1.2, 0.7, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(1.8, 0.4, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(3.2, 0.7, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(3.8, 1, maxAccel, maxAccel)
+				// .addDesiredMotionConstraints(0, 1, maxAccel, maxAccel)
+				// .addDesiredMotionConstraints(1.2, 0.7, maxAccel, maxAccel)
+				// .addDesiredMotionConstraints(1.8, 0.4, maxAccel, maxAccel)
+				// .addDesiredMotionConstraints(3.2, 0.7, maxAccel, maxAccel)
+				// .addDesiredMotionConstraints(3.8, 1, maxAccel, maxAccel)
+				// .calculateMotion();
+				.autoSetMotionConstraints(loveSplineSampler, 2.5, maxAccel, maxAccel)
 				.calculateMotion();
 
-			bigLoveSpline = UniformCubicSpline()
-				.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
+			bigLoveSpline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
 					{4.07, -0.01}, {3, 0.55}, {1.99, 1.99}, {0.92, 4.03}, {1.5, 5.2},
 					{3.02, 4.68}, {4.52, 5.2}, {5.08, 4.01}, {4.03, 2.03}, {3.02, 0.57},
 					{1.97, -0.07}
-				}));
-			bigLoveSplineSampler = CurveSampler(loveSpline)
-				.calculateByResolution(loveSpline.getTRange().second * 7);
-			bigLoveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
-				.addDesiredMotionConstraints(0, 1, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(1.2, 0.7, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(1.8, 0.4, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(3.2, 0.7, maxAccel, maxAccel)
-				.addDesiredMotionConstraints(3.8, 1, maxAccel, maxAccel)
+				});
+			bigLoveSplineSampler = CurveSampler(bigLoveSpline)
+				.calculateByResolution(bigLoveSpline.getTRange().second * 10);
+			bigLoveSplineTrajectoryPlan = TrajectoryPlanner(bigLoveSplineSampler.getDistanceRange().second)
+				.autoSetMotionConstraints(bigLoveSplineSampler, 2.5, maxAccel, maxAccel)
 				.calculateMotion();
 		}
 	}
@@ -69,6 +63,15 @@ void autonpaths::runLoveShape() {
 	// Follow path again
 	printf("<3\n");
 	followSplinePath(true);
+
+	// Wait
+	waitUntil(_pathFollowCompleted);
+	printf("done\n");
+
+	// Follow path
+	printf("<3 big\n");
+	setSplinePath(bigLoveSpline, bigLoveSplineTrajectoryPlan, bigLoveSplineSampler);
+	followSplinePath();
 
 	// Wait
 	waitUntil(_pathFollowCompleted);

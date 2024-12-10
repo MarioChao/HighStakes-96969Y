@@ -25,6 +25,7 @@ public:
 	// Spline data
 	std::pair<double, double> getTRange();
 	std::pair<double, double> getDistanceRange();
+	UniformCubicSpline getSpline();
 
 	// Sampling
 	double paramToDistance(double t);

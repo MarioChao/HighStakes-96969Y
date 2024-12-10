@@ -68,6 +68,10 @@ std::pair<double, double> CurveSampler::getDistanceRange() {
 	return std::make_pair(t_cumulativeDistances.front().second, t_cumulativeDistances.back().second);
 }
 
+UniformCubicSpline CurveSampler::getSpline() {
+	return spline;
+}
+
 double CurveSampler::paramToDistance(double t) {
 	// Check extreme
 	if (t <= t_cumulativeDistances.front().first) {

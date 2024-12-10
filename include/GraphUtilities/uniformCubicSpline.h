@@ -29,10 +29,16 @@ public:
 
 	UniformCubicSpline &attachSegment(CubicSplineSegment newSegment);
 
+	std::vector<CubicSplineSegment> getSegments();
+
 	CubicSplineSegment &getSegment(int id);
 	std::vector<double> getPositionAtT(double t);
 	std::vector<double> getVelocityAtT(double t);
 	double getPolarAngleRadiansAt(double t);
+
+	std::vector<double> getSecondPrimeAtT(double t);
+
+	double getCurvatureAt(double t);
 
 	std::pair<double, double> getTRange();
 

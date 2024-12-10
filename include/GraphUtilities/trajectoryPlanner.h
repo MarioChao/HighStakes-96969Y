@@ -3,6 +3,13 @@
 #include <vector>
 #include <algorithm>
 
+// Forward declaration
+
+class CurveSampler;
+
+
+// Namespace
+
 namespace trajectory {
 	using merged_kinematics = std::vector<std::pair<double, std::pair<
 		std::pair<bool, std::vector<double>>,
@@ -10,11 +17,21 @@ namespace trajectory {
 	>>>;
 }
 
+
+// Class
+
 class TrajectoryPlanner {
 public:
 	TrajectoryPlanner(double totalDistance = 0);
 
 	void _onInit(double totalDistance);
+
+	// Add motion constraints according to a curve's curvature.
+	TrajectoryPlanner &autoSetMotionConstraints(
+		CurveSampler sampler, double maxVelocity,
+		double maxAccel, double maxDecel,
+		int resolution = 30
+	);
 
 	// Add motion constraints. Call in ascending order of `startDistance` please.
 	TrajectoryPlanner &addDesiredMotionConstraints(

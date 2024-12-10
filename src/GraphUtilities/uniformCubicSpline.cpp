@@ -54,6 +54,10 @@ UniformCubicSpline &UniformCubicSpline::attachSegment(CubicSplineSegment newSegm
 	return *this;
 }
 
+std::vector<CubicSplineSegment> UniformCubicSpline::getSegments() {
+	return segments;
+}
+
 CubicSplineSegment &UniformCubicSpline::getSegment(int id) {
 	// Validate
 	if (!(0 <= id && id < (int) segments.size())) {
@@ -95,6 +99,34 @@ std::vector<double> UniformCubicSpline::getVelocityAtT(double t) {
 double UniformCubicSpline::getPolarAngleRadiansAt(double t) {
 	std::vector<double> velocity = getVelocityAtT(t);
 	return atan2(velocity[1], velocity[0]);
+}
+
+std::vector<double> UniformCubicSpline::getSecondPrimeAtT(double t) {
+	// Get segment info
+	int segment_id = floor(t);
+	double segment_t = t - segment_id;
+
+	// Special cases
+	if (segment_id < 0) {
+		return segments[0].getSecondPrimeAtT(0);
+	} else if (segment_id >= (int) segments.size()) {
+		return segments.back().getSecondPrimeAtT(1);
+	}
+	return segments[segment_id].getSecondPrimeAtT(segment_t);
+}
+
+double UniformCubicSpline::getCurvatureAt(double t) {
+	std::vector<double> prime1 = getVelocityAtT(t);
+	std::vector<double> prime2 = getSecondPrimeAtT(t);
+
+	double xp = prime1[0], xpp = prime2[0];
+	double yp = prime1[1], ypp = prime2[1];
+
+	double k = (
+		(xp * ypp - yp * xpp)
+		/ std::pow(xp * xp + yp * yp, 3.0 / 2.0)
+	);
+	return k;
 }
 
 std::pair<double, double> UniformCubicSpline::getTRange() {
