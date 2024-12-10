@@ -48,9 +48,13 @@ namespace autonfunctions {
 	/// @param state Normal: 0, to arm: 1
 	void setIntakeToArm(int state) {
 		if (intakePart == 1) {
-			botintake::setColorFiltering(false);
-			redirect::setState(1);
-			botarm::setArmStage(1);
+			if (state) {
+				botintake::setColorFiltering(false);
+				redirect::setState(1);
+				botarm::setArmStage(1);
+			} else {
+				botintake::setColorFiltering(true);
+			}
 		} else botintake2::setHookMode(state);
 	}
 

@@ -66,8 +66,14 @@ namespace autonfunctions {
 		timer timeout;
 		while (!rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout) {
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
-			// Compute rotate error
+
+			// Compute heading error
 			double rotateError = rotation - InertialSensor.rotation();
+			if (_useRelativeRotation) {
+				rotateError = genutil::modRange(rotateError, 360, -180);
+			}
+
+			// Compute heading pid-value from error
 			rotateTargetAngleVoltPid.computeFromError(rotateError);
 			rotateTargetAngleVelocityPctPid.computeFromError(rotateError);
 
@@ -193,8 +199,13 @@ namespace autonfunctions {
 			driveTargetDistancePid.computeFromError(distanceError);
 			double velocityPct = fmin(maxVelocityPct, fmax(-maxVelocityPct, driveTargetDistancePid.getValue()));
 
-			// Compute heading pid-value from error
+			// Compute heading error
 			double rotateError = (targetRotation - InertialSensor.rotation());
+			if (_useRelativeRotation) {
+				rotateError = genutil::modRange(rotateError, 360, -180);
+			}
+
+			// Compute heading pid-value from error
 			rotateTargetAnglePid.computeFromError(rotateError);
 			double rotateVelocityPct = fmin(maxTurnVelocityPct, fmax(-maxTurnVelocityPct, rotateTargetAnglePid.getValue()));
 
@@ -230,6 +241,12 @@ namespace autonfunctions {
 		// Correct
 		driftCorrector.correct();
 	}
+
+	void setDifferentialUseRelativeRotation(bool useRelativeRotation) {
+		_useRelativeRotation = useRelativeRotation;
+	}
+
+	bool _useRelativeRotation = false;
 }
 
 

@@ -12,6 +12,7 @@ namespace {
 
 	bool userRunningAutonomous = false;
 	bool runningAutonUponStart = false;
+
 	autonomousType auton_runType = autonomousType::AutonSkills;
 	int auton_allianceId;
 

@@ -30,6 +30,10 @@ namespace autonfunctions {
 	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = defaultMoveTilesErrorRange, double runTimeout = 3);
 	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = defaultMoveWithInchesErrorRange, double runTimeout = 3);
 
+	void setDifferentialUseRelativeRotation(bool useRelativeRotation);
+
+	extern bool _useRelativeRotation;
+
 
 	/* Path following */
 
