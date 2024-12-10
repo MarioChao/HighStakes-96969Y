@@ -361,27 +361,35 @@ namespace {
 			}
 		};
 
+		// Auton selector rectangle
+		double rectCenterX = 120;
+		double rectCenterY = 80;
+		double selectorWidth = 140;
+		double selectorHeight = 80;
+		double offsetX = selectorWidth + 20;
+		double offsetY = selectorHeight + 20;
+
 		/* Normal Autons */
 		// Red Up
-		ButtonGui *redUp = new ButtonGui(200, 80, 100, 80, 20, color(255, 0, 0), white, 2, "Red Up", white, [] {
+		ButtonGui *redUp = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Up", white, [] {
 			allianceDisable(0);
 			allianceButtons[0]->enable();
 			setAutonRunType(1, autonomousType::RedUp);
 		});
 		// Red Down
-		ButtonGui *redDown = new ButtonGui(200, 180, 100, 80, 20, color(255, 0, 0), white, 2, "Red Down", white, [] {
+		ButtonGui *redDown = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Down", white, [] {
 			allianceDisable(1);
 			allianceButtons[1]->enable();
 			setAutonRunType(1, autonomousType::RedDown);
 		});
 		// Blue Up
-		ButtonGui *blueUp = new ButtonGui(310, 80, 100, 80, 20, color(0, 0, 255), white, 2, "Blue Up", white, [] {
+		ButtonGui *blueUp = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Up", white, [] {
 			allianceDisable(2);
 			allianceButtons[2]->enable();
 			setAutonRunType(1, autonomousType::BlueUp);
 		});
 		// Blue Down
-		ButtonGui *blueDown = new ButtonGui(310, 180, 100, 80, 20, color(0, 0, 255), white, 2, "Blue Down", white, [] {
+		ButtonGui *blueDown = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth,selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Down", white, [] {
 			allianceDisable(3);
 			allianceButtons[3]->enable();
 			setAutonRunType(1, autonomousType::BlueDown);
@@ -389,25 +397,25 @@ namespace {
 
 		/* Safer Autons */
 		// Red Up
-		ButtonGui *redUpSafe = new ButtonGui(200, 80, 100, 80, 20, color(255, 0, 0), white, 2, "Red Up Sf", white, [] {
+		ButtonGui *redUpSafe = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Up Safe", white, [] {
 			allianceDisable(4);
 			allianceButtons[4]->enable();
 			setAutonRunType(1, autonomousType::RedUpSafe);
 		});
 		// Red Down
-		ButtonGui *redDownSafe = new ButtonGui(200, 180, 100, 80, 20, color(255, 0, 0), white, 2, "Rd Down Sf", white, [] {
+		ButtonGui *redDownSafe = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Rd Down Safe", white, [] {
 			allianceDisable(5);
 			allianceButtons[5]->enable();
 			setAutonRunType(1, autonomousType::RedDownSafe);
 		});
 		// Blue Up
-		ButtonGui *blueUpSafe = new ButtonGui(310, 80, 100, 80, 20, color(0, 0, 255), white, 2, "Blue Up Sf", white, [] {
+		ButtonGui *blueUpSafe = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Up Safe", white, [] {
 			allianceDisable(6);
 			allianceButtons[6]->enable();
 			setAutonRunType(1, autonomousType::BlueUpSafe);
 		});
 		// Blue Down
-		ButtonGui *blueDownSafe = new ButtonGui(310, 180, 100, 80, 20, color(0, 0, 255), white, 2, "Bl Down Sf", white, [] {
+		ButtonGui *blueDownSafe = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Bl Down Safe", white, [] {
 			allianceDisable(7);
 			allianceButtons[7]->enable();
 			setAutonRunType(1, autonomousType::BlueDownSafe);
@@ -415,7 +423,7 @@ namespace {
 
 		/* Irregular Autons */
 		// Skills Auton
-		ButtonGui *skillsAuton = new ButtonGui(200, 80, 100, 80, 20, color(0, 200, 0), white, 1, "Auton Skills", white, [] {
+		ButtonGui *skillsAuton = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 200, 0), white, 1, "Auton Skills", white, [] {
 			ownColor = color::purple;
 			oppColor = color::purple;
 			allianceDisable(8);
@@ -423,7 +431,7 @@ namespace {
 			setAutonRunType(0, autonomousType::AutonSkills);
 		});
 		// Skills Driver
-		ButtonGui *skillsDriver = new ButtonGui(200, 180, 100, 80, 20, color(200, 0, 200), white, 1, "Drive Skills", white, [] {
+		ButtonGui *skillsDriver = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(200, 0, 200), white, 1, "Drive Skills", white, [] {
 			ownColor = color::purple;
 			oppColor = color::purple;
 			allianceDisable(9);
@@ -432,14 +440,14 @@ namespace {
 		});
 
 		// Red field
-		ButtonGui *redField = new ButtonGui(310, 80, 100, 80, 20, color(0, 0, 255), white, 2, "Blue Field", white, [] {
+		ButtonGui *redField = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Field", white, [] {
 			ownColor = color::blue;
 			oppColor = color::red;
 			allianceDisable(10);
 			allianceButtons[10]->enable();
 		});
 		// Blue field
-		ButtonGui *blueField = new ButtonGui(310, 180, 100, 80, 20, color(255, 0, 0), white, 2, "Red Field", white, [] {
+		ButtonGui *blueField = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Field", white, [] {
 			ownColor = color::red;
 			oppColor = color::blue;
 			allianceDisable(11);
@@ -485,9 +493,9 @@ namespace {
 		});
 
 		// Auton Sub-docks
-		autonSubdock1 = new DockGui(150, 40, 210, 180, {}, {});
-		autonSubdock2 = new DockGui(150, 40, 210, 180, {}, {});
-		autonSubdock3 = new DockGui(150, 40, 210, 180, {}, {});
+		autonSubdock1 = new DockGui(50, 40, 300, 180, {}, {});
+		autonSubdock2 = new DockGui(50, 40, 300, 180, {}, {});
+		autonSubdock3 = new DockGui(50, 40, 300, 180, {}, {});
 
 		// Simulation Dock
 		simulationDock = new DockGui(0, 20, 480, 220, {}, {});
