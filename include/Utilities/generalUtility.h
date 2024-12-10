@@ -28,6 +28,7 @@ namespace genutil {
 	double rangeMap(double x, double inMin, double inMax, double outMin, double outMax);
 
 	double getScaleFactor(double scaleToMax, std::initializer_list<double> list);
-
 	double maxAbsolute(std::initializer_list<double> list);
+
+	double getAverage(std::vector<double> list);
 }

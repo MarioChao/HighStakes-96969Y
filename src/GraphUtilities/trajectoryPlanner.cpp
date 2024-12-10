@@ -3,6 +3,8 @@
 #include "GraphUtilities/curveSampler.h"
 
 #include "Utilities/generalUtility.h"
+#include "Utilities/robotInfo.h"
+#include "Utilities/fieldInfo.h"
 
 #include <stdio.h>
 
@@ -22,32 +24,48 @@ void TrajectoryPlanner::_onInit(double totalDistance) {
 TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 	CurveSampler sampler, double minVelocity, double maxVelocity,
 	double maxAccel, double maxDecel,
-	int resolution
+	int resolution,
+	double leftRightWheelDistance
 ) {
 	// Clear motion constraints
 	distance_motionConstraints.clear();
 
+	// Preprocess config
+	if (leftRightWheelDistance < 0) {
+		leftRightWheelDistance = botinfo::robotLengthIn * (1.0 / field::tileLengthIn);
+	}
+
 	// Get sampler info
 	double pathStart = sampler.getDistanceRange().first;
 	double pathEnd = sampler.getDistanceRange().second;
+	UniformCubicSpline spline = sampler.getSpline();
 
 	// Set motion constraints for segments
 	for (int i = 0; i < resolution; i++) {
 		// Get the segment distance
 		double segmentDistance_start = genutil::rangeMap(i, 0, resolution, pathStart, pathEnd);
-		double segmentDistance_mid = genutil::rangeMap(i + 0.5, 0, resolution, pathStart, pathEnd);
 
 		// Get estimated curvature at distance
-		double curvature_start = sampler.getSpline().getCurvatureAt(sampler.distanceToParam(segmentDistance_start));
-		double curvature_mid = sampler.getSpline().getCurvatureAt(sampler.distanceToParam(segmentDistance_mid));
-		double curvature = (curvature_start + curvature_mid) / 2.0;
+		std::vector<double> curvature_values;
+		for (double j = i; j < i + 0.9; j += 0.1) {
+			double subSegment_distance = genutil::rangeMap(j, 0, resolution, pathStart, pathEnd);
+			double subSegment_curvature = spline.getCurvatureAt(sampler.distanceToParam(subSegment_distance));
+			curvature_values.push_back(subSegment_curvature);
+		}
+		double curvature = genutil::getAverage(curvature_values);
 		curvature = std::fabs(curvature);
 
+		// Calculate velocity used for rotation
+		// w = v/r
+		// v = r*w
+		double rotationLinearVelocity = maxVelocity * curvature * (leftRightWheelDistance / 2.0);
+
 		// Calculate constraint values
-		double nonChangingFactor = 0.3;
-		double segmentMaxVelocity = maxVelocity * (nonChangingFactor / (nonChangingFactor + curvature));
+		// double nonChangingFactor = 0.3;
+		// double segmentMaxVelocity = maxVelocity * (nonChangingFactor / (nonChangingFactor + curvature));
+		double segmentMaxVelocity = maxVelocity - rotationLinearVelocity;
 		segmentMaxVelocity = genutil::clamp(segmentMaxVelocity, minVelocity, maxVelocity);
-		// printf("d: %.3f, curva: %.3f, vel: %.3f\n", segmentDistance_start, curvature, segmentMaxVelocity);
+		// printf("d: %.3f, curva: %.3f, vel: %.3f, ang: %.3f\n", segmentDistance_start, curvature, segmentMaxVelocity, rotationLinearVelocity);
 
 		// Add constraint
 		addDesiredMotionConstraints(segmentDistance_start, segmentMaxVelocity, maxAccel, maxDecel);

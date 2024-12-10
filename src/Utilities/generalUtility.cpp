@@ -70,4 +70,16 @@ namespace genutil {
 		}
 		return result;
 	}
+
+	double getAverage(std::vector<double> list) {
+		double sum = 0;
+		int count = 0;
+		for (double element : list) {
+			sum += element;
+			count++;
+		}
+
+		double result = sum / count;
+		return result;
+	}
 }

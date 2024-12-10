@@ -30,7 +30,8 @@ public:
 	TrajectoryPlanner &autoSetMotionConstraints(
 		CurveSampler sampler, double minVelocity, double maxVelocity,
 		double maxAccel, double maxDecel,
-		int resolution = 30
+		int resolution = 30,
+		double leftRightWheelDistance = -1
 	);
 
 	// Add motion constraints. Call in ascending order of `startDistance` please.
