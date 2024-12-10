@@ -44,7 +44,7 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 		curvature = std::fabs(curvature);
 
 		// Calculate constraint values
-		double nonChangingFactor = 0.5;
+		double nonChangingFactor = 0.3;
 		double segmentMaxVelocity = maxVelocity * (nonChangingFactor / (nonChangingFactor + curvature));
 		segmentMaxVelocity = genutil::clamp(segmentMaxVelocity, minVelocity, maxVelocity);
 		// printf("d: %.3f, curva: %.3f, vel: %.3f\n", segmentDistance_start, curvature, segmentMaxVelocity);

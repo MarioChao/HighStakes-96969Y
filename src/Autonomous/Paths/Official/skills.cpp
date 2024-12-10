@@ -2,8 +2,8 @@
 #include "Simulation/robotSimulator.h"
 
 namespace {
-	double maxAccel = 1;
-	double avgVel = 1.5;
+	double maxVel = 2.7;
+	double maxAccel = 3;
 
 	std::vector<UniformCubicSpline> splines;
 	std::vector<CurveSampler> splineSamplers;
@@ -11,26 +11,42 @@ namespace {
 
 	void loadSkillsSplines() {
 		if (splines.empty()) {
+			// Alliance wall stake to mobile goal
+
 			UniformCubicSpline spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-					{-0.64, 2.86}, {0.29, 2.92}, {1, 2.04}, {0.96, 0.02}
-				});
+				{-0.64, 2.86}, {0.29, 2.92}, {1, 2.04}, {0.96, 0.02}
+			});
 			CurveSampler splineSampler = CurveSampler(spline)
-				.calculateByResolution(spline.getTRange().second * 7);
+				.calculateByResolution(spline.getTRange().second * 10);
 			TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
-				.autoSetMotionConstraints(splineSampler, 0.5, 2.5, maxAccel, maxAccel)
+				.autoSetMotionConstraints(splineSampler, 0.5, maxVel, maxAccel, maxAccel)
 				.calculateMotion();
 			splines.push_back(spline);
 			splineSamplers.push_back(splineSampler);
 			splineTrajectoryPlans.push_back(splineTrajectoryPlan);
 
+			// Redirect 1 ring to arm & score 6 rings
 			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
 				{-0.17, 2.03}, {1, 2.03}, {1.98, 1.95}, {3.02, 1.15}, {3.95, 1.01},
 				{3.1, 0.5}, {1.96, 1}, {0.48, 1.03}, {1.04, 0.49}, {2, 0.43}
-				});
+			});
 			splineSampler = CurveSampler(spline)
-				.calculateByResolution(spline.getTRange().second * 7);
+				.calculateByResolution(spline.getTRange().second * 10);
 			splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
-				.autoSetMotionConstraints(splineSampler, 0.5, 2.5, maxAccel, maxAccel)
+				.autoSetMotionConstraints(splineSampler, 0.5, maxVel, maxAccel, maxAccel)
+				.calculateMotion();
+			splines.push_back(spline);
+			splineSamplers.push_back(splineSampler);
+			splineTrajectoryPlans.push_back(splineTrajectoryPlan);
+
+			// Score on neutral wall stake
+			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+				{-0.44, 0.21}, {0.58, 0.49}, {2.78, 1.16}, {3, 0.52}, {3.02, -0.39}
+			});
+			splineSampler = CurveSampler(spline)
+				.calculateByResolution(spline.getTRange().second * 10);
+			splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
+				.autoSetMotionConstraints(splineSampler, 0.5, maxVel, maxAccel, maxAccel)
 				.calculateMotion();
 			splines.push_back(spline);
 			splineSamplers.push_back(splineSampler);
@@ -42,13 +58,14 @@ namespace {
 /// @brief Run the skills autonomous.
 void autonpaths::runAutonSkills() {
 	/* Pre skills */
+
 	// Timer
 	timer autontimer;
 
 	// Pre-process
 	loadSkillsSplines();
 
-	// Set coordinate
+	// Set position and rotation
 	mainOdometry.setPosition(1.0, 3);
 	mainOdometry.setLookAngle(-90.0);
 	mainOdometry.printDebug();
@@ -56,18 +73,20 @@ void autonpaths::runAutonSkills() {
 	mainOdometry.restart();
 	mainOdometry.printDebug();
 
+	// Set config
+	setDifferentialUseRelativeRotation(true);
+
 	// Wait for arm reset
 	waitUntil(isArmResetted());
 
-	/* Actual route */
+
+	/* Score alliance wall stake and grab goal */
 
 	// Score preload at alliance wall stake
-	// setArmHangState(1);
 	setArmStage(2);
-	task::sleep(800);
-	driveAndTurnDistanceTiles(0.5, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-	driveAndTurnDistanceTiles(-0.3, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
-	// setArmHangState(0);
+	task::sleep(600);
+	driveAndTurnDistanceTiles(0.5, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+	driveAndTurnDistanceTiles(-0.6, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 	setArmStage(1, 0.5);
 
 	// Follow path
@@ -81,6 +100,9 @@ void autonpaths::runAutonSkills() {
 	setGoalClampState(1);
 	wait(200, msec);
 
+
+	/* Redirect 1 ring and score 6 rings */
+
 	// Start intake
 	turnToAngle(90.0);
 	setIntakeState(1);
@@ -92,6 +114,7 @@ void autonpaths::runAutonSkills() {
 
 	// Wait and remove redirect
 	waitUntil(_trajectoryPlan.getMotionAtTime(_splinePathTimer.value())[0] >= 1.5);
+	printf("No more redirect\n");
 	setIntakeToArm(0);
 
 	// Wait
@@ -101,6 +124,29 @@ void autonpaths::runAutonSkills() {
 	turnToAngle(70.0);
 	setGoalClampState(0);
 	driveAndTurnDistanceTiles(-0.60, 85.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+
+
+	/* Score on neutral wall stake */
+
+	// Raise arm
+	setArmStage(3);
+
+	// Follow path
+	setSplinePath(splines[2], splineTrajectoryPlans[2], splineSamplers[2]);
+	followSplinePath();
+
+	// Wait
+	waitUntil(_pathFollowCompleted);
+
+	// Drive forward and score
+	driveAndTurnDistanceTiles(0.5, 180.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+	driveAndTurnDistanceTiles(-0.3, 180.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+
+
+	/* Redirect 1 ring */
+
+	turnToAngle(90.0);
+
 
 	// Go to & face neutral wall stake
 	setIntakeState(0);

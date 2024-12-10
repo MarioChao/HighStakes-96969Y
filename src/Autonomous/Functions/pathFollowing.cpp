@@ -93,10 +93,10 @@ namespace autonfunctions {
 				rightVelocityPct = leftRightVelocity.second * _pathToPctFactor;
 
 				// Drive
+				// printf("L: %07.3f, R: %07.3f\n", leftVelocityPct, rightVelocityPct);
 				if (!useSimulator) {
 					botdrive::driveVelocity(leftVelocityPct, rightVelocityPct);
 					// botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
-					// printf("L: %07.3f, R: %07.3f\n", leftVelocityPct, rightVelocityPct);
 				} else {
 					double velocity = (leftRightVelocity.first + leftRightVelocity.second) / 2;
 					double angularVelocity = (leftRightVelocity.second - leftRightVelocity.first) / 2;
@@ -104,8 +104,8 @@ namespace autonfunctions {
 					robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
 					robotSimulator.angularVelocity = angularVelocity;
 
-					// robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
-					// robotSimulator.angularPosition = targetLg.getTheta_radians();
+					robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
+					robotSimulator.angularPosition = targetLg.getTheta_radians();
 					robotSimulator.updatePhysics();
 					robotSimulator.updateDistance();
 				}
