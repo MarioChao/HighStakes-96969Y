@@ -18,14 +18,14 @@ public:
 	UniformCubicSpline();
 	UniformCubicSpline(std::vector<CubicSplineSegment> segments);
 
-	/**
-	 * @brief Extends the spline by adding a new segment.
-	 * Only use for B-Spline or Catmull-Rom.
-	 * 
-	 */
+	/// @brief Creates a spline with the given points. Only use B-Spline or Catmull-Rom.
+	static UniformCubicSpline fromAutoTangent(cspline::SplineType splineType, std::vector<std::vector<double>> points);
+
+	/// @brief Extends the spline by adding a new segment. Only use for B-Spline or Catmull-Rom.
 	UniformCubicSpline &extendPoint(std::vector<double> newPoint);
 
-	UniformCubicSpline &extendPoints(std::initializer_list<std::vector<double>> newPoints);
+	/// @brief Extends the spline by adding new segments. Only use for B-Spline or Catmull-Rom.
+	UniformCubicSpline &extendPoints(std::vector<std::vector<double>> newPoints);
 
 	UniformCubicSpline &attachSegment(CubicSplineSegment newSegment);
 

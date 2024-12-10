@@ -121,7 +121,7 @@ double CurveSampler::distanceToParam(double distance) {
 		return t_cumulativeDistances.back().first;
 	}
 
-	// Binary search for t
+	// Binary search for distance
 	int bL, bR;
 	bL = 0;
 	bR = (int) t_cumulativeDistances.size() - 2;

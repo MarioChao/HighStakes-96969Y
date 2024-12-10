@@ -14,21 +14,31 @@ UniformCubicSpline::UniformCubicSpline(std::vector<CubicSplineSegment> segments)
 	this->segments = segments;
 }
 
+UniformCubicSpline UniformCubicSpline::fromAutoTangent(cspline::SplineType splineType, std::vector<std::vector<double>> points) {
+	// Validate input
+	if ((int) points.size() < 4) {
+		return UniformCubicSpline();
+	}
+
+	// Create spline
+	UniformCubicSpline spline = UniformCubicSpline()
+	.attachSegment(CubicSplineSegment(splineType, {points[0], points[1], points[2], points[3]}))
+	.extendPoints(std::vector<std::vector<double>>(points.begin() + 4, points.end()));
+
+	// Return
+	return spline;
+}
+
 UniformCubicSpline &UniformCubicSpline::extendPoint(std::vector<double> newPoint) {
 	CubicSplineSegment lastSegment = getSegment((int) segments.size() - 1);
 	std::vector<std::vector<double>> points = lastSegment.getControlPoints();
-	attachSegment(CubicSplineSegment(
-		lastSegment.getSplineType(),
-		{
-			points[1], points[2], points[3], newPoint
-		}
-	));
+	attachSegment(CubicSplineSegment(lastSegment.getSplineType(), {points[1], points[2], points[3], newPoint}));
 
 	// Method chaining
 	return *this;
 }
 
-UniformCubicSpline &UniformCubicSpline::extendPoints(std::initializer_list<std::vector<double>> newPoints) {
+UniformCubicSpline &UniformCubicSpline::extendPoints(std::vector<std::vector<double>> newPoints) {
 	for (std::vector<double> point : newPoints) {
 		extendPoint(point);
 	}
