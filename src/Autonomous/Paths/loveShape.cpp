@@ -20,13 +20,7 @@ namespace {
 			loveSplineSampler = CurveSampler(loveSpline)
 				.calculateByResolution(loveSpline.getTRange().second * 10);
 			loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
-				// .addDesiredMotionConstraints(0, 1, maxAccel, maxAccel)
-				// .addDesiredMotionConstraints(1.2, 0.7, maxAccel, maxAccel)
-				// .addDesiredMotionConstraints(1.8, 0.4, maxAccel, maxAccel)
-				// .addDesiredMotionConstraints(3.2, 0.7, maxAccel, maxAccel)
-				// .addDesiredMotionConstraints(3.8, 1, maxAccel, maxAccel)
-				// .calculateMotion();
-				.autoSetMotionConstraints(loveSplineSampler, 2.5, maxAccel, maxAccel)
+				.autoSetMotionConstraints(loveSplineSampler, 0.5, 2.5, maxAccel, maxAccel)
 				.calculateMotion();
 
 			bigLoveSpline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
@@ -37,7 +31,7 @@ namespace {
 			bigLoveSplineSampler = CurveSampler(bigLoveSpline)
 				.calculateByResolution(bigLoveSpline.getTRange().second * 10);
 			bigLoveSplineTrajectoryPlan = TrajectoryPlanner(bigLoveSplineSampler.getDistanceRange().second)
-				.autoSetMotionConstraints(bigLoveSplineSampler, 2.5, maxAccel, maxAccel)
+				.autoSetMotionConstraints(bigLoveSplineSampler, 0.5, 2.5, maxAccel, maxAccel, 60)
 				.calculateMotion();
 		}
 	}

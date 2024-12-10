@@ -28,7 +28,7 @@ public:
 
 	// Add motion constraints according to a curve's curvature.
 	TrajectoryPlanner &autoSetMotionConstraints(
-		CurveSampler sampler, double maxVelocity,
+		CurveSampler sampler, double minVelocity, double maxVelocity,
 		double maxAccel, double maxDecel,
 		int resolution = 30
 	);

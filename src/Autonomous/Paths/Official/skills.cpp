@@ -11,30 +11,26 @@ namespace {
 
 	void loadSkillsSplines() {
 		if (splines.empty()) {
-			UniformCubicSpline spline = UniformCubicSpline()
-				.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
+			UniformCubicSpline spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
 					{-0.64, 2.86}, {0.29, 2.92}, {1, 2.04}, {0.96, 0.02}
-				}));
+				});
 			CurveSampler splineSampler = CurveSampler(spline)
 				.calculateByResolution(spline.getTRange().second * 7);
 			TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
-				.addDesiredMotionConstraints(0, avgVel, maxAccel, maxAccel)
+				.autoSetMotionConstraints(splineSampler, 0.5, 2.5, maxAccel, maxAccel)
 				.calculateMotion();
 			splines.push_back(spline);
 			splineSamplers.push_back(splineSampler);
 			splineTrajectoryPlans.push_back(splineTrajectoryPlan);
 
-			spline = UniformCubicSpline()
-				.attachSegment(CubicSplineSegment(cspline::CatmullRom, {
-					{-0.17, 2.03}, {1, 2.03}, {1.98, 1.95}, {3.02, 1.15}
-				}))
-				.extendPoints({
-					{3.95, 1.01}, {3.1, 0.5}, {1.96, 1}, {0.48, 1.03}, {1.04, 0.49}, {2, 0.43}
+			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+				{-0.17, 2.03}, {1, 2.03}, {1.98, 1.95}, {3.02, 1.15}, {3.95, 1.01},
+				{3.1, 0.5}, {1.96, 1}, {0.48, 1.03}, {1.04, 0.49}, {2, 0.43}
 				});
 			splineSampler = CurveSampler(spline)
 				.calculateByResolution(spline.getTRange().second * 7);
 			splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
-				.addDesiredMotionConstraints(0, avgVel, maxAccel, maxAccel)
+				.autoSetMotionConstraints(splineSampler, 0.5, 2.5, maxAccel, maxAccel)
 				.calculateMotion();
 			splines.push_back(spline);
 			splineSamplers.push_back(splineSampler);

@@ -11,8 +11,8 @@ namespace {
 	using namespace auton;
 
 	bool userRunningAutonomous = false;
-	bool runningAutonUponStart = true;
-	autonomousType auton_runType = autonomousType::LoveShape;
+	bool runningAutonUponStart = false;
+	autonomousType auton_runType = autonomousType::AutonSkills;
 	int auton_allianceId;
 
 	std::string autonFilterOutColor;

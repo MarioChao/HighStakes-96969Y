@@ -20,7 +20,7 @@ void TrajectoryPlanner::_onInit(double totalDistance) {
 }
 
 TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
-	CurveSampler sampler, double maxVelocity,
+	CurveSampler sampler, double minVelocity, double maxVelocity,
 	double maxAccel, double maxDecel,
 	int resolution
 ) {
@@ -34,19 +34,23 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 	// Set motion constraints for segments
 	for (int i = 0; i < resolution; i++) {
 		// Get the segment distance
-		double segmentDistance = genutil::rangeMap(i, 0, resolution, pathStart, pathEnd);
+		double segmentDistance_start = genutil::rangeMap(i, 0, resolution, pathStart, pathEnd);
+		double segmentDistance_mid = genutil::rangeMap(i + 0.5, 0, resolution, pathStart, pathEnd);
 
-		// Get curvature at distance
-		double curvature = sampler.getSpline().getCurvatureAt(sampler.distanceToParam(segmentDistance));
+		// Get estimated curvature at distance
+		double curvature_start = sampler.getSpline().getCurvatureAt(sampler.distanceToParam(segmentDistance_start));
+		double curvature_mid = sampler.getSpline().getCurvatureAt(sampler.distanceToParam(segmentDistance_mid));
+		double curvature = (curvature_start + curvature_mid) / 2.0;
 		curvature = std::fabs(curvature);
 
 		// Calculate constraint values
 		double nonChangingFactor = 0.5;
 		double segmentMaxVelocity = maxVelocity * (nonChangingFactor / (nonChangingFactor + curvature));
-		// printf("d: %.3f, curva: %.3f, vel: %.3f\n", segmentDistance, curvature, segmentMaxVelocity);
+		segmentMaxVelocity = genutil::clamp(segmentMaxVelocity, minVelocity, maxVelocity);
+		// printf("d: %.3f, curva: %.3f, vel: %.3f\n", segmentDistance_start, curvature, segmentMaxVelocity);
 
 		// Add constraint
-		addDesiredMotionConstraints(segmentDistance, segmentMaxVelocity, maxAccel, maxDecel);
+		addDesiredMotionConstraints(segmentDistance_start, segmentMaxVelocity, maxAccel, maxDecel);
 	}
 
 	// Method chaining
