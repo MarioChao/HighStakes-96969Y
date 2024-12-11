@@ -59,6 +59,7 @@ namespace autonfunctions {
 
 	/* Main mechanics */
 
+	// Intake
 	void setIntakeState(int state, double delaySec = 0);
 	void setIntakeTopState(int, double = 0);
 	void setIntakeBottomState(int, double = 0);
@@ -68,10 +69,19 @@ namespace autonfunctions {
 
 	void setIntakeFilterOutColor(std::string colorText);
 
+	// Clamp
+	void setGoalClampState(bool state, double delaySec = 0);
+	void setIntakeLiftState(bool state);
+
+	// Arm
 	void setArmHangState(int, double = 0);
 	void setArmStage(int, double = 0);
 
 	bool isArmResetted();
+
+	// Swing
+	void setSwingState(int, double = 0);
+	void setSwing2State(int, double = 0);
 
 
 	/* Legacy wings */
@@ -80,7 +90,4 @@ namespace autonfunctions {
 	void setLeftWingState(bool state, double delaySec = 0);
 	void setRightWingState(bool state, double delaySec = 0);
 	void setBackWingsState(bool state, double delaySec = 0);
-
-	void setGoalClampState(bool state, double delaySec = 0);
-	void setIntakeLiftState(bool state);
 }

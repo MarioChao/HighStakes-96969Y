@@ -117,6 +117,9 @@ namespace controls {
 				rumble::setConstantRumbling(true);
 			}
 		});
+		Controller1.ButtonLeft.pressed([]() -> void {
+			swing::switch2ndState();
+		});
 	}
 
 	void preauton() {

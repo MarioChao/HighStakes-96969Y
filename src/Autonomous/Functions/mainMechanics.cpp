@@ -4,6 +4,7 @@
 #include "Mechanics/botIntake2.h"
 #include "Mechanics/botArm.h"
 #include "Mechanics/botArmPneumatics.h"
+#include "Mechanics/swing.h"
 #include "Mechanics/goalClamp.h"
 #include "Mechanics/redirect.h"
 
@@ -71,6 +72,19 @@ namespace autonfunctions {
 		else botintake2::setFilterOutColor(colorText);
 	}
 
+	/// @brief Set the state of Left Wing's pneumatic.
+	/// @param state Expanded: true, retracted: false.
+	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
+	void setGoalClampState(bool state, double delaySec) {
+		goalclamp::setState(state, delaySec);
+	}
+
+	/// @brief Set the state of the lift's pneumatic.
+	/// @param state Lifted: true, lowered: false
+	void setIntakeLiftState(bool state) {
+		IntakeLiftPneumatic.set(state);
+	}
+
 	void setArmHangState(int state, double delaySec) {
 		botarmpneu::setState(state, delaySec);
 	}
@@ -83,16 +97,11 @@ namespace autonfunctions {
 		return botarm::isArmResetted();
 	}
 
-	/// @brief Set the state of Left Wing's pneumatic.
-   /// @param state Expanded: true, retracted: false.
-   /// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
-	void setGoalClampState(bool state, double delaySec) {
-		goalclamp::setState(state, delaySec);
+	void setSwingState(int state, double delaySec) {
+		swing::setState(state, delaySec);
 	}
 
-	/// @brief Set the state of the lift's pneumatic.
-	/// @param state Lifted: true, lowered: false
-	void setIntakeLiftState(bool state) {
-		IntakeLiftPneumatic.set(state);
+	void setSwing2State(int state, double delaySec) {
+		swing::set2ndState(state, delaySec);
 	}
 }

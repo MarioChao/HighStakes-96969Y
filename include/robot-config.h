@@ -33,6 +33,7 @@ extern pneumatics HangPneumatic;
 extern pneumatics GoalClampPneumatic;
 extern pneumatics BotArmPneumatics;
 extern pneumatics SwordPneumatics;
+extern pneumatics Sword2Pneumatics;
 extern pneumatics RedirectPneumatics;
 
 extern encoder LookEncoder;

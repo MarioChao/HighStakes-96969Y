@@ -46,8 +46,40 @@ namespace swing {
 		});
 	}
 
+	void set2ndState(int state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+			Sword2Pneumatics.set(state);
+
+			return;
+		}
+
+		// Set global variables
+		_taskState = state;
+		_taskDelay = delaySec;
+
+		task setState([]() -> int {
+			// Get global variables
+			int taskState = _taskState;
+			double taskDelay = _taskDelay;
+
+			// Delay setting state
+			task::sleep(taskDelay * 1000);
+
+			// Set state here
+			Sword2Pneumatics.set(taskState);
+
+			return 1;
+		});
+	}
+
 	void switchState() {
 		setState(!SwordPneumatics.value());
+	}
+
+	void switch2ndState() {
+		set2ndState(!Sword2Pneumatics.value());
 	}
 
 	void control(int state) {

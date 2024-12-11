@@ -6,8 +6,10 @@ namespace swing {
 	void preauton();
 
 	void setState(int, double = 0);
+	void set2ndState(int, double = 0);
 
 	void switchState();
+	void switch2ndState();
 
 	void control(int);
 

@@ -52,6 +52,7 @@ pneumatics HangPneumatic(Expander1.E);
 pneumatics GoalClampPneumatic(Brain.ThreeWirePort.C);
 pneumatics BotArmPneumatics(Expander1.B);
 pneumatics SwordPneumatics(Brain.ThreeWirePort.F);
+pneumatics Sword2Pneumatics(Brain.ThreeWirePort.H);
 pneumatics RedirectPneumatics(Brain.ThreeWirePort.D);
 
 // Sensors
@@ -61,7 +62,7 @@ encoder RightEncoder(Brain.ThreeWirePort.A);
 rotation LookRotation(PORT14);
 rotation RightRotation(emptyPort);
 
-rotation ArmRotationSensor(PORT9);
+rotation ArmRotationSensor(PORT9, true);
 
 inertial InertialSensor(PORT13);
 distance DistanceSensor(emptyPort);
