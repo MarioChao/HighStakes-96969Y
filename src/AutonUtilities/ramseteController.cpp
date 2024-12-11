@@ -7,8 +7,8 @@
 #include <stdio.h>
 
 namespace {
-	const double defaultB = 1.0; // 3.28
-	const double defaultDamp = 0.8;
+	const double defaultB = 0.743; // 2.0 rad^2/m^2 * (1 m / 1.64041995 tiles)^2 = 0.7432
+	const double defaultDamp = 0.7;
 
 	double smallScalar = 0.0001;
 }

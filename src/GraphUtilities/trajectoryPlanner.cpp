@@ -46,14 +46,13 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 		double segmentDistance_start = genutil::rangeMap(i, 0, resolution, pathStart, pathEnd);
 
 		// Get estimated curvature at distance
-		std::vector<double> curvature_values;
-		for (double j = i; j < i + 0.9; j += 0.1) {
+		double curvature = 0;
+		for (double j = i; j < i + 1; j += 0.1) {
 			double subSegment_distance = genutil::rangeMap(j, 0, resolution, pathStart, pathEnd);
 			double subSegment_curvature = spline.getCurvatureAt(sampler.distanceToParam(subSegment_distance));
-			curvature_values.push_back(subSegment_curvature);
+			// Use maximum
+			curvature = std::max(curvature, std::fabs(subSegment_curvature));
 		}
-		double curvature = genutil::getAverage(curvature_values);
-		curvature = std::fabs(curvature);
 
 		// Calculate velocity used for rotation
 		// w = v/r

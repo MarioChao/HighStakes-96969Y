@@ -31,7 +31,7 @@ namespace autonfunctions {
 	/// @param errorRange The allowed degree errors the target angle.
 	/// @param runTimeout Maximum seconds the function will run for.
 	void turnToAngle(double rotation, double rotateCenterOffsetIn, double errorRange, double runTimeout) {
-		turnToAngleVelocity(rotation, 70.0, rotateCenterOffsetIn, errorRange, runTimeout);
+		turnToAngleVelocity(rotation, 90.0, rotateCenterOffsetIn, errorRange, runTimeout);
 	}
 
 	/// @brief Turn the robot to face a specified angle.
