@@ -1,7 +1,8 @@
 #include "Autonomous/autonPaths.h"
 
 namespace {
-	double maxAccel = 1;
+	double maxVel = 2.7;
+	double maxAccel = 2.2;
 
 	UniformCubicSpline loveSpline;
 	CurveSampler loveSplineSampler;
@@ -20,7 +21,7 @@ namespace {
 			loveSplineSampler = CurveSampler(loveSpline)
 				.calculateByResolution(loveSpline.getTRange().second * 10);
 			loveSplineTrajectoryPlan = TrajectoryPlanner(loveSplineSampler.getDistanceRange().second)
-				.autoSetMotionConstraints(loveSplineSampler, 0.5, 2.5, maxAccel, maxAccel)
+				.autoSetMotionConstraints(loveSplineSampler, 0.5, maxVel, maxAccel, maxAccel)
 				.calculateMotion();
 
 			bigLoveSpline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
@@ -31,7 +32,7 @@ namespace {
 			bigLoveSplineSampler = CurveSampler(bigLoveSpline)
 				.calculateByResolution(bigLoveSpline.getTRange().second * 10);
 			bigLoveSplineTrajectoryPlan = TrajectoryPlanner(bigLoveSplineSampler.getDistanceRange().second)
-				.autoSetMotionConstraints(bigLoveSplineSampler, 0.5, 2.5, maxAccel, maxAccel, 60)
+				.autoSetMotionConstraints(bigLoveSplineSampler, 0.5, maxVel, maxAccel, maxAccel, 60)
 				.calculateMotion();
 		}
 	}

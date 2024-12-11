@@ -18,6 +18,8 @@ namespace autonfunctions {
 		InertialSensor.setRotation(rotation, deg);
 	}
 
+	timer _autonTimer;
+
 	/// @brief Set the state of the intake.
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).
@@ -56,6 +58,12 @@ namespace autonfunctions {
 				botintake::setColorFiltering(true);
 			}
 		} else botintake2::setHookMode(state);
+	}
+
+	void setIntakeStoreRing(int state) {
+		if (intakePart == 1) {
+			botintake::setIntakeStoreRing(state);
+		}
 	}
 
 	void setIntakeFilterOutColor(std::string colorText) {

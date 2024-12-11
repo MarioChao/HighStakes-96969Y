@@ -1,7 +1,8 @@
 #include "Autonomous/autonPaths.h"
 
 namespace {
-	double maxAccel = 1;
+	double maxVel = 2.7;
+	double maxAccel = 2.2;
 
 	UniformCubicSpline spline;
 	CurveSampler splineSampler;
@@ -19,7 +20,7 @@ namespace {
 			splineSampler = CurveSampler(spline)
 				.calculateByResolution(spline.getTRange().second * 7);
 			splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
-				.autoSetMotionConstraints(splineSampler, 0.5, 2.5, maxAccel, maxAccel, 60)
+				.autoSetMotionConstraints(splineSampler, 0.5, maxVel, maxAccel, maxAccel, 60)
 				.calculateMotion();
 		}
 	}

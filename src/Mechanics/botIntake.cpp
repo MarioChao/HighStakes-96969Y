@@ -26,6 +26,8 @@ namespace {
 	std::string detectedRingColor;
 	bool isDetectingRing;
 
+	bool isStoringRing = false;
+
 	bool controlState = true;
 }
 
@@ -61,8 +63,9 @@ namespace botintake {
 
 			/* Intake loop */
 
-			// Normal intake
-			if (false) {
+			if (!isStoringRing) {
+				/* Normal intake */
+
 				// Detect stuck
 				if (IntakeMotor2.torque() > 0.41) {
 					if (!isStuck) {
@@ -72,6 +75,8 @@ namespace botintake {
 				} else {
 					isStuck = false;
 				}
+
+				// Override stuck
 				isStuck = false;
 
 				// Reverse on stuck
@@ -83,7 +88,15 @@ namespace botintake {
 					resolveIntake();
 				}
 			} else {
+				/* Store ring */
+
+				resolveState = 1;
 				resolveIntake();
+
+				if (detectedRingColor != "none" && detectedRingColor != filterOutColor) {
+					wait(100, msec);
+					isStoringRing = false;
+				}
 			}
 
 			wait(5, msec);
@@ -152,6 +165,10 @@ namespace botintake {
 	void setFilterOutColor(std::string colorText) {
 		filterOutColor = colorText;
 		// debug::printOnController(colorText);
+	}
+
+	void setIntakeStoreRing(bool isStore) {
+		isStoringRing = isStore;
 	}
 
 	void control(int state, int hookState) {

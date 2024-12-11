@@ -17,9 +17,14 @@ class TrajectoryPlanner;
 // Namespace
 
 namespace autonfunctions {
-	using autonvals::defaultMoveTilesErrorRange, autonvals::defaultMoveWithInchesErrorRange, autonvals::defaultTurnAngleErrorRange;
+	using autonvals::defaultMoveTilesErrorRange, autonvals::defaultTurnAngleErrorRange;
+
+
+	/* General */
 
 	void setRotation(double rotation);
+
+	extern timer _autonTimer;
 
 	/* PID differential */
 
@@ -28,7 +33,7 @@ namespace autonfunctions {
 
 	void driveDistanceTiles(double distanceTiles, double maxVelocityPct = 100, double errorRange = defaultMoveTilesErrorRange, double runTimeout = 3);
 	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = defaultMoveTilesErrorRange, double runTimeout = 3);
-	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = defaultMoveWithInchesErrorRange, double runTimeout = 3);
+	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = autonvals::defaultMoveWithInchesErrorRange, double runTimeout = 3);
 
 	void setDifferentialUseRelativeRotation(bool useRelativeRotation);
 
@@ -57,7 +62,9 @@ namespace autonfunctions {
 	void setIntakeState(int state, double delaySec = 0);
 	void setIntakeTopState(int, double = 0);
 	void setIntakeBottomState(int, double = 0);
+
 	void setIntakeToArm(int);
+	void setIntakeStoreRing(int);
 
 	void setIntakeFilterOutColor(std::string colorText);
 
