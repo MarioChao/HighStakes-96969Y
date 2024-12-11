@@ -63,7 +63,6 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	auto &w_desired = desiredAngularVelocity_radiansPerSecond;
 	auto e_right = error.getX();
 	auto e_look = error.getY();
-	// auto e_theta = error.getTheta_radians();
 	auto e_theta = genutil::toRadians(genutil::modRange(error.getTheta_degrees(), 360, -180));
 	// printf("ANG ERR: %.f\n", genutil::toDegrees(e_theta));
 
@@ -76,7 +75,6 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	double outputAngularVelocity = (w_desired) + (k * e_theta) - (b * v_desired * angle::sinc(e_theta) * e_right);
 
 	// Compute left and right velocities
-	// outputAngularVelocity *= -1; // for polar angles
 	double leftVelocity = outputLinearVelocity - outputAngularVelocity;
 	double rightVelocity = outputLinearVelocity + outputAngularVelocity;
 	// printf("outlin: %.3f, outang: %.3f\n", outputLinearVelocity, outputAngularVelocity);

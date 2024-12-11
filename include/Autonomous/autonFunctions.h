@@ -55,6 +55,7 @@ namespace autonfunctions {
 	extern double _pathToPctFactor;
 	extern bool _pathFollowStarted;
 	extern bool _pathFollowCompleted;
+	extern double _pathFollowDelay_seconds;
 
 
 	/* Main mechanics */

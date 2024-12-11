@@ -65,7 +65,7 @@ namespace autonfunctions {
 				double traj_time = _splinePathTimer.value();
 
 				// Exit when path completed
-				if (traj_time > _trajectoryPlan.getTotalTime()) {
+				if (traj_time > _trajectoryPlan.getTotalTime() + _pathFollowDelay_seconds) {
 					_pathFollowCompleted = true;
 					break;
 				}
@@ -84,7 +84,7 @@ namespace autonfunctions {
 					robotLg = Linegular(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
 				}
 
-				// Get robot motion
+				// Get desired robot motion
 				std::pair<double, double> leftRightVelocity = robotController.getLeftRightVelocity_pct(robotLg, targetLg, traj_velocity);
 
 				// Get motor percentages
@@ -104,8 +104,8 @@ namespace autonfunctions {
 					robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
 					robotSimulator.angularVelocity = angularVelocity;
 
-					robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
-					robotSimulator.angularPosition = targetLg.getTheta_radians();
+					// robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
+					// robotSimulator.angularPosition = targetLg.getTheta_radians();
 					robotSimulator.updatePhysics();
 					robotSimulator.updateDistance();
 				}
@@ -127,4 +127,5 @@ namespace autonfunctions {
 	double _pathToPctFactor = autonvals::tilesPerSecond_to_pct;
 	bool _pathFollowStarted;
 	bool _pathFollowCompleted;
+	double _pathFollowDelay_seconds = 0.010;
 }

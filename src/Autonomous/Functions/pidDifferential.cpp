@@ -5,9 +5,12 @@
 
 #include "Mechanics/botDrive.h"
 
+#include "Utilities/angleUtility.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
+
+#include "Simulation/robotSimulator.h"
 
 #include "main.h"
 
@@ -22,6 +25,9 @@ namespace {
 
 	// DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
+
+	// Simulator
+	bool useSimulator = mainUseSimulator;
 }
 
 namespace autonfunctions {
@@ -63,12 +69,24 @@ namespace autonfunctions {
 		// TODO: Tune pid
 		PIDController rotateTargetAngleVoltPid(2.5, 0.002, 2.0, errorRange);
 		PIDController rotateTargetAngleVelocityPctPid(0.4, 0.0, 1.5, errorRange);
+
+		// Reset timer
+		if (useSimulator) {
+			robotSimulator.resetTimer();
+		}
+
 		timer timeout;
 		while (!rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout) {
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
 
+			// Get current robot heading
+			double currentRotation_degrees = InertialSensor.rotation(degrees);
+			if (useSimulator) {
+				currentRotation_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(robotSimulator.angularPosition));
+			}
+
 			// Compute heading error
-			double rotateError = rotation - InertialSensor.rotation();
+			double rotateError = rotation - currentRotation_degrees;
 			if (_useRelativeRotation) {
 				rotateError = genutil::modRange(rotateError, 360, -180);
 			}
@@ -93,10 +111,23 @@ namespace autonfunctions {
 			rightMotorVelocityPct *= scaleFactor;
 
 			// Drive with velocities
-			if (useVolt) {
-				botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+			if (!useSimulator) {
+				if (useVolt) {
+					botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+				} else {
+					botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
+				}
 			} else {
-				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
+				double leftVelocity = leftMotorVelocityPct / _pathToPctFactor;
+				double rightVelocity = rightMotorVelocityPct / _pathToPctFactor;
+				double velocity = (leftVelocity + rightVelocity) / 2;
+				double angularVelocity = (rightVelocity - leftVelocity) / 2;
+				double lookAngle = robotSimulator.angularPosition;
+				robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
+				robotSimulator.angularVelocity = angularVelocity;
+
+				robotSimulator.updatePhysics();
+				robotSimulator.updateDistance();
 			}
 
 			task::sleep(20);
@@ -147,6 +178,7 @@ namespace autonfunctions {
 		double lookEncoderInitialRevolution = LookEncoder.rotation(rev);
 		double lookRotationInitialRevolution = LookRotation.position(rev);
 		// double rightRotationInitialRevolution = RightRotation.position(rev);
+		Vector3 initalSimulatorPosition = robotSimulator.position;
 
 		// PID
 		// TODO: Tune pid
@@ -154,14 +186,21 @@ namespace autonfunctions {
 		PIDController rotateTargetAnglePid(1.0, 0.001, 0.5, defaultTurnAngleErrorRange);
 		PIDController synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
+		// Reset timer
+		if (useSimulator) {
+			robotSimulator.resetTimer();
+		}
+
 		timer timeout;
-		printf("Drive with inches\n");
 		while (!(driveTargetDistancePid.isSettled() && rotateTargetAnglePid.isSettled()) && timeout.value() < runTimeout) {
 			// Compute linear distance error
 			double distanceError;
 			double targetDistanceInches = distanceInches;
-			if (useRotationSensorForPid) {
-				printf("Rotation sensor pid\n");
+			if (useSimulator) {
+				double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude();
+				distanceError = targetDistanceInches - travelDistance_tiles * field::tileLengthIn;
+			} else if (useRotationSensorForPid) {
+				// printf("Rotation sensor pid\n");
 				// Compute current rotation revolutions
 				double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
 
@@ -199,8 +238,14 @@ namespace autonfunctions {
 			driveTargetDistancePid.computeFromError(distanceError);
 			double velocityPct = fmin(maxVelocityPct, fmax(-maxVelocityPct, driveTargetDistancePid.getValue()));
 
+			// Get current robot heading
+			double currentRotation_degrees = InertialSensor.rotation(degrees);
+			if (useSimulator) {
+				currentRotation_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(robotSimulator.angularPosition));
+			}
+
 			// Compute heading error
-			double rotateError = (targetRotation - InertialSensor.rotation());
+			double rotateError = targetRotation - currentRotation_degrees;
 			if (_useRelativeRotation) {
 				rotateError = genutil::modRange(rotateError, 360, -180);
 			}
@@ -214,23 +259,38 @@ namespace autonfunctions {
 			double rightVelocityPct = velocityPct - rotateVelocityPct;
 
 			// Compute value to synchronize velocity
-			double velocityDifferencePct = LeftMotors.velocity(pct) - RightMotors.velocity(pct);
-			double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
-			double finalVelocityDifferencePct = leftVelocityPct - rightVelocityPct;
-			double finalVelocityDifferenceInchesPerSecond = (finalVelocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
+			if (!useSimulator) {
+				double velocityDifferencePct = LeftMotors.velocity(pct) - RightMotors.velocity(pct);
+				double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
+				double finalVelocityDifferencePct = leftVelocityPct - rightVelocityPct;
+				double finalVelocityDifferenceInchesPerSecond = (finalVelocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 
-			// Compute final delta motor velocities
-			double velocityDifferenceError = finalVelocityDifferenceInchesPerSecond - velocityDifferenceInchesPerSecond;
-			synchronizeVelocityPid.computeFromError(velocityDifferenceError);
-			double finalDeltaVelocityPct = synchronizeVelocityPid.getValue();
+				// Compute final delta motor velocities
+				double velocityDifferenceError = finalVelocityDifferenceInchesPerSecond - velocityDifferenceInchesPerSecond;
+				synchronizeVelocityPid.computeFromError(velocityDifferenceError);
+				double finalDeltaVelocityPct = synchronizeVelocityPid.getValue();
 
-			// Update final motor velocities
-			leftVelocityPct += finalDeltaVelocityPct;
-			rightVelocityPct -= finalDeltaVelocityPct;
+				// Update final motor velocities
+				leftVelocityPct += finalDeltaVelocityPct;
+				rightVelocityPct -= finalDeltaVelocityPct;
+			}
 
 			// Drive with velocities
-			botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
 			// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
+			if (!useSimulator) {
+				botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
+			} else {
+				double leftVelocity = leftVelocityPct / _pathToPctFactor;
+				double rightVelocity = rightVelocityPct / _pathToPctFactor;
+				double velocity = (leftVelocity + rightVelocity) / 2;
+				double angularVelocity = (rightVelocity - leftVelocity) / 2;
+				double lookAngle = robotSimulator.angularPosition;
+				robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
+				robotSimulator.angularVelocity = angularVelocity;
+
+				robotSimulator.updatePhysics();
+				robotSimulator.updateDistance();
+			}
 
 			task::sleep(20);
 		}
