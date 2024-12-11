@@ -94,7 +94,8 @@ namespace botintake {
 				resolveIntake();
 
 				if (detectedRingColor != "none" && detectedRingColor != filterOutColor) {
-					wait(100, msec);
+					wait(50, msec);
+					resolveState = 0;
 					isStoringRing = false;
 				}
 			}

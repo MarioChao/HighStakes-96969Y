@@ -35,9 +35,9 @@ namespace {
 
 namespace video {
 	void keybindVideos() {
-		Controller1.ButtonLeft.pressed([]() -> void {
-			switchVideoState(-1);
-		});
+		// Controller1.ButtonLeft.pressed([]() -> void {
+		// 	switchVideoState(-1);
+		// });
 		Controller1.ButtonRight.pressed([]() -> void {
 			switchVideoState(1);
 		});

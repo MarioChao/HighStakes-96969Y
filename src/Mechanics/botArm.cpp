@@ -20,7 +20,7 @@ namespace {
 	PatienceController armDownPatience(15, 1.0, false);
 
 	// Stage config
-	std::vector<double> armStages_degrees = {30, 0, 195.0, 0};
+	std::vector<double> armStages_degrees = {80, 0, 195.0, 0};
 	std::vector<int> extremeStages_values = {0, -2, 0, 2};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
@@ -223,6 +223,7 @@ namespace {
 		// Calculate error
 		double currentPosition_degrees = ArmRotationSensor.position(degrees);
 		double error_degrees = armStateTargetAngle_degrees - currentPosition_degrees;
+		// printf("Cur: %.3f, target: %.3f\n", currentPosition_degrees, armStateTargetAngle_degrees);
 		// printf("Err: %.3f\n", error_degrees);
 
 		// Get pid value

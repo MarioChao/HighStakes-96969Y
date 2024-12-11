@@ -31,15 +31,11 @@ void PatienceController::computePatience(double value) {
 	// Modify patience
 	if (willResetPatience) {
 		patience = 0;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+		// Update value
+		storedValue = value;
 	} else {
 		patience++;
-	}
-
-	// Update value
-	if (positiveImprovement && delta > 0) {
-		storedValue = value;
-	} else if (!positiveImprovement && delta < 0) {
-		storedValue = value;
 	}
 }
 

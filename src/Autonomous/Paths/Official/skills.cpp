@@ -4,8 +4,9 @@
 namespace {
 	using namespace autonpaths;
 
-	double maxVel = 2.7;
-	double maxAccel = 2.2;
+	double maxVel = 3.7 * 0.8;
+	double maxAccel = 2;
+	double maxDecel = 2;
 
 	std::vector<UniformCubicSpline> splines;
 	std::vector<CurveSampler> splineSamplers;
@@ -34,9 +35,10 @@ void autonpaths::runAutonSkills() {
 
 	// Pre-process
 	loadSkillsSplines(1);
+	setSwing2State(1);
 
 	// Set position and rotation
-	mainOdometry.setPosition(1.0, 3);
+	mainOdometry.setPosition(0.9, 3);
 	mainOdometry.setLookAngle(-90.0);
 	mainOdometry.printDebug();
 	setRotation(-90.0);
@@ -70,7 +72,7 @@ namespace {
 		CurveSampler splineSampler = CurveSampler(spline)
 			.calculateByResolution(spline.getTRange().second * 10);
 		TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
-			.autoSetMotionConstraints(splineSampler, 0.5, maxVel, maxAccel, maxAccel)
+			.autoSetMotionConstraints(splineSampler, 0.3, maxVel, maxAccel, maxDecel)
 			.calculateMotion();
 		splines.push_back(spline);
 		splineSamplers.push_back(splineSampler);
@@ -219,7 +221,7 @@ namespace {
 		setArmStage(2);
 		task::sleep(600);
 		driveAndTurnDistanceTiles(0.5, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.5);
-		driveAndTurnDistanceTiles(-0.6, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(-0.5, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 		setArmStage(1, 0.5);
 
 		// Follow path
@@ -268,7 +270,7 @@ namespace {
 		turnToAngle(180.0);
 		setIntakeState(0);
 		driveAndTurnDistanceTiles(1.5, 180.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(-0.6, 180.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(-0.5, 180.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 
 
 		/* Score more rings */
@@ -363,7 +365,7 @@ namespace {
 		// Score on alliance wall stake
 		turnToAngle(90.0);
 		driveAndTurnDistanceTiles(1.5, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.8);
-		driveAndTurnDistanceTiles(-0.6, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 		setArmStage(1, 0.5);
 
 
@@ -425,7 +427,7 @@ namespace {
 		// Score on alliance wall stake
 		turnToAngle(90.0);
 		driveAndTurnDistanceTiles(1.5, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.8);
-		driveAndTurnDistanceTiles(-0.6, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 		setArmStage(1, 0.5);
 	}
 
@@ -498,7 +500,7 @@ namespace {
 		// Score on neutral wall stake
 		turnToAngle(0);
 		driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.5);
-		driveAndTurnDistanceTiles(-0.6, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(-0.5, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 		setArmStage(1, 0.5);
 
 
@@ -557,7 +559,7 @@ namespace {
 		// Score on alliance wall stake
 		turnToAngle(-90);
 		driveAndTurnDistanceTiles(1.0, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(-0.6, -90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(-0.5, -90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
 
 
 		/* Climb on ladder */
