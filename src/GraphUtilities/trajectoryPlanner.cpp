@@ -55,8 +55,8 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 		}
 
 		// Calculate velocity used for rotation
-		// w = v/r
-		// v = r*w
+		// w = v/r = v*k
+		// v_wheel = w*r
 		double rotationLinearVelocity = maxVelocity * curvature * (leftRightWheelDistance / 2.0);
 
 		// Calculate constraint values

@@ -75,6 +75,7 @@ namespace autonfunctions {
 				double traj_distance = motion[0];
 				double traj_velocity = motion[1];
 				double traj_tvalue = _curveSampler.distanceToParam(traj_distance);
+				double traj_angularVelocity = traj_velocity * _splinePath.getCurvatureAt(traj_tvalue);
 
 				// Get robot and target linegular
 				Linegular robotLg = mainOdometry.getLookLinegular();
@@ -85,7 +86,7 @@ namespace autonfunctions {
 				}
 
 				// Get desired robot motion
-				std::pair<double, double> leftRightVelocity = robotController.getLeftRightVelocity_pct(robotLg, targetLg, traj_velocity);
+				std::pair<double, double> leftRightVelocity = robotController.getLeftRightVelocity_pct(robotLg, targetLg, traj_velocity, traj_angularVelocity);
 
 				// Get motor percentages
 				double leftVelocityPct, rightVelocityPct;
