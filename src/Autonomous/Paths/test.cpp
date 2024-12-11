@@ -34,7 +34,7 @@ void autonpaths::odometryRadiusTest() {
 
 	mainOdometry.printDebug();
 
-	turnToAngleVelocity(360.0 * 10.0, 15.0, 0.0, defaultTurnAngleErrorRange, 40.0);
+	turnToAngleVelocity(-360.0 * 10.0, 30.0, 0.0, defaultTurnAngleErrorRange, 40.0);
 
 	mainOdometry.printDebug();
 }

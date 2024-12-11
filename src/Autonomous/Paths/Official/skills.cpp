@@ -1,19 +1,23 @@
 #include "Autonomous/autonPaths.h"
+
+#include "Utilities/generalUtility.h"
+#include "Utilities/angleUtility.h"
+
 #include "Simulation/robotSimulator.h"
 
 namespace {
 	using namespace autonpaths;
 
-	double maxVel = 3.7 * 0.8;
-	double maxAccel = 2;
-	double maxDecel = 2;
+	double maxVel = 3.7 * 0.7;
+	double maxAccel = 6;
+	double maxDecel = 6;
 
 	std::vector<UniformCubicSpline> splines;
 	std::vector<CurveSampler> splineSamplers;
 	std::vector<TrajectoryPlanner> splineTrajectoryPlans;
 	std::vector<bool> willReverse;
 
-	void pushNewSpline(UniformCubicSpline spline, bool reverse = false);
+	void pushNewSpline(UniformCubicSpline spline, bool reverse = false, double maxVel = ::maxVel);
 	void loadSkillsSplines(int section);
 	void runFollowSpline();
 
@@ -35,7 +39,6 @@ void autonpaths::runAutonSkills() {
 
 	// Pre-process
 	loadSkillsSplines(1);
-	setSwing2State(1);
 
 	// Set position and rotation
 	mainOdometry.setPosition(0.9, 3);
@@ -44,6 +47,11 @@ void autonpaths::runAutonSkills() {
 	setRotation(-90.0);
 	mainOdometry.restart();
 	mainOdometry.printDebug();
+
+	if (mainUseSimulator) {
+		robotSimulator.position = Vector3(0.9, 3);
+		robotSimulator.angularPosition = genutil::toRadians(angle::swapFieldPolar_degrees(-90));
+	}
 
 	// Set config
 	setDifferentialUseRelativeRotation(true);
@@ -68,7 +76,7 @@ void autonpaths::runAutonSkills() {
 }
 
 namespace {
-	void pushNewSpline(UniformCubicSpline spline, bool reverse) {
+	void pushNewSpline(UniformCubicSpline spline, bool reverse, double maxVel) {
 		CurveSampler splineSampler = CurveSampler(spline)
 			.calculateByResolution(spline.getTRange().second * 10);
 		TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
@@ -287,7 +295,7 @@ namespace {
 
 		// Score 1 ring
 		turnToAngle(145);
-		driveAndTurnDistanceTiles(0.4, 145, 70.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(1.0, 145, 70.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 
 		/* Place mobile goal in corner */
@@ -383,7 +391,7 @@ namespace {
 
 		// Score 1 ring
 		turnToAngle(145);
-		driveAndTurnDistanceTiles(0.5, 145, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(1.0, 145, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 
 		/* Score 2 rings and redirect 1 ring */
@@ -400,7 +408,7 @@ namespace {
 		// Redirect ring
 		turnToAngle(40);
 		setIntakeToArm(1);
-		driveAndTurnDistanceTiles(0.5, 35, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(1.0, 35, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 
 		/* Place mobile goal in corner */
@@ -530,7 +538,7 @@ namespace {
 		// Redirect ring
 		turnToAngle(55);
 		setIntakeToArm(1);
-		driveAndTurnDistanceTiles(0.5, 55, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(1.0, 55, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 
 		/* Place mobile goal in corner */

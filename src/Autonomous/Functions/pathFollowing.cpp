@@ -96,8 +96,8 @@ namespace autonfunctions {
 				// Drive
 				// printf("L: %07.3f, R: %07.3f\n", leftVelocityPct, rightVelocityPct);
 				if (!useSimulator) {
-					botdrive::driveVelocity(leftVelocityPct, rightVelocityPct);
-					// botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
+					// botdrive::driveVelocity(leftVelocityPct, rightVelocityPct);
+					botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
 				} else {
 					double velocity = (leftRightVelocity.first + leftRightVelocity.second) / 2;
 					double angularVelocity = (leftRightVelocity.second - leftRightVelocity.first) / 2;

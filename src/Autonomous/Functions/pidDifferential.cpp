@@ -197,7 +197,7 @@ namespace autonfunctions {
 			double distanceError;
 			double targetDistanceInches = distanceInches;
 			if (useSimulator) {
-				double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude();
+				double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * genutil::signum(targetDistanceInches);
 				distanceError = targetDistanceInches - travelDistance_tiles * field::tileLengthIn;
 			} else if (useRotationSensorForPid) {
 				// printf("Rotation sensor pid\n");
