@@ -13,6 +13,28 @@ namespace autonpaths {
 	using namespace autonfunctions;
 	using namespace botinfo;
 
+	// Build paths
+
+	namespace pathbuild {
+		extern const double maxVel;
+		extern const double maxAccel;
+		extern const double maxDecel;
+
+		extern std::vector<UniformCubicSpline> splines;
+		extern std::vector<CurveSampler> splineSamplers;
+		extern std::vector<TrajectoryPlanner> splineTrajectoryPlans;
+		extern std::vector<bool> willReverse;
+
+		extern int pathIndex;
+
+		void pushNewSpline(UniformCubicSpline spline, bool reverse = false, double maxVel = pathbuild::maxVel);
+		void loadSkillsSplines(int section);
+		void runFollowSpline();
+	}
+
+
+	// Paths
+
 	void autonTest();
 	void odometryRadiusTest();
 
