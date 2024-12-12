@@ -13,6 +13,7 @@ PIDController::PIDController(double kP, double kI, double kD, double settleRange
 void PIDController::resetErrorToZero() {
 	previousError = currentError = 2e17;
 	cumulativeError = deltaError = 0;
+	pidTimer.reset();
 }
 
 void PIDController::computeFromError(double error) {
@@ -23,15 +24,19 @@ void PIDController::computeFromError(double error) {
 		previousError = currentError;
 	}
 
-	// Calculate errors
+	// Elapsed time
+	double elapsedTime_seconds = pidTimer.value();
+	pidTimer.reset();
+
+	// Update errors
 	currentError = error;
 	bool isCrossZero = (currentError >= 0 && previousError <= 0) || (currentError <= 0 && previousError >= 0);
 	if (isCrossZero) {
 		cumulativeError = 0;
 	} else {
-		cumulativeError += error;
+		cumulativeError += error * elapsedTime_seconds;
 	}
-	deltaError = currentError - previousError;
+	deltaError = (currentError - previousError) / elapsedTime_seconds;
 
 	// Settle errors
 	if (fabs(error) < settleErrorRange) {

@@ -67,8 +67,8 @@ namespace autonfunctions {
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDController rotateTargetAngleVoltPid(2.5, 0.002, 2.0, errorRange);
-		PIDController rotateTargetAngleVelocityPctPid(0.4, 0.0, 1.5, errorRange);
+		PIDController rotateTargetAngleVoltPid(2.5, 0.0, 0.15, errorRange);
+		PIDController rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, errorRange);
 
 		// Reset timer
 		if (useSimulator) {
@@ -113,7 +113,7 @@ namespace autonfunctions {
 			// Drive with velocities
 			if (!useSimulator) {
 				if (useVolt) {
-					botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 7);
+					botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 9);
 				} else {
 					botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
 				}
@@ -182,8 +182,8 @@ namespace autonfunctions {
 
 		// PID
 		// TODO: Tune pid
-		PIDController driveTargetDistancePid(12.5, 0, 80, errorRange);
-		PIDController rotateTargetAnglePid(1.0, 0.001, 0.5, defaultTurnAngleErrorRange);
+		PIDController driveTargetDistancePid(12.5, 0, 1.6, errorRange);
+		PIDController rotateTargetAnglePid(1.0, 0.05, 0.01, defaultTurnAngleErrorRange);
 		PIDController synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
 		// Reset timer

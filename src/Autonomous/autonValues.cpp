@@ -6,7 +6,7 @@
 namespace autonvals {
 	const double defaultMoveTilesErrorRange = 0.065;
 	const double defaultMoveWithInchesErrorRange = defaultMoveTilesErrorRange * field::tileLengthIn;
-	const double defaultTurnAngleErrorRange = 4;
+	const double defaultTurnAngleErrorRange = 5;
 
 	const double tilesPerSecond_to_pct = (
 		// input: travel tiles per second
