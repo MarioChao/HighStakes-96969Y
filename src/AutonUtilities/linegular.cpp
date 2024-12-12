@@ -7,7 +7,7 @@
 Linegular::Linegular(double x, double y, double polarTheta_degrees) {
 	this->x = x;
 	this->y = y;
-	this->theta = polarTheta_degrees;
+	this->theta_degrees = polarTheta_degrees;
 }
 
 double Linegular::getX(){
@@ -19,11 +19,11 @@ double Linegular::getY(){
 }
 
 double Linegular::getTheta_degrees(){
-	return theta;
+	return theta_degrees;
 }
 
 double Linegular::getTheta_radians() {
-	return genutil::toRadians(theta);
+	return genutil::toRadians(theta_degrees);
 }
 
 void Linegular::rotateXYBy(double polarRotate_radians) {
@@ -42,9 +42,9 @@ void Linegular::rotateExponentialBy(double polarRotate_radians) {
 }
 
 Linegular Linegular::operator+(Linegular &other) {
-	return Linegular(x + other.x, y + other.y, theta + other.theta);
+	return Linegular(x + other.x, y + other.y, theta_degrees + other.theta_degrees);
 }
 
 Linegular Linegular::operator-(Linegular &other) {
-	return Linegular(x - other.x, y - other.y, theta - other.theta);
+	return Linegular(x - other.x, y - other.y, theta_degrees - other.theta_degrees);
 }

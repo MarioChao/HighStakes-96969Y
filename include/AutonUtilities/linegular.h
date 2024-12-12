@@ -23,5 +23,5 @@ public:
 	Linegular operator-(Linegular &other);
 
 private:
-	double x, y, theta;
+	double x, y, theta_degrees;
 };

@@ -5,7 +5,7 @@ void autonpaths::runAutonBlueDownOld() {
 	// Mirrored from RedDown
 
 	timer autontimer;
-	setRotation(90.0);
+	setRobotRotation(90.0);
 
 	/* Start facing left */
 

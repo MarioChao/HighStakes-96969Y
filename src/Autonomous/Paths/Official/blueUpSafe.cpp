@@ -5,7 +5,7 @@ void autonpaths::runAutonBlueUpSafe() {
 	// Modified from blue up
 
 	timer autontimer;
-	setRotation(120.0);
+	setRobotRotation(120.0);
 
 	// Grab goal
 	setGoalClampState(1, 1.4);

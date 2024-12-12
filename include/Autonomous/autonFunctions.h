@@ -22,7 +22,7 @@ namespace autonfunctions {
 
 	/* General */
 
-	void setRotation(double rotation);
+	void setRobotRotation(double rotation);
 
 	extern timer _autonTimer;
 

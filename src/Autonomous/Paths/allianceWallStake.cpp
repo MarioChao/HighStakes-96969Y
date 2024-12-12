@@ -4,7 +4,7 @@ namespace {}
 
 void autonpaths::runAllianceWallStake() {
 	timer autontimer;
-	setRotation(-180.0);
+	setRobotRotation(-180.0);
 
 
 	// Go back 1 tile

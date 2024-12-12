@@ -32,7 +32,7 @@ void autonpaths::runFieldTour() {
 	// Set robot position
 	mainOdometry.setPosition(1.5, 0.5);
 	mainOdometry.setLookAngle(0);
-	setRotation(0);
+	setRobotRotation(0);
 
 	// Follow path
 	setSplinePath(spline, splineTrajectoryPlan, splineSampler);

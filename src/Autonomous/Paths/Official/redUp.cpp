@@ -3,7 +3,7 @@
 /// @brief Run the 15-seconds new red-up autonomous.
 void autonpaths::runAutonRedUp() {
 	timer autontimer;
-	setRotation(-120.0);
+	setRobotRotation(-120.0);
 
 	waitUntil(isArmResetted());
 

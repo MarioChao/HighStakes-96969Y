@@ -3,7 +3,7 @@
 /// @brief Run the 15-seconds old red-down autonomous.
 void autonpaths::runAutonRedDownOld() {
 	timer autontimer;
-	setRotation(-90.0);
+	setRobotRotation(-90.0);
 
 	// Grab middle goal
 	driveAndTurnDistanceTiles(-1.30, -90.0, 100.0);

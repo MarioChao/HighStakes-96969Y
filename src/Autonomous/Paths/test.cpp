@@ -1,7 +1,7 @@
 #include "Autonomous/autonPaths.h"
 
 void autonpaths::autonTest() {
-	setRotation(0.0);
+	setRobotRotation(0.0);
 
 	// driveAndTurnDistanceTiles(1.0, 0.0, 50.0, 100.0, defaultMoveTilesErrorRange, 6.0);
 	// driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 3.0);
@@ -30,7 +30,7 @@ void autonpaths::autonTest() {
 }
 
 void autonpaths::odometryRadiusTest() {
-	setRotation(0.0);
+	setRobotRotation(0.0);
 
 	mainOdometry.printDebug();
 

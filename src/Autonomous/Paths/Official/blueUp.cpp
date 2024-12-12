@@ -5,7 +5,7 @@ void autonpaths::runAutonBlueUp() {
 	// Mirrored from red up
 
 	timer autontimer;
-	setRotation(120.0);
+	setRobotRotation(120.0);
 
 	waitUntil(isArmResetted());
 
