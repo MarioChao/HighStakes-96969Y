@@ -15,6 +15,8 @@ namespace autonfunctions {
 	/// @param rotation The angle (in degrees) to be set for the current orientation.
 	void setRobotRotation(double rotation) {
 		InertialSensor.setRotation(rotation, deg);
+		mainOdometry.restart();
+		mainOdometry.setLookAngle(rotation);
 	}
 
 	timer _autonTimer;

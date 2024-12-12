@@ -164,12 +164,12 @@ void Odometry::setPosition(double x, double y) {
 	this->y = y;
 }
 
-void Odometry::setLookAngle(double fieldAngles) {
-	this->right_fieldAngle_degrees = fieldAngles + 90.0;
+void Odometry::setLookAngle(double fieldAngles_degrees) {
+	this->right_fieldAngle_degrees = fieldAngles_degrees + 90.0;
 }
 
-void Odometry::setRightAngle(double fieldAngles) {
-	this->right_fieldAngle_degrees = fieldAngles;
+void Odometry::setRightAngle(double fieldAngles_degrees) {
+	this->right_fieldAngle_degrees = fieldAngles_degrees;
 }
 
 double Odometry::getX() { return x; }

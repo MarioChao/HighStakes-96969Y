@@ -77,16 +77,16 @@ public:
 	/**
 	 * @brief Sets the robot's rotation (look direction) in a 2D plane.
 	 * 
-	 * @param fieldAngles Robot's front/look direction. Field angle rotation in degrees.
+	 * @param fieldAngles_degrees Robot's front/look direction. Field angle rotation in degrees.
 	 */
-	void setLookAngle(double fieldAngles);
+	void setLookAngle(double fieldAngles_degrees);
 
 	/**
 	 * @brief Sets the robot's rotation (look direction) in a 2D plane.
 	 * 
-	 * @param fieldAngles Robot's right direction. Field angle rotation in degrees.
+	 * @param fieldAngles_degrees Robot's right direction. Field angle rotation in degrees.
 	 */
-	void setRightAngle(double fieldAngles);
+	void setRightAngle(double fieldAngle_degrees);
 
 	double getX();
 	double getY();

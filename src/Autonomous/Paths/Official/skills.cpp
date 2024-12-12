@@ -27,11 +27,9 @@ void autonpaths::runAutonSkills() {
 	loadSkillsSplines(1);
 
 	// Set position and rotation
-	mainOdometry.setPosition(0.9, 3);
-	mainOdometry.setLookAngle(-90.0);
 	mainOdometry.printDebug();
+	mainOdometry.setPosition(0.9, 3);
 	setRobotRotation(-90.0);
-	mainOdometry.restart();
 	mainOdometry.printDebug();
 
 	if (mainUseSimulator) {
