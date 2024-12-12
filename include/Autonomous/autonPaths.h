@@ -27,8 +27,8 @@ namespace autonpaths {
 
 		extern int pathIndex;
 
+		void clearSplines();
 		void pushNewSpline(UniformCubicSpline spline, bool reverse = false, double maxVel = pathbuild::maxVel);
-		void loadSkillsSplines(int section);
 		void runFollowSpline();
 	}
 
