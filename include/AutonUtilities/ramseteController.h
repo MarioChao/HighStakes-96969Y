@@ -11,14 +11,14 @@ public:
 
 	void setDirection(bool isReversed);
 
-	std::pair<double, double> getLeftRightVelocity_pct(
+	std::pair<double, double> getLinegularVelocity(
 		Linegular actual, Linegular desired
 	);
-	std::pair<double, double> getLeftRightVelocity_pct(
+	std::pair<double, double> getLinegularVelocity(
 		Linegular actual, Linegular desired,
 		double desiredLinearVelocity
 	);
-	std::pair<double, double> getLeftRightVelocity_pct(
+	std::pair<double, double> getLinegularVelocity(
 		Linegular actual, Linegular desired,
 		double desiredLinearVelocity, double desiredAngularVelocity_radiansPerSecond
 	);

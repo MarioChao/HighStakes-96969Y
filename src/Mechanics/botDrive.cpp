@@ -1,10 +1,12 @@
 #include "Mechanics/botDrive.h"
 
+#include "Autonomous/autonValues.h"
 #include "AutonUtilities/pidController.h"
 
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "Utilities/generalUtility.h"
+#include "Utilities/fieldInfo.h"
 
 #include "main.h"
 
@@ -12,9 +14,15 @@ namespace {
 	using namespace botinfo;
 	using botdrive::controlType;
 
+	// Controls
 	void controlArcadeTwoStick();
 	void controlArcadeSingleStick();
 	void drive(double initLeftPct, double initRightPct, double initPolarRotatePct, double rotateCenterOffsetIn = 0);
+
+	// Resolve
+	void resolveDriveVelocity();
+	void _differentialDriveAtVelocity(double leftVelocity_pct, double rightVelocity_pct);
+	void _differentialDriveAtVolt(double leftVelocity_volt, double rightVelocity_volt);
 
 	// Drive mode
 	controlType driveMode = controlType::ArcadeTwoStick;
@@ -22,6 +30,10 @@ namespace {
 
 	// Drive config
 	double maxDriveVelocityPct = 100.0;
+	bool driveUseThread = false;
+
+	// Driving velocity
+	double _linearVelocity_pct, _angularVelocity_radPerSecond;
 
 	// Velocity controller
 	const double kP = 0.10;
@@ -29,6 +41,16 @@ namespace {
 }
 
 namespace botdrive {
+	void runThread() {
+		while (true) {
+			if (driveUseThread) {
+				resolveDriveVelocity();
+			}
+
+			wait(20, msec);
+		}
+	}
+
 	void preauton() {
 		// LeftMotors.setStopping(coast);
 		// RightMotors.setStopping(coast);
@@ -80,35 +102,17 @@ namespace botdrive {
 		return maxDriveVelocityPct;
 	}
 
-	void driveVelocity(double leftVelocityPct, double rightVelocityPct, bool useCustomPid) {
-		// Scale percentages if overshoot
-		double scaleFactor = genutil::getScaleFactor(100.0, {leftVelocityPct, rightVelocityPct});
-		leftVelocityPct *= scaleFactor;
-		rightVelocityPct *= scaleFactor;
+	void driveLinegularVelocity(double linearVelocity_pct, double angularVelocity_radPerSecond) {
+		_linearVelocity_pct = linearVelocity_pct;
+		_angularVelocity_radPerSecond = angularVelocity_radPerSecond;
+		resolveDriveVelocity();
+	}
 
-		if (useCustomPid) {
-			// Calculate velocity errors
-			double leftVelocity_error = leftVelocityPct - LeftMotors.velocity(pct);
-			double rightVelocity_error = rightVelocityPct - RightMotors.velocity(pct);
-
-			// Compute needed voltage to maintain velocity
-			driveVelocityLeftMotorPID.computeFromError(leftVelocity_error);
-			driveVelocityRightMotorPID.computeFromError(rightVelocity_error);
-			double leftDeltaVolt = driveVelocityLeftMotorPID.getValue();
-			double rightDeltaVolt = driveVelocityRightMotorPID.getValue();
-
-			// Compute final voltage
-			double leftVelocity_volt = LeftMotors.voltage(volt) + leftDeltaVolt;
-			double rightVelocity_volt = RightMotors.voltage(volt) + rightDeltaVolt;
-
-			// Drive at volt
-			botdrive::driveVoltage(leftVelocity_volt, rightVelocity_volt, 11);
-			printf("Err: %.3f, %.3f, Lvolt: %.3f, Rvolt: %.3f\n", leftVelocity_error, rightVelocity_error, leftVelocity_volt, rightVelocity_volt);
-		} else {
-			// Spin motors
-			LeftMotors.spin(fwd, leftVelocityPct, pct);
-			RightMotors.spin(fwd, rightVelocityPct, pct);
-		}
+	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
+		_linearVelocity_pct = (leftVelocityPct + rightVelocityPct) / 2.0;
+		double angularVelocity_tilesPerSecond = (rightVelocityPct - leftVelocityPct) / 2.0 / autonvals::tilesPerSecond_to_pct;
+		_angularVelocity_radPerSecond = angularVelocity_tilesPerSecond / (botinfo::halfRobotLengthIn * (1.0 / field::tileLengthIn));
+		resolveDriveVelocity();
 	}
 
 	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage) {
@@ -125,9 +129,8 @@ namespace botdrive {
 		leftVoltageVolt = genutil::clamp(leftVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
 		rightVoltageVolt = genutil::clamp(rightVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
 
-		// Spin motors
-		LeftMotors.spin(fwd, leftVoltageVolt, volt);
-		RightMotors.spin(fwd, rightVoltageVolt, volt);
+		// Drive
+		_differentialDriveAtVolt(leftVoltageVolt, rightVoltageVolt);
 	}
 }
 
@@ -189,5 +192,62 @@ namespace {
 				RightMotors.spin(fwd, genutil::pctToVolt(rightPct), volt);
 			}
 		}
+	}
+
+	void resolveDriveVelocity() {
+		// Differential drive
+
+		// Convert angular velocity to wheel's linear velocity
+		double rotationLinearVelocity_tilesPerSecond = _angularVelocity_radPerSecond * botinfo::halfRobotLengthIn * (1.0 / field::tileLengthIn);
+		double rotationLinearVelocity_pct = rotationLinearVelocity_tilesPerSecond * autonvals::tilesPerSecond_to_pct;
+
+		// Compute differential velocity
+		double leftVelocity_pct = _linearVelocity_pct - rotationLinearVelocity_pct;
+		double rightVelocity_pct = _linearVelocity_pct + rotationLinearVelocity_pct;
+
+		// Drive at velocity
+		_differentialDriveAtVelocity(leftVelocity_pct, rightVelocity_pct);
+	}
+
+	void _differentialDriveAtVelocity(double leftVelocity_pct, double rightVelocity_pct) {
+		// Scale percentages if overshoot
+		double scaleFactor = genutil::getScaleFactor(100.0, {leftVelocity_pct, rightVelocity_pct});
+		leftVelocity_pct *= scaleFactor;
+		rightVelocity_pct *= scaleFactor;
+
+		if (false) {
+			// Calculate velocity errors
+			double leftVelocity_error = leftVelocity_pct - LeftMotors.velocity(pct);
+			double rightVelocity_error = rightVelocity_pct - RightMotors.velocity(pct);
+
+			// Compute needed voltage to maintain velocity
+			driveVelocityLeftMotorPID.computeFromError(leftVelocity_error);
+			driveVelocityRightMotorPID.computeFromError(rightVelocity_error);
+			double leftDeltaVolt = driveVelocityLeftMotorPID.getValue();
+			double rightDeltaVolt = driveVelocityRightMotorPID.getValue();
+
+			// Compute final voltage
+			double leftVelocity_volt = LeftMotors.voltage(volt) + leftDeltaVolt;
+			double rightVelocity_volt = RightMotors.voltage(volt) + rightDeltaVolt;
+
+			// Drive at volt
+			botdrive::driveVoltage(leftVelocity_volt, rightVelocity_volt, 11);
+			printf("Err: %.3f, %.3f, Lvolt: %.3f, Rvolt: %.3f\n", leftVelocity_error, rightVelocity_error, leftVelocity_volt, rightVelocity_volt);
+		} else {
+			// Spin motors
+			LeftMotors.spin(fwd, leftVelocity_pct, pct);
+			RightMotors.spin(fwd, rightVelocity_pct, pct);
+		}
+	}
+
+	void _differentialDriveAtVolt(double leftVelocity_volt, double rightVelocity_volt) {
+		// Scale voltages if overshoot
+		double scaleFactor = genutil::getScaleFactor(12, {leftVelocity_volt, rightVelocity_volt});
+		leftVelocity_volt *= scaleFactor;
+		rightVelocity_volt *= scaleFactor;
+
+		// Spin
+		LeftMotors.spin(fwd, leftVelocity_volt, volt);
+		RightMotors.spin(fwd, rightVelocity_volt, volt);
 	}
 }

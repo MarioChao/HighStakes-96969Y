@@ -29,17 +29,17 @@ void RamseteController::setDirection(bool isReversed) {
 	}
 }
 
-std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
+std::pair<double, double> RamseteController::getLinegularVelocity(
 	Linegular actual, Linegular desired
 ) {
 	// Get local error
 	Linegular error = desired - actual;
 	error.rotateXYBy(genutil::toRadians(90 - actual.getTheta_degrees()));
 
-	return getLeftRightVelocity_pct(actual, desired, smallScalar * error.getY(), smallScalar * error.getTheta_radians());
+	return getLinegularVelocity(actual, desired, smallScalar * error.getY(), smallScalar * error.getTheta_radians());
 }
 
-std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
+std::pair<double, double> RamseteController::getLinegularVelocity(
 	Linegular actual, Linegular desired,
 	double desiredLinearVelocity
 ) {
@@ -47,10 +47,10 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	Linegular error = desired - actual;
 	error.rotateXYBy(genutil::toRadians(90 - actual.getTheta_degrees()));
 
-	return getLeftRightVelocity_pct(actual, desired, desiredLinearVelocity, smallScalar * error.getTheta_radians());
+	return getLinegularVelocity(actual, desired, desiredLinearVelocity, smallScalar * error.getTheta_radians());
 }
 
-std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
+std::pair<double, double> RamseteController::getLinegularVelocity(
 	Linegular actual, Linegular desired,
 	double desiredLinearVelocity, double desiredAngularVelocity_radiansPerSecond
 ) {

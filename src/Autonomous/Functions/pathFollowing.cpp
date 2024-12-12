@@ -55,10 +55,6 @@ namespace autonfunctions {
 			// Reset timer
 			_splinePathTimer.reset();
 
-			if (useSimulator) {
-				robotSimulator.resetTimer();
-			}
-
 			// Follow path
 			while (true) {
 				// Get time
@@ -85,30 +81,15 @@ namespace autonfunctions {
 					robotLg = Linegular(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
 				}
 
-				// Get desired robot motion
-				std::pair<double, double> leftRightVelocity = robotController.getLeftRightVelocity_pct(robotLg, targetLg, traj_velocity, traj_angularVelocity);
+				// Get desired robot motion (linear and angular)
+				std::pair<double, double> linegularVelocity = robotController.getLinegularVelocity(robotLg, targetLg, traj_velocity, traj_angularVelocity);
 
-				// Get motor percentages
-				double leftVelocityPct, rightVelocityPct;
-				leftVelocityPct = leftRightVelocity.first * _pathToPctFactor;
-				rightVelocityPct = leftRightVelocity.second * _pathToPctFactor;
+				// Convert linear velocity units
+				linegularVelocity.first *= _pathToPctFactor;
 
 				// Drive
-				// printf("L: %07.3f, R: %07.3f\n", leftVelocityPct, rightVelocityPct);
 				if (!useSimulator) {
-					// botdrive::driveVelocity(leftVelocityPct, rightVelocityPct);
-					botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 11);
-				} else {
-					double velocity = (leftRightVelocity.first + leftRightVelocity.second) / 2;
-					double angularVelocity = (leftRightVelocity.second - leftRightVelocity.first) / 2;
-					double lookAngle = robotSimulator.angularPosition;
-					robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
-					robotSimulator.angularVelocity = angularVelocity;
-
-					// robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
-					// robotSimulator.angularPosition = targetLg.getTheta_radians();
-					robotSimulator.updatePhysics();
-					robotSimulator.updateDistance();
+					botdrive::driveLinegularVelocity(linegularVelocity.first, linegularVelocity.second);
 				}
 
 				// Wait

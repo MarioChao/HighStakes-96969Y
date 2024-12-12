@@ -6,6 +6,8 @@ namespace botdrive {
 		ArcadeSingleStick,
 	};
 
+	void runThread();
+
 	void preauton();
 
 	void switchDriveMode();
@@ -15,6 +17,7 @@ namespace botdrive {
 	void setMaxDriveVelocity(double velocityPct);
 	double getMaxDriveVelocity();
 
-	void driveVelocity(double leftVelocityPct, double rightVelocityPct, bool useCustomPid = false);
+	void driveLinegularVelocity(double linearVelocity_pct, double angularVelocity_radPerSecond);
+	void driveVelocity(double leftVelocityPct, double rightVelocityPct);
 	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage);
 }
