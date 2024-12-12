@@ -74,12 +74,7 @@ std::pair<double, double> RamseteController::getLeftRightVelocity_pct(
 	double outputLinearVelocity = (v_desired * cos(e_theta)) + (k * e_look);
 	double outputAngularVelocity = (w_desired) + (k * e_theta) - (b * v_desired * angle::sinc(e_theta) * e_right);
 
-	// Compute left and right velocities
-	double leftVelocity = outputLinearVelocity - outputAngularVelocity;
-	double rightVelocity = outputLinearVelocity + outputAngularVelocity;
-	// printf("outlin: %.3f, outang: %.3f\n", outputLinearVelocity, outputAngularVelocity);
-
-	// Return velocities
-	std::pair<double, double> result = std::make_pair(leftVelocity, rightVelocity);
+	// Return linegular velocities
+	std::pair<double, double> result = std::make_pair(outputLinearVelocity, outputAngularVelocity);
 	return result;
 }
