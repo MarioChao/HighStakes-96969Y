@@ -3,6 +3,7 @@
 #include "vex.h"
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 // Forward declaration
 class Odometry;

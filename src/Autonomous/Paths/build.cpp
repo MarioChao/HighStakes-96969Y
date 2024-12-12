@@ -42,6 +42,7 @@ namespace autonpaths { namespace pathbuild {
 	}
 
 	std::vector<std::vector<std::vector<double>>> linearPaths;
+	std::vector<double> linearMaxVelocity_pct;
 	std::vector<bool> linearWillReverse;
 
 	int linearIndex;
@@ -52,13 +53,14 @@ namespace autonpaths { namespace pathbuild {
 		linearIndex = 0;
 	}
 
-	void pushNewLinear(std::vector<std::vector<double>> path, bool reverse) {
+	void pushNewLinear(std::vector<std::vector<double>> path, bool reverse,  double maxVelocity_pct) {
 		linearPaths.push_back(path);
+		linearMaxVelocity_pct.push_back(maxVelocity_pct);
 		linearWillReverse.push_back(reverse);
 	}
 
-	void runFollowLinearYield(double maxVelocity) {
-		runLinearPIDPath(linearPaths[linearIndex], maxVelocity, linearWillReverse[linearIndex]);
+	void runFollowLinearYield() {
+		runLinearPIDPath(linearPaths[linearIndex], linearMaxVelocity_pct[linearIndex], linearWillReverse[linearIndex]);
 		linearIndex++;
 	}
 }}

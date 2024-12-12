@@ -66,14 +66,16 @@ namespace {
 		clearLinear();
 		clearSplines();
 
-		UniformCubicSpline spline;
-
 		if (section == 1) {
 			// Redirect 1 ring
 			pushNewLinear({{2, 2.01}});
 
 			// Score 3 rings
-			pushNewLinear({{2.01, 1.02}, {3, 0.51}, {3.99, 1}});
+			// pushNewLinear({{2.01, 1.02}, {3, 0.51}, {3.99, 1}});
+			pushNewLinear({{2.01, 1.02}});
+			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+				{0.9, 2.33}, {2.01, 1.02}, {2.98, 0.53}, {4.07, 1.08}, {5.06, 2.31}
+			}));
 
 			// Prepare to score on neutral wall stake
 			pushNewLinear({{3, 1.2}}, true);
@@ -89,13 +91,13 @@ namespace {
 			pushNewLinear({{4, 2.01}});
 
 			// Grab mobile goal
-			pushNewLinear({{5, 3.01}}, true);
+			pushNewLinear({{5, 3.01}}, true, 60.0);
 
-			// Score 2 rings at top
+			// Score 3 rings at top
 			pushNewLinear({{4.6, 3.7}, {5.01, 4.99}, {4.98, 5.4}, {5.51, 4.99}});
 
 			// Score 2 rings at bottom
-			pushNewLinear({{4.56, 4.03}, {4.9, 1.48}, {4.99, 0.57}});
+			pushNewLinear({{4.72, 4.21}, {5.08, 1.48}, {4.94, 0.49}});
 
 			// Redirect 1 ring
 			pushNewLinear({{5.43, 0.96}});
@@ -107,46 +109,34 @@ namespace {
 			pushNewLinear({{5.4, 3.6}, {5.68, 5.5}}, true);
 		} else if (section == 4) {
 			// Redirect 1 ring and store 1 ring
-			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{6.11, 5.85}, {5.48, 5.43}, {3.98, 5}, {2.01, 3.99}, {0.33, 1.36}
-			});
-			pushNewSpline(spline);
+			pushNewLinear({{4.03}});
+			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+				{8.4, 4.98}, {4.01, 5.04}, {1.93, 3.91}, {0.21, 0.29}
+			}));
 
 			// Grab goal
-			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{3.26, 4.01}, {2.03, 4.01}, {1, 3.99}, {-0.5, 4.05}
-			});
-			pushNewSpline(spline, true);
+			pushNewLinear({{1.02, 4.01}}, true, 60.0);
 
 			// Go to neutral wall stake
-			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{-0.3, 4.07}, {1.05, 4}, {2.01, 4.14}, {2.83, 4.8}, {3.02, 5.51}, {3.04, 6.35}
-			});
-			pushNewSpline(spline);
+			pushNewLinear({{3.0, 4.7}});
 
 			// Score 1 ring
-			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{0.85, 5.41}, {3, 5.45}, {4.02, 4.03}, {4.08, 1.01}
-			});
-			pushNewSpline(spline);
+			pushNewLinear({{3.95, 4.07}});
 
 			// Score 3 rings
-			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{5.63, 2.25}, {3.96, 4.05}, {2.4, 4.93}, {0.49, 5}, {-0.42, 5}
-			});
-			pushNewSpline(spline);
+			pushNewLinear({{2.98, 4.94}, {1.9, 4.94}});
+			pushNewLinear({{0.49, 4.94}}, 60.0);
+
+			// Redirect 1 ring
+			pushNewLinear({{0.98, 5.45}});
 		} else if (section == 5) {
 			// Go to alliance wall stake
-			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{-0.19, 6.07}, {0.47, 5.53}, {1.3, 3.5}, {0.59, 3.01}, {-0.42, 3}
-			});
-			pushNewSpline(spline);
+			pushNewLinear({{0.8, 3}});
 
 			// Climb on ladder
-			spline = UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
 				{0.13, 3.81}, {0.51, 2.99}, {1.38, 1.87}, {2.24, 2.35}, {3.23, 3.42}
-			});
-			pushNewSpline(spline);
+			}));
 		}
 	}
 
@@ -172,7 +162,6 @@ namespace {
 		/* Redirect 1 ring */
 
 		// Start intake
-		turnToAngle(80.0);
 		setIntakeState(1);
 		setIntakeToArm(1);
 
@@ -187,6 +176,13 @@ namespace {
 
 		// Follow path
 		runFollowLinearYield();
+
+		// Follow path
+		turnToAngle(120);
+		runFollowSpline();
+
+		// Wait
+		waitUntil(_pathFollowCompleted);
 
 
 		/* Score on neutral wall stake */
@@ -254,7 +250,7 @@ namespace {
 		/* Grab mobile goal */
 
 		// Follow path
-		runFollowLinearYield(60.0);
+		runFollowLinearYield();
 
 		// Grab goal
 		setGoalClampState(1);
@@ -300,6 +296,7 @@ namespace {
 		/* Place mobile goal in corner */
 
 		// Release goal and push to corner
+		turnToAngle(-25);
 		setGoalClampState(0);
 		driveAndTurnDistanceTiles(-1.0, -25, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 		driveAndTurnDistanceTiles(0.5, -45, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
@@ -341,14 +338,14 @@ namespace {
 		setIntakeToArm(1);
 
 		// Follow path
+		runFollowLinearYield();
+
+		// Remove redirect and start to store
+		setIntakeToArm(0, 0.5);
+		setIntakeStoreRing(1, 0.5);
+
+		// Follow path
 		runFollowSpline();
-
-		// Wait
-		waitUntil(_trajectoryPlan.getMotionAtTime(_splinePathTimer.value())[0] >= 2.0);
-
-		// Remove redirect and start storing
-		setIntakeToArm(0);
-		setIntakeStoreRing(1);
 
 		// Wait
 		waitUntil(_pathFollowCompleted);
@@ -356,14 +353,8 @@ namespace {
 
 		/* Grab mobile goal */
 
-		// Turn
-		turnToAngle(90);
-
 		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
+		runFollowLinearYield();
 
 		// Grab goal
 		setGoalClampState(1);
@@ -377,44 +368,29 @@ namespace {
 		setArmStage(3);
 
 		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
+		runFollowLinearYield();
 
 		// Score on neutral wall stake
 		turnToAngle(0);
-		driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(1.5, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 		driveAndTurnDistanceTiles(-0.5, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
-		setArmStage(1, 0.5);
+		setArmStage(0, 1.0);
 
 
 		/* Score 1 ring */
 
-		// Turn
-		turnToAngle(90);
-
 		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
+		runFollowLinearYield();
 
 
 		/* Score 3 rings and redirect 1 ring */
 
-		// Turn
-		turnToAngle(-60);
-
 		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
+		runFollowLinearYield();
+		runFollowLinearYield();
 
 		// Redirect ring
-		turnToAngle(55);
-		setIntakeToArm(1);
+		setIntakeToArm(1, 0.5);
 		driveAndTurnDistanceTiles(1.0, 55, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
 
 
@@ -431,15 +407,11 @@ namespace {
 	void finalSkills() {
 		/* Score on alliance wall stake */
 
-		// Turn and raise arm
-		turnToAngle(160);
+		// Raise arm
 		setArmStage(2);
 
 		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
+		runFollowLinearYield();
 
 		// Score on alliance wall stake
 		turnToAngle(-90);

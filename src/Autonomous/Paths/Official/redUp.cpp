@@ -1,61 +1,143 @@
 #include "Autonomous/autonPaths.h"
 
+namespace {
+	using namespace autonpaths;
+	using namespace autonpaths::pathbuild;
+
+	void loadPaths(int section);
+
+	void doAuton();
+}
+
 /// @brief Run the 15-seconds new red-up autonomous.
 void autonpaths::runAutonRedUp() {
-	timer autontimer;
-	setRobotRotation(-120.0);
+	/* Pre skills */
 
+	// Timer
+	_autonTimer.reset();
+
+	// Set position and rotation
+	mainOdometry.printDebug();
+	mainOdometry.setPosition(0.8, 3.5);
+	setRobotRotation(-120.0);
+	mainOdometry.printDebug();
+
+	// Set config
+	setDifferentialUseRelativeRotation(true);
+
+	// Wait for arm reset
 	waitUntil(isArmResetted());
 
-	// Score preload
-	// setArmHangState(1);
-	setArmStage(2);
-	task::sleep(700);
-	driveAndTurnDistanceTiles(0.45, -120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(-0.1, -120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	turnToAngle(-120.0);
-	// setArmHangState(0);
-	setArmStage(0);
-	task::sleep(200);
 
-	// Grab goal
-	setGoalClampState(1, 1.4);
-	driveAndTurnDistanceTiles(-1.73, -115.0, 38.0, 15.0, defaultMoveTilesErrorRange, 2.0);
-	task::sleep(200);
+	/* Auton */
+	loadPaths(1);
+	doAuton();
+}
 
-	// Take in middle up
-	turnToAngle(44.0);
-	setIntakeState(1);
-	driveAndTurnDistanceTiles(0.85, 44.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
-	driveAndTurnDistanceTiles(-0.12, 44.0, 50.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+namespace {
+	void loadPaths(int section) {
+		// Clear
+		clearLinear();
+		clearSplines();
 
-	// Take in 2nd middle up
-	turnToAngleVelocity(5.0, 40.0);
-	turnToAngleVelocity(40.0, 90.0, halfRobotLengthIn * 1.25);
-	task::sleep(100);
+		if (section == 1) {
+			// Grab goal
+			pushNewLinear({{2, 4}}, true, 60.0);
 
-	// Take in left up
-	turnToAngleVelocity(-70.0, 40.0);
-	driveAndTurnDistanceTiles(1.3, -80.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+			// Score 2 rings
+			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+				{0.76, 4.01}, {2.06, 4.02}, {2.75, 4.49}, {2.76, 5.5}, {1.84, 6.28}
+			}), false, 0.7);
 
-	// Take in corner
-	// setArmHangState(1);
-	setArmStage(2);
-	turnToAngle(-50.0);
-	setIntakeState(0);
-	driveAndTurnDistanceTiles(0.95, -50.0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-	task::sleep(200);
-	driveAndTurnDistanceTiles(1.0, -45.0, 50.0, 100.0, defaultMoveTilesErrorRange, 0.5);
-	task::sleep(600);
-	driveAndTurnDistanceTiles(-0.50, -42.0, 60.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+			// Go to corner
+			pushNewLinear({{2.01, 5.02}, {0.45, 5.4}});
 
-	// Touch ladder
-	turnToAngle(-42.0);
-	while (autontimer.value() < 13.0) {
-		task::sleep(20);
+			// Score corner
+			pushNewLinear({{0.19, 5.83}});
+
+			// Score 1 ring
+			pushNewLinear({{1.02, 3.38}, {1.02, 2.51}});
+
+			// Touch ladder
+			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
+				{0.99, 1.34}, {1.02, 2.49}, {1.4, 3.6}, {2.61, 3.26}, {3.97, 2.03}
+			}), true);
+		}
 	}
-	// setArmHangState(0, 0.5);
-	setArmStage(0);
-	setIntakeState(0, 0.5);
-	driveAndTurnDistanceTiles(-2.28, -42.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.6);
+
+	void doAuton() {
+		/* Score alliance wall stake and grab goal */
+
+		// Score preload on alliance wall stake
+		setArmStage(2);
+		task::sleep(600);
+		driveAndTurnDistanceTiles(0.45, -120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(-0.5, -120.0, 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+		setArmStage(0);
+
+		// Follow path
+		runFollowLinearYield();
+
+		// Grab goal
+		setGoalClampState(1);
+		wait(200, msec);
+
+
+		/* Score 2 rings */
+
+		// Start intake
+		turnToAngle(80);
+		setIntakeState(1);
+
+		// Follow path
+		runFollowSpline();
+
+		// Wait
+		waitUntil(_pathFollowCompleted);
+
+
+		/* Score 1 ring */
+
+		// Follow path
+		runFollowLinearYield();
+
+
+		/* Sweep corner */
+
+		// Deploy swing
+		turnToAngle(-60);
+		setSwingState(1);
+
+		// Swing out rings
+		driveAndTurnDistanceTiles(0.7, -60, 60, 100, defaultMoveTilesErrorRange, 0.5);
+		turnToAngleVelocity(0, 50);
+		setSwingState(0);
+
+		/* Score corner */
+
+		// Follow path
+		runFollowLinearYield();
+
+		// Back up
+		driveAndTurnDistanceTiles(-0.5, -45, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+
+
+		/* Score 1 ring */
+
+		// Follow path
+		runFollowLinearYield();
+
+
+		/* Touch ladder */
+
+		// Follow path
+		runFollowSpline();
+
+		// Wait
+		waitUntil(_pathFollowCompleted);
+
+		// Stop intake
+		waitUntil(_autonTimer.value() > 14.5);
+		setIntakeState(0);
+	}
 }

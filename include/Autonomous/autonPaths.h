@@ -32,17 +32,20 @@ namespace autonpaths {
 		void runFollowSpline();
 
 		extern std::vector<std::vector<std::vector<double>>> linearPaths;
+		extern std::vector<double> linearMaxVelocity_pct;
 		extern std::vector<bool> linearWillReverse;
 
 		extern int linearIndex;
 
 		void clearLinear();
-		void pushNewLinear(std::vector<std::vector<double>> path, bool reverse = false);
-		void runFollowLinearYield(double maxVelocity = 100.0);
+		void pushNewLinear(std::vector<std::vector<double>> path, bool reverse = false, double maxVelocity_pct = 100);
+		void runFollowLinearYield();
 	}
 
 
 	// Paths
+
+	void runTemplate();
 
 	void autonTest();
 	void odometryRadiusTest();

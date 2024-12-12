@@ -8,6 +8,7 @@
 #include "AutonUtilities/odometry.h"
 
 #include "GraphUtilities/trajectoryPlanner.h"
+#include "GraphUtilities/curveSampler.h"
 
 #include "Graphics/GraphicMain.h"
 #include "Graphics/GUIs/ButtonsGui.h"
@@ -263,7 +264,11 @@ namespace {
 		if (mainUseSimulator && !autonfunctions::_pathFollowStarted) {
 			trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
 		} else {
-			trajectoryValue = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[1];
+			double traj_distance = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[0];
+			double traj_velocity = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[1];
+			// double traj_tvalue = autonfunctions::_curveSampler.distanceToParam(traj_distance);
+			// double traj_angularVelocity = traj_velocity * autonfunctions::_splinePath.getCurvatureAt(traj_tvalue);
+			trajectoryValue = traj_velocity;
 		}
 		gph_x = fw_drawX;
 		gph_y = y + height / 2.0 - (trajectoryValue / 7 * height);

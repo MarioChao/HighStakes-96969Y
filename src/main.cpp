@@ -70,7 +70,7 @@ void pre_auton(void) {
 	mainOdometry.addInertialSensor(InertialSensor, -3.276, 3.651);
 	mainOdometry.setPositionFactor(1.0 / field::tileLengthIn);
 	task odometryTask([]() -> int {
-		mainOdometry.setPosition(0, 0);
+		mainOdometry.setPosition(3, 0);
 		mainOdometry.setLookAngle(0);
 		mainOdometry.start();
 		while (true) {
