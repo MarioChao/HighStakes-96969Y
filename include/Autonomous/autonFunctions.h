@@ -35,6 +35,8 @@ namespace autonfunctions {
 	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = defaultMoveTilesErrorRange, double runTimeout = 3);
 	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = autonvals::defaultMoveWithInchesErrorRange, double runTimeout = 3);
 
+	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse = false);
+
 	void setDifferentialUseRelativeRotation(bool useRelativeRotation);
 
 	extern bool _useRelativeRotation;
@@ -65,8 +67,8 @@ namespace autonfunctions {
 	void setIntakeTopState(int, double = 0);
 	void setIntakeBottomState(int, double = 0);
 
-	void setIntakeToArm(int);
-	void setIntakeStoreRing(int);
+	void setIntakeToArm(int, double = 0);
+	void setIntakeStoreRing(int, double = 0);
 
 	void setIntakeFilterOutColor(std::string colorText);
 

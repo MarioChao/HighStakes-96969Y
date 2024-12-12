@@ -30,6 +30,15 @@ namespace autonpaths {
 		void clearSplines();
 		void pushNewSpline(UniformCubicSpline spline, bool reverse = false, double maxVel = pathbuild::maxVel);
 		void runFollowSpline();
+
+		extern std::vector<std::vector<std::vector<double>>> linearPaths;
+		extern std::vector<bool> linearWillReverse;
+
+		extern int linearIndex;
+
+		void clearLinear();
+		void pushNewLinear(std::vector<std::vector<double>> path, bool reverse = false);
+		void runFollowLinearYield(double maxVelocity = 100.0);
 	}
 
 

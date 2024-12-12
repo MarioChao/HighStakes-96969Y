@@ -15,13 +15,13 @@ namespace botintake {
 	/* Color filter */
 
 	bool isColorFiltering();
-	void setColorFiltering(bool isEnabled);
+	void setColorFiltering(bool, double = 0);
 
 	void switchFilterColor();
 
 	void setFilterOutColor(std::string);
 
-	void setIntakeStoreRing(bool isStore);
+	void setIntakeStoreRing(bool, double = 0);
 
 	/* Control */
 
@@ -31,4 +31,10 @@ namespace botintake {
 
 	extern int _taskState;
 	extern double _taskDelay;
+
+	extern bool _colorFilterTaskState;
+	extern double _colorFilterTaskDelay;
+
+	extern bool _storeRingTaskState;
+	extern double _storeRingTaskDelay;
 }

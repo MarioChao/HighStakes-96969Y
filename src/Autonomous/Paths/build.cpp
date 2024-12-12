@@ -3,9 +3,9 @@
 namespace autonpaths { namespace pathbuild {
 	// Build paths
 
-	const double maxVel = 3.7 * 0.7;
-	const double maxAccel = 6;
-	const double maxDecel = 6;
+	const double maxVel = 3.7 * 0.6;
+	const double maxAccel = 2;
+	const double maxDecel = 2;
 
 	std::vector<UniformCubicSpline> splines;
 	std::vector<CurveSampler> splineSamplers;
@@ -39,5 +39,26 @@ namespace autonpaths { namespace pathbuild {
 		autonfunctions::followSplinePath(willReverse[pathIndex]);
 
 		pathIndex++;
+	}
+
+	std::vector<std::vector<std::vector<double>>> linearPaths;
+	std::vector<bool> linearWillReverse;
+
+	int linearIndex;
+
+	void clearLinear() {
+		linearPaths.clear();
+		linearWillReverse.clear();
+		linearIndex = 0;
+	}
+
+	void pushNewLinear(std::vector<std::vector<double>> path, bool reverse) {
+		linearPaths.push_back(path);
+		linearWillReverse.push_back(reverse);
+	}
+
+	void runFollowLinearYield(double maxVelocity) {
+		runLinearPIDPath(linearPaths[linearIndex], maxVelocity, linearWillReverse[linearIndex]);
+		linearIndex++;
 	}
 }}

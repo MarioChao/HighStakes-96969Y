@@ -2,6 +2,8 @@
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/pidController.h"
+#include "AutonUtilities/linegular.h"
+#include "AutonUtilities/patienceController.h"
 
 #include "Mechanics/botDrive.h"
 
@@ -25,6 +27,10 @@ namespace {
 
 	// DriftCorrection driftCorrector(InertialSensor, -3.276, 3.651);
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
+
+	// Some controllers
+	PatienceController angleError_degreesPatience(30, 1.0, false);
+	PatienceController driveError_inchesPatience(30, 1.0, false);
 
 	// Simulator
 	bool useSimulator = mainUseSimulator;
@@ -70,13 +76,21 @@ namespace autonfunctions {
 		PIDController rotateTargetAngleVoltPid(2.5, 0.0, 0.16, errorRange);
 		PIDController rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, errorRange);
 
+		// Reset patience
+		angleError_degreesPatience.reset();
+
 		// Reset timer
 		if (useSimulator) {
 			robotSimulator.resetTimer();
 		}
-
 		timer timeout;
+
 		while (!rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout) {
+			// Check exhausted
+			if (angleError_degreesPatience.isExhausted()) {
+				break;
+			}
+
 			// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
 
 			// Get current robot heading
@@ -95,6 +109,9 @@ namespace autonfunctions {
 			rotateTargetAngleVoltPid.computeFromError(rotateError);
 			rotateTargetAngleVelocityPctPid.computeFromError(rotateError);
 
+			// Update error patience
+			angleError_degreesPatience.computePatience(std::fabs(rotateError));
+
 			// Compute motor rotate velocities
 			double averageMotorVelocityPct;
 			if (useVolt) {
@@ -111,23 +128,10 @@ namespace autonfunctions {
 			rightMotorVelocityPct *= scaleFactor;
 
 			// Drive with velocities
-			if (!useSimulator) {
-				if (useVolt) {
-					botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 9);
-				} else {
-					botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
-				}
+			if (useVolt) {
+				botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 9);
 			} else {
-				double leftVelocity = leftMotorVelocityPct / _pathToPctFactor;
-				double rightVelocity = rightMotorVelocityPct / _pathToPctFactor;
-				double velocity = (leftVelocity + rightVelocity) / 2;
-				double angularVelocity = (rightVelocity - leftVelocity) / 2;
-				double lookAngle = robotSimulator.angularPosition;
-				robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
-				robotSimulator.angularVelocity = angularVelocity;
-
-				robotSimulator.updatePhysics();
-				robotSimulator.updateDistance();
+				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
 			}
 
 			task::sleep(20);
@@ -186,6 +190,9 @@ namespace autonfunctions {
 		PIDController rotateTargetAnglePid(1.0, 0.05, 0.01, defaultTurnAngleErrorRange);
 		PIDController synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
+		// Reset patience
+		driveError_inchesPatience.reset();
+
 		// Reset timer
 		if (useSimulator) {
 			robotSimulator.resetTimer();
@@ -193,6 +200,11 @@ namespace autonfunctions {
 
 		timer timeout;
 		while (!(driveTargetDistancePid.isSettled() && rotateTargetAnglePid.isSettled()) && timeout.value() < runTimeout) {
+			// Check exhausted
+			if (driveError_inchesPatience.isExhausted()) {
+				break;
+			}
+
 			// Compute linear distance error
 			double distanceError;
 			double targetDistanceInches = distanceInches;
@@ -238,6 +250,9 @@ namespace autonfunctions {
 			driveTargetDistancePid.computeFromError(distanceError);
 			double velocityPct = fmin(maxVelocityPct, fmax(-maxVelocityPct, driveTargetDistancePid.getValue()));
 
+			// Update error patience
+			driveError_inchesPatience.computePatience(std::fabs(distanceError));
+
 			// Get current robot heading
 			double currentRotation_degrees = InertialSensor.rotation(degrees);
 			if (useSimulator) {
@@ -277,20 +292,7 @@ namespace autonfunctions {
 
 			// Drive with velocities
 			// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
-			if (!useSimulator) {
-				botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
-			} else {
-				double leftVelocity = leftVelocityPct / _pathToPctFactor;
-				double rightVelocity = rightVelocityPct / _pathToPctFactor;
-				double velocity = (leftVelocity + rightVelocity) / 2;
-				double angularVelocity = (rightVelocity - leftVelocity) / 2;
-				double lookAngle = robotSimulator.angularPosition;
-				robotSimulator.velocity = Vector3(velocity * cos(lookAngle), velocity * sin(lookAngle), 0);
-				robotSimulator.angularVelocity = angularVelocity;
-
-				robotSimulator.updatePhysics();
-				robotSimulator.updateDistance();
-			}
+			botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
 
 			task::sleep(20);
 		}
@@ -300,6 +302,27 @@ namespace autonfunctions {
 
 		// Correct
 		driftCorrector.correct();
+	}
+
+	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse) {
+		Linegular lg(0, 0, 0);
+		for (std::vector<double> point : waypoints) {
+			// Rotation
+			lg = mainOdometry.getLookLinegular();
+			double angle_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(atan2(point[1] - lg.getY(), point[0] - lg.getX())));
+			if (isReverse) angle_degrees += 180;
+			turnToAngle(angle_degrees);
+
+			// Linear
+			lg = mainOdometry.getLookLinegular();
+			double drive_distance = genutil::euclideanDistance({lg.getX(), lg.getY()}, {point[0], point[1]}) * (isReverse ? -1 : 1);
+			printf("ST: X: %.3f, Y: %.3f, dist: %.3f\n", lg.getX(), lg.getY(), drive_distance);
+			driveAndTurnDistanceTiles(drive_distance, angle_degrees, maxVelocity);
+
+			// Info
+			lg = mainOdometry.getLookLinegular();
+			printf("ED: X: %.3f, Y: %.3f\n", lg.getX(), lg.getY());
+		}
 	}
 
 	void setDifferentialUseRelativeRotation(bool useRelativeRotation) {

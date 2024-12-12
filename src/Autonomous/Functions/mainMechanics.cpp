@@ -49,21 +49,21 @@ namespace autonfunctions {
 
 	/// @brief Set the hook mode of the intake.
 	/// @param state Normal: 0, to arm: 1
-	void setIntakeToArm(int state) {
+	void setIntakeToArm(int state, double delaySec) {
 		if (intakePart == 1) {
 			if (state) {
-				botintake::setColorFiltering(false);
-				redirect::setState(1);
-				botarm::setArmStage(1);
+				botintake::setColorFiltering(false, delaySec);
+				redirect::setState(1, delaySec);
+				botarm::setArmStage(1, delaySec);
 			} else {
-				botintake::setColorFiltering(true);
+				botintake::setColorFiltering(true, delaySec);
 			}
 		} else botintake2::setHookMode(state);
 	}
 
-	void setIntakeStoreRing(int state) {
+	void setIntakeStoreRing(int state, double delaySec) {
 		if (intakePart == 1) {
-			botintake::setIntakeStoreRing(state);
+			botintake::setIntakeStoreRing(state, delaySec);
 		}
 	}
 

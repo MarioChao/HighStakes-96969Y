@@ -149,8 +149,32 @@ namespace botintake {
 		return colorFilterEnabled;
 	}
 
-	void setColorFiltering(bool isEnabled) {
-		colorFilterEnabled = isEnabled;
+	void setColorFiltering(bool state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+			colorFilterEnabled = state;
+
+			return;
+		}
+
+		// Set global variables
+		_colorFilterTaskState = state;
+		_colorFilterTaskDelay = delaySec;
+
+		task setState([]() -> int {
+			// Get global variables
+			int taskState = _colorFilterTaskState;
+			double taskDelay = _colorFilterTaskDelay;
+
+			// Delay setting state
+			task::sleep(taskDelay * 1000);
+
+			// Set state here
+			colorFilterEnabled = taskState;
+
+			return 1;
+		});
 	}
 
 	void switchFilterColor() {
@@ -168,8 +192,32 @@ namespace botintake {
 		// debug::printOnController(colorText);
 	}
 
-	void setIntakeStoreRing(bool isStore) {
-		isStoringRing = isStore;
+	void setIntakeStoreRing(bool state, double delaySec) {
+		// Check for instant set
+		if (delaySec <= 1e-9) {
+			// Set state here
+			isStoringRing = state;
+
+			return;
+		}
+
+		// Set global variables
+		_storeRingTaskState = state;
+		_storeRingTaskDelay = delaySec;
+
+		task setState([]() -> int {
+			// Get global variables
+			int taskState = _storeRingTaskState;
+			double taskDelay = _storeRingTaskDelay;
+
+			// Delay setting state
+			task::sleep(taskDelay * 1000);
+
+			// Set state here
+			isStoringRing = taskState;
+
+			return 1;
+		});
 	}
 
 	void control(int state, int hookState) {
@@ -187,6 +235,12 @@ namespace botintake {
 
 	int _taskState;
 	double _taskDelay;
+
+	bool _colorFilterTaskState;
+	double _colorFilterTaskDelay;
+
+	bool _storeRingTaskState;
+	double _storeRingTaskDelay;
 }
 
 
