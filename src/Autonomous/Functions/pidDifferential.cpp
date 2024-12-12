@@ -67,7 +67,7 @@ namespace autonfunctions {
 		// L_vel = L_dist / time
 		// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 		// TODO: Tune pid
-		PIDController rotateTargetAngleVoltPid(2.5, 0.0, 0.15, errorRange);
+		PIDController rotateTargetAngleVoltPid(2.5, 0.0, 0.16, errorRange);
 		PIDController rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, errorRange);
 
 		// Reset timer
