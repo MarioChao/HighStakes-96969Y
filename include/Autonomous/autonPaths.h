@@ -59,6 +59,7 @@ namespace autonpaths {
 	void runAutonBlueDown();
 	void runAutonBlueDownOld();
 	void runAutonSkills();
+	void runAutonSkillsLong();
 
 	void runAllianceWallStake();
 	void runLoveShape();

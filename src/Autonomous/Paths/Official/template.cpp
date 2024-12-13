@@ -11,7 +11,7 @@ namespace {
 
 /// @brief Run the template.
 void autonpaths::runTemplate() {
-	/* Pre skills */
+	/* Pre auton */
 
 	// Timer
 	_autonTimer.reset();

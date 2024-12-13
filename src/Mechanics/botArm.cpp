@@ -16,8 +16,8 @@ namespace {
 
 	// Stage controllers
 	PIDController armPositionPid(1.5, 0, 0.12);
-	PatienceController armUpPatience(30, 1.0, true);
-	PatienceController armDownPatience(15, 1.0, false);
+	PatienceController armUpPatience(10, 1.0, true);
+	PatienceController armDownPatience(10, 1.0, false);
 
 	// Stage config
 	std::vector<double> armStages_degrees = {80, 0, 195.0, 0};
@@ -136,9 +136,7 @@ namespace botarm {
 
 		// Spin downward until exhausted
 		setArmStage(1);
-		while (!armDownPatience.isExhausted()) {
-			task::sleep(20);
-		}
+		waitUntil(armDownPatience.isExhausted());
 
 		// Set the position as 0 degrees
 		setArmPosition(0);

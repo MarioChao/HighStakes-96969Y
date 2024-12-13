@@ -1,24 +1,19 @@
 #include "Autonomous/autonPaths.h"
 
-#include "Utilities/generalUtility.h"
-#include "Utilities/angleUtility.h"
-
-#include "Simulation/robotSimulator.h"
-
 namespace {
 	using namespace autonpaths;
 	using namespace autonpaths::pathbuild;
 
 	void loadPaths(int section);
 
-	void firstGoal();
-	void secondGoal();
-	void thirdGoal();
-	void fourthGoal();
+	void firstCorner();
+	void secondCorner();
+	void thirdCorner();
+	void fourthCorner();
 	void finalSkills();
 }
 
-/// @brief Run the skills autonomous.
+/// @brief Run the autonomous skills.
 void autonpaths::runAutonSkills() {
 	/* Pre skills */
 
@@ -26,15 +21,8 @@ void autonpaths::runAutonSkills() {
 	_autonTimer.reset();
 
 	// Set position and rotation
-	mainOdometry.printDebug();
 	mainOdometry.setPosition(0.792, 3);
 	setRobotRotation(-90.0);
-	mainOdometry.printDebug();
-
-	if (mainUseSimulator) {
-		robotSimulator.position = Vector3(0.792, 3);
-		robotSimulator.angularPosition = genutil::toRadians(angle::swapFieldPolar_degrees(-90));
-	}
 
 	// Set config
 	setDifferentialUseRelativeRotation(true);
@@ -45,16 +33,16 @@ void autonpaths::runAutonSkills() {
 
 	/* Skills */
 	loadPaths(1);
-	firstGoal();
+	firstCorner();
 
 	loadPaths(2);
-	secondGoal();
+	secondCorner();
 
 	loadPaths(3);
-	thirdGoal();
+	thirdCorner();
 
 	loadPaths(4);
-	fourthGoal();
+	fourthCorner();
 
 	loadPaths(5);
 	finalSkills();
@@ -67,367 +55,212 @@ namespace {
 		clearSplines();
 
 		if (section == 1) {
+			// Score on wall stake
+			pushNewLinear({{0, 3}});
+
+			// Grab goal
+			pushNewLinear({{1, 2}}, true, 70);
+
 			// Redirect 1 ring
-			pushNewLinear({{2, 2.01}});
+			pushNewLinear({{1.93, 2}});
 
-			// Score 3 rings
-			// pushNewLinear({{2.01, 1.02}, {3, 0.51}, {3.99, 1}});
-			pushNewLinear({{2.01, 1.02}});
-			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{0.9, 2.33}, {2.01, 1.02}, {2.98, 0.53}, {4.07, 1.08}, {5.06, 2.31}
-			}));
+			// Score 2 rings
+			pushNewLinear({{2.01, 1.06}, {3.93, 1}});
 
-			// Score on neutral wall stake
-			pushNewLinear({{3, 1.2}}, true);
+			// Go to wall stake
+			pushNewLinear({{3.0, 1.2}});
+
+			// Score on wall stake
 			pushNewLinear({{3, 0}});
 
 			// Score 3 rings
-			pushNewLinear({{1.7, 1}, {0.55, 1.02}, {0.99, 0.4}});
+			pushNewLinear({{1.71, 1.05}, {0.5, 1.05}, {1.19, 0.37}});
+
+			// Place goal at corner
+			pushNewLinear({{0.39, 0.39}}, true);
 		} else if (section == 2) {
-			// Redirect middle ring
-			pushNewLinear({{3.01, 3}});
-
-			// Store ring
-			pushNewLinear({{4, 2.01}});
-
-			// Grab mobile goal
-			pushNewLinear({{5, 3.01}}, true, 60.0);
-
-			// Score on alliance wall stake
-			pushNewLinear({{6, 3}});
-
-			// Score 3 rings at top
-			pushNewLinear({{4.6, 3.7}, {4.9, 5.1}, {4.9, 5.5}, {5.6, 5}});
-
-			// Score 2 rings at bottom
-			pushNewLinear({{4.72, 4.21}, {5.08, 1.48}, {4.94, 0.49}});
-
 			// Redirect 1 ring
-			pushNewLinear({{5.43, 0.96}});
+			pushNewLinear({{3, 3}});
 
-			// Score on alliance wall stake
-			pushNewLinear({{4.61, 1.56}, {4.71, 3}, {6, 3}});
-		} else if (section == 3) {
-			// Push mobile goal to corner
-			pushNewLinear({{5.7, 5.6}}, true);
-		} else if (section == 4) {
-			// Redirect 1 ring and store 1 ring
-			pushNewLinear({{4, 5}});
-			pushNewLinear({{3.02, 4.66}, {1.97, 3.97}});
+			// Store 1 ring
+			pushNewLinear({{2, 4}});
 
 			// Grab goal
-			pushNewLinear({{1.02, 4.01}}, true, 60.0);
+			pushNewLinear({{1.1, 4.01}}, true, 70);
 
-			// Go to neutral wall stake
-			pushNewLinear({{3.0, 4.7}});
-
-			// Score 1 ring
-			pushNewLinear({{3.95, 4.07}});
+			// Score 2 ring & score on wall stake
+			pushNewLinear({{2, 4.9}, {3, 4.9}, {3, 6}});
 
 			// Score 3 rings
-			pushNewLinear({{2.98, 4.94}, {1.9, 4.94}});
-			pushNewLinear({{0.49, 4.94}}, false, 60.0);
+			pushNewLinear({{1.04, 5.52}, {1.03, 5.01}, {0.49, 5}});
 
+			// Place goal at corner
+			pushNewLinear({{0.39, 5.61}}, true);
+		} else if (section == 3) {
 			// Redirect 1 ring
-			pushNewLinear({{0.98, 5.45}});
-		} else if (section == 5) {
-			// Score on alliance wall stake
-			pushNewLinear({{1, 3}, {0, 3}});
+			pushNewLinear({{4, 5}});
 
+			// Store 1 ring
+			pushNewLinear({{4, 4}});
+
+			// Grab goal
+			pushNewLinear({{5, 3}}, true, 70);
+
+			// Score on wall stake
+			pushNewLinear({{6, 3}});
+
+			// Place goal at corner
+			pushNewLinear({{5.5, 3.9}, {5.61, 5.61}}, true);
+
+		} else if (section == 4) {
+			// Store 1 ring
+			pushNewLinear({{5, 5}});
+
+			// Grab goal
+			pushNewLinear({{5, 3}}, true, 70);
+
+			// Score 3 rings
+			pushNewLinear({{4, 2}, {4.95, 1.05}, {4.95, 0.55}});
+
+			// Reposition
+			pushNewLinear({{4.95, 1}}, true);
+
+			// Score 1 ring
+			pushNewLinear({{5.55, 1.04}});
+
+			// Place goal at corner
+			pushNewLinear({{5.61, 0.39}}, true);
+		} else if (section == 5) {
 			// Climb on ladder
-			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{0.13, 3.81}, {0.51, 2.99}, {1.38, 1.87}, {2.24, 2.35}, {3.23, 3.42}
-			}));
+			pushNewLinear({{3.78, 2.22}});
+			pushNewLinear({{3, 3}}, false, 50);
 		}
 	}
 
-	void firstGoal() {
-		/* Score alliance wall stake and grab goal */
-
-		// Score preload on alliance wall stake
+	void firstCorner() {
+		// Wall stake
 		setArmStage(2);
-		task::sleep(600);
-		driveAndTurnDistanceTiles(1.0, -90.0, 100.0, 100.0, 0.5);
-		driveAndTurnDistanceTiles(-0.5, -90.0, 70.0, 100.0, 0.5);
-		setArmStage(1, 0.5);
+		wait(600, msec);
+		runFollowLinearYield();
+		driveDistanceTiles(-0.5);
 
-		// Go to goal
-		turnToAngle(-10, 0, 1.0);
-		driveAndTurnDistanceTiles(-1.3, 0, 80.0, 100.0, 1.0);
-
-		// Grab goal
+		// Goal
+		runFollowLinearYield();
 		setGoalClampState(1);
-		wait(200, msec);
 
-
-		/* Redirect 1 ring */
-
-		// Start intake
-		setIntakeState(1);
+		// Redirect
 		setIntakeToArm(1);
-
-		// Follow path
+		setIntakeState(1);
 		runFollowLinearYield();
 
-		// Remove redirect
+		// Score
 		setIntakeToArm(0, 0.5);
-
-
-		/* Score 3 rings */
-
-		// Follow path
 		runFollowLinearYield();
 
-		// Follow path
-		turnToAngle(120);
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
-
-
-		/* Score on neutral wall stake */
-
-		// Raise arm
-		setArmStage(3);
-
-		// Follow path
+		// Wall stake
+		runFollowLinearYield();
 		runFollowLinearYield();
 
-		// Stop intake score
-		setIntakeState(0);
-
-		// Follow path
+		// Score
 		runFollowLinearYield();
 
-		// Back up
-		driveAndTurnDistanceTiles(-0.5, 180.0, 70.0, 100.0, 0.5);
-
-
-		/* Score 3 rings */
-
-		// Start intake
-		setIntakeState(1);
-
-		// Follow path
+		// Place goal
 		runFollowLinearYield();
-
-
-		/* Place mobile goal in corner */
-
-		// Release goal and push to corner
-		turnToAngle(60);
 		setGoalClampState(0);
-		setIntakeState(0);
-		driveAndTurnDistanceTiles(-1.0, 60, 100.0, 100.0, 1.0);
-		driveAndTurnDistanceTiles(0.5, 45, 80.0, 100.0, 1.0);
+		driveDistanceTiles(0.5);
 	}
 
-	void secondGoal() {
-		/* Redirect middle ring */
-
-		// Start intake
-		setIntakeState(1);
+	void secondCorner() {
+		// Redirect
 		setIntakeToArm(1);
-
-		// Follow path
+		setIntakeState(1);
 		runFollowLinearYield();
 
-		// Remove redirect
-		setIntakeToArm(0, 1.0);
-		setIntakeState(0, 1.0);
-
-
-		/* Store 1 ring */
-
-		// Store ring
+		// Store
 		setIntakeStoreRing(1, 0.5);
-
-		// Follow path
 		runFollowLinearYield();
 
-		// Remove store
-		setIntakeStoreRing(0, 1.0);
-
-
-		/* Grab mobile goal */
-
-		// Follow path
+		// Goal
 		runFollowLinearYield();
-
-		// Grab goal
 		setGoalClampState(1);
-		setArmStage(2);
-		wait(200, msec);
 
-
-		/* Score on alliance wall stake */
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Back up
-		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, 0.5);
-		setArmStage(0);
-
-
-		/* Score 3 rings */
-
-		// Start intake & score
-		setIntakeState(1);
-
-		// Follow path
-		runFollowLinearYield();
-
-
-		/* Score 2 rings and redirect 1 ring */
-
-		// Turn
-		turnToAngle(-135);
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Redirect ring
-		setIntakeToArm(1, 0.5);
-
-		// Follow path
-		runFollowLinearYield();
-
-
-		/* Place mobile goal in corner */
-
-		// Release goal and push to corner
-		turnToAngle(-25);
-		setGoalClampState(0);
-		driveAndTurnDistanceTiles(-1.0, -25, 100.0, 100.0, 1.0);
-		driveAndTurnDistanceTiles(0.5, -45, 80.0, 100.0, 1.0);
-
-
-		/* Score on alliance wall stake */
-
-		// Raise arm
-		setIntakeState(0, 3.5);
-		setArmStage(2);
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Back up
-		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, 0.5);
+		// Score + wall stake
 		setArmStage(3);
-	}
-
-	void thirdGoal() {
-		/* Push mobile goal to corner */
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Move forward a bit
-		driveAndTurnDistanceTiles(0.5, -170, 80.0, 100.0, 0.5);
-		setArmHangState(0);
-	}
-
-	void fourthGoal() {
-		/* Redirect 1 ring and store 1 ring */
-
-		// Start intake and redirect
-		turnToAngle(-105);
 		setIntakeState(1);
-		setIntakeToArm(1);
-
-		// Follow path
 		runFollowLinearYield();
-
-		// Remove redirect and start to store
-		setIntakeToArm(0, 0.5);
-		setIntakeStoreRing(1, 0.5);
-
-		// Follow path
-		runFollowLinearYield();
-
-
-		/* Grab mobile goal */
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Grab goal
-		setGoalClampState(1);
-		wait(200, msec);
-
-
-		/* Score on neutral wall stake */
-
-		// Start scoring and raise arm
-		setIntakeState(1);
-		setArmStage(3);
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Score on neutral wall stake
-		turnToAngle(0);
-		driveAndTurnDistanceTiles(1.5, 0.0, 100.0, 100.0, 1.0);
-		driveAndTurnDistanceTiles(-0.5, 0.0, 80.0, 100.0, 0.5);
+		driveDistanceTiles(-0.5);
 		setArmStage(0, 1.0);
 
-
-		/* Score 1 ring */
-
-		// Follow path
+		// Score
 		runFollowLinearYield();
 
-
-		/* Score 3 rings and redirect 1 ring */
-
-		// Follow path
+		// Place goal
 		runFollowLinearYield();
-		runFollowLinearYield();
-
-		// Redirect ring
-		setIntakeToArm(1, 0.5);
-		driveAndTurnDistanceTiles(1.0, 55, 80.0, 100.0, 1.0);
-
-
-		/* Place mobile goal in corner */
-
-		// Release goal and push to corner
-		turnToAngle(105);
 		setGoalClampState(0);
-		setIntakeState(0, 1.0);
-		driveAndTurnDistanceTiles(-1.0, 105, 100.0, 100.0, 1.0);
-		driveAndTurnDistanceTiles(0.5, 135, 80.0, 100.0, 1.0);
+		driveDistanceTiles(0.5);
+	}
+
+	void thirdCorner() {
+		// Redirect
+		setIntakeToArm(1);
+		setIntakeState(1);
+		runFollowLinearYield();
+
+		// Store
+		setIntakeStoreRing(1, 0.5);
+		runFollowLinearYield();
+
+		// Goal
+		runFollowLinearYield();
+		setGoalClampState(1);
+
+		// Release goal
+		setIntakeState(1);
+		setArmStage(2);
+		turnToAngle(90);
+		wait(200, msec);
+		setGoalClampState(0);
+		setIntakeState(0);
+
+		// Wall stake
+		runFollowLinearYield();
+		driveDistanceTiles(-0.5);
+		setArmStage(0, 1.0);
+
+		// Place goal
+		runFollowLinearYield();
+		driveDistanceTiles(0.5);
+	}
+
+	void fourthCorner() {
+		// Store
+		setIntakeStoreRing(1);
+		runFollowLinearYield();
+
+		// Goal
+		runFollowLinearYield();
+		setGoalClampState(1);
+
+		// Score
+		setIntakeStoreRing(0);
+		setIntakeState(1);
+		runFollowLinearYield();
+
+		// Reposition
+		runFollowLinearYield();
+
+		// Score
+		runFollowLinearYield();
+
+		// Place goal
+		runFollowLinearYield();
+		setGoalClampState(0);
+		driveDistanceTiles(0.5);
 	}
 
 	void finalSkills() {
-		/* Score on alliance wall stake */
-
-		// Raise arm
-		setArmStage(2);
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Back up
-		driveAndTurnDistanceTiles(-0.5, -90.0, 80.0, 100.0, 0.5);
-
-
-		/* Climb on ladder */
-
-		// Turn and raise arm
-		turnToAngle(145);
 		setArmStage(3);
-
-		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
-
-		// Climb
-		turnToAngle(45);
-		driveAndTurnDistanceTiles(1.0, 45, 40.0, 100.0);
+		runFollowLinearYield();
+		runFollowLinearYield();
 	}
 }

@@ -45,6 +45,9 @@ namespace controls {
 		// Controller 1
 		Controller1.ButtonX.pressed([]() -> void {
 			if (intakePart == 1) {
+				if (!botarm::isArmResetted()) {
+					return;
+				}
 				// botintake::switchMode();
 				// Alliance wall stake
 				botarm::setArmStage(2);
@@ -73,6 +76,10 @@ namespace controls {
 		});
 		Controller1.ButtonB.pressed([]() -> void {
 			if (intakePart == 1) {
+				if (!botarm::isArmResetted()) {
+					return;
+				}
+
 				if (botintake::isColorFiltering()) {
 					botintake::setColorFiltering(false);
 					redirect::setState(1);
@@ -95,11 +102,18 @@ namespace controls {
 			// if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
 			// 	botarmpneu::switchState();
 			// }
+			if (!botarm::isArmResetted()) {
+				return;
+			}
+
 			// Neutral wall stake
 			botarm::setArmStage(3);
 			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonDown.pressed([]() -> void {
+			if (!botarm::isArmResetted()) {
+				return;
+			}
 			botarm::setArmStage(0);
 			botintake::setColorFiltering(true);
 		});
