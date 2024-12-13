@@ -17,9 +17,6 @@ class TrajectoryPlanner;
 // Namespace
 
 namespace autonfunctions {
-	using autonvals::defaultMoveTilesErrorRange, autonvals::defaultTurnAngleErrorRange;
-
-
 	/* General */
 
 	void setRobotRotation(double rotation);
@@ -28,12 +25,12 @@ namespace autonfunctions {
 
 	/* PID differential */
 
-	void turnToAngle(double rotation, double rotateCenterOffsetIn = 0, double errorRange = defaultTurnAngleErrorRange, double runTimeout = 3);
-	void turnToAngleVelocity(double rotation, double maxVelocityPct, double rotateCenterOffsetIn = 0, double errorRange = defaultTurnAngleErrorRange, double runTimeout = 3);
+	void turnToAngle(double rotation, double rotateCenterOffsetIn = 0, double runTimeout = 3);
+	void turnToAngleVelocity(double rotation, double maxVelocityPct, double rotateCenterOffsetIn = 0, double runTimeout = 3);
 
-	void driveDistanceTiles(double distanceTiles, double maxVelocityPct = 100, double errorRange = defaultMoveTilesErrorRange, double runTimeout = 3);
-	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = defaultMoveTilesErrorRange, double runTimeout = 3);
-	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double errorRange = autonvals::defaultMoveWithInchesErrorRange, double runTimeout = 3);
+	void driveDistanceTiles(double distanceTiles, double maxVelocityPct = 100, double runTimeout = 3);
+	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double runTimeout = 3);
+	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double runTimeout = 3);
 
 	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse = false);
 

@@ -71,8 +71,8 @@ namespace {
 		// Score preload on alliance wall stake
 		setArmStage(2);
 		task::sleep(600);
-		driveAndTurnDistanceTiles(0.45, -(-120.0), 40.0, 100.0, defaultMoveTilesErrorRange, 0.5);
-		driveAndTurnDistanceTiles(-0.5, -(-120.0), 40.0, 100.0, defaultMoveTilesErrorRange, 1.5);
+		driveAndTurnDistanceTiles(0.45, -(-120.0), 40.0, 100.0, 0.5);
+		driveAndTurnDistanceTiles(-0.5, -(-120.0), 40.0, 100.0, 1.5);
 		setArmStage(0);
 
 		// Follow path
@@ -109,7 +109,7 @@ namespace {
 		setSwingState(1);
 
 		// Swing out rings
-		driveAndTurnDistanceTiles(0.7, -(-60), 60, 100, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(0.7, -(-60), 60, 100, 0.5);
 		turnToAngleVelocity(-(0), 50);
 		setSwingState(0);
 
@@ -119,7 +119,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Back up
-		driveAndTurnDistanceTiles(-0.5, -(-45), 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(-0.5, -(-45), 100.0, 100.0, 1.0);
 
 
 		/* Score 1 ring */

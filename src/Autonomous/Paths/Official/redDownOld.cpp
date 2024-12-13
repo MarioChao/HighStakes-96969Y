@@ -9,7 +9,7 @@ void autonpaths::runAutonRedDownOld() {
 	driveAndTurnDistanceTiles(-1.30, -90.0, 100.0);
 	turnToAngle(-120.0, halfRobotLengthIn * 0.5);
 	setGoalClampState(1, 0.7);
-	driveAndTurnDistanceTiles(-0.74, -120.0, 60.0, 100.0, defaultMoveTilesErrorRange, 2.0);
+	driveAndTurnDistanceTiles(-0.74, -120.0, 60.0, 100.0, 2.0);
 
 	// Score 1 ring
 	task::sleep(200);

@@ -135,7 +135,7 @@ namespace {
 		// setIntakeState(0);
 
 		// Swing out rings
-		driveAndTurnDistanceTiles(0.7, -(-135), 60, 100, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(0.7, -(-135), 60, 100, 0.5);
 		turnToAngleVelocity(-(-80), 50);
 		setSwingState(0);
 
@@ -150,7 +150,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Back up
-		driveAndTurnDistanceTiles(-0.5, -(-135), 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(-0.5, -(-135), 100.0, 100.0, 1.0);
 
 
 		/* Score alliance wall stake */

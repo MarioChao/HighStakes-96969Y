@@ -77,15 +77,15 @@ namespace {
 				{0.9, 2.33}, {2.01, 1.02}, {2.98, 0.53}, {4.07, 1.08}, {5.06, 2.31}
 			}));
 
-			// Prepare to score on neutral wall stake
+			// Score on neutral wall stake
 			pushNewLinear({{3, 1.2}}, true);
-			pushNewLinear({{3, 0.7}});
+			pushNewLinear({{3, 0}});
 
 			// Score 3 rings
-			pushNewLinear({{1.73, 1}, {1, 1}, {0.55, 1}, {0.99, 0.53}});
+			pushNewLinear({{1.7, 1}, {0.55, 1.02}, {0.99, 0.4}});
 		} else if (section == 2) {
 			// Redirect middle ring
-			pushNewLinear({{2.01, 2.03}, {3.01, 3}});
+			pushNewLinear({{3.01, 3}});
 
 			// Store ring
 			pushNewLinear({{4, 2.01}});
@@ -93,8 +93,11 @@ namespace {
 			// Grab mobile goal
 			pushNewLinear({{5, 3.01}}, true, 60.0);
 
+			// Score on alliance wall stake
+			pushNewLinear({{6, 3}});
+
 			// Score 3 rings at top
-			pushNewLinear({{4.6, 3.7}, {5.01, 4.99}, {4.98, 5.4}, {5.51, 4.99}});
+			pushNewLinear({{4.6, 3.7}, {4.9, 5.1}, {4.9, 5.5}, {5.6, 5}});
 
 			// Score 2 rings at bottom
 			pushNewLinear({{4.72, 4.21}, {5.08, 1.48}, {4.94, 0.49}});
@@ -102,17 +105,15 @@ namespace {
 			// Redirect 1 ring
 			pushNewLinear({{5.43, 0.96}});
 
-			// Face alliance wall stake
-			pushNewLinear({{4.61, 1.56}, {4.71, 3.01}, {5.58, 3.02}});
+			// Score on alliance wall stake
+			pushNewLinear({{4.61, 1.56}, {4.71, 3}, {6, 3}});
 		} else if (section == 3) {
 			// Push mobile goal to corner
-			pushNewLinear({{5.4, 3.6}, {5.68, 5.5}}, true);
+			pushNewLinear({{5.7, 5.6}}, true);
 		} else if (section == 4) {
 			// Redirect 1 ring and store 1 ring
-			pushNewLinear({{4.03}});
-			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{8.4, 4.98}, {4.01, 5.04}, {1.93, 3.91}, {0.21, 0.29}
-			}));
+			pushNewLinear({{4, 5}});
+			pushNewLinear({{3.02, 4.66}, {1.97, 3.97}});
 
 			// Grab goal
 			pushNewLinear({{1.02, 4.01}}, true, 60.0);
@@ -125,13 +126,13 @@ namespace {
 
 			// Score 3 rings
 			pushNewLinear({{2.98, 4.94}, {1.9, 4.94}});
-			pushNewLinear({{0.49, 4.94}}, 60.0);
+			pushNewLinear({{0.49, 4.94}}, false, 60.0);
 
 			// Redirect 1 ring
 			pushNewLinear({{0.98, 5.45}});
 		} else if (section == 5) {
-			// Go to alliance wall stake
-			pushNewLinear({{0.8, 3}});
+			// Score on alliance wall stake
+			pushNewLinear({{1, 3}, {0, 3}});
 
 			// Climb on ladder
 			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
@@ -146,13 +147,13 @@ namespace {
 		// Score preload on alliance wall stake
 		setArmStage(2);
 		task::sleep(600);
-		driveAndTurnDistanceTiles(1.0, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.5);
-		driveAndTurnDistanceTiles(-0.5, -90.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(1.0, -90.0, 100.0, 100.0, 0.5);
+		driveAndTurnDistanceTiles(-0.5, -90.0, 70.0, 100.0, 0.5);
 		setArmStage(1, 0.5);
 
 		// Go to goal
-		turnToAngle(-10, 0, defaultTurnAngleErrorRange, 1.0);
-		driveAndTurnDistanceTiles(-1.3, 0, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		turnToAngle(-10, 0, 1.0);
+		driveAndTurnDistanceTiles(-1.3, 0, 80.0, 100.0, 1.0);
 
 		// Grab goal
 		setGoalClampState(1);
@@ -192,13 +193,15 @@ namespace {
 
 		// Follow path
 		runFollowLinearYield();
+
+		// Stop intake score
+		setIntakeState(0);
+
+		// Follow path
 		runFollowLinearYield();
 
-		// Drive forward and score
-		turnToAngle(180.0);
-		setIntakeState(0);
-		driveAndTurnDistanceTiles(1.5, 180.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(-0.5, 180.0, 70.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		// Back up
+		driveAndTurnDistanceTiles(-0.5, 180.0, 70.0, 100.0, 0.5);
 
 
 		/* Score 3 rings */
@@ -216,8 +219,8 @@ namespace {
 		turnToAngle(60);
 		setGoalClampState(0);
 		setIntakeState(0);
-		driveAndTurnDistanceTiles(-1.0, 60, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(0.5, 45, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(-1.0, 60, 100.0, 100.0, 1.0);
+		driveAndTurnDistanceTiles(0.5, 45, 80.0, 100.0, 1.0);
 	}
 
 	void secondGoal() {
@@ -238,7 +241,7 @@ namespace {
 		/* Store 1 ring */
 
 		// Store ring
-		setIntakeStoreRing(1, 1.0);
+		setIntakeStoreRing(1, 0.5);
 
 		// Follow path
 		runFollowLinearYield();
@@ -260,12 +263,11 @@ namespace {
 
 		/* Score on alliance wall stake */
 
-		// Turn
-		turnToAngle(90);
+		// Follow path
+		runFollowLinearYield();
 
-		// Score on alliance wall stake
-		driveAndTurnDistanceTiles(1.5, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		// Back up
+		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, 0.5);
 		setArmStage(0);
 
 
@@ -298,23 +300,21 @@ namespace {
 		// Release goal and push to corner
 		turnToAngle(-25);
 		setGoalClampState(0);
-		driveAndTurnDistanceTiles(-1.0, -25, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(0.5, -45, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(-1.0, -25, 100.0, 100.0, 1.0);
+		driveAndTurnDistanceTiles(0.5, -45, 80.0, 100.0, 1.0);
 
 
 		/* Score on alliance wall stake */
 
 		// Raise arm
-		setIntakeState(0);
+		setIntakeState(0, 3.5);
 		setArmStage(2);
 
 		// Follow path
 		runFollowLinearYield();
 
-		// Score on alliance wall stake
-		turnToAngle(90.0);
-		driveAndTurnDistanceTiles(1.5, 90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 0.8);
-		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		// Back up
+		driveAndTurnDistanceTiles(-0.5, 90.0, 80.0, 100.0, 0.5);
 		setArmStage(3);
 	}
 
@@ -325,7 +325,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Move forward a bit
-		driveAndTurnDistanceTiles(0.5, -170, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(0.5, -170, 80.0, 100.0, 0.5);
 		setArmHangState(0);
 	}
 
@@ -345,10 +345,7 @@ namespace {
 		setIntakeStoreRing(1, 0.5);
 
 		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
+		runFollowLinearYield();
 
 
 		/* Grab mobile goal */
@@ -372,8 +369,8 @@ namespace {
 
 		// Score on neutral wall stake
 		turnToAngle(0);
-		driveAndTurnDistanceTiles(1.5, 0.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(-0.5, 0.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		driveAndTurnDistanceTiles(1.5, 0.0, 100.0, 100.0, 1.0);
+		driveAndTurnDistanceTiles(-0.5, 0.0, 80.0, 100.0, 0.5);
 		setArmStage(0, 1.0);
 
 
@@ -391,7 +388,7 @@ namespace {
 
 		// Redirect ring
 		setIntakeToArm(1, 0.5);
-		driveAndTurnDistanceTiles(1.0, 55, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(1.0, 55, 80.0, 100.0, 1.0);
 
 
 		/* Place mobile goal in corner */
@@ -400,8 +397,8 @@ namespace {
 		turnToAngle(105);
 		setGoalClampState(0);
 		setIntakeState(0, 1.0);
-		driveAndTurnDistanceTiles(-1.0, 105, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(0.5, 135, 80.0, 100.0, defaultMoveTilesErrorRange, 1.0);
+		driveAndTurnDistanceTiles(-1.0, 105, 100.0, 100.0, 1.0);
+		driveAndTurnDistanceTiles(0.5, 135, 80.0, 100.0, 1.0);
 	}
 
 	void finalSkills() {
@@ -413,10 +410,8 @@ namespace {
 		// Follow path
 		runFollowLinearYield();
 
-		// Score on alliance wall stake
-		turnToAngle(-90);
-		driveAndTurnDistanceTiles(1.0, -90.0, 100.0, 100.0, defaultMoveTilesErrorRange, 1.0);
-		driveAndTurnDistanceTiles(-0.5, -90.0, 80.0, 100.0, defaultMoveTilesErrorRange, 0.5);
+		// Back up
+		driveAndTurnDistanceTiles(-0.5, -90.0, 80.0, 100.0, 0.5);
 
 
 		/* Climb on ladder */
