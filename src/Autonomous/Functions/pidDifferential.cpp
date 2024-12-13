@@ -29,8 +29,8 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Some controllers
-	PatienceController angleError_degreesPatience(30, 1.0, false);
-	PatienceController driveError_inchesPatience(30, 1.0, false);
+	PatienceController angleError_degreesPatience(10, 1.0, false);
+	PatienceController driveError_inchesPatience(10, 1.0, false);
 
 	// Simulator
 	bool useSimulator = mainUseSimulator;
@@ -129,7 +129,7 @@ namespace autonfunctions {
 
 			// Drive with velocities
 			if (useVolt) {
-				botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 9);
+				botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 10);
 			} else {
 				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
 			}
