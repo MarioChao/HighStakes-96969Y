@@ -49,6 +49,7 @@ namespace autonpaths { namespace pathbuild {
 
 	void clearLinear() {
 		linearPaths.clear();
+		linearMaxVelocity_pct.clear();
 		linearWillReverse.clear();
 		linearIndex = 0;
 	}
