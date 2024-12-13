@@ -42,6 +42,8 @@ void autonpaths::autonTest() {
 void autonpaths::odometryRadiusTest() {
 	setRobotRotation(0.0);
 
+	wait(100, msec);
+
 	mainOdometry.printDebug();
 
 	turnToAngleVelocity(-360.0 * 10.0, 30.0, 0.0, 40.0);

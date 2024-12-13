@@ -68,7 +68,7 @@ namespace {
 			pushNewLinear({{2.01, 1.06}, {3.93, 1}});
 
 			// Go to wall stake
-			pushNewLinear({{3.0, 1.2}});
+			pushNewLinear({{3.0, 1.2}}, true);
 
 			// Score on wall stake
 			pushNewLinear({{3, 0}});
@@ -117,7 +117,7 @@ namespace {
 			pushNewLinear({{5, 5}});
 
 			// Grab goal
-			pushNewLinear({{5, 3}}, true, 70);
+			pushNewLinear({{4.6, 3}}, true, 70);
 
 			// Score 3 rings
 			pushNewLinear({{4, 2}, {4.95, 1.05}, {4.95, 0.55}});
@@ -158,6 +158,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Wall stake
+		setArmStage(3);
 		runFollowLinearYield();
 		runFollowLinearYield();
 
@@ -177,6 +178,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Store
+		setIntakeToArm(0, 0.5);
 		setIntakeStoreRing(1, 0.5);
 		runFollowLinearYield();
 
@@ -207,6 +209,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Store
+		setIntakeToArm(0, 0.5);
 		setIntakeStoreRing(1, 0.5);
 		runFollowLinearYield();
 
