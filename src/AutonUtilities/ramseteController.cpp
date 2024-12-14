@@ -34,9 +34,9 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 ) {
 	// Get local error
 	Linegular error = desired - actual;
-	error.rotateXYBy(genutil::toRadians(90 - actual.getTheta_degrees()));
+	error.rotateXYBy(genutil::toRadians(90 - actual.getThetaPolarAngle_degrees()));
 
-	return getLinegularVelocity(actual, desired, smallScalar * error.getY(), smallScalar * error.getTheta_radians());
+	return getLinegularVelocity(actual, desired, smallScalar * error.getY(), smallScalar * error.getThetaPolarAngle_radians());
 }
 
 std::pair<double, double> RamseteController::getLinegularVelocity(
@@ -45,9 +45,9 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 ) {
 	// Get local error
 	Linegular error = desired - actual;
-	error.rotateXYBy(genutil::toRadians(90 - actual.getTheta_degrees()));
+	error.rotateXYBy(genutil::toRadians(90 - actual.getThetaPolarAngle_degrees()));
 
-	return getLinegularVelocity(actual, desired, desiredLinearVelocity, smallScalar * error.getTheta_radians());
+	return getLinegularVelocity(actual, desired, desiredLinearVelocity, smallScalar * error.getThetaPolarAngle_radians());
 }
 
 std::pair<double, double> RamseteController::getLinegularVelocity(
@@ -56,14 +56,14 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 ) {
 	// Get local error
 	Linegular error = desired - actual;
-	error.rotateXYBy(genutil::toRadians(90 - actual.getTheta_degrees()));
+	error.rotateXYBy(genutil::toRadians(90 - actual.getThetaPolarAngle_degrees()));
 
 	// Get value alias
 	double v_desired = fabs(desiredLinearVelocity) * directionFactor;
 	auto &w_desired = desiredAngularVelocity_radiansPerSecond;
 	auto e_right = error.getX();
 	auto e_look = error.getY();
-	auto e_theta = genutil::toRadians(genutil::modRange(error.getTheta_degrees(), 360, -180));
+	auto e_theta = genutil::toRadians(genutil::modRange(error.getThetaPolarAngle_degrees(), 360, -180));
 	// printf("ANG ERR: %.f\n", genutil::toDegrees(e_theta));
 
 	// Compute gain value

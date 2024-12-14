@@ -1,5 +1,6 @@
 #pragma once
 
+// Class containing X, Y, and angle
 class Linegular {
 public:
 	/**
@@ -13,8 +14,10 @@ public:
 
 	double getX();
 	double getY();
-	double getTheta_degrees();
-	double getTheta_radians();
+	double getThetaPolarAngle_degrees();
+	double getThetaPolarAngle_radians();
+
+	double getXYMagnitude();
 
 	void rotateXYBy(double polarRotate_radians);
 	void rotateExponentialBy(double polarRotate_radians);

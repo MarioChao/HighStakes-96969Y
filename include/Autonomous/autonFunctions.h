@@ -32,6 +32,10 @@ namespace autonfunctions {
 	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double runTimeout = 3);
 	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double runTimeout = 3);
 
+	/* PID + Odometry */
+
+	void driveTurnToFace_tiles(double x_tiles, double y_tiles, bool isReverse = false, double maxVelocityPct = 100, double maxTurnVelocityPct = 100, double runTimeout = 3);
+
 	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse = false);
 
 	void setDifferentialUseRelativeRotation(bool useRelativeRotation);

@@ -17,8 +17,6 @@
 #include "main.h"
 
 namespace {
-	using field::tileLengthIn;
-
 	std::vector<double> getMotorRevolutions();
 	double getAverageDifference(std::vector<double> vector1, std::vector<double> vector2);
 
@@ -44,6 +42,8 @@ namespace {
 }
 
 namespace autonfunctions {
+	/* PID differential*/
+
 	/// @brief Turn the robot to face a specified angle.
 	/// @param rotation The target angle to face in degrees.
 	/// @param rotateCenterOffsetIn The offset of the center of rotation.
@@ -86,9 +86,6 @@ namespace autonfunctions {
 		angleError_degreesPatience.reset();
 
 		// Reset timer
-		if (useSimulator) {
-			robotSimulator.resetTimer();
-		}
 		timer timeout;
 
 		while (!turnToAngle_rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout) {
@@ -101,9 +98,6 @@ namespace autonfunctions {
 
 			// Get current robot heading
 			double currentRotation_degrees = InertialSensor.rotation(degrees);
-			if (useSimulator) {
-				currentRotation_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(robotSimulator.angularPosition));
-			}
 
 			// Compute heading error
 			double rotateError = rotation - currentRotation_degrees;
@@ -165,7 +159,7 @@ namespace autonfunctions {
 	/// @param maxTurnVelocityPct Maximum rotational velocity of the drive. (can > 100)
 	/// @param runTimeout Maximum seconds the function will run for.
 	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double runTimeout) {
-		driveAndTurnDistanceWithInches(distanceTiles * tileLengthIn, targetRotation, maxVelocityPct, maxTurnVelocityPct, runTimeout);
+		driveAndTurnDistanceWithInches(distanceTiles * field::tileLengthIn, targetRotation, maxVelocityPct, maxTurnVelocityPct, runTimeout);
 	}
 
 	/// @brief Drive the robot for a specified distance in inches and rotate it to a specified rotation in degrees.
@@ -196,16 +190,16 @@ namespace autonfunctions {
 		driveError_inchesPatience.reset();
 
 		// Reset timer
-		if (useSimulator) {
-			robotSimulator.resetTimer();
-		}
-
 		timer timeout;
+
 		while (!(driveAndTurn_driveTargetDistancePid.isSettled() && driveAndTurn_rotateTargetAnglePid.isSettled()) && timeout.value() < runTimeout) {
 			// Check exhausted
 			if (driveError_inchesPatience.isExhausted()) {
 				break;
 			}
+
+
+			/* Linear */
 
 			// Compute linear distance error
 			double distanceError;
@@ -214,37 +208,28 @@ namespace autonfunctions {
 				double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * genutil::signum(targetDistanceInches);
 				distanceError = targetDistanceInches - travelDistance_tiles * field::tileLengthIn;
 			} else if (useRotationSensorForPid) {
-				// printf("Rotation sensor pid\n");
-				// Compute current rotation revolutions
+				// Compute current travel distance in inches
 				double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
-
-				// Convert current revolutions into distance inches
 				double currentTravelDistanceInches = lookCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
 
 				// Compute error
 				distanceError = targetDistanceInches - currentTravelDistanceInches;
 			} else if (useEncoderForPid) {
-				// Compute current encoder revolutions
+				// Compute current travel distance in inches
 				double lookEncoderCurrentRevolution = LookEncoder.rotation(rev) - lookEncoderInitialRevolution;
-
-				// Convert current revolutions into distance inches
 				double currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
 
 				// Compute error
-				// double revolutionError = (lookEncoderTargetDistanceRevolution - lookEncoderCurrentRevolution);
-				// distanceError = revolutionError * (1.0 / trackingLookWheelSensorGearRatio) * (trackingLookWheelCircumIn / 1.0);
 				distanceError = targetDistanceInches - currentTravelDistanceInches;
 			} else {
 				// Compute average traveled motor revolutions
 				std::vector<double> travelRevolutions = getMotorRevolutions();
 				double averageTravelRev = getAverageDifference(initRevolutions, travelRevolutions);
 
-				// Convert current revolutions into distance inches
+				// Convert revolutions into inches
 				double currentTravelDistanceInches = averageTravelRev * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 
 				// Compute error
-				// double revolutionError = (motorTargetDistanceRev - averageTravelRev);
-				// distanceError = revolutionError * (1.0 / driveWheelMotorGearRatio) * (driveWheelCircumIn / 1.0);
 				distanceError = targetDistanceInches - currentTravelDistanceInches;
 			}
 
@@ -255,11 +240,12 @@ namespace autonfunctions {
 			// Update error patience
 			driveError_inchesPatience.computePatience(std::fabs(distanceError));
 
+
+			/* Angular */
+
 			// Get current robot heading
 			double currentRotation_degrees = InertialSensor.rotation(degrees);
-			if (useSimulator) {
-				currentRotation_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(robotSimulator.angularPosition));
-			}
+			if (useSimulator) currentRotation_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(robotSimulator.angularPosition));
 
 			// Compute heading error
 			double rotateError = targetRotation - currentRotation_degrees;
@@ -270,6 +256,9 @@ namespace autonfunctions {
 			// Compute heading pid-value from error
 			driveAndTurn_rotateTargetAnglePid.computeFromError(rotateError);
 			double rotateVelocityPct = fmin(maxTurnVelocityPct, fmax(-maxTurnVelocityPct, driveAndTurn_rotateTargetAnglePid.getValue()));
+
+
+			/* Combined */
 
 			// Compute final motor velocities
 			double leftVelocityPct = velocityPct + rotateVelocityPct;
@@ -306,26 +295,6 @@ namespace autonfunctions {
 		driftCorrector.correct();
 	}
 
-	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse) {
-		Linegular lg(0, 0, 0);
-		for (std::vector<double> point : waypoints) {
-			// Rotation
-			lg = mainOdometry.getLookLinegular();
-			double angle_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(atan2(point[1] - lg.getY(), point[0] - lg.getX())));
-			if (isReverse) angle_degrees += 180;
-			turnToAngle(angle_degrees);
-
-			// Linear
-			lg = mainOdometry.getLookLinegular();
-			double drive_distance = genutil::euclideanDistance({lg.getX(), lg.getY()}, {point[0], point[1]}) * (isReverse ? -1 : 1);
-			printf("ST: X: %.3f, Y: %.3f, dist: %.3f\n", lg.getX(), lg.getY(), drive_distance);
-			driveAndTurnDistanceTiles(drive_distance, angle_degrees, maxVelocity);
-
-			// Info
-			lg = mainOdometry.getLookLinegular();
-			printf("ED: X: %.3f, Y: %.3f\n", lg.getX(), lg.getY());
-		}
-	}
 
 	void setDifferentialUseRelativeRotation(bool useRelativeRotation) {
 		_useRelativeRotation = useRelativeRotation;

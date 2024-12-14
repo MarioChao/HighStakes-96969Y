@@ -18,12 +18,16 @@ double Linegular::getY(){
 	return y;
 }
 
-double Linegular::getTheta_degrees(){
+double Linegular::getThetaPolarAngle_degrees(){
 	return theta_degrees;
 }
 
-double Linegular::getTheta_radians() {
+double Linegular::getThetaPolarAngle_radians() {
 	return genutil::toRadians(theta_degrees);
+}
+
+double Linegular::getXYMagnitude() {
+	return genutil::euclideanDistance({0, 0}, {x, y});
 }
 
 void Linegular::rotateXYBy(double polarRotate_radians) {
