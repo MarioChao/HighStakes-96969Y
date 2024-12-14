@@ -150,6 +150,7 @@ namespace controls {
 			botarm::resetArmEncoder();
 			return 1;
 		});
+		botintake::setIntakeStoreRing(0);
 	}
 
 	void doControls() {

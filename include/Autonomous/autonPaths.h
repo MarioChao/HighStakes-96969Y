@@ -11,6 +11,7 @@
 
 namespace autonpaths {
 	using namespace autonfunctions;
+	using namespace autonfunctions::driveturn;
 	using namespace botinfo;
 
 	// Build paths

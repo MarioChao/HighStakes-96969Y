@@ -653,7 +653,7 @@ namespace {
 
 		Brain.Screen.setPenColor(color::green);
 		Brain.Screen.setFillColor(color::transparent);
-		Brain.Screen.printAt(240, 35, 1, "BotAng: %07.3f", getRobotPolarAngle_degrees());
+		Brain.Screen.printAt(240, 35, 1, "BotAng Polar: %07.3f", getRobotPolarAngle_degrees());
 
 		// Brain.Screen.setPenColor(color(255, 190, 0));
 		// Brain.Screen.setFillColor(color::transparent);

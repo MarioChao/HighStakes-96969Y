@@ -68,11 +68,11 @@ void pre_auton(void) {
 	mainOdometry.addPositionSensor2D(-90, []() {return LookRotation.position(rev);}, 1, 2, 0);
 	mainOdometry.addPositionSensor2D(0, []() {return RightEncoder.position(rev);}, 1, 2.75, 2.94);
 	// mainOdometry.addInertialSensor(InertialSensor, 0, 0);
-	mainOdometry.addInertialSensor(InertialSensor, -3, 3);
+	mainOdometry.addInertialSensor(InertialSensor, -3, 2);
 	// mainOdometry.addInertialSensor(InertialSensor, -3.276, 3.651);
 	mainOdometry.setPositionFactor(1.0 / field::tileLengthIn);
 	task odometryTask([]() -> int {
-		mainOdometry.setPosition(3, 0);
+		mainOdometry.setPosition(1, 1);
 		mainOdometry.setLookAngle(0);
 		mainOdometry.start();
 		while (true) {

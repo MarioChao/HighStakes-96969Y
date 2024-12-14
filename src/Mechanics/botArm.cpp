@@ -15,7 +15,7 @@ namespace {
 	void spinArmMotor(double velocityPct);
 
 	// Stage controllers
-	PIDController armPositionPid(1.5, 0, 0.12);
+	PIDController armPositionPid(1.5, 0, 0.3);
 	PatienceController armUpPatience(10, 1.0, true);
 	PatienceController armDownPatience(10, 1.0, false);
 

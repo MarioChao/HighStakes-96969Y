@@ -44,9 +44,21 @@ void autonpaths::odometryRadiusTest() {
 
 	wait(100, msec);
 
+	printf("Clockwise\n");
+
+	mainOdometry.printDebug();
+	turnToAngleVelocity(360.0 * 10.0, 30.0, 0.0, 40.0);
 	mainOdometry.printDebug();
 
-	turnToAngleVelocity(-360.0 * 10.0, 30.0, 0.0, 40.0);
+	wait(1, sec);
 
+	setRobotRotation(0.0);
+
+	wait(100, msec);
+
+	printf("Counter clockwise\n");
+
+	mainOdometry.printDebug();
+	turnToAngleVelocity(-360.0 * 10.0, 30.0, 0.0, 40.0);
 	mainOdometry.printDebug();
 }
