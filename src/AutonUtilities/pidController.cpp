@@ -14,6 +14,7 @@ void PIDController::resetErrorToZero() {
 	previousError = currentError = 2e17;
 	cumulativeError = deltaError = 0;
 	pidTimer.reset();
+	settledFrames = 0;
 }
 
 void PIDController::computeFromError(double error) {

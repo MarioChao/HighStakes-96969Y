@@ -19,8 +19,11 @@ namespace {
 	// Controllers
 	PatienceController driveError_tilesPatience(10, 0.0417, false);
 
-	PIDController driveTurn_driveTargetDistancePid(0.708, 0, 1.6, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveTurn_driveTargetDistancePid(410, 0, 40, autonvals::defaultMoveTilesErrorRange);
 	PIDController driveTurn_rotateTargetAnglePid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
+
+	// Constraints
+	const double turnTo_distanceThreshold = 0.3;
 }
 
 namespace autonfunctions {
@@ -32,7 +35,16 @@ namespace autonfunctions {
 		Linegular startLg = mainOdometry.getLookLinegular();
 
 		// Target state
-		double targetDistance = genutil::euclideanDistance({startLg.getX(), startLg.getY()}, {x_tiles, y_tiles});
+		const double targetDistance = genutil::euclideanDistance({startLg.getX(), startLg.getY()}, {x_tiles, y_tiles});
+		double targetRotation_degrees = genutil::toDegrees(atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX()));
+
+		// Config
+		const double velocityFactor = (isReverse ? -1 : 1);
+		const double rotationOffset_degrees = (isReverse ? 180 : 0);
+
+		// Reset PID
+		driveTurn_driveTargetDistancePid.resetErrorToZero();
+		driveTurn_rotateTargetAnglePid.resetErrorToZero();
 
 		// Reset patience
 		driveError_tilesPatience.reset();
@@ -41,6 +53,11 @@ namespace autonfunctions {
 		timer timeout;
 
 		while (timeout.value() < runTimeout) {
+			// Check settled
+			if (driveTurn_driveTargetDistancePid.isSettled() && driveTurn_rotateTargetAnglePid.isSettled()) {
+				break;
+			}
+
 			// Check exhausted
 			if (driveError_tilesPatience.isExhausted()) {
 				break;
@@ -57,10 +74,12 @@ namespace autonfunctions {
 			// Compute linear distance error
 			double travelDistance = genutil::euclideanDistance({startLg.getX(), startLg.getY()}, {currentX, currentY});
 			double distanceError = targetDistance - travelDistance;
+			// printf("TR: %.3f, TGT: %.3f, DE: %.3f\n", travelDistance, targetDistance, distanceError);
 
 			// Compute motor velocity pid-value from error
 			driveTurn_driveTargetDistancePid.computeFromError(distanceError);
 			double velocityPct = fmin(maxVelocityPct, fmax(-maxVelocityPct, driveTurn_driveTargetDistancePid.getValue()));
+			velocityPct *= velocityFactor;
 
 			// Update error patience
 			driveError_tilesPatience.computePatience(std::fabs(distanceError));
@@ -69,10 +88,12 @@ namespace autonfunctions {
 			/* Angular */
 
 			// Compute target polar heading
-			double targetRotation_degrees = genutil::toDegrees(atan2(y_tiles - currentY, x_tiles - currentX));
+			if (std::fabs(distanceError) > turnTo_distanceThreshold) {
+				targetRotation_degrees = genutil::toDegrees(atan2(y_tiles - currentY, x_tiles - currentX));
+			}
 
 			// Compute polar heading error
-			double rotateError = targetRotation_degrees - currentLg.getThetaPolarAngle_degrees();
+			double rotateError = targetRotation_degrees - currentLg.getThetaPolarAngle_degrees() + rotationOffset_degrees;
 			if (_useRelativeRotation) {
 				rotateError = genutil::modRange(rotateError, 360, -180);
 			}
