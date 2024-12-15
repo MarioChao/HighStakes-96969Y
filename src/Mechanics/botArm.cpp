@@ -15,7 +15,7 @@ namespace {
 	void spinArmMotor(double velocityPct);
 
 	// Stage controllers
-	PIDController armPositionPid(1.1, 0, 0);
+	PIDController armPositionPid(1.3, 0, 0.15);
 	PatienceController armUpPatience(10, 1.0, true);
 	PatienceController armDownPatience(10, 1.0, false);
 
@@ -27,7 +27,7 @@ namespace {
 
 	// Reset arm info
 	bool armResetted = false;
-	int resetDefaulStageId = 0;
+	int resetDefaultStageId = 0;
 
 	// Speed config
 	double armVelocityPct = 100;
@@ -142,8 +142,9 @@ namespace botarm {
 		// Set the position as 0 degrees
 		setArmPosition(0);
 
-		// Initialize to stage 0
-		setArmStage(resetDefaulStageId);
+		// Initialize to default stage
+		setArmStage(resetDefaultStageId);
+		printf("Default arm: %d\n", resetDefaultStageId);
 		armDownPatience.computePatience(ArmRotationSensor.position(degrees));
 		armDownPatience.exhaustNow();
 
@@ -155,7 +156,7 @@ namespace botarm {
 	}
 
 	void setResetDefaultStage(int stageId) {
-		resetDefaulStageId = stageId;
+		resetDefaultStageId = stageId;
 	}
 
 	void control(int state) {
