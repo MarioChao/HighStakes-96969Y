@@ -19,7 +19,7 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Controllers
-	PatienceController driveError_tilesPatience(15, 0.0417, false);
+	PatienceController driveError_tilesPatience(10, 0.02, false);
 
 	PIDController driveTurn_driveTargetDistance_voltPid(390, 0, 40, autonvals::defaultMoveTilesErrorRange);
 	PIDController driveTurn_rotateTargetAngle_voltPid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
@@ -42,6 +42,7 @@ namespace autonfunctions {
 			_linearPathDistanceError = 1e9;
 			_targetX = x_tiles;
 			_targetY = y_tiles;
+			_isReverseHeading = isReverse;
 			_maxVelocity_pct = maxVelocity_pct;
 			_maxTurnVelocity_pct = maxTurnVelocity_pct;
 			_runTimeout = runTimeout;
@@ -158,7 +159,7 @@ namespace {
 			} else {
 				velocity_pct = driveTurn_driveTargetDistance_velocityPid.getValue();
 			}
-			velocity_pct = genutil::clamp(maxVelocity_pct, -maxVelocity_pct, maxVelocity_pct);
+			velocity_pct = genutil::clamp(velocity_pct, -maxVelocity_pct, maxVelocity_pct);
 			velocity_pct *= velocityFactor;
 
 			// Update error patience
@@ -169,11 +170,11 @@ namespace {
 
 			// Compute target polar heading
 			if (distanceError > turnTo_distanceThreshold) {
-				targetRotation_degrees = genutil::toDegrees(std::atan2(y_tiles - currentY, x_tiles - currentX));
+				targetRotation_degrees = genutil::toDegrees(std::atan2(y_tiles - currentY, x_tiles - currentX)) + rotationOffset_degrees;
 			}
 
 			// Compute polar heading error
-			double rotateError = targetRotation_degrees - currentLg.getThetaPolarAngle_degrees() + rotationOffset_degrees;
+			double rotateError = targetRotation_degrees - currentLg.getThetaPolarAngle_degrees();
 			if (autonfunctions::_useRelativeRotation) {
 				rotateError = genutil::modRange(rotateError, 360, -180);
 			}

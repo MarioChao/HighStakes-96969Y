@@ -42,19 +42,12 @@ namespace {
 
 		if (section == 1) {
 			// Grab rushed goal
-			pushNewLinear({{2.2, 1.02}}, true, 60);
-
-			// Release goal
-			pushNewLinear({{1.99, 0.57}});
+			pushNewLinear({{2.1, 1.02}}, true, 60);
 
 			// Grab goal
 			pushNewLinear({{2, 2}}, true, 60);
 
-			// Go to corner
-			pushNewLinear({{0.43, 0.43}});
-
 			// Score 1 ring
-			pushNewLinear({{0.64, 0.64}}, true);
 			pushNewLinear({{0.64, 0}});
 
 			// Score alliance wall stake
@@ -62,7 +55,7 @@ namespace {
 			pushNewLinear({{0, 3}});
 
 			// Touch ladder
-			pushNewLinear({{1.42, 2.39}, {2.45, 2.43}}, true);
+			pushNewLinear({{2.11, 2.45}}, true);
 		}
 	}
 
@@ -77,47 +70,44 @@ namespace {
 		// Deploy
 		waitUntil(_linearPathDistanceError < 0.2);
 		setSwing2State(1);
-		setIntakeStoreRing(0);
-		setIntakeState(0);
 
-		// Go back
+		// Go back & un-deploy
 		waitUntil(_isDriveTurnSettled);
-		driveDistanceTiles(-1.0);
-
-		// Un-deploy
-		setSwing2State(0);
+		setSwing2State(0, 0.4);
+		driveDistanceTiles(-0.5);
 
 		// Grab goal
 		runFollowLinearYield();
 		setGoalClampState(1);
 
 		// Score stored
+		setIntakeStoreRing(0);
 		setIntakeState(1);
 		wait(200, msec);
-
-		// Follow path
-		runFollowLinearYield();
 
 		// Release goal
 		setGoalClampState(0);
 
 		// Grab goal
 		setIntakeState(0);
+		driveDistanceTiles(0.5);
 		runFollowLinearYield();
 		setGoalClampState(1);
 		wait(200, msec);
 
 		// Go to corner
-		runFollowLinearYield();
+		async_driveTurnToFace_tiles(0.6, 0.5);
+
+		// Deploy
+		waitUntil(_linearPathDistanceError < 0.2);
+		setSwingState(1);
 
 		// Swing out rings
-		setSwingState(1);
-		wait(200, msec);
+		waitUntil(_isDriveTurnSettled);
 		turnToAngleVelocity(160, 50);
 		setSwingState(0);
 
 		// Score 1 ring
-		runFollowLinearYield();
 		setIntakeState(1);
 		runFollowLinearYield();
 
@@ -133,8 +123,5 @@ namespace {
 
 		// Follow path
 		runFollowLinearYield();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
 	}
 }
