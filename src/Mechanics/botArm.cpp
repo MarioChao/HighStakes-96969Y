@@ -15,12 +15,12 @@ namespace {
 	void spinArmMotor(double velocityPct);
 
 	// Stage controllers
-	PIDController armPositionPid(1.5, 0, 0.3);
+	PIDController armPositionPid(1.1, 0, 0);
 	PatienceController armUpPatience(10, 1.0, true);
 	PatienceController armDownPatience(10, 1.0, false);
 
 	// Stage config
-	std::vector<double> armStages_degrees = {80, 0, 195.0, 0};
+	std::vector<double> armStages_degrees = {80, 0, 215.0, 0};
 	std::vector<int> extremeStages_values = {0, -2, 0, 2};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;

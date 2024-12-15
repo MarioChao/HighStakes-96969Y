@@ -19,7 +19,7 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Controllers
-	PatienceController driveError_tilesPatience(10, 0.02, false);
+	PatienceController driveError_tilesPatience(10, 0.01, false);
 
 	PIDController driveTurn_driveTargetDistance_voltPid(90, 0, 6, autonvals::defaultMoveTilesErrorRange);
 	PIDController driveTurn_rotateTargetAngle_voltPid(2.0, 0, 0, autonvals::defaultTurnAngleErrorRange);
@@ -67,21 +67,25 @@ namespace autonfunctions {
 		bool _isDriveTurnSettled;
 	}
 
+	void turnToFace(double x_tiles, double y_tiles, bool isReverse, double maxTurnVelocity_pct) {
+		Linegular lg = mainOdometry.getLookLinegular();
+		double angle_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(atan2(y_tiles - lg.getY(), x_tiles - lg.getX())));
+		if (isReverse) angle_degrees += 180;
+		turnToAngle(angle_degrees);
+	}
+
 	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse) {
 		Linegular lg(0, 0, 0);
 		for (std::vector<double> point : waypoints) {
 			// Rotation
-			lg = mainOdometry.getLookLinegular();
-			double angle_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(atan2(point[1] - lg.getY(), point[0] - lg.getX())));
-			if (isReverse) angle_degrees += 180;
-			turnToAngle(angle_degrees);
+			turnToFace(point[0], point[1], isReverse);
 
 			// Linear
 			lg = mainOdometry.getLookLinegular();
 			// double drive_distance = genutil::euclideanDistance({lg.getX(), lg.getY()}, {point[0], point[1]}) * (isReverse ? -1 : 1);
 			// printf("ST: X: %.3f, Y: %.3f, dist: %.3f\n", lg.getX(), lg.getY(), drive_distance);
 			// driveAndTurnDistanceTiles(drive_distance, angle_degrees, maxVelocity);
-			driveturn::driveTurnToFace_tiles(point[0], point[1], isReverse);
+			driveturn::driveTurnToFace_tiles(point[0], point[1], isReverse, maxVelocity);
 
 			// Info
 			lg = mainOdometry.getLookLinegular();
@@ -204,7 +208,7 @@ namespace {
 
 			// Drive with velocities
 			if (useVolt) {
-				botdrive::driveVoltage(genutil::pctToVolt(leftVelocity_pct), genutil::pctToVolt(rightVelocity_pct), 10);
+				botdrive::driveVoltage(genutil::pctToVolt(leftVelocity_pct), genutil::pctToVolt(rightVelocity_pct), 12);
 			} else {
 				botdrive::driveVelocity(leftVelocity_pct, rightVelocity_pct);
 			}

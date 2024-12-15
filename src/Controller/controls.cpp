@@ -147,10 +147,12 @@ namespace controls {
 		LeftRightMotors.setStopping(brake);
 
 		// Reset arm encoder
-		task resetArm([] () -> int {
-			botarm::resetArmEncoder();
-			return 1;
-		});
+		if (!botarm::isArmResetted()) {
+			task resetArm([] () -> int {
+				botarm::resetArmEncoder();
+				return 1;
+			});
+		}
 		botintake::setIntakeStoreRing(0);
 	}
 

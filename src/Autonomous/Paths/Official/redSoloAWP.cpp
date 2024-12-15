@@ -18,7 +18,7 @@ void autonpaths::runRedSoloAWP() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.7, 3.73);
+	mainOdometry.setPosition(0.79, 3.73);
 	setRobotRotation(-180);
 	mainOdometry.printDebug();
 
@@ -43,27 +43,27 @@ namespace {
 
 		if (section == 1) {
 			// Go to alliance wall stake
-			pushNewLinear({{0.7, 3}});
+			pushNewLinear({{0.79, 3}});
 
 			// Score on wall stake
 			pushNewLinear({{-1, 3}});
 
 			// Grab goal
-			pushNewLinear({{2, 4}}, true, 60);
+			pushNewLinear({{2, 4}}, true, 80);
 
 			// Score 2 rings
-			pushNewLinear({{2.6, 4.6}, {2.65, 5.2}}, false, 60);
-
-			// Score 1 ring
-			pushNewLinear({{2.37, 4.3}}, true);
-			pushNewLinear({{2, 5}});
+			pushNewLinear({{2.65, 4.5}, {2.65, 5.5}}, false, 100);
 
 			// Store 1 ring
-			pushNewLinear({{1.19, 3.43}});
-			pushNewLinear({{0.88, 2.5}}, false, 50);
+			pushNewLinear({{2.37, 4.3}}, true);
+			pushNewLinear({{1.9, 5}});
+
+			// Release goal
+			pushNewLinear({{0.5, 1}}, true);
 
 			// Grab goal
-			pushNewLinear({{2, 2}}, true, 60);
+			pushNewLinear({{0.75, 1.7}});
+			pushNewLinear({{2, 2}}, true, 80);
 
 			// Score 2 ring
 			pushNewLinear({{2, 1}});
@@ -76,43 +76,44 @@ namespace {
 	void doAuton() {
 		// Intake filter at hood
 		setIntakeFilterEnabled(0);
-		setIntakeState(1);
+		setIntakeStoreRing(1);
 
 		// Score on alliance wall stake
 		runFollowLinearYield();
-		setIntakeState(0, 0.4);
+		setIntakeStoreRing(0, 0.5);
 		wait(50, msec);
 		runFollowLinearYield();
 		driveDistanceTiles(-0.5);
 
-		// Re-eable filter
-		setIntakeFilterEnabled(1);
-
 		// Grab goal
+		setIntakeState(-1);
 		runFollowLinearYield();
 		setGoalClampState(1);
-		wait(200, msec);
+		wait(50, msec);
+
+		// Re-eable filter
+		setIntakeFilterEnabled(1);
 
 		// Score 2 rings
 		setIntakeState(1);
 		runFollowLinearYield();
 
-		// Score 1 ring
-		runFollowLinearYield();		
-		runFollowLinearYield();
-
 		// Store 1 ring
 		runFollowLinearYield();
-		setGoalClampState(0);
 		setIntakeStoreRing(1);
 		runFollowLinearYield();
 
+		// Release goal and push to corner
+		setGoalClampState(0);
+		runFollowLinearYield();
+
 		// Grab goal
-		setIntakeStoreRing(0, 0.4);
-		setIntakeState(0, 0.5);
+		setIntakeStoreRing(0);
+		setIntakeState(0, 0.2);
+		runFollowLinearYield();
 		runFollowLinearYield();
 		setGoalClampState(1);
-		wait(200, msec);
+		wait(50, msec);
 
 		// Score 2 rings
 		setIntakeState(1);

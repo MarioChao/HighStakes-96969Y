@@ -171,7 +171,7 @@ namespace {
 		if (true) {
 			// Drive
 			// botdrive::driveVelocity(leftPct, rightPct);
-			botdrive::driveVoltage(genutil::pctToVolt(leftPct), genutil::pctToVolt(rightPct), 11);
+			botdrive::driveVoltage(genutil::pctToVolt(leftPct), genutil::pctToVolt(rightPct), 12);
 		} else {
 			// Scale percentages if overshoot
 			double scaleFactor = genutil::getScaleFactor(maxDriveVelocityPct, {leftPct, rightPct});
