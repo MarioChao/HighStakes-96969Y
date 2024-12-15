@@ -2,7 +2,7 @@
 
 class PatienceController {
 public:
-	PatienceController(int maxPatience, double minDelta, bool positiveImprovement = true);
+	PatienceController(int maxPatience, double minDelta, bool positiveImprovement = true, int delayComputePatience = 15);
 
 	void reset();
 	void computePatience(double value);
@@ -18,6 +18,9 @@ private:
 
 	double storedValue;
 	int patience;
+
+	int delayComputePatienceLevel;
+	int delayedCalls;
 
 	bool positiveImprovement;
 };

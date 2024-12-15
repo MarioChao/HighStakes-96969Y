@@ -154,6 +154,8 @@ namespace controls {
 			});
 		}
 		botintake::setIntakeStoreRing(0);
+		swing::setState(0);
+		swing::set2ndState(0);
 	}
 
 	void doControls() {

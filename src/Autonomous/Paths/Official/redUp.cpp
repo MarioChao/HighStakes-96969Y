@@ -18,7 +18,7 @@ void autonpaths::runAutonRedUp() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.79, 3.73);
+	mainOdometry.setPosition(0.79, 3.78);
 	setRobotRotation(-180);
 	mainOdometry.printDebug();
 
@@ -46,17 +46,19 @@ namespace {
 			pushNewLinear({{0.79, 3}});
 
 			// Score on wall stake
-			pushNewLinear({{-1, 3}});
+			pushNewLinear({{-1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{2.6, 4.7}, {2.67, 5.2}}, false, 100);
+			pushNewLinear({{2.6, 4.75}, {2.67, 5.2}});
 
 			// Score 1 ring
-			pushNewLinear({{2.37, 4.3}}, true);
-			pushNewLinear({{2, 5}});
+			pushNewLinear({{2, 4.8}});
+
+			// Sweep corner
+			pushNewLinear({{0.25, 5.75}});
 
 			// Touch ladder
-			pushNewLinear({{2.48, 3.65}});
+			pushNewLinear({{2, 3}});
 		}
 	}
 
@@ -89,14 +91,16 @@ namespace {
 		runFollowLinearYield();
 
 		// Score 1 ring
+		turnToAngleVelocity(-90, 60);
 		runFollowLinearYield();
+
+		// Score corner
+		setSwing2State(1);
+		setIntakeState(0, 0.5);
 		runFollowLinearYield();
 
 		// Touch ladder
+		setIntakeState(1);
 		runFollowLinearYield();
-		setArmStage(2); // todo: zip ties?
-
-		waitUntil(_autonTimer.value() > 14.5);
-		setIntakeState(0);
 	}
 }

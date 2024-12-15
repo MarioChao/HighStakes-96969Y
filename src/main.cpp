@@ -73,7 +73,7 @@ void pre_auton(void) {
 	mainOdometry.setPositionFactor(1.0 / field::tileLengthIn);
 	task odometryTask([]() -> int {
 		mainOdometry.setPosition(1, 4);
-		mainOdometry.setLookAngle(0);
+		mainOdometry.setLookAngle(90);
 		mainOdometry.start();
 		while (true) {
 			mainOdometry.odometryFrame();

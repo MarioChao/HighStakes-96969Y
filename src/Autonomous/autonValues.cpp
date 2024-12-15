@@ -17,4 +17,6 @@ namespace autonvals {
 		* (1.0 / botinfo::chassisMotorRpm) // motor's pct [0-1]
 		* (100.0 / 1.0) // motor's pct [0-100]
 	);
+
+	const double scoreWallStakeVelocity_pct = 60;
 }
