@@ -92,6 +92,7 @@ namespace autonfunctions {
 	void setArmStage(int, double = 0);
 
 	bool isArmResetted();
+	void setArmResetDefaultStage(int);
 
 	// Swing
 	void setSwingState(int, double = 0);

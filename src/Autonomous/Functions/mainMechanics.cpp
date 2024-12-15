@@ -97,6 +97,10 @@ namespace autonfunctions {
 		return botarm::isArmResetted();
 	}
 
+	void setArmResetDefaultStage(int stageId) {
+		botarm::setResetDefaultStage(stageId);
+	}
+
 	void setSwingState(int state, double delaySec) {
 		swing::setState(state, delaySec);
 	}

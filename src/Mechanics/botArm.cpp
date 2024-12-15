@@ -27,6 +27,7 @@ namespace {
 
 	// Reset arm info
 	bool armResetted = false;
+	int resetDefaulStageId = 0;
 
 	// Speed config
 	double armVelocityPct = 100;
@@ -142,7 +143,7 @@ namespace botarm {
 		setArmPosition(0);
 
 		// Initialize to stage 0
-		setArmStage(0);
+		setArmStage(resetDefaulStageId);
 		armDownPatience.computePatience(ArmRotationSensor.position(degrees));
 		armDownPatience.exhaustNow();
 
@@ -151,6 +152,10 @@ namespace botarm {
 
 	bool isArmResetted() {
 		return armResetted;
+	}
+
+	void setResetDefaultStage(int stageId) {
+		resetDefaulStageId = stageId;
 	}
 
 	void control(int state) {

@@ -54,11 +54,12 @@ namespace autonpaths {
 	void runAutonRedUp();
 	void runAutonRedUpSafe();
 	void runAutonRedDown();
-	void runAutonRedDownOld();
 	void runAutonBlueUp();
 	void runAutonBlueUpSafe();
 	void runAutonBlueDown();
-	void runAutonBlueDownOld();
+
+	void runSoloAWP();
+
 	void runAutonSkills();
 	void runAutonSkillsLong();
 

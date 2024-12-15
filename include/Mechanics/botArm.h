@@ -11,6 +11,7 @@ namespace botarm {
 	int getArmStage();
 	void resetArmEncoder();
 	bool isArmResetted();
+	void setResetDefaultStage(int stageId);
 
 	void switchState();
 
