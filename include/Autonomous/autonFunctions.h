@@ -82,6 +82,7 @@ namespace autonfunctions {
 	void setIntakeStoreRing(int, double = 0);
 
 	void setIntakeFilterOutColor(std::string colorText);
+	void setIntakeFilterEnabled(bool, double = 0);
 
 	// Clamp
 	void setGoalClampState(bool state, double delaySec = 0);

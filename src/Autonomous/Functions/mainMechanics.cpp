@@ -72,6 +72,10 @@ namespace autonfunctions {
 		else botintake2::setFilterOutColor(colorText);
 	}
 
+	void setIntakeFilterEnabled(bool state, double delaySec) {
+		if (intakePart == 1) botintake::setColorFiltering(state, delaySec);
+	}
+
 	/// @brief Set the state of Left Wing's pneumatic.
 	/// @param state Expanded: true, retracted: false.
 	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).

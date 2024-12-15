@@ -44,17 +44,11 @@ namespace controls {
 
 		// Controller 1
 		Controller1.ButtonX.pressed([]() -> void {
-			if (intakePart == 1) {
-				if (!botarm::isArmResetted()) {
-					return;
-				}
-				// botintake::switchMode();
-				// Alliance wall stake
-				botarm::setArmStage(2);
-				botintake::setColorFiltering(true);
-			} else {
-				botintake2::switchMode();
+			if (!botarm::isArmResetted()) {
+				return;
 			}
+			botarm::setArmStage(0);
+			botintake::setColorFiltering(true);
 		});
 		// Controller1.ButtonY.pressed([]() -> void {
 		// 	if (intakePart == 1) {
@@ -90,6 +84,7 @@ namespace controls {
 						return 1;
 					});
 				} else {
+					botarm::setArmStage(0);
 					botintake::setColorFiltering(true);
 				}
 			}
@@ -110,14 +105,20 @@ namespace controls {
 			botarm::setArmStage(3);
 			botintake::setColorFiltering(true);
 		});
-		Controller1.ButtonDown.pressed([]() -> void {
-			if (!botarm::isArmResetted()) {
-				return;
-			}
-			botarm::setArmStage(0);
-			botintake::setColorFiltering(true);
-		});
 		Controller1.ButtonUp.pressed([]() -> void {
+			if (intakePart == 1) {
+				if (!botarm::isArmResetted()) {
+					return;
+				}
+				// botintake::switchMode();
+				// Alliance wall stake
+				botarm::setArmStage(2);
+				botintake::setColorFiltering(true);
+			} else {
+				botintake2::switchMode();
+			}
+		});
+		Controller1.ButtonDown.pressed([]() -> void {
 			// if (botdrive::getMaxDriveVelocity() >= 99.0) {
 			// 	botdrive::setMaxDriveVelocity(50.0);
 			// 	debug::printOnController("50\% drive speed");

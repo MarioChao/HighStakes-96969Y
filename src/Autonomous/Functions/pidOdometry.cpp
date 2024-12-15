@@ -192,7 +192,7 @@ namespace {
 
 
 			/* Debug print */
-			printf("DIS TR: %.3f, TGT: %.3f, DE: %.3f, VLin: %.3f, VRot: %.3f\n", travelDistance, targetDistance, distanceError, velocity_pct, rotateVelocity_pct);
+			// printf("DIS TR: %.3f, TGT: %.3f, DE: %.3f, VLin: %.3f, VRot: %.3f\n", travelDistance, targetDistance, distanceError, velocity_pct, rotateVelocity_pct);
 			// printf("ANG CUR: %.3f, TGT: %.3f, DE: %.3f\n", currentLg.getThetaPolarAngle_degrees(), targetRotation_degrees, rotateError);
 
 

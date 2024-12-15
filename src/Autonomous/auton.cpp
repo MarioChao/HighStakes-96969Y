@@ -14,7 +14,7 @@ namespace {
 	bool runningAutonUponStart = false;
 
 	// autonomousType auton_runType = autonomousType::AutonSkills;
-	autonomousType auton_runType = autonomousType::SoloAWP;
+	autonomousType auton_runType = autonomousType::RedSoloAWP;
 	int auton_allianceId;
 
 	std::string autonFilterOutColor;
@@ -63,6 +63,18 @@ namespace auton {
 				printf("BlueDown Safe\n");
 				autonFilterOutColor = "red";
 				break;
+
+			case autonomousType::RedSoloAWP:
+				debug::printOnController("Auton: Red SoloAWP");
+				printf("Red SoloAWP\n");
+				autonFilterOutColor = "blue";
+				break;
+			case autonomousType::BlueSoloAWP:
+				debug::printOnController("Auton: Blue SoloAWP");
+				printf("Blue SoloAWP\n");
+				autonFilterOutColor = "red";
+				break;
+
 			case autonomousType::AutonSkills:
 				debug::printOnController("Auton: Skills");
 				printf("AuSk\n");
@@ -137,8 +149,11 @@ namespace auton {
 			case autonomousType::BlueDownSafe:
 				autonpaths::runAutonBlueDown();
 				break;
-			case autonomousType::SoloAWP:
-				autonpaths::runSoloAWP();
+			case autonomousType::RedSoloAWP:
+				autonpaths::runRedSoloAWP();
+				break;
+			case autonomousType::BlueSoloAWP:
+				autonpaths::runBlueSoloAWP();
 				break;
 			case autonomousType::AutonSkills:
 				autonpaths::runAutonSkills();

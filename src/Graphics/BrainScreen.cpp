@@ -408,7 +408,7 @@ namespace {
 			setAutonRunType(1, autonomousType::RedUpSafe);
 		});
 		// Red Down
-		ButtonGui *redDownSafe = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Rd Down Safe", white, [] {
+		ButtonGui *redDownSafe = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Down Safe", white, [] {
 			allianceDisable(5);
 			allianceButtons[5]->enable();
 			setAutonRunType(1, autonomousType::RedDownSafe);
@@ -420,7 +420,7 @@ namespace {
 			setAutonRunType(1, autonomousType::BlueUpSafe);
 		});
 		// Blue Down
-		ButtonGui *blueDownSafe = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Bl Down Safe", white, [] {
+		ButtonGui *blueDownSafe = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Down Safe", white, [] {
 			allianceDisable(7);
 			allianceButtons[7]->enable();
 			setAutonRunType(1, autonomousType::BlueDownSafe);
@@ -444,30 +444,28 @@ namespace {
 			setAutonRunType(0, autonomousType::DrivingSkills);
 		});
 
-		// Red field
-		ButtonGui *redField = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Field", white, [] {
-			ownColor = color::blue;
-			oppColor = color::red;
+		// Red Solo AWP
+		ButtonGui *redSoloAWP = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Solo AWP", white, [] {
 			allianceDisable(10);
 			allianceButtons[10]->enable();
+			setAutonRunType(1, autonomousType::RedSoloAWP);
 		});
-		// Blue field
-		ButtonGui *blueField = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Field", white, [] {
-			ownColor = color::red;
-			oppColor = color::blue;
+		// Blue Solo AWP
+		ButtonGui *blueSoloAWP = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Solo AWP", white, [] {
 			allianceDisable(11);
 			allianceButtons[11]->enable();
+			setAutonRunType(2, autonomousType::BlueSoloAWP);
 		});
 
 		// Buttons groups
 		allianceButtons = {
 			redUp, redDown, blueUp, blueDown,
 			redUpSafe, redDownSafe, blueUpSafe, blueDownSafe,
-			skillsAuton, skillsDriver, redField, blueField,
+			skillsAuton, skillsDriver, redSoloAWP, blueSoloAWP,
 		};
 		autonSubdock1Buttons = { redUp, redDown, blueUp, blueDown };
 		autonSubdock2Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
-		autonSubdock3Buttons = { skillsAuton, skillsDriver, redField, blueField };
+		autonSubdock3Buttons = { skillsAuton, skillsDriver, redSoloAWP, blueSoloAWP };
 	}
 
 	/// @brief Create the interactable sliders on the screen.
