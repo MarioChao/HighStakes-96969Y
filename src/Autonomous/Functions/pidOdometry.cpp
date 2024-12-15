@@ -21,8 +21,8 @@ namespace {
 	// Controllers
 	PatienceController driveError_tilesPatience(10, 0.02, false);
 
-	PIDController driveTurn_driveTargetDistance_voltPid(390, 0, 40, autonvals::defaultMoveTilesErrorRange);
-	PIDController driveTurn_rotateTargetAngle_voltPid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
+	PIDController driveTurn_driveTargetDistance_voltPid(90, 0, 6, autonvals::defaultMoveTilesErrorRange);
+	PIDController driveTurn_rotateTargetAngle_voltPid(2.0, 0, 0, autonvals::defaultTurnAngleErrorRange);
 
 	PIDController driveTurn_driveTargetDistance_velocityPid(70, 0, 0, autonvals::defaultMoveTilesErrorRange);
 	PIDController driveTurn_rotateTargetAngle_velocityPid(0.3, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);

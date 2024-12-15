@@ -33,10 +33,16 @@ void autonpaths::autonTest() {
 	mainOdometry.setPosition(0, 0);
 	setRobotRotation(0);
 
-	runLinearPIDPath({
-		{0, 1}, {1, 1}, {1, 0}, {0, 0}
-	}, 100);
-	turnToAngle(0);
+	// runLinearPIDPath({
+	// 	{0, 1}, {1, 1}, {1, 0}, {0, 0}
+	// }, 100);
+	runLinearPIDPath({{0, 1}}, 100);
+	runLinearPIDPath({{0, 2}}, 100);
+	runLinearPIDPath({{0, 1}}, 100, true);
+	runLinearPIDPath({{0, 0}}, 100, true);
+	runLinearPIDPath({{0, 2}}, 100);
+	runLinearPIDPath({{0, 0}}, 100, true);
+	// turnToAngle(0);
 }
 
 void autonpaths::odometryRadiusTest() {
