@@ -19,7 +19,7 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Controllers
-	PatienceController driveError_tilesPatience(10, 0.01, false);
+	PatienceController driveError_tilesPatience(4, 0.01, false);
 
 	PIDController driveTurn_driveTargetDistance_voltPid(90, 0, 6, autonvals::defaultMoveTilesErrorRange);
 	PIDController driveTurn_rotateTargetAngle_voltPid(2.0, 0, 0, autonvals::defaultTurnAngleErrorRange);

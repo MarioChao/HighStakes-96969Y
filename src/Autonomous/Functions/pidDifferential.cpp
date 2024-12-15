@@ -27,8 +27,8 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Some controllers
-	PatienceController angleError_degreesPatience(10, 1.0, false);
-	PatienceController driveError_inchesPatience(10, 1.0, false);
+	PatienceController angleError_degreesPatience(4, 1.0, false);
+	PatienceController driveError_inchesPatience(4, 1.0, false);
 
 	PIDController turnToAngle_rotateTargetAngleVoltPid(2.5, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);

@@ -83,7 +83,7 @@ namespace {
 		waitUntil(_isDriveTurnSettled);
 		setArmStage(0);
 
-		// Re-eable filter
+		// Re-enable filter
 		setIntakeFilterEnabled(1);
 
 		// Score 2 rings

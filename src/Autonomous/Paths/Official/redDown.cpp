@@ -3,6 +3,7 @@
 namespace {
 	using namespace autonpaths;
 	using namespace autonpaths::pathbuild;
+	using namespace autonpaths::combination;
 
 	void loadPaths(int section);
 
@@ -18,8 +19,8 @@ void autonpaths::runAutonRedDown() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.6, 0.35);
-	setRobotRotation(66.56);
+	mainOdometry.setPosition(0.6, 0.5);
+	setRobotRotation(73);
 	mainOdometry.printDebug();
 
 	// Set config
@@ -41,87 +42,68 @@ namespace {
 		clearSplines();
 
 		if (section == 1) {
-			// Grab rushed goal
-			pushNewLinear({{2.1, 1.02}}, true, 60);
+			// Sweep corner
+			pushNewLinear({{0.3, 1.1}});
+			pushNewLinear({{0, 0.2}});
 
-			// Grab goal
-			pushNewLinear({{2, 2}}, true, 60);
+			// Store corner
+			pushNewLinear({{2, 1}});
 
-			// Score 1 ring
-			pushNewLinear({{0.64, 0}});
-
-			// Score alliance wall stake
-			pushNewLinear({{0.55, 3.}}, true);
-			pushNewLinear({{0, 3}});
+			// Score on wall stake
+			pushNewLinear({{0, 3}}, false, 75);
 
 			// Touch ladder
-			pushNewLinear({{2.11, 2.45}}, true);
+			pushNewLinear({{2.15, 2.35}}, true);
 		}
 	}
 
 	void doAuton() {
-		/* Rush middle goal */
-
-		// Store + rush
+		// Store ring + rush goal
 		setIntakeStoreRing(1);
-		async_driveTurnToFace_tiles(2.15, 1.0);
-		// driveTurnToFace_tiles(2.15, 1.0, false, 80);
+		async_driveTurnToFace_tiles(2.25, 1.0);
 
 		// Deploy
-		waitUntil(_linearPathDistanceError < 0.2);
+		waitUntil(_linearPathDistanceError < 0.1);
 		setSwing2State(1);
+		setSwing2State(0, 0.6);
 
 		// Go back & un-deploy
 		waitUntil(_isDriveTurnSettled);
-		setSwing2State(0, 0.4);
 		driveDistanceTiles(-0.5);
+		setSwing2State(0);
 
-		// Grab goal
-		runFollowLinearYield();
-		setGoalClampState(1);
+		// Grab rushed goal
+		setIntakeStoreRing(0);
+		grabGoalAt(2.5, 0.8);
 
 		// Score stored
-		setIntakeStoreRing(0);
 		setIntakeState(1);
-		wait(200, msec);
 
-		// Release goal
-		setGoalClampState(0);
+		// Sweep corner
+		setArmStage(2);
+		runFollowLinearYield();
+		setSwing2State(1, 0.3);
+		runFollowLinearYield();
+
+		// Store corner
+		setSwing2State(0);
+		setIntakeStoreRing(1);
+		setGoalClampState(0, 0.3);
+		runFollowLinearYield();
 
 		// Grab goal
-		setIntakeState(0);
-		driveDistanceTiles(0.5);
-		runFollowLinearYield();
-		setGoalClampState(1);
-		wait(200, msec);
+		setIntakeStoreRing(0);
+		grabGoalAt(2, 2);
 
-		// Go to corner
-		async_driveTurnToFace_tiles(0.6, 0.5);
-
-		// Deploy
-		waitUntil(_linearPathDistanceError < 0.2);
-		setSwingState(1);
-
-		// Swing out rings
-		waitUntil(_isDriveTurnSettled);
-		turnToAngleVelocity(160, 50);
-		setSwingState(0);
-
-		// Score 1 ring
+		// Score stored
 		setIntakeState(1);
-		runFollowLinearYield();
 
 		// Score alliance wall stake
-		setArmStage(2, 0.5);
 		runFollowLinearYield();
-		setIntakeState(0);
-		runFollowLinearYield();
-		driveDistanceTiles(-0.5);
+		driveDistanceTiles(-0.2);
 
 		// Touch ladder
-		setArmStage(0, 1.0);
-
-		// Follow path
+		setArmStage(0, 0.5);
 		runFollowLinearYield();
 	}
 }
