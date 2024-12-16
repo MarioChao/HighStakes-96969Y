@@ -43,7 +43,7 @@ namespace {
 
 		if (section == 1) {
 			// Sweep corner
-			pushNewLinear({{0.3, 1.1}});
+			pushNewLinear({{0.6, 1.1}});
 			pushNewLinear({{0, 0.2}});
 
 			// Store corner
@@ -53,7 +53,7 @@ namespace {
 			pushNewLinear({{0, 3}}, false, 75);
 
 			// Touch ladder
-			pushNewLinear({{2.15, 2.35}}, true);
+			pushNewLinear({{2.15, 2.3}}, true);
 		}
 	}
 

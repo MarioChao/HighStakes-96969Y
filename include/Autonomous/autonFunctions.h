@@ -46,7 +46,7 @@ namespace autonfunctions {
 		extern bool _isDriveTurnSettled;
 	}
 
-	void turnToFace(double x_tiles, double y_tiles, bool isReverse = false, double maxTurnVelocity_pct = 100);
+	void turnToFace_tiles(double x_tiles, double y_tiles, bool isReverse = false, double maxTurnVelocity_pct = 100);
 
 	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse = false);
 

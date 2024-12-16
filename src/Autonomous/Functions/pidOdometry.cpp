@@ -67,7 +67,7 @@ namespace autonfunctions {
 		bool _isDriveTurnSettled;
 	}
 
-	void turnToFace(double x_tiles, double y_tiles, bool isReverse, double maxTurnVelocity_pct) {
+	void turnToFace_tiles(double x_tiles, double y_tiles, bool isReverse, double maxTurnVelocity_pct) {
 		Linegular lg = mainOdometry.getLookLinegular();
 		double angle_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(atan2(y_tiles - lg.getY(), x_tiles - lg.getX())));
 		if (isReverse) angle_degrees += 180;
@@ -78,7 +78,7 @@ namespace autonfunctions {
 		Linegular lg(0, 0, 0);
 		for (std::vector<double> point : waypoints) {
 			// Rotation
-			turnToFace(point[0], point[1], isReverse);
+			turnToFace_tiles(point[0], point[1], isReverse);
 
 			// Linear
 			lg = mainOdometry.getLookLinegular();

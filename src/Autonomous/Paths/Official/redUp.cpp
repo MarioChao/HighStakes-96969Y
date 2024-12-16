@@ -76,7 +76,7 @@ namespace {
 
 		// Grab goal
 		setIntakeState(-1);
-		turnToFace(2, 4, true);
+		turnToFace_tiles(2, 4, true);
 		async_driveTurnToFace_tiles(2, 4, true, 60);
 		waitUntil(_linearPathDistanceError < 0.3);
 		setGoalClampState(1);
