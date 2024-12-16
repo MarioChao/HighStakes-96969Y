@@ -3,6 +3,7 @@
 namespace {
 	using namespace autonpaths;
 	using namespace autonpaths::pathbuild;
+	using namespace autonpaths::combination;
 
 	void loadPaths(int section);
 
@@ -18,15 +19,15 @@ void autonpaths::runAutonBlueDown() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(6 - 0.68, 1.69);
-	setRobotRotation(-105.0);
+	mainOdometry.setPosition(6 - 0.6, 0.5);
+	setRobotRotation(-73);
 	mainOdometry.printDebug();
 
 	// Set config
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
-	waitUntil(isArmResetted());
+	// waitUntil(isArmResetted());
 
 
 	/* Auton */
@@ -41,140 +42,68 @@ namespace {
 		clearSplines();
 
 		if (section == 1) {
-			// Rush goal
-			pushNewLinear({{6 - (2.62), 1.22}});
+			// Sweep corner
+			pushNewLinear({{6 - (0.6), 1.1}});
 
-			// Grab goal
-			pushNewLinear({{6 - (2.05), 1.97}}, true);
+			// Store corner
+			pushNewLinear({{6 - (1.8), 0.8}});
 
-			// Store 1 ring
-			pushNewLinear({{6 - (2), 1}});
-
-			// Grab goal
-			pushNewLinear({{6 - (2.62), 1.26}}, true);
-
-			// Go to corner
-			pushNewLinear({{6 - (1.04), 0.41}});
-
-			// Redirect corner ring
-			pushNewLinear({{6 - (0.25), 0.25}});
-
-			// Score alliance wall stake
-			pushNewLinear({{6 - (0.64), 3}, {6 - (0.3), 3}});
+			// Score on wall stake
+			pushNewLinear({{6 - (-0.3), 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Touch ladder
-			pushNewSpline(UniformCubicSpline::fromAutoTangent(cspline::CatmullRom, {
-				{6 - (0.21), 4.84}, {6 - (0.53), 2.98}, {6 - (2.45), 2.41}, {6 - (4.48), 3.95}
-			}), true);
+			pushNewLinear({{6 - (2.2), 2.3}}, true);
 		}
 	}
 
 	void doAuton() {
-		/* Rush middle goal */
-
-		// Follow path
-		runFollowLinearYield();
+		// Store ring + rush goal
+		setIntakeStoreRing(1);
+		async_driveTurnToFace_tiles(6 - (2.15), 1.0);
 
 		// Deploy
+		waitUntil(_linearPathDistanceError < 0.15);
 		setSwing2State(1);
+		setSwing2State(0, 0.6);
 
-		// Go back
-		driveDistanceTiles(-0.5);
+		// Go back & un-deploy
+		waitUntil(_isDriveTurnSettled);
+		driveDistanceTiles(-0.7);
 		setSwing2State(0);
 
+		// Grab rushed goal
+		setIntakeStoreRing(0);
+		grabGoalAt(6 - (2.4), 0.8);
 
-		/* Grab goal*/
+		// Score stored
+		setIntakeState(1);
 
-		// Follow path
+		// Sweep corner
+		setArmStage(2);
 		runFollowLinearYield();
+		turnToAngle(-(-160));
+		setSwing2State(1);
+		driveAndTurnDistanceTiles(1.0, -(-180.0));
+
+		// Store corner
+		setIntakeStoreRing(1);
+		setGoalClampState(0, 0.3);
+		runFollowLinearYield();
+		setSwing2State(0);
 
 		// Grab goal
-		setGoalClampState(1);
-		wait(200, msec);
+		setIntakeStoreRing(0);
+		grabGoalAt(6 - (2), 1.9);
 
-
-		/* Score 1 ring */
-
-		// Score preload
+		// Score stored
 		setIntakeState(1);
 
-		// Release goal
-		wait(1, sec);
-		setGoalClampState(0);
-
-
-		/* Store 1 ring */
-
-		// Start storing
-		setIntakeStoreRing(1, 0.3);
-
-		// Follow path
+		// Score alliance wall stake
 		runFollowLinearYield();
+		driveDistanceTiles(-0.4);
 
-
-		/* Grab goal */
-
-		// Follow path
+		// Touch ladder
+		setArmStage(0, 0.5);
 		runFollowLinearYield();
-
-		// Grab goal
-		setGoalClampState(1);
-		wait(200, msec);
-
-		// Start scoring
-		setIntakeState(1);
-
-
-		/* Sweep corner */
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Deploy swing
-		setSwingState(1);
-		// setIntakeState(0);
-
-		// Swing out rings
-		driveAndTurnDistanceTiles(0.7, -(-135), 60, 100, 0.5);
-		turnToAngleVelocity(-(-80), 50);
-		setSwingState(0);
-
-
-		/* Redirect corner */
-
-		// Start redirect
-		setIntakeState(1);
-		setIntakeToArm(1);
-
-		// Follow path
-		runFollowLinearYield();
-
-		// Back up
-		driveAndTurnDistanceTiles(-0.5, -(-135), 100.0, 100.0, 1.0);
-
-
-		/* Score alliance wall stake */
-
-		// Raise arm
-		setArmStage(2, 0.5);
-
-		// Follow path
-		runFollowLinearYield();
-
-
-		/* Touch ladder */
-
-		// Lower arm
-		setArmStage(0, 1.0);
-
-		// Follow path
-		runFollowSpline();
-
-		// Wait
-		waitUntil(_pathFollowCompleted);
-
-		// Stop intake
-		waitUntil(_autonTimer.value() > 14.5);
-		setIntakeState(0);
 	}
 }

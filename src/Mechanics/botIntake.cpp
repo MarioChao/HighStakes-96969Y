@@ -53,7 +53,7 @@ namespace botintake {
 				if (RingOpticalSensor.hue() <= 20 || RingOpticalSensor.hue() >= 340) {
 					detectedRingColor = "red";
 					// debug::printOnController("Red ring");
-				} else if (200 <= RingOpticalSensor.hue() && RingOpticalSensor.hue() <= 230) {
+				} else if (180 <= RingOpticalSensor.hue() && RingOpticalSensor.hue() <= 230) {
 					detectedRingColor = "blue";
 					// debug::printOnController("Blue ring");
 				} else {
