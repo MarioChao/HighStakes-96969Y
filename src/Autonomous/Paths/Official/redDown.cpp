@@ -19,8 +19,8 @@ void autonpaths::runAutonRedDown() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.6, 0.5);
-	setRobotRotation(73);
+	mainOdometry.setPosition(0.6, 0.45);
+	setRobotRotation(70);
 	mainOdometry.printDebug();
 
 	// Set config
@@ -44,13 +44,12 @@ namespace {
 		if (section == 1) {
 			// Sweep corner
 			pushNewLinear({{0.6, 1.1}});
-			pushNewLinear({{0, 0.2}});
 
 			// Store corner
-			pushNewLinear({{2, 1}});
+			pushNewLinear({{1.8, 0.8}});
 
 			// Score on wall stake
-			pushNewLinear({{0, 3}}, false, 75);
+			pushNewLinear({{-0.3, 3}}, false, 75);
 
 			// Touch ladder
 			pushNewLinear({{2.15, 2.3}}, true);
@@ -60,21 +59,21 @@ namespace {
 	void doAuton() {
 		// Store ring + rush goal
 		setIntakeStoreRing(1);
-		async_driveTurnToFace_tiles(2.25, 1.0);
+		async_driveTurnToFace_tiles(2.15, 1.0);
 
 		// Deploy
-		waitUntil(_linearPathDistanceError < 0.1);
+		waitUntil(_linearPathDistanceError < 0.15);
 		setSwing2State(1);
 		setSwing2State(0, 0.6);
 
 		// Go back & un-deploy
 		waitUntil(_isDriveTurnSettled);
-		driveDistanceTiles(-0.5);
+		driveDistanceTiles(-0.7);
 		setSwing2State(0);
 
 		// Grab rushed goal
 		setIntakeStoreRing(0);
-		grabGoalAt(2.5, 0.8);
+		grabGoalAt(2.4, 0.8);
 
 		// Score stored
 		setIntakeState(1);
@@ -82,25 +81,26 @@ namespace {
 		// Sweep corner
 		setArmStage(2);
 		runFollowLinearYield();
-		setSwing2State(1, 0.3);
-		runFollowLinearYield();
+		turnToAngle(-160);
+		setSwing2State(1);
+		driveAndTurnDistanceTiles(1.0, -180.0);
 
 		// Store corner
-		setSwing2State(0);
 		setIntakeStoreRing(1);
 		setGoalClampState(0, 0.3);
 		runFollowLinearYield();
+		setSwing2State(0);
 
 		// Grab goal
 		setIntakeStoreRing(0);
-		grabGoalAt(2, 2);
+		grabGoalAt(2, 1.9);
 
 		// Score stored
 		setIntakeState(1);
 
 		// Score alliance wall stake
 		runFollowLinearYield();
-		driveDistanceTiles(-0.2);
+		driveDistanceTiles(-0.4);
 
 		// Touch ladder
 		setArmStage(0, 0.5);
