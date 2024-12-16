@@ -78,7 +78,7 @@ void pre_auton(void) {
 		while (true) {
 			mainOdometry.odometryFrame();
 			// printf("test: %.3f %.3f\n", mainOdometry.getX(), mainOdometry.getY());
-			wait(20, msec);
+			wait(5, msec);
 		}
 	});
 

@@ -28,6 +28,11 @@ namespace {
 
 	bool isStoringRing = false;
 
+	// Reverse intake loop
+	const int reverseIntakeThreshold = 100;
+	const int reverseIntakeFor = 10;
+	int reverseIntakeCalls = 0;
+
 	bool controlState = true;
 }
 
@@ -75,15 +80,29 @@ namespace botintake {
 				} else {
 					isStuck = false;
 				}
-
 				// Override stuck
 				isStuck = false;
 
-				// Reverse on stuck
+				// Check reverse intake
+				bool reverseIntake = false;
+				reverseIntakeCalls++;
+				if (reverseIntakeCalls > reverseIntakeThreshold) {
+					reverseIntake = true;
+					if (reverseIntakeCalls - reverseIntakeThreshold > reverseIntakeFor) {
+						reverseIntakeCalls = 0;
+					}
+				}
+				// Override reverse
+				reverseIntake = false;
+
 				if (isStuck && stuckTime.value() > 0.08) {
+					// Reverse on stuck
 					resolveState = -1;
 					resolveIntake();
 					task::sleep(300);
+				} else if (reverseIntake) {
+					resolveState = -1;
+					resolveIntake();
 				} else {
 					resolveIntake();
 				}

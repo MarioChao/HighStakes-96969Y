@@ -23,6 +23,7 @@ namespace swing {
 		if (delaySec <= 1e-9) {
 			// Set state here
 			SwordPneumatics.set(state);
+			printf("Sword 1 state: %d\n", SwordPneumatics.value());
 
 			return;
 		}

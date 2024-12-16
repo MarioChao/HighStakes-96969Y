@@ -50,13 +50,13 @@ namespace {
 			pushNewLinear({{6 - (-1), 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{3.35, 4.75}, {3.3, 5.2}});
+			pushNewLinear({{3.43, 4.75}, {3.38, 5.2}});
 
 			// Score 1 ring
 			pushNewLinear({{5.2, 4.8}});
 
 			// Touch ladder
-			pushNewLinear({{6 - (2), 3}});
+			pushNewLinear({{4.2, 3.3}});
 		}
 	}
 
@@ -74,7 +74,7 @@ namespace {
 
 		// Grab goal
 		setIntakeState(-1);
-		grabGoalAt(3.95, 4.2, 0.1);
+		grabGoalAt(3.95, 4.2);
 		setArmStage(0);
 
 		// Re-enable filter

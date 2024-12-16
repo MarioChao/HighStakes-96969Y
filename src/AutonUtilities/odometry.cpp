@@ -140,8 +140,11 @@ void Odometry::odometryFrame() {
 	// Rotate with pose exponential
 	deltaDistances.rotateExponentialBy(genutil::toRadians(deltaPolarAngle_degrees));
 
+	// Altenatively, rotate by half angle (euler integration)
+	// see https://docs.ftclib.org/ftclib/master/kinematics/odometry
+	// deltaDistances.rotateXYBy(genutil::toRadians(deltaPolarAngle_degrees / 2));
+
 	// Rotate to absolute difference
-	// double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees()) + deltaPolarAngle_degrees / 2;
 	double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees());
 	double localToGlobalRotateAngle = genutil::toRadians(averageAngleDegrees);
 	deltaDistances.rotateXYBy(localToGlobalRotateAngle);
