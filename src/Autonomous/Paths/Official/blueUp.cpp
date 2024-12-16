@@ -19,7 +19,7 @@ void autonpaths::runAutonBlueUp() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(6 - 0.79, 3.78);
+	mainOdometry.setPosition(5.2, 3.73);
 	setRobotRotation(180);
 	mainOdometry.printDebug();
 
@@ -50,13 +50,10 @@ namespace {
 			pushNewLinear({{6 - (-1), 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{6 - (2.6), 4.75}, {6 - (2.67), 5.2}});
+			pushNewLinear({{3.35, 4.75}, {3.3, 5.2}});
 
 			// Score 1 ring
-			pushNewLinear({{6 - (2), 4.8}});
-
-			// Sweep corner
-			pushNewLinear({{6 - (0.25), 5.75}});
+			pushNewLinear({{5.2, 4.8}});
 
 			// Touch ladder
 			pushNewLinear({{6 - (2), 3}});
@@ -77,11 +74,7 @@ namespace {
 
 		// Grab goal
 		setIntakeState(-1);
-		turnToFace_tiles(6 - (2), 4, true);
-		async_driveTurnToFace_tiles(6 - (2), 4, true, 60);
-		waitUntil(_linearPathDistanceError < 0.3);
-		setGoalClampState(1);
-		waitUntil(_isDriveTurnSettled);
+		grabGoalAt(3.95, 4.2, 0.1);
 		setArmStage(0);
 
 		// Re-enable filter
@@ -92,13 +85,15 @@ namespace {
 		runFollowLinearYield();
 
 		// Score 1 ring
-		turnToAngleVelocity(-(-90), 60);
+		turnToFace_tiles(5.2, 4.8, false, 60);
 		runFollowLinearYield();
 
-		// Score corner
+		// Sweep corner
+		turnToAngle(20, -halfRobotLengthIn * 0.5);
 		setSwing2State(1);
-		setIntakeState(0, 0.5);
-		runFollowLinearYield();
+		setIntakeState(0);
+		driveAndTurnDistanceTiles(1.0, 0.0);
+		turnToAngle(-120);
 
 		// Touch ladder
 		setIntakeState(1);

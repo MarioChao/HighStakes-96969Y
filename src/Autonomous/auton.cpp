@@ -14,7 +14,7 @@ namespace {
 	bool runningAutonUponStart = false;
 
 	// autonomousType auton_runType = autonomousType::AutonSkills;
-	autonomousType auton_runType = autonomousType::BlueDown;
+	autonomousType auton_runType = autonomousType::BlueUp;
 	// autonomousType auton_runType = autonomousType::Test;
 	int auton_allianceId;
 
