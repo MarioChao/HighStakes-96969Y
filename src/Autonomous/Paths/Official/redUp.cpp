@@ -19,7 +19,7 @@ void autonpaths::runAutonRedUp() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.79, 3.78);
+	mainOdometry.setPosition(0.77, 3.78);
 	setRobotRotation(-180);
 	mainOdometry.printDebug();
 
@@ -50,16 +50,16 @@ namespace {
 			pushNewLinear({{-1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{2.6, 4.75}, {2.67, 5.2}});
+			pushNewLinear({{2.65, 4.75}, {2.7, 5.2}});
 
 			// Score 1 ring
-			pushNewLinear({{2, 4.8}});
+			pushNewLinear({{1.8, 4.8}});
 
 			// Sweep corner
 			pushNewLinear({{0.25, 5.75}});
 
 			// Touch ladder
-			pushNewLinear({{2, 3}});
+			pushNewLinear({{1.8, 3.3}});
 		}
 	}
 
@@ -77,7 +77,7 @@ namespace {
 
 		// Grab goal
 		setIntakeState(-1);
-		grabGoalAt(2, 4);
+		grabGoalAt(2.2, 4.2);
 		setArmStage(0);
 
 		// Re-enable filter
@@ -88,7 +88,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Score 1 ring
-		turnToAngleVelocity(-90, 60);
+		turnToFace_tiles(1.8, 4.8, false, 60);
 		runFollowLinearYield();
 
 		// Score corner
