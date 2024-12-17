@@ -14,6 +14,7 @@ namespace {
 	void finalSkills();
 
 	bool skipWallStakes = true;
+	bool skipLastWallStake = true;
 }
 
 /// @brief Run the autonomous skills.
@@ -74,7 +75,7 @@ namespace {
 			pushNewLinear({{3, 0}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1.71, 1.05}, {0.5, 1.05}, {1.19, 0.37}});
+			pushNewLinear({{1.71, 1.05}, {0.5, 1.05}, {1.3, 0.37}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
@@ -91,7 +92,7 @@ namespace {
 
 			// Score 3 rings
 			// pushNewLinear({{1.04, 5.52}, {1.03, 5.01}, {0.49, 5}});
-			pushNewLinear({{1.71, 5}, {0.5, 5}, {1.2, 5.63}});
+			pushNewLinear({{1.71, 5}, {0.5, 5}, {1.3, 5.63}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.61}}, true);
@@ -103,11 +104,11 @@ namespace {
 			pushNewLinear({{4, 4}});
 
 			// Score on wall stake
-			pushNewLinear({{6, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{6.3, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Place goal at corner
 			// pushNewLinear({{5.5, 3.9}, {5.7, 5.7}}, true);
-			pushNewLinear({{5.7, 5.7}}, true);
+			pushNewLinear({{6, 5.7}}, true);
 
 		} else if (section == 4) {
 			// Store 1 ring
@@ -117,7 +118,7 @@ namespace {
 			pushNewLinear({{4, 2}, {4.95, 1.05}, {4.95, 0.55}});
 
 			// Reposition
-			pushNewLinear({{4.8, 1}}, true);
+			// pushNewLinear({{4.8, 1}}, true);
 
 			// Score 1 ring
 			pushNewLinear({{5.55, 1.04}});
@@ -155,10 +156,9 @@ namespace {
 			setArmStage(3);
 			runFollowLinearYield();
 			runFollowLinearYield();
+			mainOdometry.setPosition(3.0, 0.33);
 			driveDistanceTiles(-0.5);
 		} else {
-			turnToFace_tiles(3, 0.6);
-			driveTurnToFace_tiles(3, 0.6);
 			autonpaths::pathbuild::linearIndex += 2;
 		}
 
@@ -192,13 +192,14 @@ namespace {
 			setIntakeState(1);
 			runFollowLinearYield();
 			runFollowLinearYield();
+			mainOdometry.setPosition(3.0, 5.67);
 			driveDistanceTiles(-0.5);
 			setArmStage(0, 1.0);
 		} else {
 			setIntakeState(1);
 			driveTurnToFace_tiles(2, 5);
-			turnToFace_tiles(3, 6);
-			driveTurnToFace_tiles(3, 6);
+			turnToFace_tiles(3, 5.4);
+			driveTurnToFace_tiles(3, 5.4);
 			autonpaths::pathbuild::linearIndex += 2;
 		}
 
@@ -213,7 +214,7 @@ namespace {
 
 	void thirdCorner() {
 		// Redirect
-		setIntakeToArm(1, 0.5);
+		if (!skipLastWallStake) setIntakeToArm(1, 0.5);
 		setIntakeState(1);
 		runFollowLinearYield();
 
@@ -234,9 +235,11 @@ namespace {
 		setIntakeState(0);
 
 		// Wall stake
-		runFollowLinearYield();
-		driveDistanceTiles(-0.5);
-		setArmStage(0, 1.0);
+		if (!skipLastWallStake) {
+			runFollowLinearYield();
+			driveDistanceTiles(-0.5);
+			setArmStage(0, 1.0);
+		} else autonpaths::pathbuild::linearIndex += 1;
 
 		// Place goal
 		runFollowLinearYield();
@@ -257,7 +260,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Reposition
-		runFollowLinearYield();
+		// runFollowLinearYield();
 
 		// Score
 		runFollowLinearYield();
