@@ -3,6 +3,7 @@
 namespace {
 	using namespace autonpaths;
 	using namespace autonpaths::pathbuild;
+	using namespace autonpaths::combination;
 
 	void loadPaths(int section);
 
@@ -11,6 +12,8 @@ namespace {
 	void thirdCorner();
 	void fourthCorner();
 	void finalSkills();
+
+	bool skipWallStakes = true;
 }
 
 /// @brief Run the autonomous skills.
@@ -56,10 +59,7 @@ namespace {
 
 		if (section == 1) {
 			// Score on wall stake
-			pushNewLinear({{0, 3}});
-
-			// Grab goal
-			pushNewLinear({{1, 2}}, true, 70);
+			pushNewLinear({{0, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Redirect 1 ring
 			pushNewLinear({{1.93, 2}});
@@ -71,7 +71,7 @@ namespace {
 			pushNewLinear({{3.0, 1.2}}, true);
 
 			// Score on wall stake
-			pushNewLinear({{3, 0}});
+			pushNewLinear({{3, 0}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 3 rings
 			pushNewLinear({{1.71, 1.05}, {0.5, 1.05}, {1.19, 0.37}});
@@ -85,14 +85,13 @@ namespace {
 			// Store 1 ring
 			pushNewLinear({{2, 4}});
 
-			// Grab goal
-			pushNewLinear({{1.1, 4.01}}, true, 70);
-
 			// Score 2 ring & score on wall stake
-			pushNewLinear({{2, 4.9}, {3, 4.9}, {3, 6}});
+			pushNewLinear({{2, 4.9}, {3, 4.8}});
+			pushNewLinear({{3, 6}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1.04, 5.52}, {1.03, 5.01}, {0.49, 5}});
+			// pushNewLinear({{1.04, 5.52}, {1.03, 5.01}, {0.49, 5}});
+			pushNewLinear({{1.71, 5}, {0.5, 5}, {1.2, 5.63}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.61}}, true);
@@ -103,27 +102,22 @@ namespace {
 			// Store 1 ring
 			pushNewLinear({{4, 4}});
 
-			// Grab goal
-			pushNewLinear({{5, 3}}, true, 70);
-
 			// Score on wall stake
-			pushNewLinear({{6, 3}});
+			pushNewLinear({{6, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Place goal at corner
-			pushNewLinear({{5.5, 3.9}, {5.61, 5.61}}, true);
+			// pushNewLinear({{5.5, 3.9}, {5.7, 5.7}}, true);
+			pushNewLinear({{5.7, 5.7}}, true);
 
 		} else if (section == 4) {
 			// Store 1 ring
 			pushNewLinear({{5, 5}});
 
-			// Grab goal
-			pushNewLinear({{4.6, 3}}, true, 70);
-
 			// Score 3 rings
 			pushNewLinear({{4, 2}, {4.95, 1.05}, {4.95, 0.55}});
 
 			// Reposition
-			pushNewLinear({{4.95, 1}}, true);
+			pushNewLinear({{4.8, 1}}, true);
 
 			// Score 1 ring
 			pushNewLinear({{5.55, 1.04}});
@@ -145,11 +139,10 @@ namespace {
 		driveDistanceTiles(-0.5);
 
 		// Goal
-		runFollowLinearYield();
-		setGoalClampState(1);
+		grabGoalAt(1, 2);
 
 		// Redirect
-		setIntakeToArm(1);
+		if (!skipWallStakes) setIntakeToArm(1);
 		setIntakeState(1);
 		runFollowLinearYield();
 
@@ -158,9 +151,16 @@ namespace {
 		runFollowLinearYield();
 
 		// Wall stake
-		setArmStage(3);
-		runFollowLinearYield();
-		runFollowLinearYield();
+		if (!skipWallStakes) {
+			setArmStage(3);
+			runFollowLinearYield();
+			runFollowLinearYield();
+			driveDistanceTiles(-0.5);
+		} else {
+			turnToFace_tiles(3, 0.6);
+			driveTurnToFace_tiles(3, 0.6);
+			autonpaths::pathbuild::linearIndex += 2;
+		}
 
 		// Score
 		runFollowLinearYield();
@@ -173,7 +173,8 @@ namespace {
 
 	void secondCorner() {
 		// Redirect
-		setIntakeToArm(1);
+		if (!skipWallStakes) setIntakeToArm(1);
+		else setArmStage(0);
 		setIntakeState(1);
 		runFollowLinearYield();
 
@@ -183,15 +184,23 @@ namespace {
 		runFollowLinearYield();
 
 		// Goal
-		runFollowLinearYield();
-		setGoalClampState(1);
+		grabGoalAt(0.9, 4);
 
 		// Score + wall stake
-		setArmStage(3);
-		setIntakeState(1);
-		runFollowLinearYield();
-		driveDistanceTiles(-0.5);
-		setArmStage(0, 1.0);
+		if (!skipWallStakes) {
+			setArmStage(3);
+			setIntakeState(1);
+			runFollowLinearYield();
+			runFollowLinearYield();
+			driveDistanceTiles(-0.5);
+			setArmStage(0, 1.0);
+		} else {
+			setIntakeState(1);
+			driveTurnToFace_tiles(2, 5);
+			turnToFace_tiles(3, 6);
+			driveTurnToFace_tiles(3, 6);
+			autonpaths::pathbuild::linearIndex += 2;
+		}
 
 		// Score
 		runFollowLinearYield();
@@ -204,7 +213,7 @@ namespace {
 
 	void thirdCorner() {
 		// Redirect
-		setIntakeToArm(1);
+		setIntakeToArm(1, 0.5);
 		setIntakeState(1);
 		runFollowLinearYield();
 
@@ -214,8 +223,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Goal
-		runFollowLinearYield();
-		setGoalClampState(1);
+		grabGoalAt(4.9, 2.8);
 
 		// Release goal
 		setIntakeState(1);
@@ -232,7 +240,7 @@ namespace {
 
 		// Place goal
 		runFollowLinearYield();
-		driveDistanceTiles(0.5);
+		driveDistanceTiles(0.2);
 	}
 
 	void fourthCorner() {
@@ -241,8 +249,7 @@ namespace {
 		runFollowLinearYield();
 
 		// Goal
-		runFollowLinearYield();
-		setGoalClampState(1);
+		grabGoalAt(4.75, 2.8);
 
 		// Score
 		setIntakeStoreRing(0);

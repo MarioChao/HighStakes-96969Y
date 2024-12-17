@@ -66,7 +66,7 @@ void pre_auton(void) {
 
 	// Odometry
 	mainOdometry.addPositionSensor2D(-90, []() {return LookRotation.position(rev);}, 1, 2, 0);
-	mainOdometry.addPositionSensor2D(0, []() {return RightEncoder.position(rev);}, 1, 2.75, 2.94);
+	mainOdometry.addPositionSensor2D(180, []() {return RightEncoder.position(rev);}, 1, 2.75, -3.27);
 	// mainOdometry.addInertialSensor(InertialSensor, 0, 0);
 	mainOdometry.addInertialSensor(InertialSensor, -3, 2);
 	// mainOdometry.addInertialSensor(InertialSensor, -3.276, 3.651);
@@ -77,6 +77,8 @@ void pre_auton(void) {
 		mainOdometry.start();
 		while (true) {
 			mainOdometry.odometryFrame();
+			Controller1.Screen.setCursor(3, 0);
+			// Controller1.Screen.print("Enc val: %.3f\n", RightEncoder.position(rev));
 			// printf("test: %.3f %.3f\n", mainOdometry.getX(), mainOdometry.getY());
 			wait(5, msec);
 		}
