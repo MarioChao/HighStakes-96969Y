@@ -19,8 +19,8 @@ void autonpaths::runAutonRedDown() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.6, 0.45);
-	setRobotRotation(70);
+	mainOdometry.setPosition(0.56, 0.45);
+	setRobotRotation(68);
 	mainOdometry.printDebug();
 
 	// Set config
@@ -49,17 +49,17 @@ namespace {
 			pushNewLinear({{1.8, 0.8}});
 
 			// Score on wall stake
-			pushNewLinear({{-0.3, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{0, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Touch ladder
-			pushNewLinear({{2.2, 2.3}}, true);
+			// pushNewLinear({{2.2, 2.3}}, true);
 		}
 	}
 
 	void doAuton() {
 		// Store ring + rush goal
 		setIntakeStoreRing(1);
-		async_driveTurnToFace_tiles(2.15, 1.0);
+		async_driveTurnToFace_tiles(2.2, 1.0);
 
 		// Deploy
 		waitUntil(_linearPathDistanceError < 0.15);
@@ -68,12 +68,12 @@ namespace {
 
 		// Go back & un-deploy
 		waitUntil(_isDriveTurnSettled);
-		driveDistanceTiles(-0.7);
+		driveDistanceTiles(-0.8);
 		setSwing2State(0);
 
 		// Grab rushed goal
 		setIntakeStoreRing(0);
-		grabGoalAt(2.4, 0.8);
+		grabGoalAt(2.4, 0.9);
 
 		// Score stored
 		setIntakeState(1);
@@ -87,7 +87,7 @@ namespace {
 
 		// Store corner
 		setIntakeStoreRing(1);
-		setGoalClampState(0, 0.3);
+		setGoalClampState(0, 1.0);
 		runFollowLinearYield();
 		setSwing2State(0);
 
@@ -105,5 +105,7 @@ namespace {
 		// Touch ladder
 		setArmStage(0, 0.5);
 		runFollowLinearYield();
+		turnToFace_tiles(2.2, 2.3, true);
+		driveTurnToFace_tiles(2.5, 2.3, true);
 	}
 }
