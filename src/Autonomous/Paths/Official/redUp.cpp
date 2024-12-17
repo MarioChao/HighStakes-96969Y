@@ -50,7 +50,7 @@ namespace {
 			pushNewLinear({{-1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{2.65, 4.75}, {2.7, 5.2}});
+			pushNewLinear({{2.65, 4.75}, {2.67, 5.2}});
 
 			// Score 1 ring
 			pushNewLinear({{1.8, 4.8}});
@@ -93,11 +93,10 @@ namespace {
 
 		// Score corner
 		setSwing2State(1);
-		setIntakeState(0, 0.5);
 		runFollowLinearYield();
 
 		// Touch ladder
-		setIntakeState(1);
+		// setIntakeState(1);
 		runFollowLinearYield();
 	}
 }
