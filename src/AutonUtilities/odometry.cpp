@@ -11,7 +11,8 @@
 
 namespace {
 	const double cosAngleWithinRange = 1e-4;
-	const double smallAngleThreshold_degrees = 8;
+	const double integralSmallAngle_degrees = 8;
+	const double inertialNoiseFilter_degrees = 1e-4;
 }
 
 
@@ -102,8 +103,9 @@ void Odometry::start() {
 	// Initialize old measurements with counter-clockwise being positive, assuming right turn type
 	inertialSensor_oldMeasurements.resize(inertialSensor_count);
 	for (int i = 0; i < inertialSensor_count; i++) {
-		inertialSensor_oldMeasurements[i] = -inertialSensors[i]->rotation(deg);
 		inertialSensor_driftCorrections[i]->setInitial();
+		// inertialSensor_oldMeasurements[i] = -inertialSensors[i]->rotation(deg);
+		inertialSensor_oldMeasurements[i] = -inertialSensor_driftCorrections[i]->getRotation();
 	}
 }
 
@@ -138,7 +140,7 @@ void Odometry::odometryFrame() {
 
 	/* Local to Absolute */
 
-	if (genutil::isWithin(deltaPolarAngle_degrees, 0, smallAngleThreshold_degrees)) {
+	if (genutil::isWithin(deltaPolarAngle_degrees, 0, integralSmallAngle_degrees)) {
 		// Rotate by half angle (euler integration)
 		// see https://docs.ftclib.org/ftclib/master/kinematics/odometry
 		deltaDistances.rotateXYBy(genutil::toRadians(deltaPolarAngle_degrees / 2));
@@ -149,8 +151,8 @@ void Odometry::odometryFrame() {
 
 
 	// Rotate to absolute difference
-	double averageAngleDegrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees());
-	double localToGlobalRotateAngle = genutil::toRadians(averageAngleDegrees);
+	double rightPolarAngle_degrees = angle::swapFieldPolar_degrees(getRightFieldAngle_degrees());
+	double localToGlobalRotateAngle = genutil::toRadians(rightPolarAngle_degrees);
 	deltaDistances.rotateXYBy(localToGlobalRotateAngle);
 
 
@@ -230,19 +232,28 @@ void Odometry::getNewInertialSensorMeasurements() {
 	inertialSensor_newMeasurements.resize(inertialSensor_count);
 	for (int i = 0; i < inertialSensor_count; i++) {
 		inertialSensor_driftCorrections[i]->correct();
-		inertialSensor_newMeasurements[i] = -inertialSensors[i]->rotation(deg);
-		inertialSensor_driftCorrections[i]->setInitial();
+		inertialSensor_newMeasurements[i] = -inertialSensor_driftCorrections[i]->getRotation();
 	}
 }
 
 double Odometry::getDeltaPolarAngle_degrees() {
 	double totalDeltaAngle = 0;
 	for (int i = 0; i < inertialSensor_count; i++) {
-		totalDeltaAngle += inertialSensor_newMeasurements[i] - inertialSensor_oldMeasurements[i];
+		// Angle difference
+		double deltaAngle_degrees = inertialSensor_newMeasurements[i] - inertialSensor_oldMeasurements[i];
+
+		// Small noise filter
+		// if (genutil::isWithin(deltaAngle_degrees, 0, inertialNoiseFilter_degrees)) continue;
+
+		// Add to total
+		totalDeltaAngle += deltaAngle_degrees;
 	}
 
 	// Return
-	if (inertialSensor_count == 0) return 0;
+	if (inertialSensor_count == 0) {
+		printf("Error: no inertial sensors available.");
+		return 0;
+	}
 	return totalDeltaAngle / inertialSensor_count;
 }
 
@@ -276,7 +287,10 @@ double Odometry::getLocalDeltaX_inches(double deltaPolarAngle_degrees) {
 	}
 
 	// Return
-	if (validSensorsCount == 0) return 0;
+	if (validSensorsCount == 0) {
+		printf("Error: no position sensors available for delta X.");
+		return 0;
+	}
 	return totalDeltaX_inches / validSensorsCount;
 }
 
@@ -310,6 +324,9 @@ double Odometry::getLocalDeltaY_inches(double deltaPolarAngle_degrees) {
 	}
 
 	// Return
-	if (validSensorsCount == 0) return 0;
+	if (validSensorsCount == 0) {
+		printf("Error: no position sensors available for delta Y.");
+		return 0;
+	}
 	return totalDeltaY_inches / validSensorsCount;
 }
