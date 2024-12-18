@@ -46,13 +46,14 @@ namespace {
 			pushNewLinear({{5.7, 0.2}});
 
 			// Store corner
-			pushNewLinear({{5.2, 1.8}});
+			pushNewLinear({{5.0, 1.8}});
 
 			// Score on wall stake
-			pushNewLinear({{6.3, 3.1}}, false, autonvals::scoreWallStakeVelocity_pct);
+			// pushNewLinear({{6.1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{6.1, 3}}, false, 40);
 
 			// Touch ladder
-			pushNewLinear({{4.3, 3}});
+			pushNewLinear({{4.3, 3}}, false, 40);
 		}
 	}
 
@@ -91,14 +92,14 @@ namespace {
 
 		// Grab goal
 		setIntakeStoreRing(0);
-		grabGoalAt(4, 2.1);
+		grabGoalAt(3.9, 2);
 
 		// Score stored
 		setIntakeState(1);
 
 		// Score alliance wall stake
-		turnToFace_tiles(5.2, 2.5);
-		driveTurnToFace_tiles(5.2, 3.0);
+		// turnToFace_tiles(5.2, 2.5);
+		// driveTurnToFace_tiles(5.2, 3.0);
 		runFollowLinearYield();
 		driveDistanceTiles(-0.4);
 
