@@ -43,13 +43,13 @@ namespace {
 
 		if (section == 1) {
 			// Sweep corner
-			pushNewLinear({{0.6, 1.1}});
+			pushNewLinear({{0.6, 1.3}});
 
 			// Store corner
 			pushNewLinear({{1.8, 0.8}});
 
 			// Score on wall stake
-			pushNewLinear({{0, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{-0.05, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Touch ladder
 			// pushNewLinear({{2.2, 2.3}}, true);
@@ -104,7 +104,7 @@ namespace {
 
 		// Touch ladder
 		setArmStage(0, 0.5);
-		runFollowLinearYield();
+		// runFollowLinearYield();
 		turnToFace_tiles(2.2, 2.3, true);
 		driveTurnToFace_tiles(2.5, 2.3, true);
 	}

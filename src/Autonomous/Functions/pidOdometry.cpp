@@ -224,6 +224,7 @@ namespace {
 		driftCorrector.correct();
 
 		// Settled
+		_linearPathDistanceError = 0;
 		_isDriveTurnSettled = true;
 	}
 }
