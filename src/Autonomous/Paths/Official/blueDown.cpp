@@ -50,7 +50,7 @@ namespace {
 
 			// Score on wall stake
 			// pushNewLinear({{6.1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
-			pushNewLinear({{6.1, 3}}, false, 40);
+			pushNewLinear({{6.15, 2.97}}, false, 50);
 
 			// Touch ladder
 			pushNewLinear({{4.3, 3}}, false, 40);
@@ -60,7 +60,7 @@ namespace {
 	void doAuton() {
 		// Store ring + rush goal
 		setIntakeStoreRing(1);
-		async_driveTurnToFace_tiles(3.80, 1.0);
+		async_driveTurnToFace_tiles(3.78, 0.96);
 
 		// Deploy
 		waitUntil(_linearPathDistanceError < 0.15);
