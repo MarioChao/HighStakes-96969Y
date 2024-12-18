@@ -13,7 +13,7 @@ namespace {
 	void fourthCorner();
 	void finalSkills();
 
-	bool skipWallStakes = true;
+	bool skipWallStakes = false;
 	bool skipLastWallStake = true;
 }
 
@@ -273,6 +273,7 @@ namespace {
 
 	void finalSkills() {
 		setArmStage(3);
+		setIntakeState(0);
 		runFollowLinearYield();
 		runFollowLinearYield();
 	}

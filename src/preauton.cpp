@@ -47,6 +47,7 @@ namespace {
 		// Increase optical sensor brightness
 		RingOpticalSensor.setLight(ledState::on);
 		RingOpticalSensor.setLightPower(100);
+		printf("Optical on\n");
 
 		initComponentFinished = true;
 	}

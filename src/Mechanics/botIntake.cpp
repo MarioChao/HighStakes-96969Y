@@ -63,6 +63,7 @@ namespace botintake {
 					// debug::printOnController("Blue ring");
 				} else {
 					detectedRingColor = "none";
+					// debug::printOnController("No ring");
 				}
 			}
 

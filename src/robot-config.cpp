@@ -68,7 +68,7 @@ inertial InertialSensor(PORT13);
 distance DistanceSensor(emptyPort);
 
 distance RingDistanceSensor(emptyPort);
-optical RingOpticalSensor(PORT6);
+optical RingOpticalSensor(PORT7);
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
