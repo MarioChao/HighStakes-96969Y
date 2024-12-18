@@ -50,8 +50,8 @@ namespace {
 			pushNewLinear({{6 - (-1), 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{3.43, 4.75}});
-			pushNewLinear({{3.40, 5.3}});
+			pushNewLinear({{3.37, 4.75}});
+			pushNewLinear({{3.35, 5.3}});
 
 			// Score 1 ring
 			pushNewLinear({{5.2, 4.8}});
@@ -92,8 +92,8 @@ namespace {
 
 		// Sweep corner
 		turnToAngle(20, -halfRobotLengthIn * 0.5);
-		turnToAngle(40);
 		setSwing2State(1);
+		turnToAngle(40);
 		setIntakeState(0);
 		driveAndTurnDistanceTiles(1.0, 0.0);
 		turnToAngle(-120);

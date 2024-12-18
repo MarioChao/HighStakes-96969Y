@@ -50,7 +50,7 @@ namespace {
 
 			// Score on wall stake
 			// pushNewLinear({{6.1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
-			pushNewLinear({{6.15, 2.97}}, false, 50);
+			pushNewLinear({{6.05, 3.0}}, false, 50);
 
 			// Touch ladder
 			pushNewLinear({{4.3, 3}}, false, 40);
@@ -74,7 +74,7 @@ namespace {
 
 		// Grab rushed goal
 		setIntakeStoreRing(0);
-		grabGoalAt(3.6, 1.1);
+		grabGoalAt(3.6, 1.3);
 
 		// Score stored
 		setIntakeState(1);

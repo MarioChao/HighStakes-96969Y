@@ -47,7 +47,7 @@ namespace autonpaths {
 	// Combinations
 
 	namespace combination {
-		void grabGoalAt(double x_tiles, double y_tiles, double grabAtDistanceError = 0.1);
+		void grabGoalAt(double x_tiles, double y_tiles, double grabAtDistanceError = 0.15);
 	}
 
 

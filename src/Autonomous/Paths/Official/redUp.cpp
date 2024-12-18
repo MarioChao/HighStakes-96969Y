@@ -50,8 +50,8 @@ namespace {
 			pushNewLinear({{-1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{2.65, 4.75}});
-			pushNewLinear({{2.67, 5.3}});
+			pushNewLinear({{2.63, 4.75}});
+			pushNewLinear({{2.65, 5.3}});
 
 			// Score 1 ring
 			pushNewLinear({{1.8, 4.8}});
