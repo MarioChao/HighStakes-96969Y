@@ -207,7 +207,7 @@ namespace {
 				if (releaseOnExhausted) {
 					ArmMotor.stop(coast);
 				} else {
-					spinArmMotor(-3);
+					spinArmMotor(-10);
 				}
 				return;
 			}
