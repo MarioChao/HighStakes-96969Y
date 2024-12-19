@@ -16,8 +16,8 @@ namespace {
 
 	// Stage controllers
 	PIDController armPositionPid(1.3, 0, 0.15);
-	PatienceController armUpPatience(6, 1.0, true);
-	PatienceController armDownPatience(6, 1.0, false);
+	PatienceController armUpPatience(6, 1.0, true, 5);
+	PatienceController armDownPatience(6, 1.0, false, 5);
 
 	// Stage config
 	std::vector<double> armStages_degrees = {80, 0, 215.0, 0};

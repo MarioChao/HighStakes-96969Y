@@ -13,6 +13,7 @@
 
 #include "AutonUtilities/odometry.h"
 #include "Controller/controls.h"
+#include "Mechanics/botArm.h"
 
 #include "Utilities/fieldInfo.h"
 #include "Utilities/debugFunctions.h"
@@ -68,7 +69,9 @@ void pre_auton(void) {
 	mainOdometry.addPositionSensor2D(-90, []() {return LookRotation.position(rev);}, 1, 2.005, 0);
 	mainOdometry.addPositionSensor2D(180, []() {return RightEncoder.position(rev);}, 1, 2.75, -3.5);
 	// mainOdometry.addInertialSensor(InertialSensor, -3.2, 2.1);
-	mainOdometry.addInertialSensor(InertialSensor, -2.8, 2.8);
+	// mainOdometry.addInertialSensor(InertialSensor, -2.8, 2.8);
+	mainOdometry.addInertialSensor(InertialSensor, -4, 4);
+	// mainOdometry.addInertialSensor(InertialSensor, 0, 0);
 	mainOdometry.setPositionFactor(1.0 / field::tileLengthIn);
 	task odometryTask([]() -> int {
 		wait(500, msec);
@@ -159,6 +162,11 @@ void usercontrol(void) {
 	// User autonomous
 	if (auton::isUserRunningAuton()) {
 		userRunAutonomous();
+	}
+
+	// Driving skills
+	if (auton::getAutonRunType() == auton::autonomousType::DrivingSkills) {
+		botarm::setResetDefaultStage(2);
 	}
 
 	// Keybinds
