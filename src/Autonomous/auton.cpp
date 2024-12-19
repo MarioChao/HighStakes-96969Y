@@ -15,7 +15,7 @@ namespace {
 
 	// autonomousType auton_runType = autonomousType::DrivingSkills;
 	// autonomousType auton_runType = autonomousType::AutonSkills;
-	autonomousType auton_runType = autonomousType::BlueUp;
+	autonomousType auton_runType = autonomousType::RedDown;
 	// autonomousType auton_runType = autonomousType::OdometryRadiusTest;
 	int auton_allianceId;
 

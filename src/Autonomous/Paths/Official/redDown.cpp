@@ -42,17 +42,17 @@ namespace {
 		clearSplines();
 
 		if (section == 1) {
-			// Sweep corner
-			pushNewLinear({{0.6, 1.3}});
+			// Go to corner
+			pushNewLinear({{0.4, 0.7}});
+
+			// Score preload
+			// pushNewLinear({{0.4, 0.55}});
 
 			// Store corner
 			pushNewLinear({{1.8, 0.8}});
 
-			// Score on wall stake
-			pushNewLinear({{-0.05, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
-
 			// Touch ladder
-			// pushNewLinear({{2.2, 2.3}}, true);
+			pushNewLinear({{2, 2.7}});
 		}
 	}
 
@@ -64,26 +64,32 @@ namespace {
 		// Deploy
 		waitUntil(_linearPathDistanceError < 0.15);
 		setSwing2State(1);
-		setSwing2State(0, 0.6);
+		wait(500, msec);
+		setSwing2State(0, 0.9);
 
 		// Go back & un-deploy
 		waitUntil(_isDriveTurnSettled);
-		driveDistanceTiles(-0.8);
+		driveTurnToFace_tiles(1.24, 0.64, true, 80);
 		setSwing2State(0);
 
 		// Grab rushed goal
 		setIntakeStoreRing(0);
-		grabGoalAt(2.4, 0.9);
+		grabGoalAt(2.4, 0.6);
 
 		// Score stored
 		setIntakeState(1);
 
-		// Sweep corner
+		// Go to corner
+		// setIntakeFilterEnabled(0);
 		setArmStage(2);
 		runFollowLinearYield();
 		turnToAngle(-160);
+		driveDistanceTiles(-0.3);
 		setSwing2State(1);
-		driveAndTurnDistanceTiles(1.0, -180.0);
+		turnToAngle(-140);
+
+		// Sweep corner
+		driveAndTurnDistanceTiles(1.5, -180.0);
 
 		// Store corner
 		setIntakeStoreRing(1);
@@ -98,14 +104,8 @@ namespace {
 		// Score stored
 		setIntakeState(1);
 
-		// Score alliance wall stake
-		runFollowLinearYield();
-		driveDistanceTiles(-0.4);
-
 		// Touch ladder
-		setArmStage(0, 0.5);
-		// runFollowLinearYield();
-		turnToFace_tiles(2.2, 2.3, true);
-		driveTurnToFace_tiles(2.5, 2.3, true);
+		setArmStage(0);
+		runFollowLinearYield();
 	}
 }

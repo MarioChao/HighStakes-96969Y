@@ -13,7 +13,9 @@
 
 #include "AutonUtilities/odometry.h"
 #include "Controller/controls.h"
+
 #include "Mechanics/botArm.h"
+#include "Mechanics/botIntake.h"
 
 #include "Utilities/fieldInfo.h"
 #include "Utilities/debugFunctions.h"
@@ -167,6 +169,7 @@ void usercontrol(void) {
 	// Driving skills
 	if (auton::getAutonRunType() == auton::autonomousType::DrivingSkills) {
 		botarm::setResetDefaultStage(2);
+		botintake::setFilterOutColor("blue");
 	}
 
 	// Keybinds
