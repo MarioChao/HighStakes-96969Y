@@ -44,17 +44,20 @@ namespace {
 
 		if (section == 1) {
 			// Go to alliance wall stake
-			pushNewLinear({{6 - (0.79), 3}});
+			pushNewLinear({{5.2, 3}});
 
 			// Score on wall stake
-			pushNewLinear({{6 - (-1), 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{7, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{3.37, 4.75}});
-			pushNewLinear({{3.35, 5.3}});
+			pushNewLinear({{3.33, 4.65}}, false, 40);
+			// pushNewLinear({{3.3, 5.3}}, false, 40);
 
 			// Score 1 ring
-			pushNewLinear({{5.2, 4.8}});
+			pushNewLinear({{4.2, 5.2}});
+
+			// Go to corner
+			pushNewLinear({{5.2, 4.6}});
 
 			// Touch ladder
 			pushNewLinear({{4.25, 3.35}});
@@ -71,11 +74,11 @@ namespace {
 		setIntakeStoreRing(0, 0.5);
 		wait(50, msec);
 		runFollowLinearYield();
-		driveDistanceTiles(-0.5);
+		driveDistanceTiles(-0.4);
 
 		// Grab goal
 		setIntakeState(-1);
-		grabGoalAt(3.95, 4.2);
+		grabGoalAt(3.95, 4.1);
 		setArmStage(0);
 
 		// Re-enable filter
@@ -83,11 +86,16 @@ namespace {
 
 		// Score 2 rings
 		setIntakeState(1);
+		// setSwingState(1);
 		runFollowLinearYield();
-		runFollowLinearYield();
+		// runFollowLinearYield();
+		// setSwingState(0);
 
 		// Score 1 ring
-		turnToFace_tiles(5.3, 4.7, false, 60);
+		turnToFace_tiles(4.2, 5.2, false, 60);
+		runFollowLinearYield();
+
+		// Go to corner
 		runFollowLinearYield();
 
 		// Sweep corner

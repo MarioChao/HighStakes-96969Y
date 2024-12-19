@@ -13,7 +13,7 @@ namespace {
 	void fourthCorner();
 	void finalSkills();
 
-	bool skipWallStakes = false;
+	bool skipWallStakes = true;
 	bool skipLastWallStake = true;
 }
 
