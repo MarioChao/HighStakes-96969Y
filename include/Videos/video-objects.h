@@ -18,3 +18,4 @@ extern VideoInfo ningning1;
 extern VideoInfo ningning2;
 extern VideoInfo ningning3;
 
+extern VideoInfo madotsuki;
