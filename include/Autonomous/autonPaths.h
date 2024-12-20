@@ -69,6 +69,7 @@ namespace autonpaths {
 	void runRedSoloAWP();
 	void runBlueSoloAWP();
 
+	void runAutonSkillsNoWallStake();
 	void runAutonSkills();
 	void runAutonSkillsLong();
 

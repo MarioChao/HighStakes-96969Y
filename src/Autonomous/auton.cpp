@@ -158,7 +158,7 @@ namespace auton {
 				autonpaths::runBlueSoloAWP();
 				break;
 			case autonomousType::AutonSkills:
-				autonpaths::runAutonSkills();
+				autonpaths::runAutonSkillsNoWallStake();
 				break;
 			case autonomousType::AllianceWallStake:
 				autonpaths::runAllianceWallStake();
