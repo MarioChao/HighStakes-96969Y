@@ -149,7 +149,7 @@ namespace auton {
 				autonpaths::runAutonBlueUpSafe();
 				break;
 			case autonomousType::BlueDownSafe:
-				autonpaths::runAutonBlueDown();
+				autonpaths::runAutonBlueDownSafe();
 				break;
 			case autonomousType::RedSoloAWP:
 				autonpaths::runRedSoloAWP();

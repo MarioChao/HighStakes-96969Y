@@ -65,6 +65,7 @@ namespace autonpaths {
 
 	void runAutonRedDown();
 	void runAutonBlueDown();
+	void runAutonBlueDownSafe();
 
 	void runRedSoloAWP();
 	void runBlueSoloAWP();

@@ -19,4 +19,5 @@ namespace autonvals {
 	);
 
 	const double scoreWallStakeVelocity_pct = 60;
+	const double rushGoalDeployDelay_msec = 250;
 }

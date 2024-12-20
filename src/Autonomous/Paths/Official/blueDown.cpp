@@ -65,16 +65,18 @@ namespace {
 		// Deploy
 		waitUntil(_linearPathDistanceError < 0.15);
 		setSwing2State(1);
-		setSwing2State(0, 0.6);
+		turnToAngle(-111.7);
+		wait(autonvals::rushGoalDeployDelay_msec, msec);
 
 		// Go back & un-deploy
 		waitUntil(_isDriveTurnSettled);
-		driveDistanceTiles(-0.8);
+		setSwing2State(0, 0.8);
+		driveTurnToFace_tiles(4.76, 1.36, true, 60);
 		setSwing2State(0);
 
 		// Grab rushed goal
 		setIntakeStoreRing(0);
-		grabGoalAt(3.6, 1.3);
+		grabGoalAt(3.6, 1.4);
 
 		// Score stored
 		setIntakeState(1);
