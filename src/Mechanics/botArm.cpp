@@ -20,8 +20,8 @@ namespace {
 	PatienceController armDownPatience(6, 1.0, false, 5);
 
 	// Stage config
-	std::vector<double> armStages_degrees = {80, 0, 215.0, 0};
-	std::vector<int> extremeStages_values = {0, -2, 0, 2};
+	std::vector<double> armStages_degrees = {80, 0, 215.0, 0, 300};
+	std::vector<int> extremeStages_values = {0, -2, 0, 2, 0};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
 
