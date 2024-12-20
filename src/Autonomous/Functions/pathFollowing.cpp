@@ -36,6 +36,7 @@ namespace autonfunctions {
 		_curveSampler = curveSampler;
 		_pathFollowStarted = false;
 		_pathFollowCompleted = false;
+		_pathFollowDistanceRemaining_tiles = 10;
 		_reverseHeading = false;
 	}
 
@@ -55,6 +56,9 @@ namespace autonfunctions {
 			// Reset timer
 			_splinePathTimer.reset();
 
+			// Get total distance
+			double totalDistance_tiles = _curveSampler.getDistanceRange().second;
+
 			// Follow path
 			while (true) {
 				// Get time
@@ -63,6 +67,7 @@ namespace autonfunctions {
 				// Exit when path completed
 				if (traj_time > _trajectoryPlan.getTotalTime() + _pathFollowDelay_seconds) {
 					_pathFollowCompleted = true;
+					_pathFollowDistanceRemaining_tiles = 0;
 					break;
 				}
 
@@ -72,6 +77,9 @@ namespace autonfunctions {
 				double traj_velocity = motion[1];
 				double traj_tvalue = _curveSampler.distanceToParam(traj_distance);
 				double traj_angularVelocity = traj_velocity * _splinePath.getCurvatureAt(traj_tvalue);
+
+				// Update distance remaining
+				_pathFollowDistanceRemaining_tiles = totalDistance_tiles - traj_distance;
 
 				// Get robot and target linegular
 				Linegular robotLg = mainOdometry.getLookLinegular();
@@ -90,6 +98,9 @@ namespace autonfunctions {
 				// Drive
 				if (!useSimulator) {
 					botdrive::driveLinegularVelocity(linegularVelocity.first, linegularVelocity.second);
+				} else {
+					robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
+					robotSimulator.angularPosition = targetLg.getThetaPolarAngle_radians();
 				}
 
 				// Wait
@@ -109,5 +120,6 @@ namespace autonfunctions {
 	double _pathToPctFactor = autonvals::tilesPerSecond_to_pct;
 	bool _pathFollowStarted;
 	bool _pathFollowCompleted;
+	double _pathFollowDistanceRemaining_tiles;
 	double _pathFollowDelay_seconds = 0.010;
 }

@@ -58,6 +58,7 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 		// w = v/r = v*k
 		// v_wheel = w*r
 		double rotationLinearVelocity = maxVelocity * curvature * (leftRightWheelDistance / 2.0);
+		rotationLinearVelocity *= 1.2;
 
 		// Calculate constraint values
 		// double nonChangingFactor = 0.3;
