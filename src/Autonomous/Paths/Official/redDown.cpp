@@ -59,17 +59,17 @@ namespace {
 	void doAuton() {
 		// Store ring + rush goal
 		setIntakeStoreRing(1);
-		async_driveTurnToFace_tiles(2.21, 1.02);  // (2.2, 1)
+		async_driveTurnToFace_tiles(2.21, 1.07);  // (2.2, 1)
 
 		// Deploy
 		waitUntil(_linearPathDistanceError < 0.15);
 		setSwing2State(1);
-		wait(500, msec);
-		setSwing2State(0, 0.9);
+		turnToAngle(68);
 
 		// Go back & un-deploy
 		waitUntil(_isDriveTurnSettled);
-		driveTurnToFace_tiles(1.24, 0.64, true, 80);
+		setSwing2State(0, 0.8);
+		driveTurnToFace_tiles(1.24, 0.64, true, 60);
 		setSwing2State(0);
 
 		// Grab rushed goal
@@ -89,7 +89,7 @@ namespace {
 		turnToAngle(-143);
 
 		// Sweep corner
-		//driveAndTurnDistanceTiles(1.5, -180.0);
+		// driveAndTurnDistanceTiles(1.5, -180.0);
 		driveAndTurnDistanceTiles(1.5, -143);
 		turnToAngle(90);
 		 
