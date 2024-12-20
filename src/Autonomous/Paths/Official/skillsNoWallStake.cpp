@@ -59,7 +59,7 @@ namespace {
 			// Score on wall stake
 			pushNewLinear({{0, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
-			// Redirect 1 ring
+			// Score 1 ring
 			pushNewLinear({{1.93, 2}});
 
 			// Score 2 rings
@@ -100,9 +100,9 @@ namespace {
 			pushNewLinear({{5.9, 5.9}}, true);
 		} else if (section == 5) {
 			// Climb on ladder
-			// pushNewLinear({{3.78, 3.78}});
-			// pushNewLinear({{3, 3}}, false, 50);
-			pushNewLinear({{3, 3}}, false, 65);
+			pushNewLinear({{3.78, 3.78}});
+			pushNewLinear({{3, 3}}, false, 50);
+			// pushNewLinear({{3, 3}}, false, 65);
 		}
 	}
 
@@ -116,7 +116,7 @@ namespace {
 		// Goal
 		grabGoalAt(1, 2);
 
-		// Redirect
+		// Score
 		setIntakeState(1);
 		runFollowLinearYield();
 
@@ -191,6 +191,6 @@ namespace {
 		setArmStage(3);
 		setIntakeState(0);
 		runFollowLinearYield();
-		// runFollowLinearYield();
+		runFollowLinearYield();
 	}
 }
