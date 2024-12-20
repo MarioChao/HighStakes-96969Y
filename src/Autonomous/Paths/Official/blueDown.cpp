@@ -50,7 +50,7 @@ namespace {
 
 			// Score on wall stake
 			// pushNewLinear({{6.1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
-			pushNewLinear({{6.05, 3.0}}, false, 50);
+			pushNewLinear({{6.05, 3.25}}, false, 50);
 
 			// Touch ladder
 			pushNewLinear({{4.3, 3}}, false, 40);

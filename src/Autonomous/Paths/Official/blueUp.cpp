@@ -50,7 +50,7 @@ namespace {
 			pushNewLinear({{7, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{3.33, 4.65}}, false, 40);
+			pushNewLinear({{3.27, 4.72}}, false, 40);
 			// pushNewLinear({{3.3, 5.3}}, false, 40);
 
 			// Score 1 ring
@@ -107,6 +107,7 @@ namespace {
 		turnToAngle(-120);
 
 		// Touch ladder
+		setSwing2State(0);
 		setIntakeState(1);
 		runFollowLinearYield();
 	}
