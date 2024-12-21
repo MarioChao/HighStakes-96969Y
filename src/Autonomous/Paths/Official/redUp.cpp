@@ -50,8 +50,8 @@ namespace {
 			pushNewLinear({{-1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 
 			// Score 2 rings
-			pushNewLinear({{2.53, 4.75}});
-			//pushNewLinear({{2.57, 5.3}});
+			pushNewLinear({{2.5, 4.75}});
+			// pushNewLinear({{2.57, 5.3}});
 
 			// Score 1 ring
 			pushNewLinear({{1.8, 4.8}});
@@ -88,7 +88,7 @@ namespace {
 		setIntakeState(1);
 		runFollowLinearYield();
 		// turnToFace_tiles(2.55, 5.2);
-		runFollowLinearYield();
+		// runFollowLinearYield();
 
 		// Score 1 ring
 		turnToFace_tiles(1.8, 4.8, false, 60);
