@@ -63,19 +63,19 @@ namespace {
 			pushNewLinear({{1.93, 2}});
 
 			// Score 2 rings
-			pushNewLinear({{2.01, 1.06}, {3.93, 1}});
+			pushNewLinear({{2.01, 1.1}, {3.93, 1.1}});
 
 			// Score 3 rings
-			pushNewLinear({{0.5, 1.05}, {1.35, 0.37}});
+			pushNewLinear({{0.5, 1.1}, {1.35, 0.37}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
 		} else if (section == 2) {
 			// Score 3 rings
-			pushNewLinear({{2, 4}, {2, 5}, {3.93, 5}});
+			pushNewLinear({{2, 4}, {2, 4.9}, {3.93, 4.9}});
 
 			// Score 3 rings
-			pushNewLinear({{0.5, 5}, {1.35, 5.63}});
+			pushNewLinear({{0.5, 4.9}, {1.35, 5.63}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.7}}, true);
@@ -84,10 +84,11 @@ namespace {
 			pushNewLinear({{3.18, 5}, {4, 4}});
 
 			// Score 2 rings
-			pushNewLinear({{4.38, 4.03}, {5, 5.47}});
+			pushNewLinear({{4.38, 4.03}});
+			pushNewLinear({{5, 5.47}});
 
 			// Score 3 rings
-			pushNewLinear({{4.7, 4}, {4.65, 2.7}}, true);
+			pushNewLinear({{4.65, 4}, {4.75, 2.8}}, true);
 			pushNewLinear({{4, 2}, {4.95, 1.05}, {4.95, 0.55}});
 
 			// Place goal at corner
@@ -116,15 +117,14 @@ namespace {
 		// Goal
 		grabGoalAt(1, 2);
 
-		// Score
+		// Score 1 ring
 		setIntakeState(1);
 		runFollowLinearYield();
 
-		// Score
-		setIntakeToArm(0, 0.5);
+		// Score 2 rings
 		runFollowLinearYield();
 
-		// Score
+		// Score 3 rings
 		runFollowLinearYield();
 
 		// Place goal
@@ -165,6 +165,9 @@ namespace {
 
 		// Score 2 rings
 		runFollowLinearYield();
+		setSwing2State(1, 0.6);
+		runFollowLinearYield();
+		setSwing2State(0);
 
 		// Score 3 rings
 		runFollowLinearYield();
@@ -192,5 +195,7 @@ namespace {
 		setIntakeState(0);
 		runFollowLinearYield();
 		runFollowLinearYield();
+		driveDistanceTiles(-0.5, 50);
+		driveDistanceTiles(0.3, 30);
 	}
 }
