@@ -120,7 +120,7 @@ namespace {
 			pushNewLinear({{6, 6}}, true);
 		} else if (section == 5) {
 			// Climb on ladder
-			pushNewLinear({{3.78, 3.78}});
+			pushNewLinear({{3.85, 3.85}});
 			pushNewLinear({{3, 3}}, false, 70);
 		}
 	}
@@ -142,7 +142,7 @@ namespace {
 
 		// Score
 		setIntakeToArm(0, 0.5);
-		setArmStage(0, 0.5);
+		setArmStage(0, 1.5);
 		runFollowLinearYield();
 
 		// Wall stake
@@ -150,7 +150,7 @@ namespace {
 		runFollowLinearYield();
 		runFollowLinearYield();
 		// Odometry wall align
-		mainOdometry.setPosition(3.0, 0.33);
+		mainOdometry.setPosition(mainOdometry.getX(), 0.45);
 		driveDistanceTiles(-0.5);
 
 		// Score
@@ -174,7 +174,7 @@ namespace {
 
 		// Score
 		setIntakeToArm(0, 0.5);
-		setArmStage(0, 0.5);
+		setArmStage(0, 1.5);
 		runFollowLinearYield();
 
 		// Wall stake
@@ -183,7 +183,7 @@ namespace {
 		runFollowLinearYield();
 		runFollowLinearYield();
 		// Odometry wall align
-		mainOdometry.setPosition(3.0, 5.67);
+		mainOdometry.setPosition(mainOdometry.getX(), 5.55);
 		driveDistanceTiles(-0.5);
 
 		// Score
