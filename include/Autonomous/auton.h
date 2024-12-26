@@ -11,7 +11,7 @@ namespace auton {
 		RedSoloAWP, BlueSoloAWP,
 		AutonSkillsLong,
 		AutonSkills59, AutonSkillsNoWallStake,
-		DrivingSkills,
+		DrivingRunAutonSkills, DrivingSkills,
 		AllianceWallStake, LoveShape, FieldTour,
 		Test, OdometryRadiusTest,
 		None

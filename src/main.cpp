@@ -170,6 +170,9 @@ void usercontrol(void) {
 	if (auton::getAutonRunType() == auton::autonomousType::DrivingSkills) {
 		botarm::setResetDefaultStage(2);
 		botintake::setFilterOutColor("blue");
+	} else if (auton::getAutonRunType() == auton::autonomousType::DrivingRunAutonSkills) {
+		auton::setAutonRunType(0, auton::autonomousType::AutonSkills59);
+		autonomous();
 	}
 
 	// Keybinds

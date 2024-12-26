@@ -138,7 +138,7 @@ namespace {
 		grabGoalAt(1, 2);
 
 		// Redirect
-		setIntakeToArm(1);
+		// setIntakeToArm(1);
 		setIntakeState(1);
 		runFollowLinearYield();
 

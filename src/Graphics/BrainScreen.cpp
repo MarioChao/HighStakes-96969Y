@@ -467,6 +467,14 @@ namespace {
 			allianceButtons[13]->enable();
 			setAutonRunType(0, autonomousType::AutonSkillsNoWallStake);
 		});
+		// Driver run Auton Skills
+		ButtonGui *skillsDriverRunAuton = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(200, 0, 200), white, 1, "Drive Run Auton", white, [] {
+			ownColor = color::purple;
+			oppColor = color::purple;
+			allianceDisable(14);
+			allianceButtons[14]->enable();
+			setAutonRunType(0, autonomousType::DrivingRunAutonSkills);
+		});
 		// Skills Driver
 		ButtonGui *skillsDriver = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(200, 0, 200), white, 1, "Drive Skills", white, [] {
 			ownColor = color::purple;
@@ -481,12 +489,12 @@ namespace {
 			redUp, redDown, blueUp, blueDown,
 			redUpSafe, redDownSafe, blueUpSafe, blueDownSafe,
 			redSoloAWP, blueSoloAWP, nullptr, nullptr,
-			skillsAuton59, skillsAutonNoWS, nullptr, skillsDriver,
+			skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver,
 		};
 		autonSubdock1Buttons = { redUp, redDown, blueUp, blueDown };
 		autonSubdock2Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
 		autonSubdock3Buttons = { redSoloAWP, blueSoloAWP };
-		autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriver };
+		autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver };
 	}
 
 	/// @brief Create the interactable sliders on the screen.

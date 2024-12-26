@@ -87,6 +87,11 @@ namespace auton {
 				printf("AuSk NoWS\n");
 				autonFilterOutColor = "blue";
 				break;
+			case autonomousType::DrivingRunAutonSkills:
+				debug::printOnController("Driving -> Auton");
+				printf("Dr->AuSk\n");
+				autonFilterOutColor = "blue";
+				break;
 			case autonomousType::DrivingSkills:
 				debug::printOnController("Driving Skills");
 				printf("DrSk\n");
