@@ -58,7 +58,7 @@ namespace {
 
 		if (section == 1) {
 			// Score on wall stake
-			pushNewLinear({{0, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{0, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 
 			// Redirect 1 ring
 			pushNewLinear({{1.93, 2}});
@@ -68,13 +68,10 @@ namespace {
 
 			// Score on wall stake
 			pushNewLinear({{3.0, 1.2}}, true);
-			pushNewLinear({{3, 0}}, false, autonvals::scoreWallStakeVelocity_pct);
-
-			// Reposition
-			pushNewLinear({{3, 1.2}}, true);
+			pushNewLinear({{3, 0}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{0.5, 1.15}, {1.35, 0.35}});
+			pushNewLinear({{1, 1.15}, {0.5, 1.15}, {1.35, 0.35}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
@@ -87,13 +84,10 @@ namespace {
 
 			// Score on wall stake
 			pushNewLinear({{3, 4.8}}, true);
-			pushNewLinear({{3, 6}}, false, autonvals::scoreWallStakeVelocity_pct);
-
-			// Reposition
-			pushNewLinear({{3, 4.8}}, true);
+			pushNewLinear({{3, 6}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{0.5, 4.85}, {1.35, 5.65}});
+			pushNewLinear({{1, 4.85}, {0.5, 4.85}, {1.35, 5.65}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.61}}, true);
@@ -105,7 +99,7 @@ namespace {
 			pushNewLinear({{4, 4}});
 
 			// Score on wall stake
-			pushNewLinear({{6.3, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{6, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 
 			// Score 2 rings
 			pushNewLinear({{4.38, 4.03}});
@@ -127,7 +121,7 @@ namespace {
 		} else if (section == 5) {
 			// Climb on ladder
 			pushNewLinear({{3.78, 3.78}});
-			pushNewLinear({{3, 3}}, false, 50);
+			pushNewLinear({{3, 3}}, false, 70);
 		}
 	}
 
@@ -157,9 +151,6 @@ namespace {
 		// Odometry wall align
 		mainOdometry.setPosition(3.0, 0.33);
 		driveDistanceTiles(-0.5);
-
-		// Reposition
-		runFollowLinearYield();
 
 		// Score
 		runFollowLinearYield();
@@ -193,9 +184,6 @@ namespace {
 		driveDistanceTiles(-0.5);
 		setArmStage(0, 1.0);
 
-		// Reposition
-		runFollowLinearYield();
-
 		// Score
 		runFollowLinearYield();
 
@@ -217,10 +205,10 @@ namespace {
 		runFollowLinearYield();
 
 		// Goal
-		setArmStage(2);
 		grabGoalAt(5, 3);
 
 		// Wall stake
+		setArmStage(2);
 		runFollowLinearYield();
 		driveDistanceTiles(-0.5);
 		setIntakeState(1);

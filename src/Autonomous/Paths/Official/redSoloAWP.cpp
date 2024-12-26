@@ -51,7 +51,7 @@ namespace {
 			pushNewLinear({{0.8, 3}});
 
 			// Score on wall stake
-			pushNewLinear({{-1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{-1, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 		} else if (section == 2) {
 			// Score 1 ring
 			// pushNewLinear({{2.67, 4.72}}, false, 80);

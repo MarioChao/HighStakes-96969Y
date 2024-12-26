@@ -18,6 +18,7 @@ namespace autonvals {
 		* (100.0 / 1.0) // motor's pct [0-100]
 	);
 
-	const double scoreWallStakeVelocity_pct = 60;
+	const double scoreAllianceWallStakeVelocity_pct = 60;
+	const double scoreNeutralWallStakeVelocity_pct = 80;
 	const double rushGoalDeployDelay_msec = 250;
 }

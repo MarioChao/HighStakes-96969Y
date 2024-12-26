@@ -60,7 +60,7 @@ namespace {
 
 		if (section == 1) {
 			// Score on wall stake
-			pushNewLinear({{0, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{0, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 
 			// Redirect 1 ring
 			pushNewLinear({{1.93, 2}});
@@ -72,7 +72,7 @@ namespace {
 			pushNewLinear({{3.0, 1.2}}, true);
 
 			// Score on wall stake
-			pushNewLinear({{3, 0}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{3, 0}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 
 			// Score 3 rings
 			pushNewLinear({{1.71, 1.05}, {0.5, 1.05}, {1.3, 0.37}});
@@ -88,7 +88,7 @@ namespace {
 
 			// Score 2 ring & score on wall stake
 			pushNewLinear({{2, 4.9}, {3, 4.8}});
-			pushNewLinear({{3, 6}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{3, 6}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 
 			// Score 3 rings
 			// pushNewLinear({{1.04, 5.52}, {1.03, 5.01}, {0.49, 5}});
@@ -104,7 +104,7 @@ namespace {
 			pushNewLinear({{4, 4}});
 
 			// Score on wall stake
-			pushNewLinear({{6.3, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+			pushNewLinear({{6.3, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 
 			// Place goal at corner
 			// pushNewLinear({{5.5, 3.9}, {5.7, 5.7}}, true);

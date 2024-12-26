@@ -7,6 +7,7 @@ namespace autonvals {
 
 	extern const double tilesPerSecond_to_pct;
 
-	extern const double scoreWallStakeVelocity_pct;
+	extern const double scoreAllianceWallStakeVelocity_pct;
+	extern const double scoreNeutralWallStakeVelocity_pct;
 	extern const double rushGoalDeployDelay_msec;
 }
