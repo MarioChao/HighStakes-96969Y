@@ -68,10 +68,10 @@ namespace {
 
 			// Score on wall stake
 			pushNewLinear({{3.0, 1.2}}, true);
-			pushNewLinear({{3, 0}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
+			pushNewLinear({{3, -1}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 1.15}, {0.5, 1.15}, {1.35, 0.35}});
+			pushNewLinear({{1, 1.15}, {0.5, 1.15}, {1.45, 0.35}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
@@ -84,10 +84,10 @@ namespace {
 
 			// Score on wall stake
 			pushNewLinear({{3, 4.8}}, true);
-			pushNewLinear({{3, 6}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
+			pushNewLinear({{3, 7}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 4.85}, {0.5, 4.85}, {1.35, 5.65}});
+			pushNewLinear({{1, 4.85}, {0.5, 4.85}, {1.45, 5.65}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.61}}, true);
@@ -99,7 +99,7 @@ namespace {
 			pushNewLinear({{4, 4}});
 
 			// Score on wall stake
-			pushNewLinear({{6, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
+			pushNewLinear({{7, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
 
 			// Score 2 rings
 			pushNewLinear({{4.38, 4.03}});
@@ -167,7 +167,7 @@ namespace {
 		grabGoalAt(1, 4.1);
 
 		// Redirect
-		setIntakeToArm(1);
+		// setIntakeToArm(1);
 		setIntakeState(1);
 		runFollowLinearYield();
 
