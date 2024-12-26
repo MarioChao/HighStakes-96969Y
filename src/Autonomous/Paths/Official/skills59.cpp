@@ -71,7 +71,8 @@ namespace {
 			pushNewLinear({{3, -1}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 1.1}, {0.5, 1.1}, {1.45, 0.35}});
+			// pushNewLinear({{1, 1.1}, {0.5, 1.1}, {1.45, 0.35}});
+			pushNewLinear({{0.5, 1.1}, {1.45, 0.35}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
@@ -87,7 +88,8 @@ namespace {
 			pushNewLinear({{3, 7}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 4.9}, {0.5, 4.9}, {1.45, 5.65}});
+			// pushNewLinear({{1, 4.9}, {0.5, 4.9}, {1.45, 5.65}});
+			pushNewLinear({{0.5, 4.9}, {1.45, 5.65}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.61}}, true);
@@ -241,7 +243,7 @@ namespace {
 		runFollowLinearYield();
 		runFollowLinearYield();
 		runFollowLinearYield();
-		setSwingState(1);
+		setSwingState(1, 1);
 		runFollowLinearYield();
 
 		// Clear corner
