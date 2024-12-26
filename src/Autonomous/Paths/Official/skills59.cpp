@@ -71,7 +71,7 @@ namespace {
 			pushNewLinear({{3, -1}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 1.15}, {0.5, 1.1}, {1.45, 0.35}});
+			pushNewLinear({{1, 1.15}, {0.5, 1.05}, {1.45, 0.35}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
@@ -107,7 +107,8 @@ namespace {
 
 			// Score 3 rings
 			pushNewLinear({{4.65, 4}, {4.8, 2.75}}, true);
-			pushNewLinear({{4, 2}, {4.95, 1.05}, {4.95, 0.55}});
+			pushNewLinear({{4, 2}});
+			pushNewLinear({{4.95, 1.05}, {4.95, 0.55}});
 
 			// Place goal at corner
 			pushNewLinear({{6, 0}}, true);
@@ -213,15 +214,19 @@ namespace {
 		grabGoalAt(5, 3);
 
 		// Wall stake
-		setArmStage(2);
-		runFollowLinearYield();
-		// Odometry wall align
-		mainOdometry.setPosition(5.5, mainOdometry.getY());
-		driveDistanceTiles(-0.5);
-		setIntakeState(1);
-		setArmStage(0, 1.0);
+		if (false) {
+			setArmStage(2);
+			runFollowLinearYield();
+			// Odometry wall align
+			mainOdometry.setPosition(5.5, mainOdometry.getY());
+			driveDistanceTiles(-0.5);
+			setArmStage(0, 1.0);
+		} else {
+			autonpaths::pathbuild::linearIndex += 1;
+		}
 
 		// Score 2 rings
+		setIntakeState(1);
 		runFollowLinearYield();
 		setSwing2State(1, 0.6);
 		runFollowLinearYield();
@@ -230,6 +235,14 @@ namespace {
 		// Score 3 rings
 		runFollowLinearYield();
 		runFollowLinearYield();
+		setSwingState(1);
+		runFollowLinearYield();
+
+		// Clear corner
+		setSwingState(0);
+		setSwing2State(1);
+		turnToAngleVelocity(45, 60);
+		setSwing2State(0);
 
 		// Place goal
 		runFollowLinearYield();
@@ -257,8 +270,9 @@ namespace {
 		// Climb
 		runFollowLinearYield();
 		runFollowLinearYield();
-		driveDistanceTiles(-0.5, 50);
-		driveDistanceTiles(0.3, 30);
+		driveDistanceTiles(0.5, 50);
+		driveDistanceTiles(-0.4, 30);
+		driveDistanceTiles(0.3, 20);
 		driveDistanceTiles(-0.2, 15);
 	}
 }
