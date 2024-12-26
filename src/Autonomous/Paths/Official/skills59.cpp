@@ -71,7 +71,7 @@ namespace {
 			pushNewLinear({{3, -1}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 1.15}, {0.5, 1.15}, {1.45, 0.35}});
+			pushNewLinear({{1, 1.15}, {0.5, 1.1}, {1.45, 0.35}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
@@ -87,7 +87,7 @@ namespace {
 			pushNewLinear({{3, 7}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 4.85}, {0.5, 4.85}, {1.45, 5.65}});
+			pushNewLinear({{1, 4.85}, {0.5, 4.9}, {1.45, 5.65}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.61}}, true);
@@ -215,10 +215,10 @@ namespace {
 		// Wall stake
 		setArmStage(2);
 		runFollowLinearYield();
-		driveDistanceTiles(-0.5);
-		setIntakeState(1);
 		// Odometry wall align
 		mainOdometry.setPosition(5.5, mainOdometry.getY());
+		driveDistanceTiles(-0.5);
+		setIntakeState(1);
 		setArmStage(0, 1.0);
 
 		// Score 2 rings
@@ -259,5 +259,6 @@ namespace {
 		runFollowLinearYield();
 		driveDistanceTiles(-0.5, 50);
 		driveDistanceTiles(0.3, 30);
+		driveDistanceTiles(-0.2, 15);
 	}
 }
