@@ -63,7 +63,7 @@ namespace {
 			pushNewLinear({{0.9, 2.55}});
 
 			// Score 1 ring
-			pushNewLinear({{2, 1.1}});
+			pushNewLinear({{2, 1.2}});
 
 			// Touch ladder
 			pushNewLinear({{2.5, 2.4}}, false, 60);
@@ -80,8 +80,8 @@ namespace {
 		setIntakeStoreRing(0, 0.5);
 		wait(50, msec);
 		runFollowLinearYield();
+		setIntakeState(-1, 0.1);
 		driveDistanceTiles(-0.5);
-		setIntakeState(-1);
 
 		// Re-enable filter
 		setIntakeFilterEnabled(1, 1.0);

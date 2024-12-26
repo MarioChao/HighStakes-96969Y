@@ -54,7 +54,7 @@ namespace {
 			pushNewLinear({{7, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
 		} else if (section == 2) {
 			// Score 1 ring
-			pushNewLinear({{3.33, 4.72}}, false, 80);
+			// pushNewLinear({{3.33, 4.72}}, false, 80);
 
 			// Score 1 ring
 			pushNewLinear({{4, 4.9}});
@@ -63,10 +63,10 @@ namespace {
 			pushNewLinear({{5.11, 2.55}});
 
 			// Score 1 ring
-			// pushNewLinear({{4.1, 1.1}});
+			pushNewLinear({{4, 1.2}});
 
 			// Touch ladder
-			pushNewLinear({{3.24, 2.4}}, false, 60);
+			pushNewLinear({{3.5, 2.4}}, false, 60);
 		}
 	}
 
@@ -80,8 +80,8 @@ namespace {
 		setIntakeStoreRing(0, 0.5);
 		wait(50, msec);
 		runFollowLinearYield();
-		driveDistanceTiles(-0.4);
-		setIntakeState(-1);
+		setIntakeState(-1, 0.1);
+		driveDistanceTiles(-0.5);
 
 		// Re-enable filter
 		setIntakeFilterEnabled(1, 1.0);
@@ -93,8 +93,8 @@ namespace {
 
 		// Score
 		setIntakeState(1);
-		runFollowLinearYield();
-		driveDistanceTiles(-0.5);
+		// runFollowLinearYield();
+		// driveDistanceTiles(-0.5);
 
 		// Score
 		runFollowLinearYield();
@@ -110,7 +110,7 @@ namespace {
 		// Score
 		setIntakeStoreRing(0);
 		setIntakeState(1);
-		// runFollowLinearYield();
+		runFollowLinearYield();
 
 		// Touch ladder
 		setArmStage(4);
