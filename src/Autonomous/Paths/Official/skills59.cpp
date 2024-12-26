@@ -64,14 +64,14 @@ namespace {
 			pushNewLinear({{1.93, 2}});
 
 			// Score 2 rings
-			pushNewLinear({{2, 1.15}, {3.9, 1.15}});
+			pushNewLinear({{2, 1.15}, {3.9, 1.1}});
 
 			// Score on wall stake
 			pushNewLinear({{3.0, 1.2}}, true);
 			pushNewLinear({{3, -1}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 1.15}, {0.5, 1.05}, {1.45, 0.35}});
+			pushNewLinear({{1, 1.1}, {0.5, 1.1}, {1.45, 0.35}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 0.39}}, true);
@@ -80,14 +80,14 @@ namespace {
 			pushNewLinear({{2, 4}});
 
 			// Score 2 rings
-			pushNewLinear({{2, 4.85}, {3.9, 4.85}});
+			pushNewLinear({{2, 4.85}, {3.9, 4.9}});
 
 			// Score on wall stake
 			pushNewLinear({{3, 4.8}}, true);
 			pushNewLinear({{3, 7}}, false, autonvals::scoreNeutralWallStakeVelocity_pct);
 
 			// Score 3 rings
-			pushNewLinear({{1, 4.85}, {0.5, 4.9}, {1.45, 5.65}});
+			pushNewLinear({{1, 4.9}, {0.5, 4.9}, {1.45, 5.65}});
 
 			// Place goal at corner
 			pushNewLinear({{0.39, 5.61}}, true);
@@ -108,7 +108,8 @@ namespace {
 			// Score 3 rings
 			pushNewLinear({{4.65, 4}, {4.8, 2.75}}, true);
 			pushNewLinear({{4, 2}});
-			pushNewLinear({{4.95, 1.05}, {4.95, 0.55}});
+			pushNewLinear({{4.95, 1.05}});
+			pushNewLinear({{4.95, 0.55}});
 
 			// Place goal at corner
 			pushNewLinear({{6, 0}}, true);
@@ -121,8 +122,8 @@ namespace {
 			pushNewLinear({{6, 6}}, true);
 		} else if (section == 5) {
 			// Climb on ladder
-			pushNewLinear({{3.85, 3.85}});
-			pushNewLinear({{3, 3}}, false, 70);
+			pushNewLinear({{3.8, 3.8}});
+			pushNewLinear({{3, 3}}, false, 50);
 		}
 	}
 
@@ -233,6 +234,7 @@ namespace {
 		setSwing2State(0);
 
 		// Score 3 rings
+		runFollowLinearYield();
 		runFollowLinearYield();
 		runFollowLinearYield();
 		setSwingState(1);
