@@ -54,7 +54,7 @@ void DockGui::draw() {
 void DockGui::clearDock() {
 	// Clear dock
 	Brain.Screen.setPenColor(white);
-	Brain.Screen.setPenWidth(2);
+	Brain.Screen.setPenWidth(1);
 	Brain.Screen.setFillColor(black);
 	Brain.Screen.drawRectangle(leftX, topY, width, height);
 }

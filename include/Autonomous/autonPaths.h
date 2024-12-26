@@ -70,9 +70,10 @@ namespace autonpaths {
 	void runRedSoloAWP();
 	void runBlueSoloAWP();
 
+	void runAutonSkills59();
 	void runAutonSkillsNoWallStake();
-	void runAutonSkills();
 	void runAutonSkillsLong();
+	void runAutonSkills();
 
 	void runAllianceWallStake();
 	void runLoveShape();

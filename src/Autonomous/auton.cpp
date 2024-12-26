@@ -77,9 +77,14 @@ namespace auton {
 				autonFilterOutColor = "red";
 				break;
 
-			case autonomousType::AutonSkills:
-				debug::printOnController("Auton: Skills");
-				printf("AuSk\n");
+			case autonomousType::AutonSkills59:
+				debug::printOnController("Auton: Skills 59");
+				printf("AuSk 59\n");
+				autonFilterOutColor = "blue";
+				break;
+			case autonomousType::AutonSkillsNoWallStake:
+				debug::printOnController("Auton: Skills No WS");
+				printf("AuSk NoWS\n");
 				autonFilterOutColor = "blue";
 				break;
 			case autonomousType::DrivingSkills:
@@ -157,7 +162,10 @@ namespace auton {
 			case autonomousType::BlueSoloAWP:
 				autonpaths::runBlueSoloAWP();
 				break;
-			case autonomousType::AutonSkills:
+			case autonomousType::AutonSkills59:
+				autonpaths::runAutonSkills59();
+				break;
+			case autonomousType::AutonSkillsNoWallStake:
 				autonpaths::runAutonSkillsNoWallStake();
 				break;
 			case autonomousType::AllianceWallStake:
