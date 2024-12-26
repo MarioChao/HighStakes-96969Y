@@ -147,12 +147,16 @@ namespace {
 		runFollowLinearYield();
 
 		// Wall stake
-		setArmStage(3);
-		runFollowLinearYield();
-		runFollowLinearYield();
-		// Odometry wall align
-		mainOdometry.setPosition(mainOdometry.getX(), 0.45);
-		driveDistanceTiles(-0.5);
+		if (false) {
+			setArmStage(3);
+			runFollowLinearYield();
+			runFollowLinearYield();
+			// Odometry wall align
+			mainOdometry.setPosition(mainOdometry.getX(), 0.45);
+			driveDistanceTiles(-0.5);
+		} else {
+			autonpaths::pathbuild::linearIndex += 2;
+		}
 
 		// Score
 		setArmStage(0, 1);
@@ -166,7 +170,7 @@ namespace {
 
 	void secondCorner() {
 		// Goal
-		grabGoalAt(1, 4.1);
+		grabGoalAt(1.1, 4.1);
 
 		// Redirect
 		// setIntakeToArm(1);
