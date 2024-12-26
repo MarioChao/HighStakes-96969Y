@@ -3,10 +3,12 @@
 namespace {
 	using namespace autonpaths;
 	using namespace autonpaths::pathbuild;
+	using namespace autonpaths::combination;
 
 	void loadPaths(int section);
 
-	void doAuton();
+	void doAuton1();
+	void doAuton2();
 }
 
 /// @brief Run the red solo AWP.
@@ -18,7 +20,7 @@ void autonpaths::runRedSoloAWP() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.79, 3.73);
+	mainOdometry.setPosition(0.8, 3.73);
 	setRobotRotation(-180);
 	mainOdometry.printDebug();
 
@@ -32,7 +34,10 @@ void autonpaths::runRedSoloAWP() {
 
 	/* Auton */
 	loadPaths(1);
-	doAuton();
+	doAuton1();
+
+	loadPaths(2);
+	doAuton2();
 }
 
 namespace {
@@ -43,37 +48,29 @@ namespace {
 
 		if (section == 1) {
 			// Go to alliance wall stake
-			pushNewLinear({{0.79, 3}});
+			pushNewLinear({{0.8, 3}});
 
 			// Score on wall stake
-			pushNewLinear({{-1, 3}});
+			pushNewLinear({{-1, 3}}, false, autonvals::scoreWallStakeVelocity_pct);
+		} else if (section == 2) {
+			// Score 1 ring
+			// pushNewLinear({{2.67, 4.72}}, false, 80);
 
-			// Grab goal
-			pushNewLinear({{2, 4}}, true, 80);
+			// Score 1 ring
+			pushNewLinear({{2, 5}});
 
-			// Score 2 rings
-			pushNewLinear({{2.65, 4.5}, {2.65, 5.5}}, false, 100);
+			// Store middle
+			pushNewLinear({{0.9, 2.55}});
 
-			// Store 1 ring
-			pushNewLinear({{2.37, 4.3}}, true);
-			pushNewLinear({{1.9, 5}});
-
-			// Release goal
-			pushNewLinear({{0.5, 1}}, true);
-
-			// Grab goal
-			pushNewLinear({{0.75, 1.7}});
-			pushNewLinear({{2, 2}}, true, 80);
-
-			// Score 2 ring
-			pushNewLinear({{2, 1}});
+			// Score 1 ring
+			pushNewLinear({{2, 1.1}});
 
 			// Touch ladder
-			pushNewLinear({{2.45, 2.47}}, true);
+			pushNewLinear({{2.5, 2.4}}, false, 60);
 		}
 	}
 
-	void doAuton() {
+	void doAuton1() {
 		// Intake filter at hood
 		setIntakeFilterEnabled(0);
 		setIntakeStoreRing(1);
@@ -84,45 +81,39 @@ namespace {
 		wait(50, msec);
 		runFollowLinearYield();
 		driveDistanceTiles(-0.5);
-
-		// Grab goal
 		setIntakeState(-1);
-		runFollowLinearYield();
-		setGoalClampState(1);
-		wait(50, msec);
 
-		// Re-eable filter
-		setIntakeFilterEnabled(1);
+		// Re-enable filter
+		setIntakeFilterEnabled(1, 1.0);
+	}
 
-		// Score 2 rings
+	void doAuton2() {
+		// Grab goal
+		grabGoalAt(6 - (3.95), 4.15);
+
+		// Score
 		setIntakeState(1);
+		// runFollowLinearYield();
+		// driveDistanceTiles(-0.5);
+
+		// Score
 		runFollowLinearYield();
 
-		// Store 1 ring
-		runFollowLinearYield();
-		setIntakeStoreRing(1);
-		runFollowLinearYield();
-
-		// Release goal and push to corner
-		setGoalClampState(0);
+		// Store middle
+		setIntakeStoreRing(1, 1.5);
+		setGoalClampState(0, 1.5);
 		runFollowLinearYield();
 
 		// Grab goal
-		setIntakeStoreRing(0);
-		setIntakeState(0, 0.2);
-		runFollowLinearYield();
-		runFollowLinearYield();
-		setGoalClampState(1);
-		wait(50, msec);
+		grabGoalAt(6 - (3.8), 1.95);
 
-		// Score 2 rings
+		// Score
+		setIntakeStoreRing(0);
 		setIntakeState(1);
 		runFollowLinearYield();
 
 		// Touch ladder
+		setArmStage(4);
 		runFollowLinearYield();
-
-		waitUntil(_autonTimer.value() > 14.5);
-		setIntakeState(0);
 	}
 }
