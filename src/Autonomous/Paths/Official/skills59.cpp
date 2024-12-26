@@ -142,6 +142,7 @@ namespace {
 
 		// Score
 		setIntakeToArm(0, 0.5);
+		setArmStage(0, 0.5);
 		runFollowLinearYield();
 
 		// Wall stake
@@ -153,6 +154,7 @@ namespace {
 		driveDistanceTiles(-0.5);
 
 		// Score
+		setArmStage(0, 1);
 		runFollowLinearYield();
 
 		// Place goal
@@ -172,6 +174,7 @@ namespace {
 
 		// Score
 		setIntakeToArm(0, 0.5);
+		setArmStage(0, 0.5);
 		runFollowLinearYield();
 
 		// Wall stake
@@ -182,9 +185,9 @@ namespace {
 		// Odometry wall align
 		mainOdometry.setPosition(3.0, 5.67);
 		driveDistanceTiles(-0.5);
-		setArmStage(0, 1.0);
 
 		// Score
+		setArmStage(0, 1);
 		runFollowLinearYield();
 
 		// Place goal
@@ -230,8 +233,9 @@ namespace {
 	}
 
 	void fourthCorner() {
-		// Grab goal
+		// Fake grab goal
 		runFollowLinearYield();
+		setGoalClampState(1);
 		grabGoalAt(5.46, 3.95);
 
 		// Place goal
