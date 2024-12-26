@@ -106,7 +106,7 @@ namespace {
 			pushNewLinear({{5, 5.47}});
 
 			// Score 3 rings
-			pushNewLinear({{4.65, 4}, {4.75, 2.8}}, true);
+			pushNewLinear({{4.65, 4}, {4.8, 2.75}}, true);
 			pushNewLinear({{4, 2}, {4.95, 1.05}, {4.95, 0.55}});
 
 			// Place goal at corner
@@ -142,7 +142,6 @@ namespace {
 
 		// Score
 		setIntakeToArm(0, 0.5);
-		setArmStage(0, 1.5);
 		runFollowLinearYield();
 
 		// Wall stake
@@ -174,20 +173,23 @@ namespace {
 
 		// Score
 		setIntakeToArm(0, 0.5);
-		setArmStage(0, 1.5);
 		runFollowLinearYield();
 
 		// Wall stake
-		setArmStage(3);
-		setIntakeState(1);
-		runFollowLinearYield();
-		runFollowLinearYield();
-		// Odometry wall align
-		mainOdometry.setPosition(mainOdometry.getX(), 5.55);
-		driveDistanceTiles(-0.5);
+		if (false) {
+			setArmStage(3);
+			setIntakeState(1);
+			runFollowLinearYield();
+			runFollowLinearYield();
+			// Odometry wall align
+			mainOdometry.setPosition(mainOdometry.getX(), 5.55);
+			driveDistanceTiles(-0.5);
+			setArmStage(0, 1);
+		} else {
+			autonpaths::pathbuild::linearIndex += 2;
+		}
 
 		// Score
-		setArmStage(0, 1);
 		runFollowLinearYield();
 
 		// Place goal
@@ -198,8 +200,8 @@ namespace {
 
 	void thirdCorner() {
 		// Redirect
-		setIntakeToArm(1, 0.5);
-		setIntakeState(1);
+		// setIntakeToArm(1, 0.5);
+		// setIntakeState(1);
 		runFollowLinearYield();
 
 		// Store
@@ -215,6 +217,8 @@ namespace {
 		runFollowLinearYield();
 		driveDistanceTiles(-0.5);
 		setIntakeState(1);
+		// Odometry wall align
+		mainOdometry.setPosition(5.5, mainOdometry.getY());
 		setArmStage(0, 1.0);
 
 		// Score 2 rings
@@ -229,6 +233,7 @@ namespace {
 
 		// Place goal
 		runFollowLinearYield();
+		setGoalClampState(0);
 		driveDistanceTiles(0.5);
 	}
 
