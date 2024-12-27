@@ -75,7 +75,7 @@ namespace {
 
 		// Grab rushed goal
 		setIntakeStoreRing(0);
-		grabGoalAt(2.4, 0.6);
+		grabGoalAt(2.4, 0.8);
 
 		// Score stored
 		setIntakeState(1);

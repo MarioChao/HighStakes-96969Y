@@ -266,7 +266,7 @@ namespace {
 
 		// Place goal
 		runFollowLinearYield();
-		setGoalClampState(0);
+		// setGoalClampState(0);
 		driveDistanceTiles(0.5);
 	}
 
