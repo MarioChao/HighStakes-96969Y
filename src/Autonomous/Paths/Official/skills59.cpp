@@ -243,11 +243,9 @@ namespace {
 		runFollowLinearYield();
 		runFollowLinearYield();
 		runFollowLinearYield();
-		setSwingState(1, 1);
 		runFollowLinearYield();
 
 		// Clear corner
-		setSwingState(0);
 		setSwing2State(1);
 		turnToAngleVelocity(45, 60);
 		setSwing2State(0);
