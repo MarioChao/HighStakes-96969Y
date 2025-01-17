@@ -61,21 +61,21 @@ Matrix &CubicSplineSegment::getStoringMatrix() {
 }
 
 std::vector<double> CubicSplineSegment::getPositionAtT(double t) {
-	Matrix t_matrix({{1, t, t*t, t*t*t}});
+	Matrix t_matrix({ {1, t, t*t, t*t*t} });
 	Matrix point_matrix = Matrix(stored_points);
 	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
 	return point;
 }
 
 std::vector<double> CubicSplineSegment::getVelocityAtT(double t) {
-	Matrix t_matrix({{0, 1, 2*t, 3*t*t}});
+	Matrix t_matrix({ {0, 1, 2*t, 3*t*t} });
 	Matrix point_matrix = Matrix(stored_points);
 	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
 	return point;
 }
 
 std::vector<double> CubicSplineSegment::getSecondPrimeAtT(double t) {
-	Matrix t_matrix({{0, 0, 2, 6*t}});
+	Matrix t_matrix({ {0, 0, 2, 6*t} });
 	Matrix point_matrix = Matrix(stored_points);
 	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
 	return point;
