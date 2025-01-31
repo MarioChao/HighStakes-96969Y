@@ -10,7 +10,7 @@
 // File-local variables
 
 namespace {
-	const double cosAngleWithinRange = 1e-4;
+	const double cosAngleWithinRange = 1e-2;
 	const double integralSmallAngle_degrees = 8;
 	const double inertialNoiseFilter_degrees = 1e-4;
 }
