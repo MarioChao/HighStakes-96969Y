@@ -16,7 +16,7 @@ class TrajectoryPlanner;
 extern competition Competition;
 
 // Intake info
-extern int intakePart;
+extern int intakePartType;
 
 // Arm info
 extern bool isArmPneumatic;

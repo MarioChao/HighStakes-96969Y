@@ -68,6 +68,7 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 
 	// Compute gain value
 	// refer to https://wiki.purduesigbots.com/software/control-algorithms/ramsete
+	// Note: "the positive θ direction is turning the robot to the right"
 	double k = 2 * zeta * sqrt(pow(w_desired, 2) + b * pow(v_desired, 2));
 
 	// Compute output velocities

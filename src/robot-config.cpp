@@ -16,12 +16,12 @@ controller Controller2(partner);
 
 // Wheel motors
 
-motor LeftMotorA(PORT15, ratio6_1, true);
-motor LeftMotorB(PORT17, ratio6_1, true);
-motor LeftMotorC(PORT16, ratio6_1);
-motor RightMotorA(PORT20, ratio6_1);
-motor RightMotorB(PORT18, ratio6_1);
-motor RightMotorC(PORT19, ratio6_1, true);
+motor LeftMotorA(PORT1, ratio6_1);
+motor LeftMotorB(PORT3, ratio6_1);
+motor LeftMotorC(PORT2, ratio6_1, true);
+motor RightMotorA(PORT8, ratio6_1, true);
+motor RightMotorB(PORT9, ratio6_1, true);
+motor RightMotorC(PORT10, ratio6_1);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
 motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA,
@@ -29,13 +29,13 @@ motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA,
 
 // Intake motors
 
-motor IntakeMotor1(PORT1, ratio6_1);
-motor IntakeMotor2(PORT4, ratio18_1, true);
+motor IntakeMotor1(PORT12, ratio6_1);
+motor IntakeMotor2(emptyPort, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 // arm motor
 
-motor ArmMotor(PORT10, ratio36_1);
+motor ArmMotor(emptyPort, ratio36_1);
 
 // Expander
 
@@ -59,12 +59,12 @@ pneumatics RedirectPneumatics(Brain.ThreeWirePort.D);
 
 encoder LookEncoder(Expander1.A);
 encoder RightEncoder(Brain.ThreeWirePort.A);
-rotation LookRotation(PORT14);
+rotation LookRotation(emptyPort);
 rotation RightRotation(emptyPort);
 
-rotation ArmRotationSensor(PORT9, true);
+rotation ArmRotationSensor(emptyPort, true);
 
-inertial InertialSensor(PORT13);
+inertial InertialSensor(emptyPort);
 distance DistanceSensor(emptyPort);
 
 distance RingDistanceSensor(emptyPort);

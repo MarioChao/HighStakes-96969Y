@@ -36,7 +36,7 @@
 
 competition Competition;
 
-int intakePart = 1;
+int intakePartType = 1;
 
 bool isArmPneumatic = false;
 

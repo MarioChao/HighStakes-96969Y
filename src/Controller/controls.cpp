@@ -15,7 +15,7 @@
 
 namespace controls {
 	void startThreads() {
-		if (intakePart == 1) {
+		if (intakePartType == 1) {
 			task intakeTask([]() -> int {
 				botintake::runThread();
 				return 1;
@@ -62,14 +62,14 @@ namespace controls {
 		Controller1.ButtonY.pressed([]() -> void {
 			rumble::setConstantRumbling(false);
 			rumble::setString(".");
-			if (intakePart == 1) botintake::switchFilterColor();
+			if (intakePartType == 1) botintake::switchFilterColor();
 			else botintake2::switchFilterColor();
 		});
 		Controller1.ButtonA.pressed([]() -> void {
 			swing::switchState();
 		});
 		Controller1.ButtonB.pressed([]() -> void {
-			if (intakePart == 1) {
+			if (intakePartType == 1) {
 				if (!botarm::isArmResetted()) {
 					return;
 				}
@@ -106,7 +106,7 @@ namespace controls {
 			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonUp.pressed([]() -> void {
-			if (intakePart == 1) {
+			if (intakePartType == 1) {
 				if (!botarm::isArmResetted()) {
 					return;
 				}
@@ -126,7 +126,7 @@ namespace controls {
 			// 	botdrive::setMaxDriveVelocity(100.0);
 			// 	debug::printOnController("100\% drive speed");
 			// }
-			if (intakePart == 1) {
+			if (intakePartType == 1) {
 				botintake::setFilterOutColor("none");
 				debug::printOnController("filter none");
 				rumble::setConstantRumbling(true);
@@ -144,7 +144,7 @@ namespace controls {
 	}
 
 	void resetStates() {
-		LeftRightMotors.setStopping(brake);
+		LeftRightMotors.setStopping(coast);
 
 		// Reset arm encoder
 		if (!botarm::isArmResetted()) {
@@ -160,7 +160,7 @@ namespace controls {
 
 	void doControls() {
 		botdrive::control();
-		if (intakePart == 1) {
+		if (intakePartType == 1) {
 			botintake::control(
 				(int)Controller1.ButtonR1.pressing() -
 				(int)Controller1.ButtonR2.pressing(),

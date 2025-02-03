@@ -25,7 +25,7 @@ namespace autonfunctions {
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).
 	void setIntakeState(int state, double delaySec) {
-		if (intakePart == 1) botintake::setState(state, delaySec);
+		if (intakePartType == 1) botintake::setState(state, delaySec);
 		else botintake2::setState(state, delaySec);
 	}
 
@@ -34,7 +34,7 @@ namespace autonfunctions {
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).
 	void setIntakeTopState(int state, double delaySec) {
-		if (intakePart == 1) return;
+		if (intakePartType == 1) return;
 		else botintake2::setState2(state, delaySec);
 	}
 
@@ -43,14 +43,14 @@ namespace autonfunctions {
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).
 	void setIntakeBottomState(int state, double delaySec) {
-		if (intakePart == 1) return;
+		if (intakePartType == 1) return;
 		else botintake2::setState3(state, delaySec);
 	}
 
 	/// @brief Set the hook mode of the intake.
 	/// @param state Normal: 0, to arm: 1
 	void setIntakeToArm(int state, double delaySec) {
-		if (intakePart == 1) {
+		if (intakePartType == 1) {
 			if (state) {
 				botintake::setColorFiltering(false, delaySec);
 				redirect::setState(1, delaySec);
@@ -62,18 +62,18 @@ namespace autonfunctions {
 	}
 
 	void setIntakeStoreRing(int state, double delaySec) {
-		if (intakePart == 1) {
+		if (intakePartType == 1) {
 			botintake::setIntakeStoreRing(state, delaySec);
 		}
 	}
 
 	void setIntakeFilterOutColor(std::string colorText) {
-		if (intakePart == 1) botintake::setFilterOutColor(colorText);
+		if (intakePartType == 1) botintake::setFilterOutColor(colorText);
 		else botintake2::setFilterOutColor(colorText);
 	}
 
 	void setIntakeFilterEnabled(bool state, double delaySec) {
-		if (intakePart == 1) botintake::setColorFiltering(state, delaySec);
+		if (intakePartType == 1) botintake::setColorFiltering(state, delaySec);
 	}
 
 	/// @brief Set the state of Left Wing's pneumatic.
