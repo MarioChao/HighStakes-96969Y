@@ -168,7 +168,7 @@ void usercontrol(void) {
 
 	// Driving skills
 	if (auton::getAutonRunType() == auton::autonomousType::DrivingSkills) {
-		botarm::setResetDefaultStage(2);
+		// botarm::setResetDefaultStage(2);
 		botintake::setFilterOutColor("blue");
 	} else if (auton::getAutonRunType() == auton::autonomousType::DrivingRunAutonSkills) {
 		auton::setAutonRunType(0, auton::autonomousType::AutonSkills59);

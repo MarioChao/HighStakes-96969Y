@@ -15,19 +15,19 @@ namespace {
 	void spinArmMotor(double velocityPct);
 
 	// Stage controllers
-	PIDController armPositionPid(1.3, 0, 0.15);
+	PIDController armPositionPid(1.7, 0, 0.05);
 	PatienceController armUpPatience(6, 1.0, true, 5);
 	PatienceController armDownPatience(6, 1.0, false, 5);
 
 	// Stage config
-	std::vector<double> armStages_degrees = {80, 0, 215.0, 0, 300};
-	std::vector<int> extremeStages_values = {0, -2, 0, 2, 0};
+	std::vector<double> armStages_degrees = {0, 30, 45, 60, 140};
+	std::vector<int> extremeStages_values = {-1, 0, 0, 0, 0};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
 
 	// Reset arm info
 	bool armResetted = false;
-	int resetDefaultStageId = 0;
+	int resetDefaultStageId = 1;
 
 	// Speed config
 	double armVelocityPct = 100;
@@ -135,12 +135,17 @@ namespace botarm {
 	void resetArmEncoder() {
 		armResetted = false;
 
+		// Sanitize rotation sensor's initial value between [-50, 310]
+		setArmPosition(genutil::modRange(ArmRotationSensor.angle(degrees), 360, -50));
+
+		/*
 		// Spin downward until exhausted
-		setArmStage(1);
+		setArmStage(0);
 		waitUntil(armDownPatience.isExhausted());
 
 		// Set the position as 0 degrees
 		setArmPosition(0);
+		// */
 
 		// Initialize to default stage
 		setArmStage(resetDefaultStageId);

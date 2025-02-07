@@ -244,7 +244,7 @@ namespace botintake {
 
 	void control(int state, int hookState) {
 		if (canControl()) {
-			setState(-state);
+			setState(state);
 			// if (hookState) hookFactor = 0.4;
 			// else hookFactor = 1.0;
 		}

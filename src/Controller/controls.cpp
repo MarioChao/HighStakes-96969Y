@@ -47,7 +47,7 @@ namespace controls {
 			if (!botarm::isArmResetted()) {
 				return;
 			}
-			botarm::setArmStage(0);
+			botarm::setArmStage(3);
 			botintake::setColorFiltering(true);
 		});
 		// Controller1.ButtonY.pressed([]() -> void {
@@ -84,7 +84,7 @@ namespace controls {
 						return 1;
 					});
 				} else {
-					botarm::setArmStage(0);
+					botarm::setArmStage(2);
 					botintake::setColorFiltering(true);
 				}
 			}
@@ -102,7 +102,7 @@ namespace controls {
 			}
 
 			// Neutral wall stake
-			botarm::setArmStage(3);
+			botarm::setArmStage(4);
 			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonUp.pressed([]() -> void {
@@ -110,9 +110,9 @@ namespace controls {
 				if (!botarm::isArmResetted()) {
 					return;
 				}
-				// botintake::switchMode();
+
 				// Alliance wall stake
-				botarm::setArmStage(2);
+				botarm::setArmStage(4);
 				botintake::setColorFiltering(true);
 			} else {
 				botintake2::switchMode();

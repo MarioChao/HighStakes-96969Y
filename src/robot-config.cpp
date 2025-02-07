@@ -35,7 +35,7 @@ motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 // arm motor
 
-motor ArmMotor(emptyPort, ratio36_1);
+motor ArmMotor(PORT13, ratio36_1);
 
 // Expander
 
@@ -62,7 +62,7 @@ encoder RightEncoder(Brain.ThreeWirePort.A);
 rotation LookRotation(emptyPort);
 rotation RightRotation(emptyPort);
 
-rotation ArmRotationSensor(emptyPort, true);
+rotation ArmRotationSensor(PORT14, true);
 
 inertial InertialSensor(emptyPort);
 distance DistanceSensor(emptyPort);
