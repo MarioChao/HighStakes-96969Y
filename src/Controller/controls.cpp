@@ -102,7 +102,11 @@ namespace controls {
 			}
 
 			// Neutral wall stake
-			botarm::setArmStage(4);
+			if (botarm::getArmStage() == 4) {
+				botarm::setArmStage(0);
+			} else {
+				botarm::setArmStage(4);
+			}
 			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonUp.pressed([]() -> void {
@@ -112,7 +116,7 @@ namespace controls {
 				}
 
 				// Alliance wall stake
-				botarm::setArmStage(4);
+				botarm::setArmStage(0);
 				botintake::setColorFiltering(true);
 			} else {
 				botintake2::switchMode();
@@ -162,8 +166,8 @@ namespace controls {
 		botdrive::control();
 		if (intakePartType == 1) {
 			botintake::control(
-				(int)Controller1.ButtonR1.pressing() -
-				(int)Controller1.ButtonR2.pressing(),
+				(int)Controller1.ButtonR2.pressing() -
+				(int)Controller1.ButtonR1.pressing(),
 				/*This is not used =>*/ (int)Controller1.ButtonX.pressing());
 		} else {
 			botintake2::control(

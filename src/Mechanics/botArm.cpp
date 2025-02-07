@@ -16,18 +16,18 @@ namespace {
 
 	// Stage controllers
 	PIDController armPositionPid(1.7, 0, 0.05);
-	PatienceController armUpPatience(6, 1.0, true, 5);
+	PatienceController armUpPatience(12, 1.0, true, 5);
 	PatienceController armDownPatience(6, 1.0, false, 5);
 
 	// Stage config
-	std::vector<double> armStages_degrees = {0, 30, 45, 60, 140};
-	std::vector<int> extremeStages_values = {-1, 0, 0, 0, 0};
+	std::vector<double> armStages_degrees = {0, 30, 45, 60, 0};
+	std::vector<int> extremeStages_values = {-1, 0, 0, 0, 1};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
 
 	// Reset arm info
 	bool armResetted = false;
-	int resetDefaultStageId = 1;
+	int resetDefaultStageId = 0;
 
 	// Speed config
 	double armVelocityPct = 100;
