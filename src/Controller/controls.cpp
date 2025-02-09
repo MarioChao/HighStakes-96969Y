@@ -43,11 +43,66 @@ namespace controls {
 		Controller2.ButtonY.pressed([]() -> void { botarm::resetArmEncoder(); });
 
 		// Controller 1
+		Controller1.ButtonUp.pressed([]() -> void {
+			if (intakePartType == 1) {
+				if (!botarm::isArmResetted()) {
+					return;
+				}
+
+				// Alliance wall stake
+				botarm::setArmStage(0);
+				botintake::setColorFiltering(true);
+			} else {
+				botintake2::switchMode();
+			}
+		});
+		Controller1.ButtonB.pressed([]() -> void {
+			if (intakePartType == 1) {
+				if (!botarm::isArmResetted()) {
+					return;
+				}
+
+				botarm::setArmStage(1);
+				botintake::setColorFiltering(false);
+
+				/*
+				if (botintake::isColorFiltering()) {
+					botintake::setColorFiltering(false);
+					redirect::setState(1);
+					botarm::setArmStage(1);
+					task closeRedirect([]() -> int {
+						wait(5, sec);
+						botintake::setColorFiltering(true);
+						return 1;
+					});
+				} else {
+					botarm::setArmStage(2);
+					botintake::setColorFiltering(true);
+				}
+				*/
+			}
+		});
 		Controller1.ButtonX.pressed([]() -> void {
 			if (!botarm::isArmResetted()) {
 				return;
 			}
 			botarm::setArmStage(3);
+			botintake::setColorFiltering(true);
+		});
+		Controller1.ButtonL1.pressed([]() -> void {
+			// if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
+			// 	botarmpneu::switchState();
+			// }
+			if (!botarm::isArmResetted()) {
+				return;
+			}
+
+			// Neutral wall stake
+			if (botarm::getArmStage() == 4) {
+				botarm::setArmStage(0);
+			} else {
+				botarm::setArmStage(4);
+			}
 			botintake::setColorFiltering(true);
 		});
 		// Controller1.ButtonY.pressed([]() -> void {
@@ -68,59 +123,9 @@ namespace controls {
 		Controller1.ButtonA.pressed([]() -> void {
 			swing::switchState();
 		});
-		Controller1.ButtonB.pressed([]() -> void {
-			if (intakePartType == 1) {
-				if (!botarm::isArmResetted()) {
-					return;
-				}
-
-				if (botintake::isColorFiltering()) {
-					botintake::setColorFiltering(false);
-					redirect::setState(1);
-					botarm::setArmStage(1);
-					task closeRedirect([]() -> int {
-						wait(5, sec);
-						botintake::setColorFiltering(true);
-						return 1;
-					});
-				} else {
-					botarm::setArmStage(2);
-					botintake::setColorFiltering(true);
-				}
-			}
-		});
 		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
-		});
-		Controller1.ButtonL1.pressed([]() -> void {
-			// if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
-			// 	botarmpneu::switchState();
-			// }
-			if (!botarm::isArmResetted()) {
-				return;
-			}
-
-			// Neutral wall stake
-			if (botarm::getArmStage() == 4) {
-				botarm::setArmStage(0);
-			} else {
-				botarm::setArmStage(4);
-			}
-			botintake::setColorFiltering(true);
-		});
-		Controller1.ButtonUp.pressed([]() -> void {
-			if (intakePartType == 1) {
-				if (!botarm::isArmResetted()) {
-					return;
-				}
-
-				// Alliance wall stake
-				botarm::setArmStage(0);
-				botintake::setColorFiltering(true);
-			} else {
-				botintake2::switchMode();
-			}
 		});
 		Controller1.ButtonDown.pressed([]() -> void {
 			// if (botdrive::getMaxDriveVelocity() >= 99.0) {
