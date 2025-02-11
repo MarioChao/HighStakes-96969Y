@@ -43,6 +43,8 @@ namespace controls {
 		Controller2.ButtonY.pressed([]() -> void { botarm::resetArmEncoder(); });
 
 		// Controller 1
+
+		/* Arm stages */
 		Controller1.ButtonUp.pressed([]() -> void {
 			if (intakePartType == 1) {
 				if (!botarm::isArmResetted()) {
@@ -114,18 +116,12 @@ namespace controls {
 		// 		}
 		// 	}
 		// });
+		/* Ring color filter */
 		Controller1.ButtonY.pressed([]() -> void {
 			rumble::setConstantRumbling(false);
 			rumble::setString(".");
 			if (intakePartType == 1) botintake::switchFilterColor();
 			else botintake2::switchFilterColor();
-		});
-		Controller1.ButtonA.pressed([]() -> void {
-			swing::switchState();
-		});
-		Controller1.ButtonL2.pressed([]() -> void {
-			printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
-			goalclamp::switchState();
 		});
 		Controller1.ButtonDown.pressed([]() -> void {
 			// if (botdrive::getMaxDriveVelocity() >= 99.0) {
@@ -141,6 +137,15 @@ namespace controls {
 				rumble::setConstantRumbling(true);
 			}
 		});
+
+		/* Pneumatics */
+		Controller1.ButtonA.pressed([]() -> void {
+			swing::switchState();
+		});
+		Controller1.ButtonL2.pressed([]() -> void {
+			printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
+			goalclamp::switchState();
+		});
 		Controller1.ButtonLeft.pressed([]() -> void {
 			swing::switch2ndState();
 		});
@@ -153,7 +158,7 @@ namespace controls {
 	}
 
 	void resetStates() {
-		LeftRightMotors.setStopping(coast);
+		LeftRightMotors.setStopping(brake);
 
 		// Reset arm encoder
 		if (!botarm::isArmResetted()) {

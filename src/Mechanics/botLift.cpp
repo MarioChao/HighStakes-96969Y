@@ -1,8 +1,12 @@
 #include "Mechanics/botLift.h"
 #include "main.h"
 
+namespace {
+	bool controlState = true;
+}
+
 namespace botlift {
-	void setLiftState(bool state, double delaySec) {
+	void setState(int state, double delaySec) {
 		// Check for instant set
 		if (delaySec <= 1e-9) {
 			// Set state here
@@ -31,6 +35,10 @@ namespace botlift {
 	}
 
 	void switchState() {
-		// setState(!IntakeLiftPneumatic.value());
+		setState(!IntakeLiftPneumatic.value());
+	}
+
+	bool canControl() {
+		return controlState;
 	}
 }

@@ -16,12 +16,12 @@ controller Controller2(partner);
 
 // Wheel motors
 
-motor LeftMotorA(PORT1, ratio6_1);
-motor LeftMotorB(PORT3, ratio6_1);
-motor LeftMotorC(PORT2, ratio6_1, true);
-motor RightMotorA(PORT8, ratio6_1, true);
-motor RightMotorB(PORT9, ratio6_1, true);
-motor RightMotorC(PORT10, ratio6_1);
+motor LeftMotorA(PORT14, ratio6_1);
+motor LeftMotorB(PORT16, ratio6_1);
+motor LeftMotorC(PORT15, ratio6_1, true);
+motor RightMotorA(PORT11, ratio6_1, true);
+motor RightMotorB(PORT13, ratio6_1, true);
+motor RightMotorC(PORT12, ratio6_1);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
 motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA,
@@ -29,13 +29,13 @@ motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA,
 
 // Intake motors
 
-motor IntakeMotor1(PORT12, ratio6_1);
+motor IntakeMotor1(PORT17, ratio6_1);
 motor IntakeMotor2(emptyPort, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 // arm motor
 
-motor ArmMotor(PORT13, ratio36_1);
+motor ArmMotor(PORT18, ratio36_1);
 
 // Expander
 
@@ -49,20 +49,20 @@ pneumatics RightWingPneumatic(Expander1.C);
 
 pneumatics IntakeLiftPneumatic(Expander1.B);
 pneumatics HangPneumatic(Expander1.E);
-pneumatics GoalClampPneumatic(Brain.ThreeWirePort.C);
+pneumatics GoalClampPneumatic(Brain.ThreeWirePort.H);
 pneumatics BotArmPneumatics(Expander1.B);
-pneumatics SwordPneumatics(Brain.ThreeWirePort.G);
-pneumatics Sword2Pneumatics(Brain.ThreeWirePort.H);
-pneumatics RedirectPneumatics(Brain.ThreeWirePort.D);
+pneumatics SwordPneumatics(Expander1.B);
+pneumatics Sword2Pneumatics(Expander1.B);
+pneumatics RedirectPneumatics(Expander1.B);
 
 // Sensors
 
 encoder LookEncoder(Expander1.A);
-encoder RightEncoder(Brain.ThreeWirePort.A);
+encoder RightEncoder(Expander1.A);
 rotation LookRotation(emptyPort);
 rotation RightRotation(emptyPort);
 
-rotation ArmRotationSensor(PORT14, true);
+rotation ArmRotationSensor(PORT19, true);
 
 inertial InertialSensor(emptyPort);
 distance DistanceSensor(emptyPort);
