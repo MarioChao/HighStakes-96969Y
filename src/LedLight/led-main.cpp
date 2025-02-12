@@ -11,8 +11,8 @@ namespace {
 	digital_out ledG(gPort);
 	digital_out ledB(bPort);
 
-	double stageTimeSeconds[2] = {75, 95};
-	// double stageTimeSeconds[2] = {0, 5};
+	double stageTimeSeconds[3] = {75, 95, 105};
+	// double stageTimeSeconds[3] = {5, 10, 15};
 
 	void ledLightThread();
 }
@@ -35,7 +35,7 @@ namespace ledlight {
 namespace {
 	void ledLightThread() {
 		bool rgb[3] = {0, 0, 0};
-		double delayMs = 10;
+		double delayMs = 50;
 		while (true) {
 			// Set configs
 			if (drivingTimer.time(seconds) < stageTimeSeconds[0]) {
@@ -58,13 +58,18 @@ namespace {
 					rgb[2] = 1;
 				}
 				delayMs = genutil::rangeMap(drivingTimer.time(seconds), stageTimeSeconds[0], stageTimeSeconds[1], 500, 50);
-			} else {
+			} else if (drivingTimer.time(seconds) < stageTimeSeconds[2]) {
 				// No green and blue
 				rgb[1] = rgb[2] = 0;
 
 				// Flashing red
 				rgb[0] ^= 1;
 				delayMs = 50;
+			} else {
+				// Eternal red
+				rgb[0] = rgb[2] = 1;
+				rgb[1] = 0;
+				delayMs = 1000;
 			}
 
 

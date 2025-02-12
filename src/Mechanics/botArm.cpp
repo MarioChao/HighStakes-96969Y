@@ -21,7 +21,7 @@ namespace {
 
 	// Stage config
 	std::vector<double> armStages_degrees = {0, 30, 45, 60, 0};
-	std::vector<int> extremeStages_values = {-1, 0, 0, 0, 1};
+	std::vector<int> extremeStages_values = {-2, 0, 0, 0, 1};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
 
