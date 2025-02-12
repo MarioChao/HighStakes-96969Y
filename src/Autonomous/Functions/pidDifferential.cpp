@@ -1,4 +1,5 @@
 #include "Autonomous/autonFunctions.h"
+#include "Autonomous/autonPaths.h"
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/pidController.h"
@@ -11,6 +12,8 @@
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
+
+#include "GraphUtilities/trajectoryPlanner.h"
 
 #include "Simulation/robotSimulator.h"
 
@@ -181,6 +184,14 @@ namespace autonfunctions {
 		// double rightRotationInitialRevolution = RightRotation.position(rev);
 		Vector3 initalSimulatorPosition = robotSimulator.position;
 
+		// Motion planner
+		TrajectoryPlanner motion(distanceInches);
+		motion.addDesiredMotionConstraints(
+			0, maxVelocityPct * autonpaths::pathbuild::maxVel_tilesPerSec * field::tileLengthIn,
+			autonpaths::pathbuild::maxAccel * field::tileLengthIn, autonpaths::pathbuild::maxDecel * field::tileLengthIn
+		);
+		motion.calculateMotion();
+
 		// Reset PID
 		driveAndTurn_driveTargetDistancePid.resetErrorToZero();
 		driveAndTurn_rotateTargetAnglePid.resetErrorToZero();
@@ -190,9 +201,21 @@ namespace autonfunctions {
 		driveError_inchesPatience.reset();
 
 		// Reset timer
-		timer timeout;
+		timer runningTimer;
 
-		while (!(driveAndTurn_driveTargetDistancePid.isSettled() && driveAndTurn_rotateTargetAnglePid.isSettled()) && timeout.value() < runTimeout) {
+		// Print info
+		printf("Drive pid with trajectory of %.3f seconds\n", motion.getTotalTime());
+
+		while (!(
+			driveAndTurn_driveTargetDistancePid.isSettled() &&
+			driveAndTurn_rotateTargetAnglePid.isSettled() &&
+			runningTimer.time(seconds) > motion.getTotalTime()
+		)) {
+			// Check timeout
+			if (runningTimer.time(seconds) >= runTimeout) {
+				break;
+			}
+
 			// Check exhausted
 			if (driveError_inchesPatience.isExhausted()) {
 				break;
@@ -201,45 +224,45 @@ namespace autonfunctions {
 
 			/* Linear */
 
-			// Compute linear distance error
-			double distanceError;
+			// Compute distances
 			double targetDistanceInches = distanceInches;
+			double currentTravelDistanceInches = -1;
 			if (useSimulator) {
 				double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * genutil::signum(targetDistanceInches);
-				distanceError = targetDistanceInches - travelDistance_tiles * field::tileLengthIn;
+				currentTravelDistanceInches = travelDistance_tiles * field::tileLengthIn;
 			} else if (useRotationSensorForPid) {
 				// Compute current travel distance in inches
 				double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
-				double currentTravelDistanceInches = lookCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
-
-				// Compute error
-				distanceError = targetDistanceInches - currentTravelDistanceInches;
+				currentTravelDistanceInches = lookCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
 			} else if (useEncoderForPid) {
 				// Compute current travel distance in inches
 				double lookEncoderCurrentRevolution = LookEncoder.rotation(rev) - lookEncoderInitialRevolution;
-				double currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
-
-				// Compute error
-				distanceError = targetDistanceInches - currentTravelDistanceInches;
+				currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
 			} else {
 				// Compute average traveled motor revolutions
 				std::vector<double> travelRevolutions = getMotorRevolutions();
 				double averageTravelRev = getAverageDifference(initRevolutions, travelRevolutions);
 
 				// Convert revolutions into inches
-				double currentTravelDistanceInches = averageTravelRev * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
-
-				// Compute error
-				distanceError = targetDistanceInches - currentTravelDistanceInches;
+				currentTravelDistanceInches = averageTravelRev * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 			}
+
+			// Compute trajectory distance error
+			std::vector<double> motionKine = motion.getMotionAtTime(runningTimer.time(seconds));
+			double trajectoryVelocity_pct = motionKine[1] / field::tileLengthIn / autonpaths::pathbuild::maxVel_tilesPerSec;
+			double trajectoryDistanceError_inches = motionKine[0] - currentTravelDistanceInches;
+			printf("t: %.3f, trajd: %.3f\n", runningTimer.time(seconds), motionKine[0]);
+
+			// Compute travel distance error
+			double targetDistanceError = targetDistanceInches - currentTravelDistanceInches;
+			double distanceError = trajectoryDistanceError_inches;
 
 			// Compute motor velocity pid-value from error
 			driveAndTurn_driveTargetDistancePid.computeFromError(distanceError);
-			double velocityPct = fmin(maxVelocityPct, fmax(-maxVelocityPct, driveAndTurn_driveTargetDistancePid.getValue()));
-
+			double pidVelocity_pct = fmin(maxVelocityPct, fmax(-maxVelocityPct, driveAndTurn_driveTargetDistancePid.getValue()));
+			
 			// Update error patience
-			driveError_inchesPatience.computePatience(std::fabs(distanceError));
-
+			driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
 
 			/* Angular */
 
@@ -255,14 +278,14 @@ namespace autonfunctions {
 
 			// Compute heading pid-value from error
 			driveAndTurn_rotateTargetAnglePid.computeFromError(rotateError);
-			double rotateVelocityPct = fmin(maxTurnVelocityPct, fmax(-maxTurnVelocityPct, driveAndTurn_rotateTargetAnglePid.getValue()));
+			double rotateVelocity_pct = fmin(maxTurnVelocityPct, fmax(-maxTurnVelocityPct, driveAndTurn_rotateTargetAnglePid.getValue()));
 
 
 			/* Combined */
 
 			// Compute final motor velocities
-			double leftVelocityPct = velocityPct + rotateVelocityPct;
-			double rightVelocityPct = velocityPct - rotateVelocityPct;
+			double leftVelocityPct = pidVelocity_pct + rotateVelocity_pct;
+			double rightVelocityPct = pidVelocity_pct - rotateVelocity_pct;
 
 			// Compute value to synchronize velocity
 			if (!useSimulator) {

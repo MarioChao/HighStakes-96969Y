@@ -18,7 +18,8 @@ TrajectoryPlanner::TrajectoryPlanner(double totalDistance) {
 
 void TrajectoryPlanner::_onInit(double totalDistance) {
 	distance_motionConstraints.clear();
-	this->totalDistance = totalDistance;
+	this->totalDistance = fabs(totalDistance);
+	this->isNegative = totalDistance < 0;
 }
 
 TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
@@ -459,6 +460,13 @@ std::vector<double> TrajectoryPlanner::getMotionAtTime(double time) {
 	motion[2] = nodeKinematics[2];
 	motion[1] = nodeKinematics[1] + nodeKinematics[2] * segmentDeltaTime;
 	motion[0] = nodeKinematics[0] + nodeKinematics[1] * segmentDeltaTime + 0.5 * nodeKinematics[2] * pow(segmentDeltaTime, 2);
+
+	// Is negative
+	if (isNegative) {
+		motion[0] = -motion[0];
+		motion[1] = -motion[1];
+		motion[2] = -motion[2];
+	}
 
 	// Return result
 	return motion;

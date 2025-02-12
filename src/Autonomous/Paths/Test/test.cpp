@@ -3,7 +3,7 @@
 void autonpaths::autonTest() {
 	setRobotRotation(0.0);
 
-	if (false) {
+	if (true) {
 		driveAndTurnDistanceTiles(1.0, 0.0, 50.0, 100.0, 6.0);
 		driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, 3.0);
 		driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, 3.0);

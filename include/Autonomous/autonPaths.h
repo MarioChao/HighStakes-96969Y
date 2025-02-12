@@ -17,7 +17,7 @@ namespace autonpaths {
 	// Build paths
 
 	namespace pathbuild {
-		extern const double maxVel;
+		extern const double maxVel_tilesPerSec;
 		extern const double maxAccel;
 		extern const double maxDecel;
 
@@ -29,7 +29,7 @@ namespace autonpaths {
 		extern int pathIndex;
 
 		void clearSplines();
-		void pushNewSpline(UniformCubicSpline spline, bool reverse = false, double maxVel = pathbuild::maxVel);
+		void pushNewSpline(UniformCubicSpline spline, bool reverse = false, double maxVel = pathbuild::maxVel_tilesPerSec);
 		void runFollowSpline();
 
 		extern std::vector<std::vector<std::vector<double>>> linearPaths;

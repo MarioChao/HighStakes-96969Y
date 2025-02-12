@@ -55,4 +55,5 @@ private:
 
 	std::vector<std::pair<double, std::vector<double>>> time_kinematics;
 	double totalDistance;
+	bool isNegative;
 };

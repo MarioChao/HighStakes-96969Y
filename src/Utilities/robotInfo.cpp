@@ -3,13 +3,13 @@
 
 namespace botinfo {
 	// Robot info
-	const double robotLengthHoles = 27.0; // Left wheel to right wheel
+	const double robotLengthHoles = 24.0; // Left wheel to right wheel
 	const double robotLengthIn = robotLengthHoles * (1.0 / 2.0);
 	const double halfRobotLengthIn = robotLengthIn / 2;
 
-	const double driveWheelDiameterIn = 4;
+	const double driveWheelDiameterIn = 2.75;
 	const double driveWheelCircumIn = M_PI * driveWheelDiameterIn;
-	const double driveWheelMotorGearRatio = (84.0 / 60.0); // Wheel to Motor
+	const double driveWheelMotorGearRatio = (36.0 / 36.0); // Wheel to Motor
 
 	const double trackingLookWheelDiameterIn = 2.00; // Look wheel -> spins in the forward/backward direction
 	const double trackingLookWheelCircumIn = M_PI * trackingLookWheelDiameterIn;
