@@ -21,6 +21,7 @@
 #include "Utilities/debugFunctions.h"
 
 #include "Videos/video-main.h"
+#include "LedLight/led-main.h"
 
 #include "AutonUtilities/linegular.h"
 #include "Simulation/robotSimulator.h"
@@ -94,6 +95,7 @@ void pre_auton(void) {
 	// odometry::startThreads();
 	// preauton::controllerThread();
 	task rum([]() -> int { preauton::controllerThread(); return 1; });
+	ledlight::startThread();
 
 	// Brake-types
 	controls::preauton();
