@@ -1,6 +1,6 @@
 #pragma once
 
-namespace botlift {
+namespace botintakelift {
 	void setState(int, double = 0);
 
 	void switchState();

@@ -1,11 +1,11 @@
-#include "Mechanics/botLift.h"
+#include "Mechanics/botIntakeLift.h"
 #include "main.h"
 
 namespace {
 	bool controlState = true;
 }
 
-namespace botlift {
+namespace botintakelift {
 	void setState(int state, double delaySec) {
 		// Check for instant set
 		if (delaySec <= 1e-9) {

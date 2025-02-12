@@ -3,7 +3,7 @@
 #include "Mechanics/botDrive.h"
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botIntake2.h"
-#include "Mechanics/botLift.h"
+#include "Mechanics/botIntakeLift.h"
 #include "Mechanics/redirect.h"
 #include "Mechanics/swing.h"
 // #include "Mechanics/botWings.h"
@@ -147,7 +147,7 @@ namespace controls {
 			goalclamp::switchState();
 		});
 		Controller1.ButtonLeft.pressed([]() -> void {
-			swing::switch2ndState();
+			botintakelift::switchState();
 		});
 	}
 

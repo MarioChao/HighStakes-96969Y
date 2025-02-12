@@ -1,6 +1,5 @@
 #include "preauton.h"
 #include "Graphics/BrainScreen.h"
-#include "Mechanics/botLift.h"
 #include "Utilities/debugFunctions.h"
 #include "Videos/video-main.h"
 #include "main.h"
