@@ -1,5 +1,6 @@
 #include "Mechanics/botIntake.h"
 
+#include "Sensors/ringOptical.h"
 #include "Mechanics/redirect.h"
 #include "Utilities/debugFunctions.h"
 #include "Utilities/generalUtility.h"
@@ -19,12 +20,7 @@ namespace {
 
 	int resolveState = 0;
 
-	bool previousRingDetected = false;
-	bool ringDetected = false;
-
 	std::string filterOutColor = "none";
-	std::string detectedRingColor;
-	bool isDetectingRing;
 
 	bool isStoringRing = false;
 
@@ -42,31 +38,6 @@ namespace botintake {
 		timer stuckTime;
 		bool isStuck = false;
 		while (true) {
-			// Update ring detected
-			previousRingDetected = ringDetected;
-			double detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
-			if (detectedDistance <= 80.0) {
-				ringDetected = true;
-			} else {
-				ringDetected = false;
-			}
-
-			// Update detecting ring
-			isDetectingRing = RingOpticalSensor.isNearObject();
-			if (isDetectingRing) {
-				// Update detected ring color
-				if (RingOpticalSensor.hue() <= 20 || RingOpticalSensor.hue() >= 340) {
-					detectedRingColor = "red";
-					// debug::printOnController("Red ring");
-				} else if (180 <= RingOpticalSensor.hue() && RingOpticalSensor.hue() <= 230) {
-					detectedRingColor = "blue";
-					// debug::printOnController("Blue ring");
-				} else {
-					detectedRingColor = "none";
-					// debug::printOnController("No ring");
-				}
-			}
-
 			/* Intake loop */
 
 			if (!isStoringRing) {
@@ -113,8 +84,11 @@ namespace botintake {
 				resolveState = 1;
 				resolveIntake();
 
+				bool isDetectingRing = ringoptical::isDetecting();
+				std::string detectedRingColor = ringoptical::getDetectedColor();
+
 				if (isDetectingRing && detectedRingColor != "none") {
-					if (detectedRingColor != filterOutColor || !colorFilterEnabled) {
+					if (detectedRingColor != filterOutColor) {
 						wait(10, msec);
 						resolveState = 0;
 						isStoringRing = false;
@@ -274,22 +248,31 @@ namespace {
 
 		// Filter out on some detection
 		if (colorFilterEnabled) {
+			bool isDetectingRing = ringoptical::isDetecting();
+			std::string detectedRingColor = ringoptical::getDetectedColor();
+
 			if (disableColorFilter) {
-				if (redirect::getState() == 1) {
-					redirect::setState(0);
-				}
+				// if (redirect::getState() == 1) {
+				// 	redirect::setState(0);
+				// }
 			} else if (isDetectingRing) {
 				if (detectedRingColor == "none");
 				else if (detectedRingColor == filterOutColor) {
 					// Filter out
-					if (redirect::getState() == 0) {
-						redirect::setState(1);
-					}
+					wait(250, msec);
+					IntakeMotor1.spin(fwd, -9, volt);
+					wait(100, msec);
+					IntakeMotor1.spin(fwd, 0, volt);
+					wait(300, msec);
+					return;
+					// if (redirect::getState() == 0) {
+					// 	redirect::setState(1);
+					// }
 				} else {
 					// Remove filter
-					if (redirect::getState() == 1) {
-						redirect::setState(0);
-					}
+					// if (redirect::getState() == 1) {
+					// 	redirect::setState(0);
+					// }
 				}
 			}
 		}

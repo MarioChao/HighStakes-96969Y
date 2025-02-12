@@ -16,6 +16,7 @@
 
 #include "Mechanics/botArm.h"
 #include "Mechanics/botIntake.h"
+#include "Sensors/ringOptical.h"
 
 #include "Utilities/fieldInfo.h"
 #include "Utilities/debugFunctions.h"
@@ -69,6 +70,7 @@ void pre_auton(void) {
 	// Example: clearing encoders, setting servo positions, ...
 
 	// Odometry
+	/*
 	mainOdometry.addPositionSensor2D(-90, []() {return LookRotation.position(rev);}, 1, 2.005, 0);
 	mainOdometry.addPositionSensor2D(180, []() {return RightEncoder.position(rev);}, 1, 2.75, -3.5);
 	// mainOdometry.addInertialSensor(InertialSensor, -3.2, 2.1);
@@ -88,7 +90,7 @@ void pre_auton(void) {
 			// printf("test: %.3f %.3f\n", mainOdometry.getX(), mainOdometry.getY());
 			wait(5, msec);
 		}
-	});
+	});//*/
 
 	// Tasks
 	controls::startThreads();
@@ -96,6 +98,7 @@ void pre_auton(void) {
 	// preauton::controllerThread();
 	task rum([]() -> int { preauton::controllerThread(); return 1; });
 	ledlight::startThread();
+	ringoptical::startThread();
 
 	// Brake-types
 	controls::preauton();
