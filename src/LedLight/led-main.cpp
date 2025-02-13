@@ -12,17 +12,29 @@ namespace {
 	digital_out ledR(rPort);
 	digital_out ledG(gPort);
 	digital_out ledB(bPort);
+	pwm_out ledLicense(Brain.ThreeWirePort.D);
 
-	double stageTimeSeconds[3] = {75, 95, 105};
-	// double stageTimeSeconds[3] = {5, 10, 15};
+	double stageTime_seconds[3] = {75, 95, 105};
+	// double stageTime_seconds[3] = {5, 10, 15};
 
 	void ledLightThread();
+
+	void ledLicenseThread();
+	void setLicenseFade(double state_pct, double duration_seconds);
+
+	double licenseFadeRange_pct[2] = {0, 0};
+	double licenseFadeRange_durationSec[2] = {0, 1};
+	double licenseState_pct = 0;
 }
 
 namespace ledlight {
 	void startThread() {
-		task ledTask([]() -> int {
+		task ledLightTask([]() -> int {
 			ledLightThread();
+			return 1;
+		});
+		task ledLicenseTask([]() -> int {
+			ledLicenseThread();
 			return 1;
 		});
 	}
@@ -32,22 +44,27 @@ namespace ledlight {
 		ledG.set(g);
 		ledB.set(b);
 	}
+
+	void setLicenseState(double state_pct) {
+		ledLicense.state(state_pct, pct);
+	}
 }
 
 namespace {
 	void ledLightThread() {
 		bool rgb[3] = {0, 0, 0};
 		double delayMs = 50;
+		double licenseState_pct = 0;
 		while (true) {
-			// Set configs
-			if (drivingTimer.time(seconds) < stageTimeSeconds[0]) {
+			// Set color configs
+			if (drivingTimer.time(seconds) < stageTime_seconds[0]) {
 				// Random color
 				int val = rand() % 7 + 1;
 				rgb[0] = val & 4;
 				rgb[1] = val & 2;
 				rgb[2] = val & 1;
 				delayMs = 300;
-			} else if (drivingTimer.time(seconds) < stageTimeSeconds[1]) {
+			} else if (drivingTimer.time(seconds) < stageTime_seconds[1]) {
 				// No green
 				rgb[1] = 0;
 
@@ -59,8 +76,8 @@ namespace {
 					rgb[0] = 0;
 					rgb[2] = 1;
 				}
-				delayMs = genutil::rangeMap(drivingTimer.time(seconds), stageTimeSeconds[0], stageTimeSeconds[1], 500, 50);
-			} else if (drivingTimer.time(seconds) < stageTimeSeconds[2]) {
+				delayMs = genutil::rangeMap(drivingTimer.time(seconds), stageTime_seconds[0], stageTime_seconds[1], 500, 50);
+			} else if (drivingTimer.time(seconds) < stageTime_seconds[2]) {
 				// No green and blue
 				rgb[1] = rgb[2] = 0;
 
@@ -74,12 +91,36 @@ namespace {
 				delayMs = 1000;
 			}
 
-
 			// Show color
 			ledlight::showColor(rgb[0], rgb[1], rgb[2]);
 			gfxmain::setClearColor(color(rgb[0] * 255, rgb[1] * 255, rgb[2] * 255));
 			brainscreen::redraw();
+
+			// License
+			if (licenseState_pct > 0) licenseState_pct = -100;
+			else licenseState_pct = 100;
+			setLicenseFade(licenseState_pct, delayMs / 1000.0);
+
 			wait(delayMs, msec);
 		}
+	}
+
+	void ledLicenseThread() {
+		while (true) {
+			licenseState_pct = genutil::rangeMap(
+				drivingTimer.time(seconds), licenseFadeRange_durationSec[0], licenseFadeRange_durationSec[1],
+				licenseFadeRange_pct[0], licenseFadeRange_pct[1]
+			);
+			licenseState_pct = genutil::clamp(licenseState_pct, -100, 100);
+			ledlight::setLicenseState(licenseState_pct);
+			wait(10, msec);
+		}
+	}
+
+	void setLicenseFade(double state_pct, double duration_seconds) {
+		licenseFadeRange_pct[0] = licenseState_pct;
+		licenseFadeRange_pct[1] = state_pct;
+		licenseFadeRange_durationSec[0] = drivingTimer.time(seconds);
+		licenseFadeRange_durationSec[1] = licenseFadeRange_durationSec[0] + duration_seconds;
 	}
 }
