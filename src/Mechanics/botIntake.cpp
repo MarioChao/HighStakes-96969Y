@@ -259,11 +259,11 @@ namespace {
 				if (detectedRingColor == "none");
 				else if (detectedRingColor == filterOutColor) {
 					// Filter out
-					wait(250, msec);
+					wait(200, msec);
 					IntakeMotor1.spin(fwd, -9, volt);
 					wait(100, msec);
 					IntakeMotor1.spin(fwd, 0, volt);
-					wait(300, msec);
+					wait(200, msec);
 					return;
 					// if (redirect::getState() == 0) {
 					// 	redirect::setState(1);

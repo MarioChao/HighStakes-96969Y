@@ -44,7 +44,7 @@ namespace {
 				}
 			}
 
-			wait(5, msec);
+			wait(3, msec);
 		}
 	}
 }
