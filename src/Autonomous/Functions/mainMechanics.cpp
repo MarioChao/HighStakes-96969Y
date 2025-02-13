@@ -21,6 +21,12 @@ namespace autonfunctions {
 
 	timer _autonTimer;
 
+	void setDifferentialUseRelativeRotation(bool useRelativeRotation) {
+		_useRelativeRotation = useRelativeRotation;
+	}
+
+	bool _useRelativeRotation = false;
+
 	/// @brief Set the state of the intake.
 	/// @param state Forward: 1, released: 0, reversed: -1
 	/// @param delaySec Number of seconds to wait before setting the state (in a task).

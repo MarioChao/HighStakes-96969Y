@@ -11,6 +11,7 @@
 
 namespace autonpaths {
 	using namespace autonfunctions;
+	using namespace autonfunctions::pid_diff;
 	using namespace autonfunctions::driveturn;
 	using namespace botinfo;
 

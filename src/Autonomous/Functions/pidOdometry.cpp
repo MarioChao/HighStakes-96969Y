@@ -71,7 +71,7 @@ namespace autonfunctions {
 		Linegular lg = mainOdometry.getLookLinegular();
 		double angle_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(atan2(y_tiles - lg.getY(), x_tiles - lg.getX())));
 		if (isReverse) angle_degrees += 180;
-		turnToAngleVelocity(angle_degrees, maxTurnVelocity_pct);
+		pid_diff::turnToAngleVelocity(angle_degrees, maxTurnVelocity_pct);
 	}
 
 	void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse) {
