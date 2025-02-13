@@ -36,7 +36,8 @@ namespace {
 	PIDController turnToAngle_rotateTargetAngleVoltPid(2.5, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
-	PIDController driveAndTurn_driveTargetDistancePid(17, 0, 1.6, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_driveTargetDistancePid(20, 0, 1.0, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -271,6 +272,7 @@ namespace {
 			motion.calculateMotion();
 	
 			// Reset PID
+			driveAndTurn_reachedTargetPid.resetErrorToZero();
 			driveAndTurn_driveTargetDistancePid.resetErrorToZero();
 			driveAndTurn_rotateTargetAnglePid.resetErrorToZero();
 			driveAndTurn_synchronizeVelocityPid.resetErrorToZero();
@@ -285,6 +287,7 @@ namespace {
 			printf("Drive pid with trajectory of %.3f seconds\n", motion.getTotalTime());
 	
 			while (!(
+				driveAndTurn_reachedTargetPid.isSettled() &&
 				driveAndTurn_driveTargetDistancePid.isSettled() &&
 				driveAndTurn_rotateTargetAnglePid.isSettled() &&
 				runningTimer.time(seconds) > motion.getTotalTime()
@@ -329,11 +332,12 @@ namespace {
 				std::vector<double> motionKine = motion.getMotionAtTime(runningTimer.time(seconds));
 				double trajectoryVelocity_pct = motionKine[1] / autonpaths::pathbuild::maxVel_tilesPerSec;
 				double trajectoryDistanceError_inches = motionKine[0] * field::tileLengthIn - currentTravelDistanceInches;
-				printf("t: %.3f, trajd: %.3f\n", runningTimer.time(seconds), motionKine[0]);
+				// printf("t: %.3f, trajd: %.3f\n", runningTimer.time(seconds), motionKine[0]);
 	
 				// Compute travel distance error
 				double targetDistanceError = targetDistanceInches - currentTravelDistanceInches;
 				autonfunctions::pid_diff::_driveDistanceError_inches = targetDistanceError;
+				driveAndTurn_reachedTargetPid.computeFromError(targetDistanceError);
 	
 				// Compute motor velocity pid-value from error
 				driveAndTurn_driveTargetDistancePid.computeFromError(trajectoryDistanceError_inches);
