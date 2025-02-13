@@ -1,4 +1,5 @@
 #include "Graphics/GUIs/DocksGui.h"
+#include "Graphics/GraphicMain.h"
 
 DockGui::DockGui(double leftX, double topY, double width, double height, vector<GuiClass *> guiList, vector<void (*)()> functionList) {
 	this->leftX = leftX;
@@ -50,12 +51,12 @@ void DockGui::draw() {
 	}
 }
 
-/// @brief Clear the dock by drawing a black rectangle with white borders.
+/// @brief Clear the dock by drawing a solid rectangle with white borders.
 void DockGui::clearDock() {
 	// Clear dock
 	Brain.Screen.setPenColor(white);
 	Brain.Screen.setPenWidth(1);
-	Brain.Screen.setFillColor(black);
+	Brain.Screen.setFillColor(gfxmain::getClearColor());
 	Brain.Screen.drawRectangle(leftX, topY, width, height);
 }
 

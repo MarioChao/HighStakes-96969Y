@@ -20,4 +20,7 @@ namespace gfxmain {
 	extern vector<double> getLineIntersection(double startX0, double startY0, double endX0, double endY0, double startX1, double startY1, double endX1, double endY1);
 	extern vector<double> getClosestPointOnLine(double pointX, double pointY, double startX, double startY, double endX, double endY);
 	extern vector<double> getClosestPointOnLineSegment(double pointX, double pointY, double startX, double startY, double endX, double endY);
+
+	color getClearColor();
+	void setClearColor(color newColor);
 }

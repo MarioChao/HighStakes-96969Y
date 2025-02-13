@@ -1,6 +1,7 @@
 #include "Videos/video-main.h"
 #include "Videos/video-info.h"
 #include "Videos/video-objects.h"
+#include "Graphics/GraphicMain.h"
 #include "main.h"
 
 namespace {
@@ -68,7 +69,7 @@ namespace video {
 			// Refresh screen
 			refreshedVideoId = -1;
 			task::sleep(30);
-			Brain.Screen.clearScreen(color::black);
+			Brain.Screen.clearScreen(gfxmain::getClearColor());
 			task::sleep(30);
 			refreshedVideoId = playingVideoId;
 

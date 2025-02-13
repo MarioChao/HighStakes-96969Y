@@ -36,7 +36,7 @@ void SliderGui::draw() {
 	}
 	// Clear line
 	Brain.Screen.setPenWidth(15);
-	Brain.Screen.setPenColor(black);
+	Brain.Screen.setPenColor(gfxmain::getClearColor());
 	double ang = atan2(finishY - startY, finishX - startX);
 	Brain.Screen.drawLine(startX - 10 * cos(ang), startY - 10 * sin(ang), finishX + 10 * cos(ang), finishY + 10 * sin(ang));
 

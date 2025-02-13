@@ -89,34 +89,46 @@ namespace {
 	bool showSimulator = mainUseSimulator;
 }
 
-// Global Functions
-// Draw the brain screen continuously (thread)
-void brainScreenThread() {
-	// Init
-	ownColor = color::purple;
-	oppColor = color::purple;
-	createButtons();
-	createSliders();
-	createDocks();
-	setDockGUIs();
-	initDocks();
-	initQRCodes();
-	mainDock->setEnabled(true);
-
-	// Screen size is 480 px by 240 px
-	while (true) {
-		if (video::getCurrentVideoId() == 0) {
-			// Draw the main dock
-			mainDock->check();
-		} else {
-			// Disable the main dock until no video is playing
-			mainDock->setEnabled(false);
-			waitUntil(video::getCurrentVideoId() == 0);
-			task::sleep(30);
-			mainDock->setEnabled(true);
+namespace brainscreen {
+	// Global Functions
+	// Draw the brain screen continuously (thread)
+	void brainScreenThread() {
+		// Init
+		ownColor = color::purple;
+		oppColor = color::purple;
+		createButtons();
+		createSliders();
+		createDocks();
+		setDockGUIs();
+		initDocks();
+		initQRCodes();
+		mainDock->setEnabled(true);
+	
+		// Screen size is 480 px by 240 px
+		while (true) {
+			if (video::getCurrentVideoId() == 0) {
+				// Draw the main dock
+				mainDock->check();
+			} else {
+				// Disable the main dock until no video is playing
+				mainDock->setEnabled(false);
+				waitUntil(video::getCurrentVideoId() == 0);
+				task::sleep(30);
+				mainDock->setEnabled(true);
+			}
+	
+			task::sleep(20);
 		}
+	}
 
-		task::sleep(20);
+	void redraw() {
+		if (autonDock == nullptr) {
+			return;
+		}
+		if (autonDock->getEnabled()) {
+			autonDock->clearDock();
+			autonDock->draw();
+		}
 	}
 }
 

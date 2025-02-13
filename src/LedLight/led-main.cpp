@@ -1,5 +1,7 @@
 #include "LedLight/led-main.h"
 #include "Utilities/generalUtility.h"
+#include "Graphics/GraphicMain.h"
+#include "Graphics/BrainScreen.h"
 #include "main.h"
 
 namespace {
@@ -75,6 +77,8 @@ namespace {
 
 			// Show color
 			ledlight::showColor(rgb[0], rgb[1], rgb[2]);
+			gfxmain::setClearColor(color(rgb[0] * 255, rgb[1] * 255, rgb[2] * 255));
+			brainscreen::redraw();
 			wait(delayMs, msec);
 		}
 	}

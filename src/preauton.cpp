@@ -86,7 +86,7 @@ namespace {
 		// Brain Screen
 		video::startThread();
 		task brainScreen([]() -> int {
-			brainScreenThread();
+			brainscreen::brainScreenThread();
 			return 1;
 		});
 	}

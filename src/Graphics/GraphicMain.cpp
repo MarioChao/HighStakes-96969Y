@@ -1,6 +1,10 @@
 #include "Utilities/fieldInfo.h"
 #include "Graphics/GraphicMain.h"
 
+namespace {
+	color clearColor(black);
+}
+
 namespace gfxmain {
 	// Functions
 	// Returns the euclidean distance between point (x0, y0) and (x1, y1)
@@ -138,5 +142,13 @@ namespace gfxmain {
 			}
 		}
 		return ret;
+	}
+
+	color getClearColor() {
+		return clearColor;		
+	}
+
+	void setClearColor(color newColor) {
+		clearColor = newColor;
 	}
 }
