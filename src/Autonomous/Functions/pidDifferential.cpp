@@ -54,23 +54,24 @@ namespace {
 	}
 }
 
-namespace autonfunctions::pid_diff {
+namespace autonfunctions {
+namespace pid_diff {
 	/* PID differential*/
 
 	/// @brief Turn the robot to face a specified angle.
 	/// @param rotation The target angle to face in degrees.
 	/// @param rotateCenterOffsetIn The offset of the center of rotation.
-	/// @param runTimeout Maximum seconds the function will run for.
-	void turnToAngle(double rotation, double rotateCenterOffsetIn, double runTimeout) {
-		turnToAngleVelocity(rotation, 90.0, rotateCenterOffsetIn, runTimeout);
+	/// @param runTimeout_sec Maximum seconds the function will run for.
+	void turnToAngle(double rotation, double rotateCenterOffsetIn, double runTimeout_sec) {
+		turnToAngleVelocity(rotation, 90.0, rotateCenterOffsetIn, runTimeout_sec);
 	}
 
 	/// @brief Turn the robot to face a specified angle.
 	/// @param rotation The target angle to face in degrees.
-	/// @param maxVelocityPct Maximum velocity of the rotation.
+	/// @param maxVelocity_pct Maximum velocity of the rotation.
 	/// @param rotateCenterOffsetIn The offset of the center of rotation.
-	/// @param runTimeout Maximum seconds the function will run for.
-	void turnToAngleVelocity(double rotation, double maxVelocityPct, double rotateCenterOffsetIn, double runTimeout) {
+	/// @param runTimeout_sec Maximum seconds the function will run for.
+	void turnToAngleVelocity(double rotation, double maxVelocity_pct, double rotateCenterOffsetIn, double runTimeout_sec) {
 		// Set corrector
 		driftCorrector.setInitial();
 
@@ -89,7 +90,7 @@ namespace autonfunctions::pid_diff {
 		LeftRightMotors.setStopping(brake);
 
 		// Volt config
-		bool useVolt = maxVelocityPct > 25.0;
+		bool useVolt = maxVelocity_pct > 25.0;
 
 		// Reset PID
 		turnToAngle_rotateTargetAngleVoltPid.resetErrorToZero();
@@ -101,7 +102,7 @@ namespace autonfunctions::pid_diff {
 		// Reset timer
 		timer timeout;
 
-		while (!turnToAngle_rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout) {
+		while (!turnToAngle_rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout_sec) {
 			// Check exhausted
 			if (angleError_degreesPatience.isExhausted()) {
 				break;
@@ -136,7 +137,7 @@ namespace autonfunctions::pid_diff {
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
 			// Scale velocity to maximum
-			double scaleFactor = genutil::getScaleFactor(maxVelocityPct, {leftMotorVelocityPct, rightMotorVelocityPct});
+			double scaleFactor = genutil::getScaleFactor(maxVelocity_pct, {leftMotorVelocityPct, rightMotorVelocityPct});
 			leftMotorVelocityPct *= scaleFactor;
 			rightMotorVelocityPct *= scaleFactor;
 
@@ -158,45 +159,49 @@ namespace autonfunctions::pid_diff {
 	}
 
 	/// @brief Drive straight in the direction of the robot for a specified tile distance.
-	/// @param distanceTiles Distance in units of tiles.
-	/// @param maxVelocityPct Maximum velocity of the drive. (can > 100)
-	/// @param runTimeout Maximum seconds the function will run for.
-	void driveDistanceTiles(double distanceTiles, double maxVelocityPct, double runTimeout) {
-		driveAndTurnDistanceTiles(distanceTiles, InertialSensor.rotation(), maxVelocityPct, 100.0, runTimeout);
+	/// @param distance_tiles Distance in units of tiles.
+	/// @param maxVelocity_pct Maximum velocity of the drive. (can > 100)
+	/// @param runTimeout_sec Maximum seconds the function will run for.
+	void driveDistanceTiles(double distance_tiles, double maxVelocity_pct, double runTimeout_sec) {
+		driveAndTurnDistanceTiles(distance_tiles, InertialSensor.rotation(), maxVelocity_pct, 100.0, runTimeout_sec);
 	}
 
 	/// @brief Drive the robot for a specified tile distance and rotate it to a specified rotation in degrees.
-	/// @param distanceTiles Distance in units of tiles.
+	/// @param distance_tiles Distance in units of tiles.
 	/// @param targetRotation The target angle to face in degrees.
-	/// @param maxVelocityPct Maximum velocity of the drive. (can > 100)
-	/// @param maxTurnVelocityPct Maximum rotational velocity of the drive. (can > 100)
-	/// @param runTimeout Maximum seconds the function will run for.
-	void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double runTimeout) {
-		driveAndTurnDistanceWithInches(distanceTiles * field::tileLengthIn, targetRotation, maxVelocityPct, maxTurnVelocityPct, runTimeout);
+	/// @param maxVelocity_pct Maximum velocity of the drive. (can > 100)
+	/// @param maxTurnVelocity_pct Maximum rotational velocity of the drive. (can > 100)
+	/// @param runTimeout_sec Maximum seconds the function will run for.
+	void driveAndTurnDistanceTiles(double distance_tiles, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		driveAndTurnDistanceWithInches(distance_tiles * field::tileLengthIn, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
 	/// @brief Drive the robot for a specified distance in inches and rotate it to a specified rotation in degrees.
-	/// @param distanceInches Distance in units of inches.
+	/// @param distance_inches Distance in units of inches.
 	/// @param targetRotation The target angle to face in degrees.
-	/// @param maxVelocityPct Maximum velocity of the drive. (can > 100)
-	/// @param maxTurnVelocityPct Maximum rotational velocity of the drive. (can > 100)
-	/// @param runTimeout Maximum seconds the function will run for.
-	void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double runTimeout) {
-		async_driveAndTurnDistance_inches(distanceInches, targetRotation, maxVelocityPct, maxTurnVelocityPct, runTimeout);
+	/// @param maxVelocity_pct Maximum velocity of the drive. (can > 100)
+	/// @param maxTurnVelocity_pct Maximum rotational velocity of the drive. (can > 100)
+	/// @param runTimeout_sec Maximum seconds the function will run for.
+	void driveAndTurnDistanceWithInches(double distance_inches, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_inches, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 		waitUntil(_isDriveAndTurnSettled);
 	}
 
-	void async_driveAndTurnDistance_tiles(double distanceTiles, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double runTimeout) {
-		async_driveAndTurnDistance_inches(distanceTiles * field::tileLengthIn, targetRotation, maxVelocityPct, maxTurnVelocityPct, runTimeout);
+	void async_driveAndTurnDistance_tiles(double distance_tiles, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_tiles * field::tileLengthIn, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
-	void async_driveAndTurnDistance_inches(double distanceInches, double targetRotation, double maxVelocityPct, double maxTurnVelocityPct, double runTimeout) {
+	void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_qtInches / 4, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
+	}
+
+	void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
 		// State variables
 		_driveDistanceError_inches = 1e9;
 		_isDriveAndTurnSettled = false;
 
 		// Drive and turn
-		drive_turn::setVariables(distanceInches, targetRotation, maxVelocityPct, maxTurnVelocityPct, runTimeout);
+		drive_turn::setVariables(distance_inches, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 		task driveTurnTask([]() -> int {
 			drive_turn::driveAndTurnDistance_inches();
 			return 1;
@@ -206,7 +211,7 @@ namespace autonfunctions::pid_diff {
 	double _driveDistanceError_inches;
 	bool _isDriveAndTurnSettled;
 }
-
+}
 
 namespace {
 	/// @brief Returns the current encoder readings of each chassis motor
@@ -245,28 +250,28 @@ namespace {
 
 		void driveAndTurnDistance_inches() {
 			// Variables
-			double distanceInches = _distance_in;
+			double distance_inches = _distance_in;
 			double targetRotation = _targetRotation_deg;
-			double maxVelocityPct = _maxVelocity_pct;
-			double maxTurnVelocityPct = _maxTurnVelocity_pct;
-			double runTimeout = _runTimeout_sec;
+			double maxVelocity_pct = _maxVelocity_pct;
+			double maxTurnVelocity_pct = _maxTurnVelocity_pct;
+			double runTimeout_sec = _runTimeout_sec;
 	
 			// Set corrector
 			driftCorrector.setInitial();
 	
 			// Variables
-			// double motorTargetDistanceRev = distanceInches * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio);
+			// double motorTargetDistanceRev = distance_inches * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio);
 			std::vector<double> initRevolutions = getMotorRevolutions();
-			// double lookEncoderTargetDistanceRevolution = distanceInches * (1.0 / botinfo::trackingLookWheelCircumIn) * (botinfo::trackingLookWheelEncoderGearRatio);
+			// double lookEncoderTargetDistanceRevolution = distance_inches * (1.0 / botinfo::trackingLookWheelCircumIn) * (botinfo::trackingLookWheelEncoderGearRatio);
 			double lookEncoderInitialRevolution = LookEncoder.rotation(rev);
 			double lookRotationInitialRevolution = LookRotation.position(rev);
 			// double rightRotationInitialRevolution = RightRotation.position(rev);
 			Vector3 initalSimulatorPosition = robotSimulator.position;
 	
 			// Motion planner
-			TrajectoryPlanner motion(distanceInches / field::tileLengthIn);
+			TrajectoryPlanner motion(distance_inches / field::tileLengthIn);
 			motion.addDesiredMotionConstraints(
-				0, maxVelocityPct * autonpaths::pathbuild::maxVel_tilesPerSec,
+				0, maxVelocity_pct * autonpaths::pathbuild::maxVel_tilesPerSec,
 				autonpaths::pathbuild::maxAccel, autonpaths::pathbuild::maxDecel
 			);
 			motion.calculateMotion();
@@ -293,7 +298,7 @@ namespace {
 				runningTimer.time(seconds) > motion.getTotalTime()
 			)) {
 				// Check timeout
-				if (runningTimer.time(seconds) >= runTimeout) {
+				if (runningTimer.time(seconds) >= runTimeout_sec) {
 					break;
 				}
 	
@@ -306,7 +311,7 @@ namespace {
 				/* Linear */
 	
 				// Compute distances
-				double targetDistanceInches = distanceInches;
+				double targetDistanceInches = distance_inches;
 				double currentTravelDistanceInches = -1;
 				if (useSimulator) {
 					double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * genutil::signum(targetDistanceInches);
@@ -336,12 +341,13 @@ namespace {
 	
 				// Compute travel distance error
 				double targetDistanceError = targetDistanceInches - currentTravelDistanceInches;
-				autonfunctions::pid_diff::_driveDistanceError_inches = targetDistanceError;
+				autonfunctions::pid_diff::_driveDistanceError_inches = fabs(targetDistanceError);
 				driveAndTurn_reachedTargetPid.computeFromError(targetDistanceError);
+				// printf("De_in: %.3f\n", autonfunctions::pid_diff::_driveDistanceError_inches);
 	
 				// Compute motor velocity pid-value from error
 				driveAndTurn_driveTargetDistancePid.computeFromError(trajectoryDistanceError_inches);
-				double pidVelocity_pct = fmin(maxVelocityPct, fmax(-maxVelocityPct, driveAndTurn_driveTargetDistancePid.getValue()));
+				double pidVelocity_pct = fmin(maxVelocity_pct, fmax(-maxVelocity_pct, driveAndTurn_driveTargetDistancePid.getValue()));
 				
 				// Update error patience
 				driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
@@ -360,7 +366,7 @@ namespace {
 	
 				// Compute heading pid-value from error
 				driveAndTurn_rotateTargetAnglePid.computeFromError(rotateError);
-				double rotateVelocity_pct = fmin(maxTurnVelocityPct, fmax(-maxTurnVelocityPct, driveAndTurn_rotateTargetAnglePid.getValue()));
+				double rotateVelocity_pct = fmin(maxTurnVelocity_pct, fmax(-maxTurnVelocity_pct, driveAndTurn_rotateTargetAnglePid.getValue()));
 	
 	
 				/* Combined */

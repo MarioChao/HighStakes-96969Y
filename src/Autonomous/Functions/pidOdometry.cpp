@@ -38,14 +38,14 @@ namespace {
 
 namespace autonfunctions {
 	namespace driveturn {
-		void async_driveTurnToFace_tiles(double x_tiles, double y_tiles, bool isReverse, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout) {
+		void async_driveTurnToFace_tiles(double x_tiles, double y_tiles, bool isReverse, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
 			_linearPathDistanceError = 1e9;
 			_targetX = x_tiles;
 			_targetY = y_tiles;
 			_isReverseHeading = isReverse;
 			_maxVelocity_pct = maxVelocity_pct;
 			_maxTurnVelocity_pct = maxTurnVelocity_pct;
-			_runTimeout = runTimeout;
+			_runTimeout = runTimeout_sec;
 			_isDriveTurnSettled = false;
 			task driveTurn([] () -> int {
 				runDriveTurnToFace();
@@ -53,8 +53,8 @@ namespace autonfunctions {
 			});
 		}
 
-		void driveTurnToFace_tiles(double x_tiles, double y_tiles, bool isReverse, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout) {
-			async_driveTurnToFace_tiles(x_tiles, y_tiles, isReverse, maxVelocity_pct, maxTurnVelocity_pct, runTimeout);
+		void driveTurnToFace_tiles(double x_tiles, double y_tiles, bool isReverse, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+			async_driveTurnToFace_tiles(x_tiles, y_tiles, isReverse, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 			waitUntil(_isDriveTurnSettled);
 		}
 
@@ -102,7 +102,7 @@ namespace {
 		bool isReverse = _isReverseHeading;
 		double maxVelocity_pct = _maxVelocity_pct;
 		double maxTurnVelocity_pct = _maxTurnVelocity_pct;
-		double runTimeout = _runTimeout;
+		double runTimeout_sec = _runTimeout;
 
 		// Set corrector
 		driftCorrector.setInitial();
@@ -129,7 +129,7 @@ namespace {
 		// Reset timer
 		timer timeout;
 
-		while (timeout.value() < runTimeout) {
+		while (timeout.value() < runTimeout_sec) {
 			// Check settled
 			if (driveTurn_driveTargetDistance_voltPid.isSettled() && driveTurn_rotateTargetAngle_voltPid.isSettled()) {
 				printf("Settled\n");
