@@ -33,9 +33,9 @@ void PIDController::computeFromError(double error) {
 	currentError = error;
 	bool isCrossZero = (currentError >= 0 && previousError <= 0) || (currentError <= 0 && previousError >= 0);
 	if (isCrossZero) {
-		cumulativeError = 0;
+		setErrorI(0);
 	} else {
-		cumulativeError += 0.5 * (previousError + currentError) * elapsedTime_seconds;
+		setErrorI(cumulativeError + 0.5 * (previousError + currentError) * elapsedTime_seconds);
 	}
 	deltaError = (currentError - previousError) / elapsedTime_seconds;
 

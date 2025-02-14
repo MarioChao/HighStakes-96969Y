@@ -2,6 +2,7 @@
 #include "AutonUtilities/patienceController.h"
 #include "Mechanics/botArm.h"
 #include "Utilities/generalUtility.h"
+#include "Utilities/debugFunctions.h"
 #include "main.h"
 
 namespace {
@@ -15,12 +16,12 @@ namespace {
 	void spinArmMotor(double velocityPct);
 
 	// Stage controllers
-	PIDController armPositionPid(1.7, 0, 0.05);
+	PIDController armPositionPid(1.9, 0, 0.055);
 	PatienceController armUpPatience(12, 1.0, true, 5);
 	PatienceController armDownPatience(6, 1.0, false, 5);
 
 	// Stage config
-	std::vector<double> armStages_degrees = {0, 30, 45, 60, 0};
+	std::vector<double> armStages_degrees = {0, 15, 45, 60, 0};
 	std::vector<int> extremeStages_values = {-2, 0, 0, 0, 1};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
@@ -54,7 +55,7 @@ namespace botarm {
 				resolveArmDegrees();
 			}
 
-			wait(20, msec);
+			wait(10, msec);
 		}
 	}
 
@@ -238,6 +239,7 @@ namespace {
 		// Get pid value
 		armPositionPid.computeFromError(error_degrees);
 		double motorVelocityPct = armPositionPid.getValue();
+		// printf("Err: %.3f, pid: %.3f\n", error_degrees, motorVelocityPct);
 
 		// Get final value
 		motorVelocityPct = genutil::clamp(motorVelocityPct, -armVelocityPct, armVelocityPct);

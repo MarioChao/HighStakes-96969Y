@@ -24,11 +24,6 @@ namespace {
 
 	bool isStoringRing = false;
 
-	// Reverse intake loop
-	const int reverseIntakeThreshold = 100;
-	const int reverseIntakeFor = 10;
-	int reverseIntakeCalls = 0;
-
 	bool controlState = true;
 }
 
@@ -44,7 +39,8 @@ namespace botintake {
 				/* Normal intake */
 
 				// Detect stuck
-				if (IntakeMotor2.torque() > 0.41) {
+				// printf("Int tq: %.3f\n ", IntakeMotor1.torque(Nm));
+				if (IntakeMotor1.torque() > 0.35) {
 					if (!isStuck) {
 						stuckTime.clear();
 						isStuck = true;
@@ -53,28 +49,14 @@ namespace botintake {
 					isStuck = false;
 				}
 				// Override stuck
-				isStuck = false;
-
-				// Check reverse intake
-				bool reverseIntake = false;
-				reverseIntakeCalls++;
-				if (reverseIntakeCalls > reverseIntakeThreshold) {
-					reverseIntake = true;
-					if (reverseIntakeCalls - reverseIntakeThreshold > reverseIntakeFor) {
-						reverseIntakeCalls = 0;
-					}
-				}
-				// Override reverse
-				reverseIntake = false;
+				// isStuck = false;
 
 				if (isStuck && stuckTime.value() > 0.08) {
-					// Reverse on stuck
-					resolveState = -1;
-					resolveIntake();
-					task::sleep(300);
-				} else if (reverseIntake) {
-					resolveState = -1;
-					resolveIntake();
+					// Reverse a little on stuck
+					IntakeMotor1.spin(fwd, -5, volt);
+					wait(100, msec);
+					IntakeMotor1.spin(fwd, 0, volt);
+					wait(200, msec);
 				} else {
 					resolveIntake();
 				}
