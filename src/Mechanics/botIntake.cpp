@@ -53,7 +53,7 @@ namespace botintake {
 
 				if (isStuck && stuckTime.value() > 0.08) {
 					// Reverse a little on stuck
-					IntakeMotor1.spin(fwd, -5, volt);
+					IntakeMotor1.spin(fwd, -4, volt);
 					wait(100, msec);
 					IntakeMotor1.spin(fwd, 0, volt);
 					wait(200, msec);
@@ -241,8 +241,8 @@ namespace {
 				if (detectedRingColor == "none");
 				else if (detectedRingColor == filterOutColor) {
 					// Filter out
-					wait(200, msec);
-					IntakeMotor1.spin(fwd, -9, volt);
+					wait(250, msec);
+					IntakeMotor1.spin(fwd, 5, volt);
 					wait(100, msec);
 					IntakeMotor1.spin(fwd, 0, volt);
 					wait(200, msec);

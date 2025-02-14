@@ -38,6 +38,9 @@ namespace {
 	// Velocity controller
 	const double kP = 0.10;
 	PIDController driveVelocityLeftMotorPID(kP), driveVelocityRightMotorPID(kP);
+
+	// Control state
+	bool controlState = true;
 }
 
 namespace botdrive {
@@ -82,6 +85,9 @@ namespace botdrive {
 	}
 
 	void control() {
+		if (!canControl()) {
+			return;
+		}
 		switch (driveMode) {
 			case controlType::ArcadeTwoStick:
 				controlArcadeTwoStick();
@@ -92,6 +98,14 @@ namespace botdrive {
 			default:
 				break;
 		}
+	}
+
+	bool canControl() {
+		return controlState;
+	}
+
+	void setControlState(bool canControl) {
+		controlState = canControl;
 	}
 
 	void setMaxDriveVelocity(double velocityPct) {

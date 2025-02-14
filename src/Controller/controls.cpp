@@ -11,6 +11,7 @@
 #include "Controller/rumble.h"
 #include "Mechanics/goalClamp.h"
 #include "Utilities/debugFunctions.h"
+#include "Autonomous/autonFunctions.h"
 #include "main.h"
 
 namespace controls {
@@ -123,7 +124,7 @@ namespace controls {
 			if (intakePartType == 1) botintake::switchFilterColor();
 			else botintake2::switchFilterColor();
 		});
-		Controller1.ButtonDown.pressed([]() -> void {
+		/*Controller1.ButtonDown.pressed([]() -> void {
 			// if (botdrive::getMaxDriveVelocity() >= 99.0) {
 			// 	botdrive::setMaxDriveVelocity(50.0);
 			// 	debug::printOnController("50\% drive speed");
@@ -136,6 +137,13 @@ namespace controls {
 				debug::printOnController("filter none");
 				rumble::setConstantRumbling(true);
 			}
+		});*/
+
+		/* Macro */
+		Controller1.ButtonDown.pressed([]() -> void {
+			botdrive::setControlState(false);
+			autonfunctions::pid_diff::driveDistanceTiles(0.1);
+			botdrive::setControlState(true);
 		});
 
 		/* Pneumatics */
