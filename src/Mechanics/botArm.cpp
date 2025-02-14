@@ -21,7 +21,7 @@ namespace {
 	PatienceController armDownPatience(6, 1.0, false, 5);
 
 	// Stage config
-	std::vector<double> armStages_degrees = {0, 15, 45, 60, 150};
+	std::vector<double> armStages_degrees = {0, 20, 45, 60, 150};
 	std::vector<int> extremeStages_values = {-2, 0, 0, 0, 0};
 	int currentArmStage = 0;
 	bool releaseOnExhausted = true;
@@ -163,6 +163,9 @@ namespace botarm {
 
 	void setResetDefaultStage(int stageId) {
 		resetDefaultStageId = stageId;
+		if (isArmResetted()) {
+			setArmStage(stageId);
+		}
 	}
 
 	void control(int state) {

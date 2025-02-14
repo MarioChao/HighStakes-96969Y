@@ -30,13 +30,13 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Some controllers
-	PatienceController angleError_degreesPatience(8, 1.0, false);
-	PatienceController driveError_inchesPatience(4, 1.0, false);
+	PatienceController angleError_degreesPatience(16, 1.0, false);
+	PatienceController driveError_inchesPatience(8, 1.0, false);
 
 	PIDController turnToAngle_rotateTargetAngleVoltPid(2.5, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
-	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange, 1.0);
 	PIDController driveAndTurn_driveTargetDistancePid(20, 0, 1.0, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
@@ -271,7 +271,7 @@ namespace {
 			// Motion planner
 			TrajectoryPlanner motion(distance_inches / field::tileLengthIn);
 			motion.addDesiredMotionConstraints(
-				0, maxVelocity_pct * autonpaths::pathbuild::maxVel_tilesPerSec,
+				0, genutil::clamp(maxVelocity_pct * autonpaths::pathbuild::maxVel_tilesPerSec, 1, 100),
 				autonpaths::pathbuild::maxAccel, autonpaths::pathbuild::maxDecel
 			);
 			motion.calculateMotion();
@@ -347,7 +347,7 @@ namespace {
 	
 				// Compute motor velocity pid-value from error
 				driveAndTurn_driveTargetDistancePid.computeFromError(trajectoryDistanceError_inches);
-				double pidVelocity_pct = fmin(maxVelocity_pct, fmax(-maxVelocity_pct, driveAndTurn_driveTargetDistancePid.getValue()));
+				double pidVelocity_pct = genutil::clamp(driveAndTurn_driveTargetDistancePid.getValue(), -maxVelocity_pct, maxVelocity_pct);
 				
 				// Update error patience
 				driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
@@ -366,7 +366,7 @@ namespace {
 	
 				// Compute heading pid-value from error
 				driveAndTurn_rotateTargetAnglePid.computeFromError(rotateError);
-				double rotateVelocity_pct = fmin(maxTurnVelocity_pct, fmax(-maxTurnVelocity_pct, driveAndTurn_rotateTargetAnglePid.getValue()));
+				double rotateVelocity_pct = genutil::clamp(driveAndTurn_rotateTargetAnglePid.getValue(), -maxTurnVelocity_pct, maxTurnVelocity_pct);
 	
 	
 				/* Combined */
@@ -396,7 +396,7 @@ namespace {
 				// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
 				botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
 	
-				task::sleep(20);
+				wait(10, msec);
 			}
 	
 			// Stop

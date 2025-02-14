@@ -20,18 +20,18 @@ void autonpaths::runAutonRedDown() {
 	// Set position and rotation
 	mainOdometry.printDebug();
 	mainOdometry.setPosition(0.56, 0.45);
-	setRobotRotation(68);
+	setRobotRotation(112.25);
 	mainOdometry.printDebug();
 
 	// Set config
-	setDifferentialUseRelativeRotation(true);
+	// setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
 	// waitUntil(isArmResetted());
 
 
 	/* Auton */
-	loadPaths(1);
+	// loadPaths(1);
 	doAuton();
 }
 
@@ -42,73 +42,87 @@ namespace {
 		clearSplines();
 
 		if (section == 1) {
-			// Go to corner
-			pushNewLinear({{0.4, 0.7}});
-
-			// Score preload
-			// pushNewLinear({{0.4, 0.55}});
-
-			// Store corner
-			pushNewLinear({{1.8, 0.8}});
-
-			// Touch ladder
-			pushNewLinear({{2, 2.7}});
 		}
 	}
 
 	void doAuton() {
 		// Store ring + rush goal
-		setIntakeStoreRing(1);
-		async_driveTurnToFace_tiles(2.21, 1.07);  // (2.2, 1)
-
-		// Deploy
-		waitUntil(_linearPathDistanceError < 0.15);
-		setSwing2State(1);
-		turnToAngle(68);
-		wait(autonvals::rushGoalDeployDelay_msec, msec);
+		setArmResetDefaultStage(0);
+		setIntakeState(1);
+		setSwingState(1);
+		async_driveAndTurnDistance_qtInches(130.5, 112.25);
+		
+		// Rush goal
+		waitUntil(_driveDistanceError_inches < 2.0);
+		setIntakeState(0, 0.15);
+		setSwingState(0);
+		waitUntil(_isDriveAndTurnSettled);
 
 		// Go back & un-deploy
-		waitUntil(_isDriveTurnSettled);
-		setSwing2State(0, 0.8);
-		driveTurnToFace_tiles(1.24, 0.64, true, 60);
-		setSwing2State(0);
+		async_driveAndTurnDistance_qtInches(-80, 112.25);
+		waitUntil(_driveDistanceError_inches < 5.0);
+		setSwingState(1);
+		waitUntil(_isDriveAndTurnSettled);
+
+		// Grab 4th goal
+		turnToAngle(220);
+		setSwingState(0);
+		async_driveAndTurnDistance_qtInches(-56, 220, 40.0);
+		waitUntil(_driveDistanceError_inches < 1.0);
+		setGoalClampState(1);
+		
+		// Score on goal
+		setIntakeState(1);
+		wait(700, msec);
+		waitUntil(_isDriveAndTurnSettled);
+		setGoalClampState(0);
+		setIntakeState(0);
 
 		// Grab rushed goal
-		setIntakeStoreRing(0);
-		grabGoalAt(2.4, 0.8);
+		async_driveAndTurnDistance_qtInches(46, 220);
+		waitUntil(_isDriveAndTurnSettled);
+		turnToAngle(290);
+		async_driveAndTurnDistance_qtInches(-66, 290, 40.0);
+		waitUntil(_driveDistanceError_inches < 1.0);
+		setGoalClampState(1);
+		waitUntil(_isDriveAndTurnSettled);
 
-		// Score stored
+		// Take in preload and score
+		async_driveAndTurnDistance_qtInches(118, 290);
+		waitUntil(_isDriveAndTurnSettled);
+		turnToAngle(255);
 		setIntakeState(1);
+		async_driveAndTurnDistance_qtInches(52, 255);
+		waitUntil(_isDriveAndTurnSettled);
 
-		// Go to corner
-		// setIntakeFilterEnabled(0);
-		setArmStage(2);
-		runFollowLinearYield();
-		turnToAngle(-160);
-		driveDistanceTiles(-0.3);
-		setSwing2State(1);
-		turnToAngle(-143);
+		// Take in corner ring to lady brown
+		turnToAngle(192);
+		async_driveAndTurnDistance_qtInches(110, 192, 80.0);
+		waitUntil(_driveDistanceError_inches < 5.0);
+		setArmStage(1);
+		waitUntil(_isDriveAndTurnSettled);
+		wait(200, msec);
 
-		// Sweep corner
-		// driveAndTurnDistanceTiles(1.5, -180.0);
-		driveAndTurnDistanceTiles(1.5, -143);
-		turnToAngle(90);
-		 
-		// Store corner
-		setIntakeStoreRing(1);
-		setSwing2State(0);
-		setGoalClampState(0, 0.7);
-		runFollowLinearYield();
+		// Release goal
+		async_driveAndTurnDistance_qtInches(-40, 192);
+		waitUntil(_isDriveAndTurnSettled);
+		setGoalClampState(0);
+		async_driveAndTurnDistance_qtInches(20, 192);
+		waitUntil(_isDriveAndTurnSettled);
 
-		// Grab goal
-		setIntakeStoreRing(0);
-		grabGoalAt(2, 1.9);
+		// Prepare to score wall stake
+		turnToAngle(270);
+		async_driveAndTurnDistance_qtInches(-171, 270);
+		waitUntil(_isDriveAndTurnSettled);
+		setIntakeState(0);
 
-		// Score stored
-		setIntakeState(1);
+		// Score on wall stake
+		turnToAngle(130);
+		async_driveAndTurnDistance_qtInches(33, 130, 60.0);
+		waitUntil(_driveDistanceError_inches < 2.0);
+		setArmStage(4);
+		waitUntil(_isDriveAndTurnSettled);
 
-		// Touch ladder
-		setArmStage(0);
-		runFollowLinearYield();
+		return;
 	}
 }
