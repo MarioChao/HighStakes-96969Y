@@ -21,6 +21,7 @@ namespace {
 	int resolveState = 0;
 
 	std::string filterOutColor = "none";
+	bool previousIsDetecting = false;
 
 	bool isStoringRing = false;
 
@@ -49,14 +50,15 @@ namespace botintake {
 					isStuck = false;
 				}
 				// Override stuck
-				// isStuck = false;
+				isStuck = false;
 
 				if (isStuck && stuckTime.value() > 0.08) {
 					// Reverse a little on stuck
-					IntakeMotor1.spin(fwd, -4, volt);
-					wait(100, msec);
+					// IntakeMotor1.spin(fwd, -4, volt);
+					// wait(100, msec);
 					IntakeMotor1.spin(fwd, 0, volt);
 					wait(200, msec);
+					resolveState = 0;
 				} else {
 					resolveIntake();
 				}
@@ -71,7 +73,6 @@ namespace botintake {
 
 				if (isDetectingRing && detectedRingColor != "none") {
 					if (detectedRingColor != filterOutColor) {
-						wait(10, msec);
 						resolveState = 0;
 						isStoringRing = false;
 					}
@@ -230,22 +231,29 @@ namespace {
 
 		// Filter out on some detection
 		if (colorFilterEnabled) {
+			// Sensor data
+			ringoptical::updateDetection();
 			bool isDetectingRing = ringoptical::isDetecting();
 			std::string detectedRingColor = ringoptical::getDetectedColor();
 
+			// Newly detected ring
+			bool isNewDetected = (!previousIsDetecting && isDetectingRing);
+			previousIsDetecting = isDetectingRing;
+			
 			if (disableColorFilter) {
 				// if (redirect::getState() == 1) {
-				// 	redirect::setState(0);
-				// }
-			} else if (isDetectingRing) {
+					// 	redirect::setState(0);
+					// }
+			} else if (isNewDetected) {
 				if (detectedRingColor == "none");
 				else if (detectedRingColor == filterOutColor) {
 					// Filter out
-					wait(250, msec);
-					IntakeMotor1.spin(fwd, 5, volt);
-					wait(100, msec);
-					IntakeMotor1.spin(fwd, 0, volt);
-					wait(200, msec);
+					printf("Filtering out\n");
+					// wait(50, msec);
+					// IntakeMotor1.spin(fwd, 5, volt);
+					wait(50, msec);
+					IntakeMotor1.spin(fwd, 1, volt);
+					wait(300, msec);
 					return;
 					// if (redirect::getState() == 0) {
 					// 	redirect::setState(1);

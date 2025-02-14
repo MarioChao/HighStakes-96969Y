@@ -144,6 +144,7 @@ namespace controls {
 			botdrive::setControlState(false);
 			autonfunctions::pid_diff::driveDistanceTiles(0.1);
 			botdrive::setControlState(true);
+			botdrive::preauton();
 		});
 
 		/* Pneumatics */

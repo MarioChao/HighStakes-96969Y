@@ -5,6 +5,7 @@
 namespace ringoptical {
 	void startThread();
 
+	void updateDetection();
 	bool isDetecting();
 	std::string getDetectedColor();
 }
