@@ -2,6 +2,7 @@
 
 #include "Sensors/ringOptical.h"
 #include "Mechanics/redirect.h"
+#include "Mechanics/botArm.h"
 #include "Utilities/debugFunctions.h"
 #include "Utilities/generalUtility.h"
 #include "main.h"
@@ -49,14 +50,17 @@ namespace botintake {
 				} else {
 					isStuck = false;
 				}
-				// Override stuck
-				isStuck = false;
+
+				// Override stuck under certain conditions
+				if (botarm::getArmStage() == 1) {
+					isStuck = false;
+				}
 
 				if (isStuck && stuckTime.time(seconds) > 0.1) {
 					// Reverse a little on stuck
 					// IntakeMotor1.spin(fwd, -4, volt);
 					// wait(100, msec);
-					IntakeMotor1.spin(fwd, 0, volt);
+					IntakeMotor1.spin(fwd, -4, volt);
 					wait(100, msec);
 					resolveState = 0;
 				} else {
