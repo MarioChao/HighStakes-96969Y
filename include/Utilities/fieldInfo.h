@@ -1,5 +1,5 @@
 #pragma once
 
 namespace field {
-	extern double tileLengthIn;
+	extern const double tileLengthIn;
 }

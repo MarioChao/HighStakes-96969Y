@@ -32,6 +32,8 @@ namespace {
 	double maxDriveVelocityPct = 100.0;
 	bool driveUseThread = false;
 
+	double maxDeltaVolt = 2.0;
+
 	// Driving velocity
 	double _linearVelocity_pct, _angularVelocity_radPerSecond;
 
@@ -259,6 +261,16 @@ namespace {
 		double scaleFactor = genutil::getScaleFactor(12, {leftVelocity_volt, rightVelocity_volt});
 		leftVelocity_volt *= scaleFactor;
 		rightVelocity_volt *= scaleFactor;
+
+		// Smoothen voltages
+		double leftInitialVelocity_volt = LeftMotors.voltage(volt);
+		double rightInitialVelocity_volt = RightMotors.voltage(volt);
+		leftVelocity_volt = genutil::clamp(
+			leftVelocity_volt, leftInitialVelocity_volt - maxDeltaVolt, leftInitialVelocity_volt + maxDeltaVolt
+		);
+		rightVelocity_volt = genutil::clamp(
+			rightVelocity_volt, rightInitialVelocity_volt - maxDeltaVolt, rightInitialVelocity_volt + maxDeltaVolt
+		);
 
 		// Spin
 		LeftMotors.spin(fwd, leftVelocity_volt, volt);

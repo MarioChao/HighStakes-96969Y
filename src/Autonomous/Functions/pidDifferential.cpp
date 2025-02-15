@@ -31,14 +31,14 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Some controllers
-	PatienceController angleError_degreesPatience(8, 0.5, false);
-	PatienceController driveError_inchesPatience(8, 0.5, false);
+	PatienceController angleError_degreesPatience(40, 0.5, false);
+	PatienceController driveError_inchesPatience(40, 0.5, false);
 
 	PIDController turnToAngle_rotateTargetAngleVoltPid(2.3, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
 	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
-	PIDController driveAndTurn_drivePositionPid(20, 0, 1.0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_drivePositionPid(17, 0, 1.6, autonvals::defaultMoveWithInchesErrorRange);
 	// PIDController driveAndTurn_drivePositionPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_driveVelocityPid(0, 0, 0);
 	ForwardController driveAndTurn_driveMotionForward(3.1875, 1.25, 1.1);
@@ -157,7 +157,7 @@ namespace pid_diff {
 				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
 			}
 
-			task::sleep(20);
+			wait(5, msec);
 		}
 
 		// Stop
@@ -386,6 +386,7 @@ namespace {
 				// Compute pid-value from error
 				driveAndTurn_drivePositionPid.computeFromError(trajectoryDistanceError_inches);
 				double positionPidVelocity_pct = driveAndTurn_drivePositionPid.getValue();
+				positionPidVelocity_pct = genutil::clamp(positionPidVelocity_pct, -100, 100);
 				// printf("t: %.3f, trajd: %.3f, cntd; %.3f,\n", runningTimer.time(seconds), trajPosition_tiles, currentTravelDistance_inches / field::tileLengthIn);
 				// printf("t: %.3f, err: %.3f, pid: %.3f\n", runningTimer.time(seconds), trajectoryDistanceError_inches, positionPidVelocity_pct);
 				
@@ -394,13 +395,14 @@ namespace {
 
 				/* Feedforward */
 
-				double desiredVelocity_tilesPerSec = trajVelocity_tilesPerSec + positionPidVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
+				double desiredVelocity_tilesPerSec = trajVelocity_tilesPerSec;
+				desiredVelocity_tilesPerSec += positionPidVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
 
-				driveAndTurn_driveMotionForward.computeFromMotion(trajVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
+				driveAndTurn_driveMotionForward.computeFromMotion(desiredVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
 				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue());
 
-				double veloError = trajVelocity_tilesPerSec - LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
-				// printf("velErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, trajVelocity_tilesPerSec);
+				double veloError = desiredVelocity_tilesPerSec - LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
+				printf("velErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, desiredVelocity_tilesPerSec);
 
 				/* Velocity feedback */
 
@@ -415,7 +417,6 @@ namespace {
 
 				// Compute linear velocity
 				double linearVelocity_pct = forwardVelocity_pct + velocityPidVelocity_pct;
-
 				linearVelocity_pct = positionPidVelocity_pct;
 
 
@@ -463,7 +464,7 @@ namespace {
 				// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
 				botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
 
-				wait(20, msec);
+				wait(5, msec);
 			}
 
 			// Stop

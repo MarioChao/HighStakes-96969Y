@@ -19,7 +19,7 @@ void autonpaths::runAutonRedDownSafe() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.56, 0.45);
+	// mainOdometry.setPosition(0.56, 0.45);
 	setRobotRotation(112.25);
 	mainOdometry.printDebug();
 
@@ -49,7 +49,7 @@ namespace {
 		setArmResetDefaultStage(0);
 		setIntakeState(1);
 		setSwingState(1);
-		async_driveAndTurnDistance_qtInches(126.5, 112.25);
+		async_driveAndTurnDistance_qtInches(128.5, 112.25);
 		
 		// Rush goal
 		waitUntil(_driveDistanceError_inches < 2.0);
@@ -58,7 +58,7 @@ namespace {
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Go back & un-deploy
-		async_driveAndTurnDistance_qtInches(-80, 108.25);
+		async_driveAndTurnDistance_qtInches(-82, 112.25);
 		waitUntil(_driveDistanceError_inches < 5.0);
 		setSwingState(1);
 		waitUntil(_isDriveAndTurnSettled);
@@ -75,20 +75,21 @@ namespace {
 		wait(700, msec);
 		waitUntil(_isDriveAndTurnSettled);
 		setGoalClampState(0);
-		setIntakeState(0);
+		setIntakeState(-1);
+		setIntakeState(0, 0.5);
 
 		// Grab rushed goal
-		async_driveAndTurnDistance_qtInches(54, 220);
+		async_driveAndTurnDistance_qtInches(60, 220);
 		waitUntil(_isDriveAndTurnSettled);
-		turnToAngle(290);
-		async_driveAndTurnDistance_qtInches(-74, 290, 30.0);
+		turnToAngle(293);
+		async_driveAndTurnDistance_qtInches(-74, 293, 30.0);
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Take in preload and score
 		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(118, 290);
+		async_driveAndTurnDistance_qtInches(118, 293);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(255);
 		async_driveAndTurnDistance_qtInches(68, 255);

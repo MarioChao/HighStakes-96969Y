@@ -19,19 +19,19 @@ void autonpaths::runAutonBlueDown() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(5.43, 1.53);
-	setRobotRotation(-111.7);
+	// mainOdometry.setPosition(5.43, 1.53);
+	setRobotRotation(-67.75);
 	mainOdometry.printDebug();
 
 	// Set config
-	setDifferentialUseRelativeRotation(true);
+	// setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
 	// waitUntil(isArmResetted());
 
 
 	/* Auton */
-	loadPaths(1);
+	// loadPaths(1);
 	doAuton();
 }
 
@@ -42,72 +42,71 @@ namespace {
 		clearSplines();
 
 		if (section == 1) {
-			// Sweep corner
-			pushNewLinear({{5.7, 0.2}});
-
-			// Store corner
-			pushNewLinear({{5.0, 1.8}});
-
-			// Score on wall stake
-			// pushNewLinear({{6.1, 3}}, false, autonvals::scoreAllianceWallStakeVelocity_pct);
-			pushNewLinear({{6.05, 3.25}}, false, 50);
-
-			// Touch ladder
-			pushNewLinear({{4.3, 3}}, false, 40);
 		}
 	}
 
 	void doAuton() {
 		// Store ring + rush goal
-		setIntakeStoreRing(1);
-		async_driveTurnToFace_tiles(3.78, 0.96);
-
-		// Deploy
-		waitUntil(_linearPathDistanceError < 0.15);
-		setSwing2State(1);
-		turnToAngle(-111.7);
-		wait(autonvals::rushGoalDeployDelay_msec, msec);
+		setArmResetDefaultStage(0);
+		setIntakeState(1);
+		setSwingState(1);
+		async_driveAndTurnDistance_qtInches(128.5, -(67.75));
+		
+		// Rush goal
+		waitUntil(_driveDistanceError_inches < 2.0);
+		setIntakeState(0, 0.2);
+		setSwingState(0);
+		waitUntil(_isDriveAndTurnSettled);
 
 		// Go back & un-deploy
-		waitUntil(_isDriveTurnSettled);
-		setSwing2State(0, 0.8);
-		driveTurnToFace_tiles(4.76, 1.36, true, 60);
-		setSwing2State(0);
+		async_driveAndTurnDistance_qtInches(-82, -(67.75));
+		waitUntil(_driveDistanceError_inches < 5.0);
+		setSwingState(1);
+		waitUntil(_isDriveAndTurnSettled);
+
+		// Grab 4th goal
+		turnToAngle(-(220));
+		setSwingState(0);
+		async_driveAndTurnDistance_qtInches(-64, -(220), 30.0);
+		waitUntil(_driveDistanceError_inches < 2.0);
+		setGoalClampState(1);
+		
+		// Score on goal
+		setIntakeState(1);
+		wait(700, msec);
+		waitUntil(_isDriveAndTurnSettled);
+		setGoalClampState(0);
+		setIntakeState(-1);
+		setIntakeState(0, 0.5);
 
 		// Grab rushed goal
-		setIntakeStoreRing(0);
-		grabGoalAt(3.6, 1.4);
+		async_driveAndTurnDistance_qtInches(60, -(220));
+		waitUntil(_isDriveAndTurnSettled);
+		turnToAngle(-(293));
+		async_driveAndTurnDistance_qtInches(-74, -(293), 30.0);
+		waitUntil(_driveDistanceError_inches < 2.0);
+		setGoalClampState(1);
+		waitUntil(_isDriveAndTurnSettled);
 
-		// Score stored
+		// Take in preload and score
 		setIntakeState(1);
+		async_driveAndTurnDistance_qtInches(118, -(293));
+		waitUntil(_isDriveAndTurnSettled);
+		turnToAngle(-(255));
+		async_driveAndTurnDistance_qtInches(68, -(255));
+		waitUntil(_isDriveAndTurnSettled);
 
-		// Sweep corner
-		setArmStage(2);
-		setSwing2State(1);
-		runFollowLinearYield();
+		// Take in corner ring(s) and score
+		turnToAngle(-(192));
+		async_driveAndTurnDistance_qtInches(130, -(192), 30.0);
+		waitUntil(_isDriveAndTurnSettled);
+		wait(400, msec);
 
-		// Store corner
-		setIntakeStoreRing(1);
-		setGoalClampState(0, 1.0);
-		runFollowLinearYield();
-		setSwing2State(0);
+		// Go near middle
+		turnToAngle(-(230));
+		async_driveAndTurnDistance_qtInches(-110, -(230));
+		waitUntil(_isDriveAndTurnSettled);
 
-		// Grab goal
-		setIntakeStoreRing(0);
-		grabGoalAt(3.9, 2);
-
-		// Score stored
-		setIntakeState(1);
-
-		// Score alliance wall stake
-		// turnToFace_tiles(5.2, 2.5);
-		// driveTurnToFace_tiles(5.2, 3.0);
-		runFollowLinearYield();
-		driveDistanceTiles(-0.4);
-
-		// Touch ladder
-		setArmStage(0, 0.5);
-		setIntakeState(0, 1.0);
-		runFollowLinearYield();
+		return;
 	}
 }
