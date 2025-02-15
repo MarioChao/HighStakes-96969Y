@@ -8,7 +8,8 @@
 /*----------------------------------------------------------------------------*/
 
 #include "main.h"
-#include "preauton.h"
+#include "MatchSequence/preauton.h"
+#include "MatchSequence/match-end.h"
 #include "Autonomous/auton.h"
 
 #include "AutonUtilities/odometry.h"
@@ -98,8 +99,8 @@ void pre_auton(void) {
 	// Tasks
 	controls::startThreads();
 	// odometry::startThreads();
-	// preauton::controllerThread();
 	task rum([]() -> int { preauton::controllerThread(); return 1; });
+	match_end::startThread();
 	ledlight::startThread();
 	ringoptical::startThread();
 

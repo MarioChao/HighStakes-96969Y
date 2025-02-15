@@ -16,9 +16,9 @@ namespace rumble {
 				Controller1.rumble(".");
 			} else if (nextRumbleString != "") {
 				Controller1.rumble(nextRumbleString.c_str());
+				// printf("%s\n", nextRumbleString.c_str());
 				nextRumbleString = "";
-			} else {
-				;
+				wait(200, msec);
 			}
 
 			wait(200, msec);

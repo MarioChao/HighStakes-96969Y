@@ -11,6 +11,7 @@ namespace botintakelift {
 		if (delaySec <= 1e-9) {
 			// Set state here
 			IntakeLiftPneumatic.set(state);
+			// printf("intlift state: %d\n", state);
 
 			return;
 		}
@@ -41,4 +42,7 @@ namespace botintakelift {
 	bool canControl() {
 		return controlState;
 	}
+
+	int _taskState;
+	double _taskDelay;
 }

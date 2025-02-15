@@ -1,7 +1,7 @@
 #pragma once
 
 namespace botintakelift {
-	void setState(int, double = 0);
+	void setState(int state, double delaySec = 0);
 
 	void switchState();
 
