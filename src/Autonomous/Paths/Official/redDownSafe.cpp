@@ -52,7 +52,7 @@ namespace {
 		async_driveAndTurnDistance_qtInches(132.5, 112.25);
 		
 		// Rush goal
-		waitUntil(_driveDistanceError_inches < 4.0);
+		waitUntil(_driveDistanceError_inches < 2.0);
 		setIntakeState(0, 0.2);
 		setSwingState(0);
 		waitUntil(_isDriveAndTurnSettled);
@@ -66,7 +66,7 @@ namespace {
 		// Grab 4th goal
 		turnToAngle(220);
 		setSwingState(0);
-		async_driveAndTurnDistance_qtInches(-70, 220, 30.0);
+		async_driveAndTurnDistance_qtInches(-70, 220, 20.0);
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		
@@ -82,7 +82,7 @@ namespace {
 		async_driveAndTurnDistance_qtInches(66, 220);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(293);
-		async_driveAndTurnDistance_qtInches(-74, 293, 30.0);
+		async_driveAndTurnDistance_qtInches(-74, 293, 20.0);
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		waitUntil(_isDriveAndTurnSettled);
@@ -97,7 +97,7 @@ namespace {
 
 		// Take in corner ring(s) and score
 		turnToAngle(200);
-		async_driveAndTurnDistance_qtInches(130, 200, 30.0);
+		async_driveAndTurnDistance_qtInches(130, 200, 20.0);
 		waitUntil(_isDriveAndTurnSettled);
 		wait(400, msec);
 
