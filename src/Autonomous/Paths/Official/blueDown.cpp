@@ -90,13 +90,13 @@ namespace {
 
 		// Take in preload and score
 		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(170, -(265), {{0, 100}, {140, 30}});
+		async_driveAndTurnDistance_qtInches(170, -(262), {{0, 100}, {140, 30}});
 		waitUntil(_isDriveAndTurnSettled);
 		wait(500, msec);
 
 		// Take in corner ring(s) and score
-		turnToAngle(-(200));
-		async_driveAndTurnDistance_qtInches(130, -(200), 30.0);
+		turnToAngle(-(215));
+		async_driveAndTurnDistance_qtInches(130, -(215), 30.0);
 		waitUntil(_isDriveAndTurnSettled);
 		wait(400, msec);
 
