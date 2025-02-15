@@ -388,7 +388,7 @@ namespace {
 				double positionPidVelocity_pct = driveAndTurn_drivePositionPid.getValue();
 				positionPidVelocity_pct = genutil::clamp(positionPidVelocity_pct, -100, 100);
 				// printf("t: %.3f, trajd: %.3f, cntd; %.3f,\n", runningTimer.time(seconds), trajPosition_tiles, currentTravelDistance_inches / field::tileLengthIn);
-				// printf("t: %.3f, err: %.3f, pid: %.3f\n", runningTimer.time(seconds), trajectoryDistanceError_inches, positionPidVelocity_pct);
+				printf("t: %.3f, err: %.3f, pid: %.3f\n", runningTimer.time(seconds), trajectoryDistanceError_inches, positionPidVelocity_pct);
 				
 				// Update error patience
 				driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
@@ -468,7 +468,7 @@ namespace {
 			}
 
 			// Stop
-			LeftRightMotors.stop(coast);
+			LeftRightMotors.stop(brake);
 
 			// Correct
 			driftCorrector.correct();

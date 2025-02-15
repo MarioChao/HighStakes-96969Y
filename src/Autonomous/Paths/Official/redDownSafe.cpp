@@ -97,7 +97,7 @@ namespace {
 
 		// Take in corner ring(s) and score
 		turnToAngle(200);
-		async_driveAndTurnDistance_qtInches(130, 200, 20.0);
+		async_driveAndTurnDistance_qtInches(130, 200, 30.0);
 		waitUntil(_isDriveAndTurnSettled);
 		wait(400, msec);
 
