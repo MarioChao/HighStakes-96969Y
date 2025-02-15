@@ -59,7 +59,7 @@ namespace {
 
 		// Go back & un-deploy
 		async_driveAndTurnDistance_qtInches(-86, 112.25);
-		waitUntil(_driveDistanceError_inches < 5.0);
+		waitUntil(_driveDistanceError_inches < 9.0);
 		setSwingState(1);
 		waitUntil(_isDriveAndTurnSettled);
 
@@ -82,14 +82,14 @@ namespace {
 		async_driveAndTurnDistance_qtInches(66, 220);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(293);
-		async_driveAndTurnDistance_qtInches(-74, 293, 20.0);
+		async_driveAndTurnDistance_qtInches(-82, 293, 20.0);
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Take in preload and score
 		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(118, 293);
+		async_driveAndTurnDistance_qtInches(126, 293);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(255);
 		async_driveAndTurnDistance_qtInches(68, 255);
