@@ -37,7 +37,11 @@ void PIDController::computeFromError(double error) {
 	} else {
 		setErrorI(cumulativeError + 0.5 * (previousError + currentError) * elapsedTime_seconds);
 	}
-	deltaError = (currentError - previousError) / elapsedTime_seconds;
+	if (elapsedTime_seconds > 1e-5) {
+		deltaError = (currentError - previousError) / elapsedTime_seconds;
+	} else {
+		deltaError = 0;
+	}
 
 	// Settle errors
 	if (fabs(error) < settleErrorRange) {

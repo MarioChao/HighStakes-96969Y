@@ -38,9 +38,10 @@ namespace {
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
 	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange, 1.0);
-	// PIDController driveAndTurn_driveTargetDistancePid(60, 0, 2.0, autonvals::defaultMoveWithInchesErrorRange);
-	PIDController driveAndTurn_driveTargetDistancePid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
-	ForwardController driveAndTurn_driveMotionForward(3.45, 0, 1.15);
+	PIDController driveAndTurn_drivePositionPid(15, 0, 1.0, autonvals::defaultMoveWithInchesErrorRange);
+	// PIDController driveAndTurn_drivePositionPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_driveVelocityPid(0, 0, 0);
+	ForwardController driveAndTurn_driveMotionForward(3.1875, 1.25, 1.1);
 	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -293,12 +294,11 @@ namespace {
 	
 			// Motion planner
 			TrajectoryPlanner motion(distance_inches / field::tileLengthIn);
-			
 			for (int i = 0; i < (int) velocityConstraint_inch_pct.size(); i++) {
 				auto constraint = velocityConstraint_inch_pct[i];
 				motion.addDesiredMotionConstraints(
 					constraint.first / field::tileLengthIn,
-					genutil::clamp(constraint.second / 100.0 * autonpaths::pathbuild::maxVel_tilesPerSec, 1, 100),
+					genutil::clamp(constraint.second, 1, 100) / 100.0 * autonpaths::pathbuild::maxVel_tilesPerSec,
 					autonpaths::pathbuild::maxAccel, autonpaths::pathbuild::maxDecel
 				);
 			}
@@ -306,7 +306,8 @@ namespace {
 	
 			// Reset PID
 			driveAndTurn_reachedTargetPid.resetErrorToZero();
-			driveAndTurn_driveTargetDistancePid.resetErrorToZero();
+			driveAndTurn_drivePositionPid.resetErrorToZero();
+			driveAndTurn_driveVelocityPid.resetErrorToZero();
 			driveAndTurn_rotateTargetAnglePid.resetErrorToZero();
 			driveAndTurn_synchronizeVelocityPid.resetErrorToZero();
 	
@@ -321,7 +322,7 @@ namespace {
 	
 			while (!(
 				driveAndTurn_reachedTargetPid.isSettled() &&
-				driveAndTurn_driveTargetDistancePid.isSettled() &&
+				driveAndTurn_drivePositionPid.isSettled() &&
 				driveAndTurn_rotateTargetAnglePid.isSettled() &&
 				runningTimer.time(seconds) > motion.getTotalTime()
 			)) {
@@ -340,25 +341,30 @@ namespace {
 	
 				// Compute distances
 				double targetDistanceInches = distance_inches;
-				double currentTravelDistanceInches = -1;
+				double currentTravelDistance_inches = -1;
+				double currentTravelVelocity_inchesPerSec = -1;
 				if (useSimulator) {
 					double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * genutil::signum(targetDistanceInches);
-					currentTravelDistanceInches = travelDistance_tiles * field::tileLengthIn;
+					currentTravelDistance_inches = travelDistance_tiles * field::tileLengthIn;
 				} else if (useRotationSensorForPid) {
 					// Compute current travel distance in inches
 					double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
-					currentTravelDistanceInches = lookCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
+					currentTravelDistance_inches = lookCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
+					currentTravelVelocity_inchesPerSec = LookRotation.velocity(rpm) * (1 / 60.0) * (botinfo::trackingLookWheelCircumIn / botinfo::trackingLookWheelSensorGearRatio);
 				} else if (useEncoderForPid) {
 					// Compute current travel distance in inches
 					double lookEncoderCurrentRevolution = LookEncoder.rotation(rev) - lookEncoderInitialRevolution;
-					currentTravelDistanceInches = lookEncoderCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
+					currentTravelDistance_inches = lookEncoderCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);
+					currentTravelVelocity_inchesPerSec = LookEncoder.velocity(rpm) * (1 / 60.0) * (botinfo::trackingLookWheelCircumIn / botinfo::trackingLookWheelSensorGearRatio);
 				} else {
 					// Compute average traveled motor revolutions
 					std::vector<double> travelRevolutions = getMotorRevolutions();
 					double averageTravelRev = getAverageDifference(initRevolutions, travelRevolutions);
-	
+					double averageTravelVel = (LeftMotors.velocity(rpm) + RightMotors.velocity(rpm)) * 0.5;
+					
 					// Convert revolutions into inches
-					currentTravelDistanceInches = averageTravelRev * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
+					currentTravelDistance_inches = averageTravelRev * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
+					currentTravelVelocity_inchesPerSec = averageTravelVel * (1 / 60.0) * (botinfo::driveWheelCircumIn  / botinfo::driveWheelMotorGearRatio);
 				}
 	
 				// Compute trajectory values
@@ -367,35 +373,50 @@ namespace {
 				double trajVelocity_tilesPerSec = motionKine[1];
 				double trajPosition_tiles = motionKine[0];
 
-				/* Feedforward */
-				driveAndTurn_driveMotionForward.computeFromMotion(trajVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
-				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue());
-
-				double veloError = trajVelocity_tilesPerSec - LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
-				printf("trajVErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, trajVelocity_tilesPerSec);
-
-				/* Feedback */
+				/* Position feedback */
 
 				// Compute trajectory distance error
-				double trajectoryDistanceError_inches = trajPosition_tiles * field::tileLengthIn - currentTravelDistanceInches;
-				// printf("t: %.3f, trajd: %.3f\n", runningTimer.time(seconds), motionKine[0]);
-
+				double trajectoryDistanceError_inches = trajPosition_tiles * field::tileLengthIn - currentTravelDistance_inches;
+				
 				// Compute travel distance error
-				double targetDistanceError = targetDistanceInches - currentTravelDistanceInches;
+				double targetDistanceError = targetDistanceInches - currentTravelDistance_inches;
 				autonfunctions::pid_diff::_driveDistanceError_inches = fabs(targetDistanceError);
 				driveAndTurn_reachedTargetPid.computeFromError(targetDistanceError);
-
-				// Compute motor velocity pid-value from error
-				driveAndTurn_driveTargetDistancePid.computeFromError(trajectoryDistanceError_inches);
-				double pidVelocity_pct = genutil::clamp(driveAndTurn_driveTargetDistancePid.getValue(), -100, 100);
+				
+				// Compute pid-value from error
+				driveAndTurn_drivePositionPid.computeFromError(trajectoryDistanceError_inches);
+				double positionPidVelocity_pct = driveAndTurn_drivePositionPid.getValue();
+				printf("t: %.3f, trajd: %.3f, cntd; %.3f,\n", runningTimer.time(seconds), trajPosition_tiles, currentTravelDistance_inches / field::tileLengthIn);
+				// printf("t: %.3f, err: %.3f, pid: %.3f\n", runningTimer.time(seconds), trajectoryDistanceError_inches, positionPidVelocity_pct);
 				
 				// Update error patience
 				driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
 
+				/* Feedforward */
+
+				double desiredVelocity_tilesPerSec = trajVelocity_tilesPerSec + positionPidVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
+
+				driveAndTurn_driveMotionForward.computeFromMotion(trajVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
+				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue());
+
+				double veloError = trajVelocity_tilesPerSec - LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
+				// printf("velErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, trajVelocity_tilesPerSec);
+
+				/* Velocity feedback */
+
+				// Compute trajectory velocity error
+				double trajectoryVelocityError_inches = trajVelocity_tilesPerSec * field::tileLengthIn - currentTravelVelocity_inchesPerSec;
+
+				// Compute pid-value from error
+				driveAndTurn_driveVelocityPid.computeFromError(trajectoryVelocityError_inches);
+				double velocityPidVelocity_pct = driveAndTurn_driveVelocityPid.getValue();
+
 				/* Combined */
 
 				// Compute linear velocity
-				double linearVelocity_pct = forwardVelocity_pct + pidVelocity_pct;
+				double linearVelocity_pct = forwardVelocity_pct + velocityPidVelocity_pct;
+
+				linearVelocity_pct = positionPidVelocity_pct;
 
 
 				/* Angular */
