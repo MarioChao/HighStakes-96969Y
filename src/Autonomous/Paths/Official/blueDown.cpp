@@ -50,24 +50,24 @@ namespace {
 		setArmResetDefaultStage(0);
 		setIntakeState(1);
 		setSwingState(1);
-		async_driveAndTurnDistance_qtInches(128.5, -(67.75));
+		async_driveAndTurnDistance_qtInches(140.5, -(67.75));
 		
 		// Rush goal
 		waitUntil(_driveDistanceError_inches < 2.0);
-		setIntakeState(0, 0.2);
+		setIntakeState(0, 0.25);
 		setSwingState(0);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Go back & un-deploy
-		async_driveAndTurnDistance_qtInches(-82, -(67.75));
-		waitUntil(_driveDistanceError_inches < 5.0);
+		async_driveAndTurnDistance_qtInches(-94, -(67.75));
+		waitUntil(_driveDistanceError_inches < 9.0);
 		setSwingState(1);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Grab 4th goal
-		turnToAngle(-(220));
+		turnToAngle(-(200));
 		setSwingState(0);
-		async_driveAndTurnDistance_qtInches(-64, -(220), 30.0);
+		async_driveAndTurnDistance_qtInches(-110, -(200), {{0, 100.0}, {60, 20.0}});
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		
@@ -80,31 +80,28 @@ namespace {
 		setIntakeState(0, 0.5);
 
 		// Grab rushed goal
-		async_driveAndTurnDistance_qtInches(60, -(220));
+		async_driveAndTurnDistance_qtInches(114, -(200));
 		waitUntil(_isDriveAndTurnSettled);
-		turnToAngle(-(293));
-		async_driveAndTurnDistance_qtInches(-74, -(293), 30.0);
+		turnToAngle(-(270));
+		async_driveAndTurnDistance_qtInches(-70, -(270), 20.0);
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Take in preload and score
 		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(118, -(293));
-		waitUntil(_isDriveAndTurnSettled);
-		turnToAngle(-(255));
-		async_driveAndTurnDistance_qtInches(68, -(255));
+		async_driveAndTurnDistance_qtInches(170, -(270), {{0, 100}, {140, 30}});
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Take in corner ring(s) and score
-		turnToAngle(-(192));
-		async_driveAndTurnDistance_qtInches(130, -(192), 30.0);
+		turnToAngle(-(200));
+		async_driveAndTurnDistance_qtInches(130, -(200), 30.0);
 		waitUntil(_isDriveAndTurnSettled);
 		wait(400, msec);
 
 		// Go near middle
-		turnToAngle(-(230));
-		async_driveAndTurnDistance_qtInches(-110, -(230));
+		turnToAngle(-(260));
+		async_driveAndTurnDistance_qtInches(-110, -(260));
 		waitUntil(_isDriveAndTurnSettled);
 
 		return;

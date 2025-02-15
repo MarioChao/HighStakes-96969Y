@@ -13,7 +13,7 @@ namespace {
 	bool runningAutonUponStart = false;
 
 	// autonomousType auton_runType = autonomousType::Test;
-	autonomousType auton_runType = autonomousType::RedDownSafe;
+	autonomousType auton_runType = autonomousType::BlueDown;
 	// autonomousType auton_runType = autonomousType::AutonSkills;
 	// autonomousType auton_runType = autonomousType::BlueSoloAWP;
 	// autonomousType auton_runType = autonomousType::OdometryRadiusTest;
@@ -159,7 +159,7 @@ namespace auton {
 				autonpaths::runAutonBlueUpSafe();
 				break;
 			case autonomousType::BlueDownSafe:
-				autonpaths::runAutonBlueDownSafe();
+				autonpaths::runAutonBlueDown();
 				break;
 			case autonomousType::RedSoloAWP:
 				autonpaths::runRedSoloAWP();
