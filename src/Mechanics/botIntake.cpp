@@ -62,7 +62,6 @@ namespace botintake {
 					// wait(100, msec);
 					IntakeMotor1.spin(fwd, -4, volt);
 					wait(100, msec);
-					resolveState = 0;
 				} else {
 					resolveIntake();
 				}

@@ -38,7 +38,7 @@ namespace {
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
 	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
-	PIDController driveAndTurn_drivePositionPid(17, 0, 1.6, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_drivePositionPid(17, 0, 0.5, autonvals::defaultMoveWithInchesErrorRange);
 	// PIDController driveAndTurn_drivePositionPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_driveVelocityPid(0, 0, 0);
 	ForwardController driveAndTurn_driveMotionForward(3.1875, 1.25, 1.1);
@@ -402,7 +402,7 @@ namespace {
 				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue());
 
 				double veloError = desiredVelocity_tilesPerSec - LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
-				printf("velErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, desiredVelocity_tilesPerSec);
+				// printf("velErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, desiredVelocity_tilesPerSec);
 
 				/* Velocity feedback */
 
