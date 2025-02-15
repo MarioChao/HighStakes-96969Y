@@ -22,8 +22,14 @@ namespace {
 	void drivingEndedThread() {
 		waitUntil(drivingTimer.time(seconds) > 3);
 		waitUntil(Competition.isEnabled());
-		waitUntil(Competition.isDriverControl());
-		waitUntil(!Competition.isEnabled() || drivingTimer.time(seconds) > 104);
+		while (true) {
+			waitUntil(Competition.isDriverControl());
+			waitUntil(!Competition.isEnabled() || drivingTimer.time(seconds) > 104);
+			if (!Competition.isDriverControl()) {
+				continue;
+			}
+			break;
+		}
 		
 		botarm::setArmStage(0); // motor doesn't spin after disable
 

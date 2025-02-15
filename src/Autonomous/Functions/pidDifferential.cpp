@@ -42,7 +42,7 @@ namespace {
 	// PIDController driveAndTurn_drivePositionPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_driveVelocityPid(0, 0, 0);
 	ForwardController driveAndTurn_driveMotionForward(3.1875, 1.25, 1.1);
-	PIDController driveAndTurn_rotateTargetAnglePid(0.7, 0, 0, autonvals::defaultTurnAngleErrorRange);
+	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0, 0, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
 	// Simulator
