@@ -47,7 +47,7 @@ pneumatics FrontWingsPneumatic(Expander1.A);
 pneumatics LeftWingPneumatic(Expander1.B);
 pneumatics RightWingPneumatic(Expander1.C);
 
-pneumatics IntakeLiftPneumatic(Brain.ThreeWirePort.F);
+pneumatics IntakeLiftPneumatic(Brain.ThreeWirePort.E);
 pneumatics HangPneumatic(Expander1.E);
 pneumatics GoalClampPneumatic(Brain.ThreeWirePort.H);
 pneumatics BotArmPneumatics(Expander1.B);

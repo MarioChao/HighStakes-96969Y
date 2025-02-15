@@ -11,7 +11,7 @@ namespace {
 }
 
 /// @brief Run the 15-seconds new red-down autonomous.
-void autonpaths::runAutonRedDown() {
+void autonpaths::runAutonRedDownSafe() {
 	/* Pre skills */
 
 	// Timer
@@ -94,13 +94,20 @@ namespace {
 		async_driveAndTurnDistance_qtInches(52, 255);
 		waitUntil(_isDriveAndTurnSettled);
 
-		// Take in corner ring to lady brown
+		// Take in corner ring(s) and score
 		turnToAngle(192);
 		async_driveAndTurnDistance_qtInches(110, 192, 80.0);
-		waitUntil(_driveDistanceError_inches < 5.0);
-		setArmStage(1);
 		waitUntil(_isDriveAndTurnSettled);
 		wait(200, msec);
+
+		// Take in again x2
+		for (int i = 0; i < 2; i++) {
+			async_driveAndTurnDistance_qtInches(-40, 192);
+			waitUntil(_isDriveAndTurnSettled);
+			async_driveAndTurnDistance_qtInches(40, 192);
+			waitUntil(_isDriveAndTurnSettled);
+			wait(200, msec);
+		}
 
 		// Release goal
 		async_driveAndTurnDistance_qtInches(-40, 192);
@@ -108,19 +115,13 @@ namespace {
 		setGoalClampState(0);
 		async_driveAndTurnDistance_qtInches(20, 192);
 		waitUntil(_isDriveAndTurnSettled);
-
-		// Prepare to score wall stake
-		turnToAngle(270);
-		async_driveAndTurnDistance_qtInches(-171, 270);
-		waitUntil(_isDriveAndTurnSettled);
 		setIntakeState(0);
 
-		// Score on wall stake
-		turnToAngle(130);
-		async_driveAndTurnDistance_qtInches(33, 130, 60.0);
-		waitUntil(_driveDistanceError_inches < 2.0);
-		setArmStage(4);
+		// Prepare to grab 4th mobile goal
+		turnToAngle(270);
+		async_driveAndTurnDistance_qtInches(-110, 270);
 		waitUntil(_isDriveAndTurnSettled);
+		turnToAngle(210);
 
 		return;
 	}

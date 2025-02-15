@@ -1,6 +1,6 @@
 #include "Autonomous/auton.h"
 
-#include "Autonomous/autonpaths.h"
+#include "Autonomous/autonPaths.h"
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botIntake2.h"
 #include "Utilities/debugFunctions.h"
@@ -12,7 +12,7 @@ namespace {
 	bool userRunningAutonomous = false;
 	bool runningAutonUponStart = false;
 
-	autonomousType auton_runType = autonomousType::RedDown;
+	autonomousType auton_runType = autonomousType::RedDownSafe;
 	// autonomousType auton_runType = autonomousType::AutonSkills;
 	// autonomousType auton_runType = autonomousType::BlueSoloAWP;
 	// autonomousType auton_runType = autonomousType::OdometryRadiusTest;
@@ -152,7 +152,7 @@ namespace auton {
 				autonpaths::runAutonRedUpSafe();
 				break;
 			case autonomousType::RedDownSafe:
-				autonpaths::runAutonRedDown();
+				autonpaths::runAutonRedDownSafe();
 				break;
 			case autonomousType::BlueUpSafe:
 				autonpaths::runAutonBlueUpSafe();

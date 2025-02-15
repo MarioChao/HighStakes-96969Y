@@ -251,11 +251,11 @@ namespace {
 					printf("Filtering out\n");
 					// wait(50, msec);
 					// IntakeMotor1.spin(fwd, 5, volt);
-					wait(50, msec);
+					wait(30, msec);
 					IntakeMotor1.spin(fwd, -5, volt);
 					wait(200, msec);
 					IntakeMotor1.spin(fwd, 11, volt);
-					wait(200, msec);
+					wait(180, msec);
 					IntakeMotor1.spin(fwd, -5, volt);
 					wait(200, msec);
 					return;
