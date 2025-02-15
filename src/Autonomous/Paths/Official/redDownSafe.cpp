@@ -53,7 +53,7 @@ namespace {
 		
 		// Rush goal
 		waitUntil(_driveDistanceError_inches < 2.0);
-		setIntakeState(0, 0.2);
+		setIntakeState(0, 0.25);
 		setSwingState(0);
 		waitUntil(_isDriveAndTurnSettled);
 
