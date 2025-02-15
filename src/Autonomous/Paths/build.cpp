@@ -5,8 +5,8 @@ namespace autonpaths { namespace pathbuild {
 
 	// Default constants / constraints
 	const double maxVel_tilesPerSec = botinfo::maxV_tilesPerSec;
-	const double maxAccel = maxVel_tilesPerSec * 1.0;
-	const double maxDecel = maxVel_tilesPerSec * 1.0;
+	const double maxAccel = maxVel_tilesPerSec * 1.5;
+	const double maxDecel = maxVel_tilesPerSec * 1.5;
 
 	// Global variables
 	std::vector<UniformCubicSpline> splines;

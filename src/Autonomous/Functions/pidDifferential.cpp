@@ -3,6 +3,7 @@
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/pidController.h"
+#include "AutonUtilities/forwardController.h"
 #include "AutonUtilities/linegular.h"
 #include "AutonUtilities/patienceController.h"
 
@@ -30,14 +31,15 @@ namespace {
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);
 
 	// Some controllers
-	PatienceController angleError_degreesPatience(16, 1.0, false);
-	PatienceController driveError_inchesPatience(8, 1.0, false);
+	PatienceController angleError_degreesPatience(8, 0.5, false);
+	PatienceController driveError_inchesPatience(4, 0.5, false);
 
 	PIDController turnToAngle_rotateTargetAngleVoltPid(2.5, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
 	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange, 1.0);
-	PIDController driveAndTurn_driveTargetDistancePid(20, 0, 1.0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_driveTargetDistancePid(60, 0, 2.0, autonvals::defaultMoveWithInchesErrorRange);
+	ForwardController driveAndTurn_driveMotionForward(0, 0, 0);
 	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -46,10 +48,15 @@ namespace {
 
 	// Drive and turn
 	namespace drive_turn {
-		void setVariables(double distance_in, double targetRotation_deg, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec);
+		void setVariables(
+			double distance_in, double targetRotation_deg,
+			std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct,
+			double runTimeout_sec
+		);
 		void driveAndTurnDistance_inches();
 		double _distance_in, _targetRotation_deg;
-		double _maxVelocity_pct, _maxTurnVelocity_pct;
+		std::vector<std::pair<double, double>> _velocityConstraint_inch_pct;
+		double _maxTurnVelocity_pct;
 		double _runTimeout_sec;
 	}
 }
@@ -195,13 +202,24 @@ namespace pid_diff {
 		async_driveAndTurnDistance_inches(distance_qtInches / 4, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
+	void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, std::vector<std::pair<double,double>> velocityConstraint_qtInch_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		for (int i = 0; i < (int) velocityConstraint_qtInch_pct.size(); i++) {
+			velocityConstraint_qtInch_pct[i].first /= 4;
+		}
+		async_driveAndTurnDistance_inches(distance_qtInches / 4, targetRotation, velocityConstraint_qtInch_pct, maxTurnVelocity_pct, runTimeout_sec);
+	}
+
 	void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_inches, targetRotation, {{0, maxVelocity_pct}}, maxTurnVelocity_pct, runTimeout_sec);
+	}
+
+	void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
 		// State variables
 		_driveDistanceError_inches = 1e9;
 		_isDriveAndTurnSettled = false;
 
 		// Drive and turn
-		drive_turn::setVariables(distance_inches, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
+		drive_turn::setVariables(distance_inches, targetRotation, velocityConstraint_inch_pct, maxTurnVelocity_pct, runTimeout_sec);
 		task driveTurnTask([]() -> int {
 			drive_turn::driveAndTurnDistance_inches();
 			return 1;
@@ -240,10 +258,14 @@ namespace {
 	}
 
 	namespace drive_turn {
-		void setVariables(double distance_in, double targetRotation_deg, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		void setVariables(
+			double distance_in, double targetRotation_deg,
+			std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct,
+			double runTimeout_sec
+		) {
 			_distance_in = distance_in;
 			_targetRotation_deg = targetRotation_deg;
-			_maxVelocity_pct = maxVelocity_pct;
+			_velocityConstraint_inch_pct = velocityConstraint_inch_pct;
 			_maxTurnVelocity_pct = maxTurnVelocity_pct;
 			_runTimeout_sec = runTimeout_sec;
 		}
@@ -252,7 +274,7 @@ namespace {
 			// Variables
 			double distance_inches = _distance_in;
 			double targetRotation = _targetRotation_deg;
-			double maxVelocity_pct = _maxVelocity_pct;
+			std::vector<std::pair<double, double>> velocityConstraint_inch_pct = _velocityConstraint_inch_pct;
 			double maxTurnVelocity_pct = _maxTurnVelocity_pct;
 			double runTimeout_sec = _runTimeout_sec;
 	
@@ -270,10 +292,15 @@ namespace {
 	
 			// Motion planner
 			TrajectoryPlanner motion(distance_inches / field::tileLengthIn);
-			motion.addDesiredMotionConstraints(
-				0, genutil::clamp(maxVelocity_pct * autonpaths::pathbuild::maxVel_tilesPerSec, 1, 100),
-				autonpaths::pathbuild::maxAccel, autonpaths::pathbuild::maxDecel
-			);
+			
+			for (int i = 0; i < (int) velocityConstraint_inch_pct.size(); i++) {
+				auto constraint = velocityConstraint_inch_pct[i];
+				motion.addDesiredMotionConstraints(
+					constraint.first / field::tileLengthIn,
+					genutil::clamp(constraint.second / 100.0 * autonpaths::pathbuild::maxVel_tilesPerSec, 1, 100),
+					autonpaths::pathbuild::maxAccel, autonpaths::pathbuild::maxDecel
+				);
+			}
 			motion.calculateMotion();
 	
 			// Reset PID
@@ -333,75 +360,90 @@ namespace {
 					currentTravelDistanceInches = averageTravelRev * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 				}
 	
-				// Compute trajectory distance error
+				// Compute trajectory values
 				std::vector<double> motionKine = motion.getMotionAtTime(runningTimer.time(seconds));
-				double trajectoryVelocity_pct = motionKine[1] / autonpaths::pathbuild::maxVel_tilesPerSec;
-				double trajectoryDistanceError_inches = motionKine[0] * field::tileLengthIn - currentTravelDistanceInches;
+				double trajAcceleration_tilesPerSec2 = motionKine[2];
+				double trajVelocity_tilesPerSec = motionKine[1];
+				double trajPosition_tiles = motionKine[0];
+
+				/* Feedforward */
+				driveAndTurn_driveMotionForward.computeFromMotion(trajVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
+				double forwardVelocity_pct = driveAndTurn_driveMotionForward.getValue();
+
+				/* Feedback */
+
+				// Compute trajectory distance error
+				double trajectoryDistanceError_inches = trajPosition_tiles * field::tileLengthIn - currentTravelDistanceInches;
 				// printf("t: %.3f, trajd: %.3f\n", runningTimer.time(seconds), motionKine[0]);
-	
+
 				// Compute travel distance error
 				double targetDistanceError = targetDistanceInches - currentTravelDistanceInches;
 				autonfunctions::pid_diff::_driveDistanceError_inches = fabs(targetDistanceError);
 				driveAndTurn_reachedTargetPid.computeFromError(targetDistanceError);
-				// printf("De_in: %.3f\n", autonfunctions::pid_diff::_driveDistanceError_inches);
-	
+
 				// Compute motor velocity pid-value from error
 				driveAndTurn_driveTargetDistancePid.computeFromError(trajectoryDistanceError_inches);
-				double pidVelocity_pct = genutil::clamp(driveAndTurn_driveTargetDistancePid.getValue(), -maxVelocity_pct, maxVelocity_pct);
+				double pidVelocity_pct = genutil::clamp(driveAndTurn_driveTargetDistancePid.getValue(), -100, 100);
 				
 				// Update error patience
 				driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
-	
+
+				/* Combined */
+
+				// Compute linear velocity
+				double linearVelocity_pct = forwardVelocity_pct + pidVelocity_pct;
+
+
 				/* Angular */
-	
+
 				// Get current robot heading
 				double currentRotation_degrees = InertialSensor.rotation(degrees);
 				if (useSimulator) currentRotation_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(robotSimulator.angularPosition));
-	
+
 				// Compute heading error
 				double rotateError = targetRotation - currentRotation_degrees;
 				if (autonfunctions::_useRelativeRotation) {
 					rotateError = genutil::modRange(rotateError, 360, -180);
 				}
-	
+
 				// Compute heading pid-value from error
 				driveAndTurn_rotateTargetAnglePid.computeFromError(rotateError);
 				double rotateVelocity_pct = genutil::clamp(driveAndTurn_rotateTargetAnglePid.getValue(), -maxTurnVelocity_pct, maxTurnVelocity_pct);
-	
-	
+
+
 				/* Combined */
-	
+
 				// Compute final motor velocities
-				double leftVelocityPct = pidVelocity_pct + rotateVelocity_pct;
-				double rightVelocityPct = pidVelocity_pct - rotateVelocity_pct;
-	
+				double leftVelocityPct = linearVelocity_pct + rotateVelocity_pct;
+				double rightVelocityPct = linearVelocity_pct - rotateVelocity_pct;
+
 				// Compute value to synchronize velocity
 				if (!useSimulator) {
 					double velocityDifferencePct = LeftMotors.velocity(pct) - RightMotors.velocity(pct);
 					double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 					double finalVelocityDifferencePct = leftVelocityPct - rightVelocityPct;
 					double finalVelocityDifferenceInchesPerSecond = (finalVelocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
-	
+
 					// Compute final delta motor velocities
 					double velocityDifferenceError = finalVelocityDifferenceInchesPerSecond - velocityDifferenceInchesPerSecond;
 					driveAndTurn_synchronizeVelocityPid.computeFromError(velocityDifferenceError);
 					double finalDeltaVelocityPct = driveAndTurn_synchronizeVelocityPid.getValue();
-	
+
 					// Update final motor velocities
 					leftVelocityPct += finalDeltaVelocityPct;
 					rightVelocityPct -= finalDeltaVelocityPct;
 				}
-	
+
 				// Drive with velocities
 				// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
 				botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
-	
-				wait(10, msec);
+
+				wait(20, msec);
 			}
-	
+
 			// Stop
 			LeftRightMotors.stop(coast);
-	
+
 			// Correct
 			driftCorrector.correct();
 

@@ -33,6 +33,6 @@ namespace {
 		wait(20, msec);
 		swing::setState(0);
 		goalclamp::setState(0);
-		botintakelift::setState(1);
+		// botintakelift::setState(1);
 	}
 }

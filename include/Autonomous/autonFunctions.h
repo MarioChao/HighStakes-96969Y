@@ -39,7 +39,9 @@ namespace autonfunctions {
 
 		void async_driveAndTurnDistance_tiles(double distance_tiles, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
 		void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, std::vector<std::pair<double, double>> velocityConstraint_qtInch_pct, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
 		void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
 
 		extern double _driveDistanceError_inches;
 		extern bool _isDriveAndTurnSettled;

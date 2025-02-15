@@ -4,6 +4,13 @@ void autonpaths::autonTest() {
 	setRobotRotation(0.0);
 
 	if (true) {
+		async_driveAndTurnDistance_qtInches(200, 0.0, {{0, 100}, {100, 60}});
+		waitUntil(_isDriveAndTurnSettled);
+		async_driveAndTurnDistance_qtInches(-200, 0.0, {{0, 100}, {100, 60}});
+		waitUntil(_isDriveAndTurnSettled);
+	}
+
+	if (false) {
 		driveAndTurnDistanceTiles(1.0, 0.0, 50.0, 100.0, 6.0);
 		driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, 3.0);
 		driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, 3.0);
