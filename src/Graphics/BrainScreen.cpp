@@ -16,6 +16,8 @@
 #include "Graphics/GUIs/SlidersGui.h"
 #include "Graphics/GUIs/DocksGui.h"
 
+#include "Sensors/inertialS.h"
+
 #include "Simulation/robotSimulator.h"
 
 #include "Utilities/angleUtility.h"
@@ -775,5 +777,8 @@ namespace {
 		Brain.Screen.setPenColor(color::green);
 		Brain.Screen.setFillColor(color::transparent);
 		Brain.Screen.printAt(10, 35, 1, "%07.3f", getRobotPolarAngle_degrees());
+		bool inertialIsStable = inertial_s::isStable();
+		color stableColor = inertialIsStable ? green : red;
+		Brain.Screen.drawCircle(15, 80, 10, stableColor);
 	}
 }

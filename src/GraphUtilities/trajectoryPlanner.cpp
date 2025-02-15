@@ -434,7 +434,13 @@ std::vector<double> TrajectoryPlanner::getMotionAtTime(double time) {
 
 	// Validate completion
 	if (time > time_kinematics.back().first) {
-		return time_kinematics.back().second;
+		std::vector<double> motion = time_kinematics.back().second;
+		if (isNegative) {
+			motion[0] = -motion[0];
+			motion[1] = -motion[1];
+			motion[2] = -motion[2];
+		}
+		return motion;
 	}
 
 	// Binary search for the segment that contains the time

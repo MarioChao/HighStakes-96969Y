@@ -18,6 +18,7 @@
 #include "Mechanics/botArm.h"
 #include "Mechanics/botIntake.h"
 #include "Sensors/ringOptical.h"
+#include "Sensors/inertialS.h"
 
 #include "Utilities/fieldInfo.h"
 #include "Utilities/robotInfo.h"
@@ -103,6 +104,7 @@ void pre_auton(void) {
 	match_end::startThread();
 	ledlight::startThread();
 	ringoptical::startThread();
+	inertial_s::startThread();
 
 	// Brake-types
 	controls::preauton();

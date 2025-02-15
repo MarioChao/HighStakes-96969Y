@@ -81,15 +81,15 @@ namespace {
 		// Grab rushed goal
 		async_driveAndTurnDistance_qtInches(66, 220);
 		waitUntil(_isDriveAndTurnSettled);
-		turnToAngle(293);
-		async_driveAndTurnDistance_qtInches(-82, 293, 20.0);
+		turnToAngle(288);
+		async_driveAndTurnDistance_qtInches(-82, 288, 20.0);
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Take in preload and score
 		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(126, 293);
+		async_driveAndTurnDistance_qtInches(126, 288);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(255);
 		async_driveAndTurnDistance_qtInches(68, 255);
