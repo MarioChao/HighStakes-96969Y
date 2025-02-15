@@ -90,7 +90,7 @@ namespace {
 
 		// Take in preload and score
 		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(170, -(268), {{0, 100}, {140, 30}});
+		async_driveAndTurnDistance_qtInches(170, -(265), {{0, 100}, {140, 30}});
 		waitUntil(_isDriveAndTurnSettled);
 		wait(500, msec);
 
