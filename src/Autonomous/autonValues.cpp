@@ -4,7 +4,7 @@
 #include "Utilities/robotInfo.h"
 
 namespace autonvals {
-	const double defaultMoveTilesErrorRange = 0.08;
+	const double defaultMoveTilesErrorRange = 0.04;
 	const double defaultMoveWithInchesErrorRange = defaultMoveTilesErrorRange * field::tileLengthIn;
 	const double defaultTurnAngleErrorRange = 5;
 

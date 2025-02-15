@@ -32,17 +32,17 @@ namespace {
 
 	// Some controllers
 	PatienceController angleError_degreesPatience(8, 0.5, false);
-	PatienceController driveError_inchesPatience(4, 0.5, false);
+	PatienceController driveError_inchesPatience(8, 0.5, false);
 
-	PIDController turnToAngle_rotateTargetAngleVoltPid(2.5, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
+	PIDController turnToAngle_rotateTargetAngleVoltPid(2.3, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
-	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange, 1.0);
-	PIDController driveAndTurn_drivePositionPid(15, 0, 1.0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_drivePositionPid(20, 0, 1.0, autonvals::defaultMoveWithInchesErrorRange);
 	// PIDController driveAndTurn_drivePositionPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_driveVelocityPid(0, 0, 0);
 	ForwardController driveAndTurn_driveMotionForward(3.1875, 1.25, 1.1);
-	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
+	PIDController driveAndTurn_rotateTargetAnglePid(0.7, 0, 0, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
 	// Simulator
@@ -386,7 +386,7 @@ namespace {
 				// Compute pid-value from error
 				driveAndTurn_drivePositionPid.computeFromError(trajectoryDistanceError_inches);
 				double positionPidVelocity_pct = driveAndTurn_drivePositionPid.getValue();
-				printf("t: %.3f, trajd: %.3f, cntd; %.3f,\n", runningTimer.time(seconds), trajPosition_tiles, currentTravelDistance_inches / field::tileLengthIn);
+				// printf("t: %.3f, trajd: %.3f, cntd; %.3f,\n", runningTimer.time(seconds), trajPosition_tiles, currentTravelDistance_inches / field::tileLengthIn);
 				// printf("t: %.3f, err: %.3f, pid: %.3f\n", runningTimer.time(seconds), trajectoryDistanceError_inches, positionPidVelocity_pct);
 				
 				// Update error patience

@@ -49,16 +49,16 @@ namespace {
 		setArmResetDefaultStage(0);
 		setIntakeState(1);
 		setSwingState(1);
-		async_driveAndTurnDistance_qtInches(130.5, 112.25);
+		async_driveAndTurnDistance_qtInches(126.5, 112.25);
 		
 		// Rush goal
 		waitUntil(_driveDistanceError_inches < 2.0);
-		setIntakeState(0, 0.15);
+		setIntakeState(0, 0.2);
 		setSwingState(0);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Go back & un-deploy
-		async_driveAndTurnDistance_qtInches(-80, 112.25);
+		async_driveAndTurnDistance_qtInches(-80, 108.25);
 		waitUntil(_driveDistanceError_inches < 5.0);
 		setSwingState(1);
 		waitUntil(_isDriveAndTurnSettled);
@@ -66,8 +66,8 @@ namespace {
 		// Grab 4th goal
 		turnToAngle(220);
 		setSwingState(0);
-		async_driveAndTurnDistance_qtInches(-56, 220, 40.0);
-		waitUntil(_driveDistanceError_inches < 1.0);
+		async_driveAndTurnDistance_qtInches(-64, 220, 30.0);
+		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		
 		// Score on goal
@@ -78,50 +78,43 @@ namespace {
 		setIntakeState(0);
 
 		// Grab rushed goal
-		async_driveAndTurnDistance_qtInches(46, 220);
+		async_driveAndTurnDistance_qtInches(54, 220);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(290);
-		async_driveAndTurnDistance_qtInches(-66, 290, 40.0);
-		waitUntil(_driveDistanceError_inches < 1.0);
+		async_driveAndTurnDistance_qtInches(-74, 290, 30.0);
+		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Take in preload and score
+		setIntakeState(1);
 		async_driveAndTurnDistance_qtInches(118, 290);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(255);
-		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(52, 255);
+		async_driveAndTurnDistance_qtInches(68, 255);
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Take in corner ring(s) and score
 		turnToAngle(192);
-		async_driveAndTurnDistance_qtInches(110, 192, 80.0);
+		async_driveAndTurnDistance_qtInches(130, 192, 30.0);
 		waitUntil(_isDriveAndTurnSettled);
-		wait(200, msec);
+		wait(400, msec);
 
-		// Take in again x2
-		for (int i = 0; i < 2; i++) {
-			async_driveAndTurnDistance_qtInches(-40, 192);
-			waitUntil(_isDriveAndTurnSettled);
-			async_driveAndTurnDistance_qtInches(40, 192);
-			waitUntil(_isDriveAndTurnSettled);
-			wait(200, msec);
-		}
+		// Take in again
+		// double deg = mainOdometry.getLookFieldAngle_degrees();
+		// async_driveAndTurnDistance_qtInches(-40, deg);
+		// waitUntil(_isDriveAndTurnSettled);
+		// setIntakeLiftState(1);
+		// async_driveAndTurnDistance_qtInches(48, deg, 40.0);
+		// waitUntil(_driveDistanceError_inches < 2.0);
+		// setIntakeLiftState(0);
+		// waitUntil(_isDriveAndTurnSettled);
+		// wait(200, msec);
 
-		// Release goal
-		async_driveAndTurnDistance_qtInches(-40, 192);
+		// Go near middle
+		turnToAngle(230);
+		async_driveAndTurnDistance_qtInches(-110, 230);
 		waitUntil(_isDriveAndTurnSettled);
-		setGoalClampState(0);
-		async_driveAndTurnDistance_qtInches(20, 192);
-		waitUntil(_isDriveAndTurnSettled);
-		setIntakeState(0);
-
-		// Prepare to grab 4th mobile goal
-		turnToAngle(270);
-		async_driveAndTurnDistance_qtInches(-110, 270);
-		waitUntil(_isDriveAndTurnSettled);
-		turnToAngle(210);
 
 		return;
 	}
