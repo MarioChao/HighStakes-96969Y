@@ -52,12 +52,12 @@ namespace botintake {
 				// Override stuck
 				isStuck = false;
 
-				if (isStuck && stuckTime.value() > 0.08) {
+				if (isStuck && stuckTime.time(seconds) > 0.1) {
 					// Reverse a little on stuck
 					// IntakeMotor1.spin(fwd, -4, volt);
 					// wait(100, msec);
 					IntakeMotor1.spin(fwd, 0, volt);
-					wait(200, msec);
+					wait(100, msec);
 					resolveState = 0;
 				} else {
 					resolveIntake();
@@ -252,8 +252,12 @@ namespace {
 					// wait(50, msec);
 					// IntakeMotor1.spin(fwd, 5, volt);
 					wait(50, msec);
-					IntakeMotor1.spin(fwd, 1, volt);
-					wait(300, msec);
+					IntakeMotor1.spin(fwd, -5, volt);
+					wait(200, msec);
+					IntakeMotor1.spin(fwd, 11, volt);
+					wait(200, msec);
+					IntakeMotor1.spin(fwd, -5, volt);
+					wait(200, msec);
 					return;
 					// if (redirect::getState() == 0) {
 					// 	redirect::setState(1);

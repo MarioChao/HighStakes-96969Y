@@ -54,7 +54,7 @@ namespace controls {
 
 				// Alliance wall stake
 				botarm::setArmStage(0);
-				// botintake::setColorFiltering(true);
+				botintake::setColorFiltering(true);
 			} else {
 				botintake2::switchMode();
 			}
@@ -66,7 +66,7 @@ namespace controls {
 				}
 
 				botarm::setArmStage(1);
-				// botintake::setColorFiltering(false);
+				botintake::setColorFiltering(false);
 
 				/*
 				if (botintake::isColorFiltering()) {
@@ -90,7 +90,7 @@ namespace controls {
 				return;
 			}
 			botarm::setArmStage(3);
-			// botintake::setColorFiltering(true);
+			botintake::setColorFiltering(true);
 		});
 		Controller1.ButtonL1.pressed([]() -> void {
 			// if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
@@ -106,7 +106,7 @@ namespace controls {
 			} else {
 				botarm::setArmStage(4);
 			}
-			// botintake::setColorFiltering(true);
+			botintake::setColorFiltering(true);
 		});
 		// Controller1.ButtonY.pressed([]() -> void {
 		// 	if (intakePart == 1) {
