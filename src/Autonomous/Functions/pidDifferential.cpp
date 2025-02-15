@@ -38,8 +38,9 @@ namespace {
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
 	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange, 1.0);
-	PIDController driveAndTurn_driveTargetDistancePid(60, 0, 2.0, autonvals::defaultMoveWithInchesErrorRange);
-	ForwardController driveAndTurn_driveMotionForward(0, 0, 0);
+	// PIDController driveAndTurn_driveTargetDistancePid(60, 0, 2.0, autonvals::defaultMoveWithInchesErrorRange);
+	PIDController driveAndTurn_driveTargetDistancePid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
+	ForwardController driveAndTurn_driveMotionForward(3.45, 0, 1.15);
 	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0.05, 0.01, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -368,7 +369,10 @@ namespace {
 
 				/* Feedforward */
 				driveAndTurn_driveMotionForward.computeFromMotion(trajVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
-				double forwardVelocity_pct = driveAndTurn_driveMotionForward.getValue();
+				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue());
+
+				double veloError = trajVelocity_tilesPerSec - LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
+				printf("trajVErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, trajVelocity_tilesPerSec);
 
 				/* Feedback */
 

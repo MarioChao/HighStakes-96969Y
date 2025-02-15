@@ -16,6 +16,7 @@ namespace genutil {
 	double clamp(double value, double min, double max);
 
 	double pctToVolt(double pct);
+	double voltToPct(double volt);
 
 	int signum(double value);
 	bool isWithin(double value, double target, double withinRange);

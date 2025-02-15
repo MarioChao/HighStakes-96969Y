@@ -192,8 +192,27 @@ void usercontrol(void) {
 	controls::resetStates();
 
 	// User control code here, inside the loop
+	double v = 0;
+	std::vector<double> velocities = {0};
 	while (1) {
-		controls::doControls();
+		if (false) {
+			LeftRightMotors.spin(forward, v, volt);
+
+			double velocity = LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
+			if (velocities.size() > 10) velocities = {velocity};
+			else velocities.push_back(velocity);
+			double avgV = genutil::getAverage(velocities);
+			if (fabs(v) > 1) printf("volt: %.3f, vel: %.3f\n", v, avgV);
+
+			if (Controller2.ButtonRight.pressing()) {
+				v += 0.1;
+			}
+			if (Controller2.ButtonLeft.pressing()) {
+				v -= 0.1;
+			}
+		} else {
+			controls::doControls();
+		}
 
 		wait(20, msec);
 	}

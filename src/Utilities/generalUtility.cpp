@@ -22,6 +22,10 @@ namespace genutil {
 		return pct * 12.0 / 100.0;
 	}
 
+	double voltToPct(double volt) {
+		return volt * 100.0 / 12.0;
+	}
+
 	int signum(double value) {
 		if (value > 0) return 1;
 		if (value == 0) return 0;
