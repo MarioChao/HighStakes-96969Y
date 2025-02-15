@@ -21,9 +21,9 @@ namespace match_end {
 namespace {
 	void drivingEndedThread() {
 		waitUntil(drivingTimer.time(seconds) > 3);
-		waitUntil(Competition.isEnabled());
 		while (true) {
-			waitUntil(Competition.isDriverControl());
+			waitUntil(Competition.isDriverControl() && Competition.isEnabled());
+			wait(100, msec);
 			waitUntil(!Competition.isEnabled() || drivingTimer.time(seconds) > 104);
 			if (!Competition.isDriverControl()) {
 				continue;

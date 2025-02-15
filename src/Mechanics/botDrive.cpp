@@ -90,6 +90,7 @@ namespace botdrive {
 		if (!canControl()) {
 			return;
 		}
+		setMaxDeltaVolt(24);
 		switch (driveMode) {
 			case controlType::ArcadeTwoStick:
 				controlArcadeTwoStick();
@@ -116,6 +117,10 @@ namespace botdrive {
 
 	double getMaxDriveVelocity() {
 		return maxDriveVelocityPct;
+	}
+
+	void setMaxDeltaVolt(double deltaVolt) {
+		maxDeltaVolt = deltaVolt;
 	}
 
 	void driveLinegularVelocity(double linearVelocity_pct, double angularVelocity_radPerSecond) {
