@@ -49,7 +49,7 @@ namespace {
 		setArmResetDefaultStage(0);
 		setIntakeState(1);
 		setSwingState(1);
-		async_driveAndTurnDistance_qtInches(132.5, 112.25);
+		async_driveAndTurnDistance_qtInches(140.5, 112.25);
 		
 		// Rush goal
 		waitUntil(_driveDistanceError_inches < 2.0);
@@ -58,7 +58,7 @@ namespace {
 		waitUntil(_isDriveAndTurnSettled);
 
 		// Go back & un-deploy
-		async_driveAndTurnDistance_qtInches(-86, 112.25);
+		async_driveAndTurnDistance_qtInches(-94, 112.25);
 		waitUntil(_driveDistanceError_inches < 9.0);
 		setSwingState(1);
 		waitUntil(_isDriveAndTurnSettled);
