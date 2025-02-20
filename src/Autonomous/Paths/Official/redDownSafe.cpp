@@ -66,7 +66,7 @@ namespace {
 		// Grab 4th goal
 		turnToAngle(220);
 		setSwingState(0);
-		async_driveAndTurnDistance_qtInches(-70, 220, 20.0);
+		async_driveAndTurnDistance_qtInches(-70, 220, {{0, 100}, {40, 20.0}});
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		
@@ -82,7 +82,7 @@ namespace {
 		async_driveAndTurnDistance_qtInches(66, 220);
 		waitUntil(_isDriveAndTurnSettled);
 		turnToAngle(288);
-		async_driveAndTurnDistance_qtInches(-82, 288, 20.0);
+		async_driveAndTurnDistance_qtInches(-82, 288, {{0, 100}, {50, 20.0}});
 		waitUntil(_driveDistanceError_inches < 2.0);
 		setGoalClampState(1);
 		waitUntil(_isDriveAndTurnSettled);
@@ -97,7 +97,7 @@ namespace {
 
 		// Take in corner ring(s) and score
 		turnToAngle(200);
-		async_driveAndTurnDistance_qtInches(130, 200, 30.0);
+		async_driveAndTurnDistance_qtInches(130, 200, {{0, 100}, {80, 30.0}});
 		waitUntil(_isDriveAndTurnSettled);
 		wait(400, msec);
 

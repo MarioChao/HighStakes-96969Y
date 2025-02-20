@@ -6,14 +6,18 @@ void autonpaths::autonTest() {
 	if (true) {
 		// async_driveAndTurnDistance_qtInches(400, 0.0, {{0, 50}});
 		// waitUntil(_isDriveAndTurnSettled);
-		async_driveAndTurnDistance_qtInches(100, 0.0, 100);
+		async_driveAndTurnDistance_qtInches(200, 0.0, {{0, 100}, {100, 40}});
 		waitUntil(_isDriveAndTurnSettled);
-		async_driveAndTurnDistance_qtInches(100, 0.0, 60);
+		async_driveAndTurnDistance_qtInches(-200, 0.0, {{0, 40}, {100, 100}});
 		waitUntil(_isDriveAndTurnSettled);
-		async_driveAndTurnDistance_qtInches(-100, 0.0, 60);
-		waitUntil(_isDriveAndTurnSettled);
-		async_driveAndTurnDistance_qtInches(-100, 0.0, 100);
-		waitUntil(_isDriveAndTurnSettled);
+		// async_driveAndTurnDistance_qtInches(100, 0.0, 100);
+		// waitUntil(_isDriveAndTurnSettled);
+		// async_driveAndTurnDistance_qtInches(100, 0.0, 40);
+		// waitUntil(_isDriveAndTurnSettled);
+		// async_driveAndTurnDistance_qtInches(-100, 0.0, 40);
+		// waitUntil(_isDriveAndTurnSettled);
+		// async_driveAndTurnDistance_qtInches(-100, 0.0, 100);
+		// waitUntil(_isDriveAndTurnSettled);
 	}
 
 	if (false) {
