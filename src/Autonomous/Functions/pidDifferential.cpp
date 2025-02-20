@@ -42,7 +42,7 @@ namespace {
 	// PIDController driveAndTurn_drivePositionPid(17, 0, 0.5, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_drivePositionPid(17, 0, 0, autonvals::defaultMoveWithInchesErrorRange); // in to pct
 	PIDController driveAndTurn_driveVelocityPid(1.8, 0, 0.005); // in/s to pct
-	ForwardController driveAndTurn_driveMotionForward(3.1875, 0.4, 1.0); // t/s to volt
+	ForwardController driveAndTurn_driveMotionForward(1.0, 3.1875, 0.4); // t/s to volt
 	PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0, 0, autonvals::defaultTurnAngleErrorRange);
 	PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
@@ -408,7 +408,7 @@ namespace {
 
 				driveAndTurn_driveMotionForward.computeFromMotion(desiredVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
 				bool useS = currentTravelVelocity_inchesPerSec < 0.5;
-				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue(true, true, useS));
+				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue(useS));
 				
 				/* Velocity feedback */
 				

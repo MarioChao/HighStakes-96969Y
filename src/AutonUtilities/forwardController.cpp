@@ -2,8 +2,9 @@
 #include "Utilities/generalUtility.h"
 #include <cmath>
 
-ForwardController::ForwardController(double kV, double kA, double kS) {
-	kVelo = kV, kAcel = kA, kStat = kS;
+ForwardController::ForwardController(double kS, double kV, double kA) {
+	kStat = kS;
+	kVelo = kV, kAcel = kA;
 }
 
 void ForwardController::computeFromMotion(double velocity, double acceleration) {
@@ -11,14 +12,19 @@ void ForwardController::computeFromMotion(double velocity, double acceleration) 
 	this->acceleration = acceleration;
 }
 
-double ForwardController::getValue(bool useV, bool useA, bool useS) {
+double ForwardController::getValue(bool useS, bool useV, bool useA) {
+	// Deadband kS
+	double valS = 0;
+	if (useS) {
+		bool isSpeedingUp = genutil::signum(velocity) == genutil::signum(acceleration);
+		if (1e-5 < fabs(velocity) && fabs(velocity) < 0.05 && isSpeedingUp) {
+			valS = kStat;
+		}
+	}
+
+	// Others
 	double valV = useV ? (velocity * kVelo) : 0;
 	double valA = useA ? (acceleration * kAcel) : 0;
-	double valS = useS ? (kStat) : 0;
-
-	// Deadband kS
-	if (1e-5 < fabs(velocity) && fabs(velocity) < 0.05 && genutil::signum(velocity) == genutil::signum(acceleration)) valS = valS;
-	else valS = 0;
 
 	return valV + valA + valS;
 }
