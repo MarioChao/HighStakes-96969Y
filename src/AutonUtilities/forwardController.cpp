@@ -1,4 +1,5 @@
 #include "AutonUtilities/forwardController.h"
+#include "Utilities/generalUtility.h"
 #include <cmath>
 
 ForwardController::ForwardController(double kV, double kA, double kS) {
@@ -16,7 +17,8 @@ double ForwardController::getValue(bool useV, bool useA, bool useS) {
 	double valS = useS ? (kStat) : 0;
 
 	// Deadband kS
-	if (fabs(velocity) > 0.05) valS = 0;
+	if (1e-5 < fabs(velocity) && fabs(velocity) < 0.05 && genutil::signum(velocity) == genutil::signum(acceleration)) valS = valS;
+	else valS = 0;
 
 	return valV + valA + valS;
 }
