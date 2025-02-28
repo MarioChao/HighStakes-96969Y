@@ -14,7 +14,7 @@
 #include "Graphics/GUIs/SlidersGui.h"
 #include "Graphics/GUIs/DocksGui.h"
 
-#include "Sensors/inertialS.h"
+#include "Sensors/inertial-s.h"
 
 #include "Simulation/robotSimulator.h"
 

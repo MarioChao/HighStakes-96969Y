@@ -1,4 +1,4 @@
-#include "Sensors/inertialS.h"
+#include "Sensors/inertial-s.h"
 #include "main.h"
 
 namespace {

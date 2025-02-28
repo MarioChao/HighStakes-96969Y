@@ -20,7 +20,7 @@
 #include "Mechanics/botArm.h"
 #include "Mechanics/botIntake.h"
 #include "Sensors/ringOptical.h"
-#include "Sensors/inertialS.h"
+#include "Sensors/inertial-s.h"
 
 #include "Utilities/fieldInfo.h"
 #include "Utilities/robotInfo.h"
