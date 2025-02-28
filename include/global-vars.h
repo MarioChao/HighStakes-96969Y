@@ -5,15 +5,6 @@
 #include "Simulation/robotSimulator.h"
 #include "GraphUtilities/trajectoryPlanner.h"
 
-// Forward declaration
-
-// namespace chassis_tracker {
-// 	class Odometry;
-// }
-// class RobotSimulator;
-// class TrajectoryPlanner;
-
-
 // ---------- Global variables ----------
 
 // Competition instance

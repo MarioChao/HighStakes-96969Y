@@ -16,6 +16,8 @@ namespace botinfo {
 
 	const double driveWheelCircumIn = M_PI * driveWheelDiameterIn;
 
+	const double driveMotorToWheel_gearRatio = 1.0 / driveWheelMotorGearRatio;
+
 	const double trackingLookWheelCircumIn = M_PI * trackingLookWheelDiameterIn;
 	const double trackingLookWheelSensorGearRatio = 1.0; // Wheel to Encoder / Rotation
 

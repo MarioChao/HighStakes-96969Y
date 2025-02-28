@@ -14,6 +14,8 @@ namespace botinfo {
 
 	extern const double driveWheelCircumIn;
 
+	extern const double driveMotorToWheel_gearRatio;
+
 	extern const double trackingLookWheelCircumIn;
 	extern const double trackingLookWheelSensorGearRatio;
 

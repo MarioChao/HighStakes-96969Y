@@ -32,4 +32,7 @@ namespace genutil {
 	double maxAbsolute(std::initializer_list<double> list);
 
 	double getAverage(std::vector<double> list);
+
+	std::pair<bool, double> getArcRadius_inches(double arcLength_inches, double rotatedAngle_polarDegrees);
+	double getChordLength_inches(double arcRadius_inches, double rotatedAngle_polarDegrees);
 }
