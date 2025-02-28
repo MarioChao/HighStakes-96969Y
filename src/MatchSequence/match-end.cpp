@@ -3,6 +3,7 @@
 #include "Mechanics/goalClamp.h"
 #include "Mechanics/swing.h"
 #include "Mechanics/botIntakeLift.h"
+#include "global-vars.h"
 #include "main.h"
 
 namespace {

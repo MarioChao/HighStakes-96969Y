@@ -2,7 +2,6 @@
 
 #include "AutonUtilities/ramseteController.h"
 #include "AutonUtilities/linegular.h"
-#include "AutonUtilities/odometry.h"
 
 #include "GraphUtilities/uniformCubicSpline.h"
 #include "GraphUtilities/curveSampler.h"
@@ -14,6 +13,7 @@
 
 #include "Simulation/robotSimulator.h"
 
+#include "global-vars.h"
 #include "main.h"
 
 namespace {

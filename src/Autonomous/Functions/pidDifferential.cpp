@@ -18,6 +18,7 @@
 
 #include "Simulation/robotSimulator.h"
 
+#include "global-vars.h"
 #include "main.h"
 
 namespace {

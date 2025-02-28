@@ -8,11 +8,13 @@
 /*----------------------------------------------------------------------------*/
 
 #include "main.h"
+#include "global-vars.h"
+
 #include "MatchSequence/preauton.h"
 #include "MatchSequence/match-end.h"
 #include "Autonomous/auton.h"
 
-#include "AutonUtilities/odometry.h"
+#include "ChassisTracker/odometry.h"
 #include "Controller/controls.h"
 
 #include "Mechanics/botArm.h"
@@ -35,25 +37,6 @@
 #include "GraphUtilities/uniformCubicSpline.h"
 #include "GraphUtilities/curveSampler.h"
 #include "GraphUtilities/trajectoryPlanner.h"
-
-
-// ---------- Variables ----------
-
-competition Competition;
-
-int intakePartType = 1;
-
-bool isArmPneumatic = false;
-
-timer drivingTimer;
-
-Odometry mainOdometry;
-
-RobotSimulator robotSimulator;
-bool mainUseSimulator = false;
-
-TrajectoryPlanner testTrajectoryPlan;
-timer trajectoryTestTimer;
 
 
 /*---------------------------------------------------------------------------*/

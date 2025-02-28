@@ -2,6 +2,7 @@
 #include "Graphics/BrainScreen.h"
 #include "Utilities/debugFunctions.h"
 #include "Videos/video-main.h"
+#include "global-vars.h"
 #include "main.h"
 
 namespace {

@@ -7,6 +7,7 @@
 
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
+#include "global-vars.h"
 #include "main.h"
 
 namespace autonpaths {

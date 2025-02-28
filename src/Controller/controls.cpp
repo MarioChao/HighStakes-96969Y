@@ -12,6 +12,7 @@
 #include "Mechanics/goalClamp.h"
 #include "Utilities/debugFunctions.h"
 #include "Autonomous/autonFunctions.h"
+#include "global-vars.h"
 #include "main.h"
 
 namespace controls {

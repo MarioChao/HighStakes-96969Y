@@ -12,6 +12,8 @@
 #include "Utilities/fieldInfo.h"
 #include "Utilities/generalUtility.h"
 
+#include "global-vars.h"
+
 namespace {
 	using namespace autonfunctions::driveturn;
 

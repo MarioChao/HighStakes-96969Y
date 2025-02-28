@@ -5,8 +5,6 @@
 #include "Autonomous/auton.h"
 #include "Autonomous/autonFunctions.h"
 
-#include "AutonUtilities/odometry.h"
-
 #include "GraphUtilities/trajectoryPlanner.h"
 #include "GraphUtilities/curveSampler.h"
 
@@ -24,6 +22,8 @@
 #include "Utilities/generalUtility.h"
 
 #include "Videos/video-main.h"
+
+#include "global-vars.h"
 #include "main.h"
 
 // File-local Functions & Variables

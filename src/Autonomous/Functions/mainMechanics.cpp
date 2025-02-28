@@ -8,6 +8,7 @@
 #include "Mechanics/goalClamp.h"
 #include "Mechanics/redirect.h"
 
+#include "global-vars.h"
 #include "main.h"
 
 namespace autonfunctions {

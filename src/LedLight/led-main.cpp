@@ -2,6 +2,7 @@
 #include "Utilities/generalUtility.h"
 #include "Graphics/GraphicMain.h"
 #include "Graphics/BrainScreen.h"
+#include "global-vars.h"
 #include "main.h"
 
 namespace {
