@@ -21,10 +21,10 @@ namespace chassis_tracker {
 		std::vector<std::reference_wrapper<TrackingWheel>> trackingWheels,
 		std::vector<std::reference_wrapper<inertial>> inertialSensors
 	) {
-		trackingWheels.clear();
+		this->trackingWheels.clear();
 		positionSensor_count = 0;
 
-		inertialSensors.clear();
+		this->inertialSensors.clear();
 		inertialSensor_driftCorrections.clear();
 		inertialSensor_oldMeasurements.clear();
 		inertialSensor_newMeasurements.clear();
@@ -252,7 +252,7 @@ namespace chassis_tracker {
 
 		// Return
 		if (inertialSensor_count == 0) {
-			printf("Error: no inertial sensors available.");
+			printf("Error: no inertial sensors available.\n");
 			return 0;
 		}
 		return totalDeltaAngle / inertialSensor_count;

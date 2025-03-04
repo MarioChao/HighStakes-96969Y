@@ -17,5 +17,4 @@ private:
 	inertial *sensor;
 	double perClockwiseRevolutionDrift, perCCWRevolutionDrift;
 	double storedInitialRotation;
-	double correctedRotation;
 };

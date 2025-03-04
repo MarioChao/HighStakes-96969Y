@@ -8,8 +8,7 @@ DriftCorrection::DriftCorrection(inertial &sensor, double perClockwiseRevolution
 }
 
 void DriftCorrection::_onInit() {
-	storedInitialRotation = sensor->rotation(deg);
-	correctedRotation = storedInitialRotation;
+	storedInitialRotation = 0;
 }
 
 void DriftCorrection::setInitial() {
@@ -24,7 +23,6 @@ void DriftCorrection::correct() {
 	// Calculate drifted rotation
 	double addRotation = deltaRotation / 360.0 * ((deltaRotation > 0) ? (-perClockwiseRevolutionDrift) : (perCCWRevolutionDrift));
 	double newRotation = nowInitialRotation + addRotation;
-	correctedRotation += addRotation;
 
 	// Update 
 	sensor->setRotation(newRotation, degrees);
@@ -32,6 +30,5 @@ void DriftCorrection::correct() {
 }
 
 double DriftCorrection::getRotation() {
-	// return correctedRotation;
 	return sensor->rotation(deg);
 }

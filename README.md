@@ -8,6 +8,16 @@ Modify robot configurations in [`robot-config.cpp`](./src/robot-config.cpp).
 
 Modify robot specifications in [`robotInfo.cpp`](./src/Utilities/robotInfo.cpp).
 
+## Chassis Configuration
+
+Modify chassis sensors & odometry in [`global-vars.cpp`](./src/global-vars.cpp).
+
+Notes:
+
+- Some dummy sensors create an error if you read its value immediately after starting the program!
+	- Optical shaft encoder
+	- Inertial sensor
+
 ## About
 
 Our main control program is organized into the categories [`Autonomous`](./include/Autonomous/), [`Controller`](./include/Controller/), and [`Mechanics`](./include/Mechanics/).

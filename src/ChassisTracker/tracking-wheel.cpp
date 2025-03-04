@@ -11,9 +11,7 @@ namespace chassis_tracker {
 	sensorToWheel_gearRatio(sensorToWheel_gearRatio),
 	wheelDiameter_inches(wheelDiameter_inches),
 	offset_inches(offset_inches)
-	{
-		storeDistance();
-	}
+	{}
 
 	double TrackingWheel::getDistance_inches() {
 		double wheelAngle_degrees = sensor_encoder.getAngle_degrees() * sensorToWheel_gearRatio;
