@@ -56,6 +56,21 @@ void pre_auton(void) {
 
 	printf("maxV: %.3f\n", botinfo::maxV_tilesPerSec);
 
+	// Tasks
+	controls::startThreads();
+	// odometry::startThreads();
+	task rum([]() -> int { preauton::controllerThread(); return 1; });
+	match_end::startThread();
+	ledlight::startThread();
+	ringoptical::startThread();
+	inertial_s::startThread();
+
+	// Brake-types
+	controls::preauton();
+
+	// Sensors
+	preauton::run();
+
 	// Odometry
 	// /*
 	task odometryTask([]() -> int {
@@ -71,21 +86,6 @@ void pre_auton(void) {
 			wait(5, msec);
 		}
 	});//*/
-
-	// Tasks
-	controls::startThreads();
-	// odometry::startThreads();
-	task rum([]() -> int { preauton::controllerThread(); return 1; });
-	match_end::startThread();
-	ledlight::startThread();
-	ringoptical::startThread();
-	inertial_s::startThread();
-
-	// Brake-types
-	controls::preauton();
-
-	// Sensors
-	preauton::run();
 
 	// Debug
 	auton::showAutonRunType();

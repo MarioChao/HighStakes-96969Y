@@ -25,6 +25,7 @@ namespace {
 	std::vector<double> getMotorRevolutions();
 	double getAverageDifference(std::vector<double> vector1, std::vector<double> vector2);
 
+	bool useOdometryForPid = true;
 	bool useRotationSensorForPid = false;
 	bool useEncoderForPid = false;
 
@@ -286,12 +287,10 @@ namespace {
 			driftCorrector.setInitial();
 	
 			// Variables
-			// double motorTargetDistanceRev = distance_inches * (1.0 / driveWheelCircumIn) * (driveWheelMotorGearRatio);
+			Linegular initialPose = mainOdometry.getLookLinegular();
 			std::vector<double> initRevolutions = getMotorRevolutions();
-			// double lookEncoderTargetDistanceRevolution = distance_inches * (1.0 / botinfo::trackingLookWheelCircumIn) * (botinfo::trackingLookWheelEncoderGearRatio);
 			double lookEncoderInitialRevolution = LookEncoder.rotation(rev);
 			double lookRotationInitialRevolution = LookRotation.position(rev);
-			// double rightRotationInitialRevolution = RightRotation.position(rev);
 			Vector3 initalSimulatorPosition = robotSimulator.position;
 	
 			// Motion planner
@@ -355,7 +354,14 @@ namespace {
 				if (useSimulator) {
 					double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * genutil::signum(targetDistanceInches);
 					currentTravelDistance_inches = travelDistance_tiles * field::tileLengthIn;
-				} else if (useRotationSensorForPid) {
+				} else if (useOdometryForPid) {
+					// Compute current travel distance in inches
+					Linegular currentPose = mainOdometry.getLookLinegular();
+					currentTravelDistance_inches = (currentPose - initialPose).getXYMagnitude() * field::tileLengthIn * genutil::signum(targetDistanceInches);
+
+					double averageTravelVel = (LeftMotors.velocity(rpm) + RightMotors.velocity(rpm)) * 0.5;
+					currentTravelVelocity_inchesPerSec = averageTravelVel * (1 / 60.0) * (botinfo::driveWheelCircumIn  / botinfo::driveWheelMotorGearRatio);
+				}  else if (useRotationSensorForPid) {
 					// Compute current travel distance in inches
 					double lookCurrentRevolution = LookRotation.position(rev) - lookRotationInitialRevolution;
 					currentTravelDistance_inches = lookCurrentRevolution * (1.0 / botinfo::trackingLookWheelSensorGearRatio) * (botinfo::trackingLookWheelCircumIn / 1.0);

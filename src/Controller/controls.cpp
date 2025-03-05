@@ -11,7 +11,10 @@
 #include "Controller/rumble.h"
 #include "Mechanics/goalClamp.h"
 #include "Utilities/debugFunctions.h"
+
 #include "Autonomous/autonFunctions.h"
+#include "Autonomous/auton.h"
+
 #include "global-vars.h"
 #include "main.h"
 
@@ -43,6 +46,14 @@ namespace controls {
 	void setUpKeybinds() {
 		Controller2.ButtonX.pressed([]() -> void { botdrive::switchDriveMode(); });
 		Controller2.ButtonY.pressed([]() -> void { botarm::resetArmEncoder(); });
+		Controller2.ButtonA.pressed([]() -> void {
+			botdrive::setControlState(false);
+
+			auton::runAutonomous();
+
+			botdrive::setControlState(true);
+			botdrive::preauton();
+		});
 
 		// Controller 1
 
@@ -172,7 +183,7 @@ namespace controls {
 
 		// Reset arm encoder
 		if (!botarm::isArmResetted()) {
-			task resetArm([] () -> int {
+			task resetArm([]() -> int {
 				botarm::resetArmEncoder();
 				return 1;
 			});
@@ -186,14 +197,14 @@ namespace controls {
 		botdrive::control();
 		if (intakePartType == 1) {
 			botintake::control(
-				(int)Controller1.ButtonR2.pressing() -
-				(int)Controller1.ButtonR1.pressing(),
-				/*This is not used =>*/ (int)Controller1.ButtonX.pressing());
+				(int) Controller1.ButtonR2.pressing() -
+				(int) Controller1.ButtonR1.pressing(),
+				/*This is not used =>*/ (int) Controller1.ButtonX.pressing());
 		} else {
 			botintake2::control(
-				(int)Controller1.ButtonR1.pressing() -
-				(int)Controller1.ButtonR2.pressing(),
-				/*This is not used =>*/ (int)Controller1.ButtonX.pressing());
+				(int) Controller1.ButtonR1.pressing() -
+				(int) Controller1.ButtonR2.pressing(),
+				/*This is not used =>*/ (int) Controller1.ButtonX.pressing());
 		}
 		// botarm::control((int)Controller1.ButtonL1.pressing() -
 		// 				(int)Controller1.ButtonDown.pressing());
