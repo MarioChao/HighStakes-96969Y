@@ -12,6 +12,8 @@
 namespace {
 	const double cosAngleWithinRange = 1e-2;
 	const double integralSmallAngle_degrees = 8;
+
+	bool errorPrinted[3] = {};
 }
 
 namespace chassis_tracker {
@@ -252,7 +254,10 @@ namespace chassis_tracker {
 
 		// Return
 		if (inertialSensor_count == 0) {
-			printf("Error: no inertial sensors available.\n");
+			if (!errorPrinted[2]) {
+				printf("Error: no inertial sensors available.\n");
+				errorPrinted[2] = 1;
+			}
 			return 0;
 		}
 		return totalDeltaAngle / inertialSensor_count;
@@ -271,6 +276,7 @@ namespace chassis_tracker {
 
 			// Get tracking center delta distance
 			double centerDeltaDistance_inches = trackingWheel.getCenterDeltaDistance_inches(wheelDeltaDistance_inches, deltaPolarAngle_degrees);
+			// printf("wheelDelta: %.3f, centerDelta: %.3f, dAng: %.3f\n", wheelDeltaDistance_inches, centerDeltaDistance_inches, deltaPolarAngle_degrees);
 
 			// Variables
 			double cosAngle;
@@ -310,11 +316,17 @@ namespace chassis_tracker {
 
 		// Return
 		if (xValidSensorsCount == 0) {
-			printf("Error: no position sensors available for delta X.\n");
+			if (!errorPrinted[0]) {
+				printf("Error: no position sensors available for delta X.\n");
+				errorPrinted[0] = 1;
+			}
 			xValidSensorsCount = 1;
 		}
 		if (yValidSensorsCount == 0) {
-			printf("Error: no position sensors available for delta Y.\n");
+			if (!errorPrinted[1]) {
+				printf("Error: no position sensors available for delta Y.\n");
+				errorPrinted[1] = 1;
+			}
 			yValidSensorsCount = 1;
 		}
 		return { totalDeltaX_inches / xValidSensorsCount, totalDeltaY_inches / yValidSensorsCount };

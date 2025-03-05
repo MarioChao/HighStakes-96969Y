@@ -37,8 +37,8 @@ namespace {
 chassis_tracker::Odometry mainOdometry = chassis_tracker::Odometry()
 .addTrackingWheel(lookLeft_trackingWheel)
 .addTrackingWheel(lookRight_trackingWheel)
-.addTrackingWheel(lookRotation_trackingWheel)
-.addTrackingWheel(rightOptical_trackingWheel)
+// .addTrackingWheel(lookRotation_trackingWheel)
+// .addTrackingWheel(rightOptical_trackingWheel)
 .addInertialSensor(InertialSensor, 0, 0)
 .setPositionFactor(1.0 / field::tileLengthIn)
 ;

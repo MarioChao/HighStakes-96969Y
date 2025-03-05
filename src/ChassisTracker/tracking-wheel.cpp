@@ -15,7 +15,7 @@ namespace chassis_tracker {
 
 	double TrackingWheel::getDistance_inches() {
 		double wheelAngle_degrees = sensor_encoder.getAngle_degrees() * sensorToWheel_gearRatio;
-		double wheelDistance_inches = wheelAngle_degrees * (M_PI * wheelDiameter_inches);
+		double wheelDistance_inches = (wheelAngle_degrees / 360.0) * (M_PI * wheelDiameter_inches);
 		return wheelDistance_inches;
 	}
 
