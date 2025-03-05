@@ -2,6 +2,7 @@
 
 #include "Autonomous/autonValues.h"
 #include "AutonUtilities/pidController.h"
+#include "AutonUtilities/forwardController.h"
 
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
@@ -38,8 +39,10 @@ namespace {
 	double _linearVelocity_pct, _angularVelocity_radPerSecond;
 
 	// Velocity controller
-	const double kP = 0.10;
-	PIDController driveVelocityLeftMotorPID(kP), driveVelocityRightMotorPID(kP);
+	PIDController left_driveVelocityPid(1.8, 0, 0.005); // in/s to pct
+	ForwardController left_driveMotionForward(1.0, 3.1875, 0.4); // t/s to volt
+	PIDController right_driveVelocityPid(1.8, 0, 0.005); // in/s to pct
+	ForwardController right_driveMotionForward(1.0, 3.1875, 0.4); // t/s to volt
 
 	// Control state
 	bool controlState = true;
@@ -131,7 +134,7 @@ namespace botdrive {
 
 	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
 		_linearVelocity_pct = (leftVelocityPct + rightVelocityPct) / 2.0;
-		double angularVelocity_tilesPerSecond = (rightVelocityPct - leftVelocityPct) / 2.0 / autonvals::tilesPerSecond_to_pct;
+		double angularVelocity_tilesPerSecond = (rightVelocityPct - leftVelocityPct) / 2.0 / botinfo::tilesPerSecond_to_pct;
 		_angularVelocity_radPerSecond = angularVelocity_tilesPerSecond / (botinfo::halfRobotLengthIn * (1.0 / field::tileLengthIn));
 		resolveDriveVelocity();
 	}
@@ -220,11 +223,12 @@ namespace {
 
 		// Convert angular velocity to wheel's linear velocity
 		double rotationLinearVelocity_tilesPerSecond = _angularVelocity_radPerSecond * botinfo::halfRobotLengthIn * (1.0 / field::tileLengthIn);
-		double rotationLinearVelocity_pct = rotationLinearVelocity_tilesPerSecond * autonvals::tilesPerSecond_to_pct;
+		double rotationLinearVelocity_pct = rotationLinearVelocity_tilesPerSecond * botinfo::tilesPerSecond_to_pct;
 
 		// Compute differential velocity
 		double leftVelocity_pct = _linearVelocity_pct - rotationLinearVelocity_pct;
 		double rightVelocity_pct = _linearVelocity_pct + rotationLinearVelocity_pct;
+		printf("Lin: %.3f, ang: %.3f\n", _linearVelocity_pct, rotationLinearVelocity_pct);
 
 		// Drive at velocity
 		_differentialDriveAtVelocity(leftVelocity_pct, rightVelocity_pct);
@@ -236,29 +240,40 @@ namespace {
 		leftVelocity_pct *= scaleFactor;
 		rightVelocity_pct *= scaleFactor;
 
-		if (false) {
-			// Calculate velocity errors
-			double leftVelocity_error = leftVelocity_pct - LeftMotors.velocity(pct);
-			double rightVelocity_error = rightVelocity_pct - RightMotors.velocity(pct);
+		// Compute current motion
+		double currentLeftVelocity_inchesPerSec = LeftMotors.velocity(rpm) * (1 / 60.0) * (botinfo::driveWheelCircumIn  / botinfo::driveWheelMotorGearRatio);
+		double currentRightVelocity_inchesPerSec = RightMotors.velocity(rpm) * (1 / 60.0) * (botinfo::driveWheelCircumIn  / botinfo::driveWheelMotorGearRatio);
 
-			// Compute needed voltage to maintain velocity
-			driveVelocityLeftMotorPID.computeFromError(leftVelocity_error);
-			driveVelocityRightMotorPID.computeFromError(rightVelocity_error);
-			double leftDeltaVolt = driveVelocityLeftMotorPID.getValue();
-			double rightDeltaVolt = driveVelocityRightMotorPID.getValue();
+		/* Feedforward */
 
-			// Compute final voltage
-			double leftVelocity_volt = LeftMotors.voltage(volt) + leftDeltaVolt;
-			double rightVelocity_volt = RightMotors.voltage(volt) + rightDeltaVolt;
+		double desiredLeftVelocity_tilesPerSec = leftVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
+		double desiredRightVelocity_tilesPerSec = rightVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
 
-			// Drive at volt
-			botdrive::driveVoltage(leftVelocity_volt, rightVelocity_volt, 11);
-			printf("Err: %.3f, %.3f, Lvolt: %.3f, Rvolt: %.3f\n", leftVelocity_error, rightVelocity_error, leftVelocity_volt, rightVelocity_volt);
-		} else {
-			// Spin motors
-			LeftMotors.spin(fwd, leftVelocity_pct, pct);
-			RightMotors.spin(fwd, rightVelocity_pct, pct);
-		}
+		left_driveMotionForward.computeFromMotion(desiredLeftVelocity_tilesPerSec, 0);
+		right_driveMotionForward.computeFromMotion(desiredRightVelocity_tilesPerSec, 0);
+		double forwardLeftVelocity_pct = genutil::voltToPct(left_driveMotionForward.getValue(0));
+		double forwardRightVelocity_pct = genutil::voltToPct(right_driveMotionForward.getValue(0));
+		
+		/* Velocity feedback */
+		
+		// Compute trajectory velocity error
+		double leftVelocityError_inchesPerSec = desiredLeftVelocity_tilesPerSec * field::tileLengthIn - currentLeftVelocity_inchesPerSec;
+		double rightVelocityError_inchesPerSec = desiredRightVelocity_tilesPerSec * field::tileLengthIn - currentRightVelocity_inchesPerSec;
+		
+		// Compute pid-value from error
+		left_driveVelocityPid.computeFromError(leftVelocityError_inchesPerSec);
+		right_driveVelocityPid.computeFromError(rightVelocityError_inchesPerSec);
+		double leftVelocityPidVelocity_pct = left_driveVelocityPid.getValue();
+		double rightVelocityPidVelocity_pct = right_driveVelocityPid.getValue();
+		
+		/* Combined */
+
+		// Compute final motor velocities
+		leftVelocity_pct = forwardLeftVelocity_pct + leftVelocityPidVelocity_pct;
+		rightVelocity_pct = forwardRightVelocity_pct + rightVelocityPidVelocity_pct;
+
+		// Drive at volt
+		botdrive::driveVoltage(genutil::pctToVolt(leftVelocity_pct), genutil::pctToVolt(rightVelocity_pct), 11);
 	}
 
 	void _differentialDriveAtVolt(double leftVelocity_volt, double rightVelocity_volt) {

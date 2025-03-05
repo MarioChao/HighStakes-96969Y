@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Autonomous/autonValues.h"
+#include "Utilities/robotInfo.h"
 
 #include "main.h"
 
@@ -68,7 +69,7 @@ namespace autonfunctions {
 
 	void setSplinePath(UniformCubicSpline &splinePath, TrajectoryPlanner &trajectoryPlan);
 	void setSplinePath(UniformCubicSpline &splinePath, TrajectoryPlanner &trajectoryPlan, CurveSampler &curveSampler);
-	void setPathToPctFactor(double factor = autonvals::tilesPerSecond_to_pct);
+	void setPathToPctFactor(double factor = botinfo::tilesPerSecond_to_pct);
 	void followSplinePath(bool reverseHeading = false);
 
 	extern timer _splinePathTimer;

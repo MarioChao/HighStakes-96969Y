@@ -28,6 +28,7 @@
 #include "Videos/video-main.h"
 #include "LedLight/led-main.h"
 
+#include "Autonomous/autonValues.h"
 #include "AutonUtilities/linegular.h"
 #include "Simulation/robotSimulator.h"
 #include "Utilities/generalUtility.h"
@@ -55,6 +56,7 @@ void pre_auton(void) {
 	// Example: clearing encoders, setting servo positions, ...
 
 	printf("maxV: %.3f\n", botinfo::maxV_tilesPerSec);
+	// printf("tps2%%: %.3f\n", botinfo::tilesPerSecond_to_pct);
 
 	// Tasks
 	controls::startThreads();

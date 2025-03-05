@@ -20,4 +20,5 @@ namespace botinfo {
 	extern const double trackingLookWheelSensorGearRatio;
 
 	extern const double maxV_tilesPerSec;
+	extern const double tilesPerSecond_to_pct;
 }

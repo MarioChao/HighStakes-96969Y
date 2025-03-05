@@ -13,8 +13,8 @@ namespace {
 	bool userRunningAutonomous = false;
 	bool runningAutonUponStart = false;
 
-	autonomousType auton_runType = autonomousType::DrivingSkills;
-	// autonomousType auton_runType = autonomousType::BlueDown;
+	// autonomousType auton_runType = autonomousType::DrivingSkills;
+	autonomousType auton_runType = autonomousType::LoveShape;
 	// autonomousType auton_runType = autonomousType::AutonSkills;
 	// autonomousType auton_runType = autonomousType::BlueSoloAWP;
 	// autonomousType auton_runType = autonomousType::OdometryRadiusTest;

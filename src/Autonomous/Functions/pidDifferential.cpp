@@ -458,14 +458,14 @@ namespace {
 				/* Combined */
 
 				// Compute final motor velocities
-				double leftVelocityPct = linearVelocity_pct + rotateVelocity_pct;
-				double rightVelocityPct = linearVelocity_pct - rotateVelocity_pct;
+				double leftVelocity_pct = linearVelocity_pct + rotateVelocity_pct;
+				double rightVelocity_pct = linearVelocity_pct - rotateVelocity_pct;
 
 				// Compute value to synchronize velocity
 				if (!useSimulator) {
 					double velocityDifferencePct = LeftMotors.velocity(pct) - RightMotors.velocity(pct);
 					double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
-					double finalVelocityDifferencePct = leftVelocityPct - rightVelocityPct;
+					double finalVelocityDifferencePct = leftVelocity_pct - rightVelocity_pct;
 					double finalVelocityDifferenceInchesPerSecond = (finalVelocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 
 					// Compute final delta motor velocities
@@ -474,13 +474,13 @@ namespace {
 					double finalDeltaVelocityPct = driveAndTurn_synchronizeVelocityPid.getValue();
 
 					// Update final motor velocities
-					leftVelocityPct += finalDeltaVelocityPct;
-					rightVelocityPct -= finalDeltaVelocityPct;
+					leftVelocity_pct += finalDeltaVelocityPct;
+					rightVelocity_pct -= finalDeltaVelocityPct;
 				}
 
 				// Drive with velocities
 				// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
-				botdrive::driveVoltage(genutil::pctToVolt(leftVelocityPct), genutil::pctToVolt(rightVelocityPct), 10);
+				botdrive::driveVoltage(genutil::pctToVolt(leftVelocity_pct), genutil::pctToVolt(rightVelocity_pct), 10);
 
 				wait(5, msec);
 			}

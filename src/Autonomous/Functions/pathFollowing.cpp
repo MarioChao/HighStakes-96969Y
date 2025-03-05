@@ -98,6 +98,7 @@ namespace autonfunctions {
 				// Drive
 				if (!useSimulator) {
 					botdrive::driveLinegularVelocity(linegularVelocity.first, linegularVelocity.second);
+					// printf("Lin: %.3f, ang: %.3f\n", linegularVelocity.first, linegularVelocity.second);
 				} else {
 					robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
 					robotSimulator.angularPosition = targetLg.getThetaPolarAngle_radians();
@@ -117,7 +118,7 @@ namespace autonfunctions {
 	TrajectoryPlanner _trajectoryPlan;
 	CurveSampler _curveSampler;
 	bool _reverseHeading;
-	double _pathToPctFactor = autonvals::tilesPerSecond_to_pct;
+	double _pathToPctFactor = botinfo::tilesPerSecond_to_pct;
 	bool _pathFollowStarted;
 	bool _pathFollowCompleted;
 	double _pathFollowDistanceRemaining_tiles;

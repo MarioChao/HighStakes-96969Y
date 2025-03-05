@@ -25,4 +25,10 @@ namespace botinfo {
 		chassisMotorRpm * (1 / 60.0) * (1.0 / driveWheelMotorGearRatio) // wheel rev/sec
 		* (driveWheelCircumIn / 1.0) * (1.0 / field::tileLengthIn) // tiles/sec
 	);
+
+	const double tilesPerSecond_to_pct = (
+		// input: travel tiles per second
+		(1.0 / botinfo::maxV_tilesPerSec) // motor's pct [0-1]
+		* (100.0 / 1.0) // motor's pct [0-100]
+	);
 }

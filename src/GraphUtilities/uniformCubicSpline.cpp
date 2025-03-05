@@ -119,6 +119,8 @@ double UniformCubicSpline::getCurvatureAt(double t) {
 	std::vector<double> prime1 = getVelocityAtT(t);
 	std::vector<double> prime2 = getSecondPrimeAtT(t);
 
+	// See https://en.wikipedia.org/wiki/Curvature#In_terms_of_a_general_parametrization
+
 	double xp = prime1[0], xpp = prime2[0];
 	double yp = prime1[1], ypp = prime2[1];
 
