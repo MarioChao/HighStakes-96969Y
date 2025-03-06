@@ -17,7 +17,9 @@ UniformCubicSpline::UniformCubicSpline(std::vector<CubicSplineSegment> segments)
 UniformCubicSpline UniformCubicSpline::fromAutoTangent(cspline::SplineType splineType, std::vector<std::vector<double>> points) {
 	// Validate input
 	if ((int) points.size() < 4) {
-		return UniformCubicSpline();
+		// return UniformCubicSpline();
+		printf("ERR: Spline points not enough\n");
+		throw;
 	}
 
 	// Create spline
@@ -61,7 +63,8 @@ std::vector<CubicSplineSegment> UniformCubicSpline::getSegments() {
 CubicSplineSegment &UniformCubicSpline::getSegment(int id) {
 	// Validate
 	if (!(0 <= id && id < (int) segments.size())) {
-		return emptySegment;
+		printf("ERR: Id not valid\n");
+		throw;
 	}
 
 	// Return result
@@ -164,5 +167,3 @@ Linegular UniformCubicSpline::getLinegularAt(double t, bool reverseHeading) {
 	Linegular lg(position[0], position[1], finalAngle_degrees);
 	return lg;
 }
-
-CubicSplineSegment UniformCubicSpline::emptySegment;

@@ -47,7 +47,7 @@ chassis_tracker::Odometry mainOdometry = chassis_tracker::Odometry()
 /* Autonomous */
 
 RobotSimulator robotSimulator;
-bool mainUseSimulator = true;
+bool mainUseSimulator = false;
 
 TrajectoryPlanner testTrajectoryPlan;
 timer trajectoryTestTimer;

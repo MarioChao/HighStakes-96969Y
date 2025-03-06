@@ -23,8 +23,8 @@ namespace cspline {
 
 class CubicSplineSegment {
 public:
-	CubicSplineSegment();
 	CubicSplineSegment(cspline::SplineType splineType, std::vector<std::vector<double>> points);
+	CubicSplineSegment();
 
 	void setSplineType(cspline::SplineType splineType);
 	void setPoints(std::vector<std::vector<double>> points);
@@ -61,4 +61,6 @@ namespace cspline {
 		extern Matrix CatmullRom;
 		extern Matrix B_Spline;
 	}
+
+	void setMatrices();
 }
