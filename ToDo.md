@@ -1,0 +1,30 @@
+# ToDo
+
+- [ ] Reorganize files
+	- [ ] Aespa Library
+		- [ ] Giselle Graphics
+		- [ ] Karina Data Structures
+			- [ ] matrix
+		- [ ] Ningning Sensors
+			- [x] encoder beats
+		- [ ] Winter Utilities (general util)
+	- [ ] Pas1 Library
+		- [ ] Auton
+			- [ ] Control loops (feedforward, feedback)
+			- [ ] End conditions (patience, settle, timeout)
+			- [ ] Pose controllers (pure pursuit, ramsete, LTV)
+		- [ ] Chassis Tracker
+			- [x] odometry
+			- [x] tracking wheel
+		- [ ] Planning
+			- [ ] Splines
+				- [ ] spline segment
+				- [ ] uniform spline
+				- [ ] curve sampler
+			- [ ] Trajectories
+				- [ ] trajectory planner
+	- [ ] 
+- [ ] Units system for consistency
+- [ ] Revamp trajectory planner
+	- [ ] Numerical integration method
+	- [ ] Higher-order derivative constraints on position
