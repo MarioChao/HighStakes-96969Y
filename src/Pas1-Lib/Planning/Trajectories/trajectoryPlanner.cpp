@@ -1,6 +1,6 @@
-#include "GraphUtilities/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
 
-#include "GraphUtilities/curveSampler.h"
+#include "Pas1-Lib/Planning/Splines/curveSampler.h"
 
 #include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 #include "Utilities/robotInfo.h"

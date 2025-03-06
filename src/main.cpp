@@ -34,9 +34,9 @@
 
 #include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 
-#include "GraphUtilities/uniformCubicSpline.h"
-#include "GraphUtilities/curveSampler.h"
-#include "GraphUtilities/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
+#include "Pas1-Lib/Planning/Splines/curveSampler.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
 
 
 /*---------------------------------------------------------------------------*/

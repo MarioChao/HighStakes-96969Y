@@ -3,7 +3,7 @@
 #include "main.h"
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
 #include "Simulation/robotSimulator.h"
-#include "GraphUtilities/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
 
 // ---------- Global variables ----------
 

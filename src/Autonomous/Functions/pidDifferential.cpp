@@ -16,7 +16,7 @@
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 
-#include "GraphUtilities/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
 
 #include "Simulation/robotSimulator.h"
 

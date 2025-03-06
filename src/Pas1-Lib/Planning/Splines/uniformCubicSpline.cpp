@@ -1,4 +1,4 @@
-#include "GraphUtilities/uniformCubicSpline.h"
+#include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
 
 #include "AutonUtilities/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/generalUtility.h"

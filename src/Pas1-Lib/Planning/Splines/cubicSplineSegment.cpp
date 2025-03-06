@@ -1,4 +1,4 @@
-#include "GraphUtilities/cubicSplineSegment.h"
+#include "Pas1-Lib/Planning/Splines/cubicSplineSegment.h"
 
 #include <stdio.h>
 

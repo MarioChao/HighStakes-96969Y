@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GraphUtilities/cubicSplineSegment.h"
+#include "Pas1-Lib/Planning/Splines/cubicSplineSegment.h"
 
 #include <initializer_list>
 #include <vector>

@@ -3,9 +3,9 @@
 #include "Pas1-Lib/Auton/Pose-Controllers/ramseteController.h"
 #include "AutonUtilities/linegular.h"
 
-#include "GraphUtilities/uniformCubicSpline.h"
-#include "GraphUtilities/curveSampler.h"
-#include "GraphUtilities/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
+#include "Pas1-Lib/Planning/Splines/curveSampler.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
 
 #include "Mechanics/botDrive.h"
 

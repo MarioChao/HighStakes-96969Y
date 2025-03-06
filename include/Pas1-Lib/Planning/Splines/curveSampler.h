@@ -2,7 +2,7 @@
 
 // Name inspired from https://github.com/FreyaHolmer/Mathfs/blob/master/Runtime/Splines/UniformCurveSampler.cs
 
-#include "GraphUtilities/uniformCubicSpline.h"
+#include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
 #include <vector>
 
 
