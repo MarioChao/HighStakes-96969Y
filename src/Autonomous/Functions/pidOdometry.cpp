@@ -1,9 +1,10 @@
 #include "Autonomous/autonFunctions.h"
 
+#include "Pas1-Lib/Auton/Control-Loops/pidController.h"
+#include "Pas1-Lib/Auton/End-Conditions/patienceController.h"
+
 #include "AutonUtilities/driftCorrection.h"
-#include "AutonUtilities/pidController.h"
 #include "AutonUtilities/linegular.h"
-#include "AutonUtilities/patienceController.h"
 
 #include "Mechanics/botDrive.h"
 

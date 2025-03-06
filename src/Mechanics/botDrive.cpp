@@ -1,8 +1,8 @@
 #include "Mechanics/botDrive.h"
 
 #include "Autonomous/autonValues.h"
-#include "AutonUtilities/pidController.h"
-#include "AutonUtilities/forwardController.h"
+#include "Pas1-Lib/Auton/Control-Loops/pidController.h"
+#include "Pas1-Lib/Auton/Control-Loops/forwardController.h"
 
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
@@ -39,9 +39,9 @@ namespace {
 	double _linearVelocity_pct, _angularVelocity_radPerSecond;
 
 	// Velocity controller
-	PIDController left_driveVelocityPid(1.8, 0, 0.005); // in/s to pct
+	PIDController left_driveVelocityPid(1.8, 0, 0); // in/s to pct
 	ForwardController left_driveMotionForward(1.0, 3.1875, 0.4); // t/s to volt
-	PIDController right_driveVelocityPid(1.8, 0, 0.005); // in/s to pct
+	PIDController right_driveVelocityPid(1.8, 0, 0); // in/s to pct
 	ForwardController right_driveMotionForward(1.0, 3.1875, 0.4); // t/s to volt
 
 	// Control state

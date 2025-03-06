@@ -1,6 +1,10 @@
 # DS Store
 .DS_Store
 
+# Dev
+dev-makefile.mk
+/dev-build
+
 # Build files
 /bin
 /build

@@ -1,5 +1,6 @@
-#include "AutonUtilities/pidController.h"
-#include "AutonUtilities/patienceController.h"
+#include "Pas1-Lib/Auton/Control-Loops/pidController.h"
+#include "Pas1-Lib/Auton/End-Conditions/patienceController.h"
+
 #include "Mechanics/botArm.h"
 #include "Utilities/generalUtility.h"
 #include "Utilities/debugFunctions.h"

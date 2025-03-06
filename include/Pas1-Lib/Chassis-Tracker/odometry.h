@@ -1,7 +1,7 @@
 #pragma once
 
 #include "main.h"
-#include "ChassisTracker/tracking-wheel.h"
+#include "Pas1-Lib/Chassis-Tracker/tracking-wheel.h"
 #include "AutonUtilities/driftCorrection.h"
 
 class DriftCorrection;

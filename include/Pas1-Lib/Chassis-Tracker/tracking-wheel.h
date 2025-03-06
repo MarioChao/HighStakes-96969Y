@@ -1,7 +1,7 @@
 #pragma once
 
 #include "main.h"
-#include "Sensors/encoder-beats.hpp"
+#include "Aespa-Lib/Ningning-Sensors/encoder-beats.hpp"
 
 namespace chassis_tracker {
 	class TrackingWheel;

@@ -10,9 +10,9 @@
 		- [ ] Winter Utilities (general util)
 	- [ ] Pas1 Library
 		- [ ] Auton
-			- [ ] Control loops (feedforward, feedback)
-			- [ ] End conditions (patience, settle, timeout)
-			- [ ] Pose controllers (pure pursuit, ramsete, LTV)
+			- [ ] Control Loops (feedforward, feedback)
+			- [ ] End Conditions (patience, settle, timeout)
+			- [ ] Pose Controllers (pure pursuit, ramsete, LTV)
 		- [ ] Chassis Tracker
 			- [x] odometry
 			- [x] tracking wheel
