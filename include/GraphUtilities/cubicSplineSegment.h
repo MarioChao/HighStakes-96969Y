@@ -36,7 +36,7 @@ public:
 	Matrix &getStoringMatrix();
 
 	std::vector<double> getPositionAtT(double t);
-	std::vector<double> getVelocityAtT(double t);
+	std::vector<double> getFirstPrimeAtT(double t);
 	std::vector<double> getSecondPrimeAtT(double t);
 
 	CubicSplineSegment getReversed();

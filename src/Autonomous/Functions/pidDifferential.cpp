@@ -61,7 +61,7 @@ namespace {
 			double runTimeout_sec
 		);
 		void driveAndTurnDistance_inches();
-		double _distance_in, _targetRotation_deg;
+		double _distance_in, _fieldAngle_degrees;
 		std::vector<std::pair<double, double>> _velocityConstraint_inch_pct;
 		double _maxTurnVelocity_pct;
 		double _runTimeout_sec;
@@ -72,26 +72,22 @@ namespace autonfunctions {
 namespace pid_diff {
 	/* PID differential*/
 
-	/// @brief Turn the robot to face a specified angle.
-	/// @param rotation The target angle to face in degrees.
-	/// @param rotateCenterOffsetIn The offset of the center of rotation.
-	/// @param runTimeout_sec Maximum seconds the function will run for.
-	void turnToAngle(double rotation, double rotateCenterOffsetIn, double runTimeout_sec) {
-		turnToAngleVelocity(rotation, 90.0, rotateCenterOffsetIn, runTimeout_sec);
+	void turnToAngle(double fieldAngle_degrees, double rotateCenterOffset_inches, double runTimeout_sec) {
+		turnToAngleVelocity(fieldAngle_degrees, 90.0, rotateCenterOffset_inches, runTimeout_sec);
 	}
 
 	/// @brief Turn the robot to face a specified angle.
-	/// @param rotation The target angle to face in degrees.
-	/// @param maxVelocity_pct Maximum velocity of the rotation.
-	/// @param rotateCenterOffsetIn The offset of the center of rotation.
+	/// @param fieldAngle_degrees The target angle to face in degrees.
+	/// @param maxVelocity_pct Maximum velocity of the fieldAngle_degrees.
+	/// @param rotateCenterOffset_inches The offset of the center of rotation.
 	/// @param runTimeout_sec Maximum seconds the function will run for.
-	void turnToAngleVelocity(double rotation, double maxVelocity_pct, double rotateCenterOffsetIn, double runTimeout_sec) {
+	void turnToAngleVelocity(double fieldAngle_degrees, double maxVelocity_pct, double rotateCenterOffset_inches, double runTimeout_sec) {
 		// Set corrector
 		driftCorrector.setInitial();
 
 		// Center of rotations
-		double leftRotateRadiusIn = botinfo::halfRobotLengthIn + rotateCenterOffsetIn;
-		double rightRotateRadiusIn = botinfo::halfRobotLengthIn - rotateCenterOffsetIn;
+		double leftRotateRadiusIn = botinfo::halfRobotLengthIn + rotateCenterOffset_inches;
+		double rightRotateRadiusIn = botinfo::halfRobotLengthIn - rotateCenterOffset_inches;
 		double averageRotateRadiusIn = (leftRotateRadiusIn + rightRotateRadiusIn) / 2;
 
 		// Velocity factors
@@ -127,11 +123,11 @@ namespace pid_diff {
 			// Get current robot heading
 			double currentRotation_degrees = InertialSensor.rotation(degrees);
 			if (mainUseSimulator) {
-				currentRotation_degrees = aespa_lib::genutil::toDegrees(robotSimulator.angularPosition);
+				currentRotation_degrees = aespa_lib::angle::swapFieldPolar_degrees(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 			}
 
 			// Compute heading error
-			double rotateError = rotation - currentRotation_degrees;
+			double rotateError = fieldAngle_degrees - currentRotation_degrees;
 			if (_useRelativeRotation) {
 				rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
 			}
@@ -173,6 +169,10 @@ namespace pid_diff {
 		// Stop
 		LeftRightMotors.stop(brake);
 
+		if (mainUseSimulator) {
+			robotSimulator.angularVelocity = 0;
+		}
+
 		// Correct
 		driftCorrector.correct();
 	}
@@ -187,51 +187,51 @@ namespace pid_diff {
 
 	/// @brief Drive the robot for a specified tile distance and rotate it to a specified rotation in degrees.
 	/// @param distance_tiles Distance in units of tiles.
-	/// @param targetRotation The target angle to face in degrees.
+	/// @param fieldAngle_degrees The target angle to face in degrees.
 	/// @param maxVelocity_pct Maximum velocity of the drive. (can > 100)
 	/// @param maxTurnVelocity_pct Maximum rotational velocity of the drive. (can > 100)
 	/// @param runTimeout_sec Maximum seconds the function will run for.
-	void driveAndTurnDistanceTiles(double distance_tiles, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
-		driveAndTurnDistanceWithInches(distance_tiles * field::tileLengthIn, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
+	void driveAndTurnDistanceTiles(double distance_tiles, double fieldAngle_degrees, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		driveAndTurnDistanceWithInches(distance_tiles * field::tileLengthIn, fieldAngle_degrees, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
 	/// @brief Drive the robot for a specified distance in inches and rotate it to a specified rotation in degrees.
 	/// @param distance_inches Distance in units of inches.
-	/// @param targetRotation The target angle to face in degrees.
+	/// @param fieldAngle_degrees The target angle to face in degrees.
 	/// @param maxVelocity_pct Maximum velocity of the drive. (can > 100)
 	/// @param maxTurnVelocity_pct Maximum rotational velocity of the drive. (can > 100)
 	/// @param runTimeout_sec Maximum seconds the function will run for.
-	void driveAndTurnDistanceWithInches(double distance_inches, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
-		async_driveAndTurnDistance_inches(distance_inches, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
+	void driveAndTurnDistanceWithInches(double distance_inches, double fieldAngle_degrees, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_inches, fieldAngle_degrees, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 		waitUntil(_isDriveAndTurnSettled);
 	}
 
-	void async_driveAndTurnDistance_tiles(double distance_tiles, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
-		async_driveAndTurnDistance_inches(distance_tiles * field::tileLengthIn, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
+	void async_driveAndTurnDistance_tiles(double distance_tiles, double fieldAngle_degrees, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_tiles * field::tileLengthIn, fieldAngle_degrees, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
-	void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
-		async_driveAndTurnDistance_inches(distance_qtInches / 4, targetRotation, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
+	void async_driveAndTurnDistance_qtInches(double distance_qtInches, double fieldAngle_degrees, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_qtInches / 4, fieldAngle_degrees, maxVelocity_pct, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
-	void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, std::vector<std::pair<double,double>> velocityConstraint_qtInch_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+	void async_driveAndTurnDistance_qtInches(double distance_qtInches, double fieldAngle_degrees, std::vector<std::pair<double,double>> velocityConstraint_qtInch_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
 		for (int i = 0; i < (int) velocityConstraint_qtInch_pct.size(); i++) {
 			velocityConstraint_qtInch_pct[i].first /= 4;
 		}
-		async_driveAndTurnDistance_inches(distance_qtInches / 4, targetRotation, velocityConstraint_qtInch_pct, maxTurnVelocity_pct, runTimeout_sec);
+		async_driveAndTurnDistance_inches(distance_qtInches / 4, fieldAngle_degrees, velocityConstraint_qtInch_pct, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
-	void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
-		async_driveAndTurnDistance_inches(distance_inches, targetRotation, {{0, maxVelocity_pct}}, maxTurnVelocity_pct, runTimeout_sec);
+	void async_driveAndTurnDistance_inches(double distance_inches, double fieldAngle_degrees, double maxVelocity_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+		async_driveAndTurnDistance_inches(distance_inches, fieldAngle_degrees, {{0, maxVelocity_pct}}, maxTurnVelocity_pct, runTimeout_sec);
 	}
 
-	void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
+	void async_driveAndTurnDistance_inches(double distance_inches, double fieldAngle_degrees, std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct, double runTimeout_sec) {
 		// State variables
 		_driveDistanceError_inches = 1e9;
 		_isDriveAndTurnSettled = false;
 
 		// Drive and turn
-		drive_turn::setVariables(distance_inches, targetRotation, velocityConstraint_inch_pct, maxTurnVelocity_pct, runTimeout_sec);
+		drive_turn::setVariables(distance_inches, fieldAngle_degrees, velocityConstraint_inch_pct, maxTurnVelocity_pct, runTimeout_sec);
 		task driveTurnTask([]() -> int {
 			drive_turn::driveAndTurnDistance_inches();
 			return 1;
@@ -276,7 +276,7 @@ namespace {
 			double runTimeout_sec
 		) {
 			_distance_in = distance_in;
-			_targetRotation_deg = targetRotation_deg;
+			_fieldAngle_degrees = targetRotation_deg;
 			_velocityConstraint_inch_pct = velocityConstraint_inch_pct;
 			_maxTurnVelocity_pct = maxTurnVelocity_pct;
 			_runTimeout_sec = runTimeout_sec;
@@ -285,7 +285,7 @@ namespace {
 		void driveAndTurnDistance_inches() {
 			// Variables
 			double distance_inches = _distance_in;
-			double targetRotation = _targetRotation_deg;
+			double fieldAngle_degrees = _fieldAngle_degrees;
 			std::vector<std::pair<double, double>> velocityConstraint_inch_pct = _velocityConstraint_inch_pct;
 			double maxTurnVelocity_pct = _maxTurnVelocity_pct;
 			double runTimeout_sec = _runTimeout_sec;
@@ -452,7 +452,7 @@ namespace {
 				if (useSimulator) currentRotation_degrees = aespa_lib::angle::swapFieldPolar_degrees(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 
 				// Compute heading error
-				double rotateError = targetRotation - currentRotation_degrees;
+				double rotateError = fieldAngle_degrees - currentRotation_degrees;
 				if (autonfunctions::_useRelativeRotation) {
 					rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
 				}

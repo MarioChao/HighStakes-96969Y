@@ -82,23 +82,18 @@ std::vector<double> UniformCubicSpline::getPositionAtT(double t) {
 	return segments[segment_id].getPositionAtT(segment_t);
 }
 
-std::vector<double> UniformCubicSpline::getVelocityAtT(double t) {
+std::vector<double> UniformCubicSpline::getFirstPrimeAtT(double t) {
 	// Get segment info
 	int segment_id = floor(t);
 	double segment_t = t - segment_id;
 
 	// Special cases
 	if (segment_id < 0) {
-		return segments[0].getVelocityAtT(0);
+		return segments[0].getFirstPrimeAtT(0);
 	} else if (segment_id >= (int) segments.size()) {
-		return segments.back().getVelocityAtT(1);
+		return segments.back().getFirstPrimeAtT(1);
 	}
-	return segments[segment_id].getVelocityAtT(segment_t);
-}
-
-double UniformCubicSpline::getPolarAngleRadiansAt(double t) {
-	std::vector<double> velocity = getVelocityAtT(t);
-	return atan2(velocity[1], velocity[0]);
+	return segments[segment_id].getFirstPrimeAtT(segment_t);
 }
 
 std::vector<double> UniformCubicSpline::getSecondPrimeAtT(double t) {
@@ -115,8 +110,13 @@ std::vector<double> UniformCubicSpline::getSecondPrimeAtT(double t) {
 	return segments[segment_id].getSecondPrimeAtT(segment_t);
 }
 
+double UniformCubicSpline::getPolarAngleRadiansAt(double t) {
+	std::vector<double> velocity = getFirstPrimeAtT(t);
+	return atan2(velocity[1], velocity[0]);
+}
+
 double UniformCubicSpline::getCurvatureAt(double t) {
-	std::vector<double> prime1 = getVelocityAtT(t);
+	std::vector<double> prime1 = getFirstPrimeAtT(t);
 	std::vector<double> prime2 = getSecondPrimeAtT(t);
 
 	// See https://en.wikipedia.org/wiki/Curvature#In_terms_of_a_general_parametrization

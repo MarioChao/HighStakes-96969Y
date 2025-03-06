@@ -18,7 +18,7 @@ class TrajectoryPlanner;
 namespace autonfunctions {
 	/* General */
 
-	void setRobotRotation(double rotation);
+	void setRobotRotation(double fieldAngle_degrees);
 
 	extern timer _autonTimer;
 
@@ -29,18 +29,22 @@ namespace autonfunctions {
 	/* PID differential */
 
 	namespace pid_diff {
-		void turnToAngle(double rotation, double rotateCenterOffsetIn = 0, double runTimeout_sec = 3);
-		void turnToAngleVelocity(double rotation, double maxVelocity_pct, double rotateCenterOffsetIn = 0, double runTimeout_sec = 3);
+		/// @brief Turn the robot to face a specified angle.
+		/// @param fieldAngle_degrees The target angle to face in degrees.
+		/// @param rotateCenterOffset_inches The offset of the center of rotation.
+		/// @param runTimeout_sec Maximum seconds the function will run for.
+		void turnToAngle(double fieldAngle_degrees, double rotateCenterOffset_inches = 0, double runTimeout_sec = 3);
+		void turnToAngleVelocity(double fieldAngle_degrees, double maxVelocity_pct, double rotateCenterOffset_inches = 0, double runTimeout_sec = 3);
 	
-		void driveDistanceTiles(double distanceTiles, double maxVelocity_pct = 100, double runTimeout_sec = 3);
-		void driveAndTurnDistanceTiles(double distanceTiles, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
-		void driveAndTurnDistanceWithInches(double distanceInches, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void driveDistanceTiles(double distance_tiles, double maxVelocity_pct = 100, double runTimeout_sec = 3);
+		void driveAndTurnDistanceTiles(double distance_tiles, double fieldAngle_degrees, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void driveAndTurnDistanceWithInches(double distance_inches, double fieldAngle_degrees, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
 
-		void async_driveAndTurnDistance_tiles(double distance_tiles, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
-		void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
-		void async_driveAndTurnDistance_qtInches(double distance_qtInches, double targetRotation, std::vector<std::pair<double, double>> velocityConstraint_qtInch_pct, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
-		void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
-		void async_driveAndTurnDistance_inches(double distance_inches, double targetRotation, std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void async_driveAndTurnDistance_tiles(double distance_tiles, double fieldAngle_degrees, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void async_driveAndTurnDistance_qtInches(double distance_qtInches, double fieldAngle_degrees, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void async_driveAndTurnDistance_qtInches(double distance_qtInches, double fieldAngle_degrees, std::vector<std::pair<double, double>> velocityConstraint_qtInch_pct, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void async_driveAndTurnDistance_inches(double distance_inches, double fieldAngle_degrees, double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
+		void async_driveAndTurnDistance_inches(double distance_inches, double fieldAngle_degrees, std::vector<std::pair<double, double>> velocityConstraint_inch_pct, double maxTurnVelocity_pct = 100, double runTimeout_sec = 3);
 
 		extern double _driveDistanceError_inches;
 		extern bool _isDriveAndTurnSettled;

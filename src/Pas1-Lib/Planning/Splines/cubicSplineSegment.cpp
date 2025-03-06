@@ -67,7 +67,7 @@ std::vector<double> CubicSplineSegment::getPositionAtT(double t) {
 	return point;
 }
 
-std::vector<double> CubicSplineSegment::getVelocityAtT(double t) {
+std::vector<double> CubicSplineSegment::getFirstPrimeAtT(double t) {
 	Matrix t_matrix({ {0, 1, 2*t, 3*t*t} });
 	Matrix point_matrix = Matrix(stored_points);
 	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
