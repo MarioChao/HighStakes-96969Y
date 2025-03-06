@@ -126,6 +126,9 @@ namespace pid_diff {
 
 			// Get current robot heading
 			double currentRotation_degrees = InertialSensor.rotation(degrees);
+			if (mainUseSimulator) {
+				currentRotation_degrees = aespa_lib::genutil::toDegrees(robotSimulator.angularPosition);
+			}
 
 			// Compute heading error
 			double rotateError = rotation - currentRotation_degrees;
@@ -156,7 +159,9 @@ namespace pid_diff {
 			rightMotorVelocityPct *= scaleFactor;
 
 			// Drive with velocities
-			if (useVolt) {
+			if (mainUseSimulator) {
+				robotSimulator.angularVelocity = (rightMotorVelocityPct - leftMotorVelocityPct) / 2 / 100 * botinfo::maxV_tilesPerSec / (botinfo::halfRobotLengthIn / field::tileLengthIn);
+			} else if (useVolt) {
 				botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftMotorVelocityPct), aespa_lib::genutil::pctToVolt(rightMotorVelocityPct), 10);
 			} else {
 				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);

@@ -13,7 +13,11 @@ public:
 	void setDistance(double distance);
 	void updateDistance();
 
+	void setForwardVelocity(double velocity_value);
+
 	Vector3 position, velocity, acceleration, jerk;
+
+	// Base unit: radians
 	double angularPosition, angularVelocity, angularAcceleration, angularJerk;
 
 	double travelledDistance;

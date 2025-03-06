@@ -61,7 +61,6 @@ void pre_auton(void) {
 
 	// Tasks
 	controls::startThreads();
-	// odometry::startThreads();
 	task rum([]() -> int { preauton::controllerThread(); return 1; });
 	match_end::startThread();
 	ledlight::startThread();
@@ -89,6 +88,17 @@ void pre_auton(void) {
 			wait(5, msec);
 		}
 	});//*/
+
+	// Simulator
+	robotSimulator.position = Vector3(1, 1);
+	robotSimulator.angularPosition = aespa_lib::genutil::toRadians(90);
+	task simulatorTask([]() -> int {
+		while (true) {
+			robotSimulator.updatePhysics();
+			robotSimulator.updateDistance();
+			wait(5, msec);
+		}
+	});
 
 	// Debug
 	auton::showAutonRunType();

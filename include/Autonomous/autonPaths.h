@@ -4,6 +4,7 @@
 #include "GraphUtilities/uniformCubicSpline.h"
 #include "GraphUtilities/curveSampler.h"
 #include "GraphUtilities/trajectoryPlanner.h"
+#include "AutonUtilities/linegular.h"
 
 #include "Aespa-Lib/Winter-Utilities/angleUtility.h"
 #include "Aespa-Lib/Winter-Utilities/generalUtility.h"

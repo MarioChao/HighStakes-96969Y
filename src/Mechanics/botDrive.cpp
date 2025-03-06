@@ -229,7 +229,7 @@ namespace {
 		// Compute differential velocity
 		double leftVelocity_pct = _linearVelocity_pct - rotationLinearVelocity_pct;
 		double rightVelocity_pct = _linearVelocity_pct + rotationLinearVelocity_pct;
-		printf("Lin: %.3f, ang: %.3f\n", _linearVelocity_pct, rotationLinearVelocity_pct);
+		// printf("Lin: %.3f, ang: %.3f\n", _linearVelocity_pct, rotationLinearVelocity_pct);
 
 		// Drive at velocity
 		_differentialDriveAtVelocity(leftVelocity_pct, rightVelocity_pct);

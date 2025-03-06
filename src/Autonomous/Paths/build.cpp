@@ -37,6 +37,8 @@ namespace autonpaths { namespace pathbuild {
 	}
 
 	void runFollowSpline() {
+		Linegular lg = splines[pathIndex].getLinegularAt(0, willReverse[pathIndex]);
+		autonfunctions::pid_diff::turnToAngle(aespa_lib::angle::swapFieldPolar_degrees(lg.getThetaPolarAngle_degrees()));
 		autonfunctions::setSplinePath(splines[pathIndex], splineTrajectoryPlans[pathIndex], splineSamplers[pathIndex]);
 		autonfunctions::followSplinePath(willReverse[pathIndex]);
 

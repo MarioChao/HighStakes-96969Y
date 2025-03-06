@@ -68,13 +68,14 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 
 	// Compute gain value
 	// refer to https://wiki.purduesigbots.com/software/control-algorithms/ramsete
-	// Note: "ey is equal to -e_right"
-	// Note: "the positive θ direction is turning the robot to the right"
+	// Note: ey = -e_right
+	// Note: "the positive θ direction is turning the robot to the right"?
 	double k = 2 * zeta * sqrt(pow(w_desired, 2) + b * pow(v_desired, 2));
 
 	// Compute output velocities
 	double outputLinearVelocity = (v_desired * cos(e_theta)) + (k * e_look);
-	double outputAngularVelocity = (w_desired) + (k * e_theta) + (b * v_desired * aespa_lib::angle::sinc(e_theta) * e_right);
+	double outputAngularVelocity = (w_desired) + (k * e_theta) - (b * v_desired * aespa_lib::angle::sinc(e_theta) * e_right);
+	// printf("dVel: %7.3f, dAng: %7.3f, oVel: %7.3f, oAng: %7.3f\n", desiredLinearVelocity, desiredAngularVelocity_radiansPerSecond, outputLinearVelocity, outputAngularVelocity);
 
 	// Return linegular velocities
 	std::pair<double, double> result = std::make_pair(outputLinearVelocity, outputAngularVelocity);

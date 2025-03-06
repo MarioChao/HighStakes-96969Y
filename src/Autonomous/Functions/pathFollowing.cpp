@@ -59,6 +59,13 @@ namespace autonfunctions {
 			// Get total distance
 			double totalDistance_tiles = _curveSampler.getDistanceRange().second;
 
+			// Simulator initial
+			if (useSimulator) {
+				// Linegular lg = _splinePath.getLinegularAt(0, _reverseHeading);
+				// robotSimulator.position = Vector3(lg.getX(), lg.getY());
+				// robotSimulator.angularPosition = lg.getThetaPolarAngle_radians();
+			}
+
 			// Follow path
 			while (true) {
 				// Get time
@@ -92,16 +99,18 @@ namespace autonfunctions {
 				// Get desired robot motion (linear and angular)
 				std::pair<double, double> linegularVelocity = robotController.getLinegularVelocity(robotLg, targetLg, traj_velocity, traj_angularVelocity);
 
-				// Convert linear velocity units
-				linegularVelocity.first *= _pathToPctFactor;
-
 				// Drive
 				if (!useSimulator) {
+					// Convert linear velocity units
+					linegularVelocity.first *= _pathToPctFactor;
+
 					botdrive::driveLinegularVelocity(linegularVelocity.first, linegularVelocity.second);
 					// printf("Lin: %.3f, ang: %.3f\n", linegularVelocity.first, linegularVelocity.second);
 				} else {
-					robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
-					robotSimulator.angularPosition = targetLg.getThetaPolarAngle_radians();
+					// robotSimulator.position = Vector3(targetLg.getX(), targetLg.getY());
+					// robotSimulator.angularPosition = targetLg.getThetaPolarAngle_radians();
+					robotSimulator.setForwardVelocity(linegularVelocity.first);
+					robotSimulator.angularVelocity = linegularVelocity.second;
 				}
 
 				// Wait

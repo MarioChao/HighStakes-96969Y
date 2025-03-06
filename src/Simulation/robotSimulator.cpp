@@ -14,7 +14,7 @@ void RobotSimulator::resetTimer() {
 
 void RobotSimulator::updatePhysics() {
 	// Get delta time
-	double currentTime = physicsTimer.value();
+	double currentTime = physicsTimer.time(sec);
 	double deltaTime = currentTime - lastUpdateTime;
 	lastUpdateTime = currentTime;
 
@@ -40,4 +40,9 @@ void RobotSimulator::updateDistance() {
 
 	// Update previous
 	previousPosition = position;
+}
+
+void RobotSimulator::setForwardVelocity(double velocity_value) {
+	double theta = angularPosition;
+	velocity = Vector3(velocity_value * cos(theta), velocity_value * sin(theta));
 }

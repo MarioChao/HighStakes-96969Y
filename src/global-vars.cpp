@@ -43,8 +43,11 @@ chassis_tracker::Odometry mainOdometry = chassis_tracker::Odometry()
 .setPositionFactor(1.0 / field::tileLengthIn)
 ;
 
+
+/* Autonomous */
+
 RobotSimulator robotSimulator;
-bool mainUseSimulator = false;
+bool mainUseSimulator = true;
 
 TrajectoryPlanner testTrajectoryPlan;
 timer trajectoryTestTimer;
