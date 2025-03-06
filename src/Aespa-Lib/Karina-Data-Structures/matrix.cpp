@@ -2,6 +2,9 @@
 
 #include <cstdio>
 
+namespace aespa_lib {
+namespace datas {
+
 Matrix::Matrix(int d1, int d2) {
 	data = std::vector< std::vector<double> >(
 		d1, std::vector<double>(d2, 0)
@@ -96,4 +99,7 @@ Matrix Matrix::identity(int dim) {
 		result.data[i][i] = 1;
 	}
 	return result;
+}
+
+}
 }

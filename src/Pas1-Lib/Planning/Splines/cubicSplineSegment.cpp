@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+using aespa_lib::datas::Matrix;
+
 CubicSplineSegment::CubicSplineSegment(cspline::SplineType splineType, std::vector<std::vector<double>> points) {
 	// Initializes matrices (prevents accessing them when uninitialized)
 	cspline::setMatrices();

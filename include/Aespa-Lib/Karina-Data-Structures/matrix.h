@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 
+namespace aespa_lib {
+namespace datas {
+
 class Matrix {
 public:
 	Matrix(int d1, int d2);
@@ -25,3 +28,6 @@ public:
 private:
 	std::pair<int, int> shape;
 };
+
+}
+}

@@ -10,12 +10,12 @@
 // Enumeration
 
 namespace cspline {
-	enum SplineType {
-		Bezier,
-		Hermite,
-		CatmullRom,
-		B_Spline,
-	};
+enum SplineType {
+	Bezier,
+	Hermite,
+	CatmullRom,
+	B_Spline,
+};
 }
 
 
@@ -32,8 +32,8 @@ public:
 	cspline::SplineType getSplineType();
 	std::vector<std::vector<double>> getControlPoints();
 
-	Matrix &getCharacteristicMatrix();
-	Matrix &getStoringMatrix();
+	aespa_lib::datas::Matrix &getCharacteristicMatrix();
+	aespa_lib::datas::Matrix &getStoringMatrix();
 
 	std::vector<double> getPositionAtT(double t);
 	std::vector<double> getFirstPrimeAtT(double t);
@@ -49,18 +49,20 @@ private:
 };
 
 namespace cspline {
-	namespace characteristic_matrix {
-		extern Matrix Bezier;
-		extern Matrix Hermite;
-		extern Matrix CatmullRom;
-		extern Matrix B_Spline;
-	}
-	namespace storing_matrix {
-		extern Matrix Bezier;
-		extern Matrix Hermite;
-		extern Matrix CatmullRom;
-		extern Matrix B_Spline;
-	}
+	
+namespace characteristic_matrix {
+extern aespa_lib::datas::Matrix Bezier;
+extern aespa_lib::datas::Matrix Hermite;
+extern aespa_lib::datas::Matrix CatmullRom;
+extern aespa_lib::datas::Matrix B_Spline;
+}
 
-	void setMatrices();
+namespace storing_matrix {
+extern aespa_lib::datas::Matrix Bezier;
+extern aespa_lib::datas::Matrix Hermite;
+extern aespa_lib::datas::Matrix CatmullRom;
+extern aespa_lib::datas::Matrix B_Spline;
+}
+
+void setMatrices();
 }

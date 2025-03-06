@@ -3,19 +3,21 @@
 - [ ] Reorganize files
 	- [ ] Aespa Library
 		- [ ] Giselle Graphics
-		- [ ] Karina Data Structures
-			- [ ] matrix
-		- [ ] Ningning Sensors
+		- [x] Karina Data Structures
+			- [x] matrix
+		- [x] Ningning Sensors
 			- [x] encoder beats
-		- [ ] Winter Utilities (general util)
+		- [x] Winter Utilities
+			- [x] angle utility
+			- [x] general utility
 	- [ ] Pas1 Library
 		- [ ] Auton
 			- [ ] Control Loops (feedforward, feedback)
 			- [ ] End Conditions (patience, settle, timeout)
 			- [ ] Pose Controllers (pure pursuit, ramsete, LTV)
 		- [ ] Chassis Tracker
-			- [x] odometry
-			- [x] tracking wheel
+			- [ ] odometry
+			- [ ] tracking wheel
 		- [ ] Planning
 			- [ ] Splines
 				- [ ] spline segment

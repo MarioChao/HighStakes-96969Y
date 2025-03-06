@@ -34,7 +34,6 @@
 
 #include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 
-#include "Aespa-Lib/Karina-Data-Structures/matrix.h"
 #include "GraphUtilities/uniformCubicSpline.h"
 #include "GraphUtilities/curveSampler.h"
 #include "GraphUtilities/trajectoryPlanner.h"
