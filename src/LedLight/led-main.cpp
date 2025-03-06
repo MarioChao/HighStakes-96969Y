@@ -1,7 +1,9 @@
 #include "LedLight/led-main.h"
-#include "Utilities/generalUtility.h"
-#include "Graphics/GraphicMain.h"
+
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
 #include "Graphics/BrainScreen.h"
+
 #include "global-vars.h"
 #include "main.h"
 
@@ -77,7 +79,7 @@ namespace {
 					rgb[0] = 0;
 					rgb[2] = 1;
 				}
-				delayMs = genutil::rangeMap(drivingTimer.time(seconds), stageTime_seconds[0], stageTime_seconds[1], 500, 50);
+				delayMs = aespa_lib::genutil::rangeMap(drivingTimer.time(seconds), stageTime_seconds[0], stageTime_seconds[1], 500, 50);
 			} else if (drivingTimer.time(seconds) < stageTime_seconds[2]) {
 				// No green and blue
 				rgb[1] = rgb[2] = 0;
@@ -108,11 +110,11 @@ namespace {
 
 	void ledLicenseThread() {
 		while (true) {
-			licenseState_pct = genutil::rangeMap(
+			licenseState_pct = aespa_lib::genutil::rangeMap(
 				drivingTimer.time(seconds), licenseFadeRange_durationSec[0], licenseFadeRange_durationSec[1],
 				licenseFadeRange_pct[0], licenseFadeRange_pct[1]
 			);
-			licenseState_pct = genutil::clamp(licenseState_pct, -100, 100);
+			licenseState_pct = aespa_lib::genutil::clamp(licenseState_pct, -100, 100);
 			ledlight::setLicenseState(licenseState_pct);
 			wait(10, msec);
 		}

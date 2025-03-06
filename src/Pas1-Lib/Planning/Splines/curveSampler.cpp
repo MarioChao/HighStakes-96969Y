@@ -1,6 +1,6 @@
 #include "GraphUtilities/curveSampler.h"
 
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 
 #include <stdio.h>
 
@@ -42,11 +42,11 @@ CurveSampler &CurveSampler::calculateByResolution(int resolution) {
 	// Look through each segment
 	for (int i = 1; i <= resolution; i++) {
 		// Get spline point
-		double t = genutil::rangeMap(i, 0, resolution, t_start, t_end);
+		double t = aespa_lib::genutil::rangeMap(i, 0, resolution, t_start, t_end);
 		currentPoint = _getCurvePosition(t);
 
 		// Add segment length to path length
-		double segmentLength = genutil::euclideanDistance(previousPoint, currentPoint);
+		double segmentLength = aespa_lib::genutil::euclideanDistance(previousPoint, currentPoint);
 		pathLength += segmentLength;
 
 		// Store distance
@@ -100,7 +100,7 @@ double CurveSampler::paramToDistance(double t) {
 
 		// Update endpoints
 		if (isInRange) {
-			return genutil::rangeMap(
+			return aespa_lib::genutil::rangeMap(
 				t,
 				t_distance1.first, t_distance2.first,
 				t_distance1.second, t_distance2.second
@@ -144,7 +144,7 @@ double CurveSampler::distanceToParam(double distance) {
 
 		// Update endpoints
 		if (isInRange) {
-			return genutil::rangeMap(
+			return aespa_lib::genutil::rangeMap(
 				distance,
 				t_distance1.second, t_distance2.second,
 				t_distance1.first, t_distance2.first

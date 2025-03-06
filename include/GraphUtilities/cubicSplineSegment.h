@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GraphUtilities/matrix.h"
+#include "Aespa-Lib/Karina-Data-Structures/matrix.h"
 
 #include <utility>
 #include <vector>

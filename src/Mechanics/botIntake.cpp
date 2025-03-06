@@ -4,7 +4,7 @@
 #include "Mechanics/redirect.h"
 #include "Mechanics/botArm.h"
 #include "Utilities/debugFunctions.h"
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 #include "main.h"
 
 // This mechanic is for one-part intake with two motors
@@ -278,13 +278,13 @@ namespace {
 		switch (resolveState) {
 			case 1:
 				// Forward
-				IntakeMotor1.spin(fwd, genutil::pctToVolt(intakeVelocityPct), volt);
-				IntakeMotor2.spin(fwd, genutil::pctToVolt(intakeVelocityPct), volt);
+				IntakeMotor1.spin(fwd, aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
+				IntakeMotor2.spin(fwd, aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
 				break;
 			case -1:
 				// Reversed
-				IntakeMotor1.spin(fwd, -genutil::pctToVolt(intakeVelocityPct), volt);
-				IntakeMotor2.spin(fwd, -genutil::pctToVolt(intakeVelocityPct), volt);
+				IntakeMotor1.spin(fwd, -aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
+				IntakeMotor2.spin(fwd, -aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
 				break;
 			default:
 				IntakeMotor1.stop(brakeType::coast);

@@ -31,9 +31,10 @@
 #include "Autonomous/autonValues.h"
 #include "AutonUtilities/linegular.h"
 #include "Simulation/robotSimulator.h"
-#include "Utilities/generalUtility.h"
 
-#include "GraphUtilities/matrix.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+
+#include "Aespa-Lib/Karina-Data-Structures/matrix.h"
 #include "GraphUtilities/uniformCubicSpline.h"
 #include "GraphUtilities/curveSampler.h"
 #include "GraphUtilities/trajectoryPlanner.h"
@@ -180,7 +181,7 @@ void usercontrol(void) {
 			double velocity = LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
 			if (velocities.size() > 10) velocities = {velocity};
 			else velocities.push_back(velocity);
-			double avgV = genutil::getAverage(velocities);
+			double avgV = aespa_lib::genutil::getAverage(velocities);
 			if (fabs(v) > 1) printf("volt: %.3f, vel: %.3f\n", v, avgV);
 
 			if (Controller2.ButtonRight.pressing()) {

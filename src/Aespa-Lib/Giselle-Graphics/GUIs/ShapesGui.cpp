@@ -1,4 +1,4 @@
-#include "Graphics/GUIs/ShapesGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
 
 ShapeGui::ShapeGui(ShapeType shape, double x, double y, color fillCol, color outlineCol, double strokeWeight) {
 	shapeName = shape;

@@ -3,7 +3,7 @@
 #include <initializer_list>
 #include <vector>
 
-namespace genutil {
+namespace aespa_lib::genutil {
 	/**
 	 * @brief Return the modulo of a number within a range.
 	 * 

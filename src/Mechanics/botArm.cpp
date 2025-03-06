@@ -1,8 +1,9 @@
 #include "Pas1-Lib/Auton/Control-Loops/pidController.h"
 #include "Pas1-Lib/Auton/End-Conditions/patienceController.h"
 
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+
 #include "Mechanics/botArm.h"
-#include "Utilities/generalUtility.h"
 #include "Utilities/debugFunctions.h"
 #include "main.h"
 
@@ -95,7 +96,7 @@ namespace botarm {
 	}
 
 	void setArmStage(int stageId, double delaySec) {
-		stageId = genutil::clamp(stageId, 0, (int) armStages_degrees.size() - 1);
+		stageId = aespa_lib::genutil::clamp(stageId, 0, (int) armStages_degrees.size() - 1);
 		currentArmStage = stageId;
 		
 		// Extreme cases
@@ -138,7 +139,7 @@ namespace botarm {
 		armResetted = false;
 
 		// Sanitize rotation sensor's initial value between [-50, 310]
-		setArmPosition(genutil::modRange(ArmRotationSensor.angle(degrees), 360, -50));
+		setArmPosition(aespa_lib::genutil::modRange(ArmRotationSensor.angle(degrees), 360, -50));
 
 		/*
 		// Spin downward until exhausted
@@ -246,7 +247,7 @@ namespace {
 		// printf("Err: %.3f, pid: %.3f\n", error_degrees, motorVelocityPct);
 
 		// Get final value
-		motorVelocityPct = genutil::clamp(motorVelocityPct, -armVelocityPct, armVelocityPct);
+		motorVelocityPct = aespa_lib::genutil::clamp(motorVelocityPct, -armVelocityPct, armVelocityPct);
 		// printf("MotVal: %.3f\n", motorVelocityPct);
 
 		// Set velocity
@@ -261,7 +262,7 @@ namespace {
 				if (ArmMotor.position(deg) > 1000.0) {
 					ArmMotor.stop(hold);
 				} else {
-					ArmMotor.spin(forward, genutil::pctToVolt(armUpVelocityPct), volt);
+					ArmMotor.spin(forward, aespa_lib::genutil::pctToVolt(armUpVelocityPct), volt);
 				}
 				break;
 
@@ -269,7 +270,7 @@ namespace {
 				if (ArmMotor.position(deg) < 10.0) {
 					ArmMotor.stop();
 				} else {
-					ArmMotor.spin(forward, -genutil::pctToVolt(armVelocityPct), volt);
+					ArmMotor.spin(forward, -aespa_lib::genutil::pctToVolt(armVelocityPct), volt);
 				}
 				break;
 
@@ -293,8 +294,8 @@ namespace {
 
 	void spinArmMotor(double velocityPct) {
 		// Spin
-		double velocityVolt = genutil::pctToVolt(velocityPct);
-		velocityVolt = genutil::clamp(velocityVolt, -12, 12);
+		double velocityVolt = aespa_lib::genutil::pctToVolt(velocityPct);
+		velocityVolt = aespa_lib::genutil::clamp(velocityVolt, -12, 12);
 		ArmMotor.spin(forward, velocityVolt, volt);
 		// printf("VVolt: %.3f, temp: %.3f C, torque: %.3f Nm\n", velocityVolt, ArmMotor.temperature(celsius), ArmMotor.torque());
 		// ArmMotor.spin(forward, velocityPct, pct);

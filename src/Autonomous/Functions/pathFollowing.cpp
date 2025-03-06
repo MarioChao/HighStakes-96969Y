@@ -9,7 +9,7 @@
 
 #include "Mechanics/botDrive.h"
 
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 
 #include "Simulation/robotSimulator.h"
 
@@ -86,7 +86,7 @@ namespace autonfunctions {
 				Linegular targetLg = _splinePath.getLinegularAt(traj_tvalue, _reverseHeading);
 
 				if (useSimulator) {
-					robotLg = Linegular(robotSimulator.position.x, robotSimulator.position.y, genutil::toDegrees(robotSimulator.angularPosition));
+					robotLg = Linegular(robotSimulator.position.x, robotSimulator.position.y, aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 				}
 
 				// Get desired robot motion (linear and angular)

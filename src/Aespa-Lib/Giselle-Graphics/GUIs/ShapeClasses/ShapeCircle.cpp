@@ -1,5 +1,5 @@
-#include "Graphics/GUIs/ShapesGui.h"
-#include "Graphics/GraphicMain.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
 
 Circle::Circle(double x, double y, double radius, color fillCol, color outlineCol, double outlineWeight)
 	: ShapeGui(ShapeType::CIRCLE, x, y, fillCol, outlineCol, outlineWeight) {

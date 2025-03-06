@@ -2,7 +2,7 @@
 
 #include "GraphUtilities/curveSampler.h"
 
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 
@@ -44,12 +44,12 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 	// Set motion constraints for segments
 	for (int i = 0; i < resolution; i++) {
 		// Get the segment distance
-		double segmentDistance_start = genutil::rangeMap(i, 0, resolution, pathStart, pathEnd);
+		double segmentDistance_start = aespa_lib::genutil::rangeMap(i, 0, resolution, pathStart, pathEnd);
 
 		// Get estimated curvature at distance
 		double curvature = 0;
 		for (double j = i; j < i + 1; j += 0.1) {
-			double subSegment_distance = genutil::rangeMap(j, 0, resolution, pathStart, pathEnd);
+			double subSegment_distance = aespa_lib::genutil::rangeMap(j, 0, resolution, pathStart, pathEnd);
 			double subSegment_curvature = spline.getCurvatureAt(sampler.distanceToParam(subSegment_distance));
 			// Use maximum
 			curvature = std::max(curvature, std::fabs(subSegment_curvature));
@@ -64,7 +64,7 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 		// double nonChangingFactor = 0.3;
 		// double segmentMaxVelocity = maxVelocity * (nonChangingFactor / (nonChangingFactor + curvature));
 		double segmentMaxVelocity = maxVelocity - rotationLinearVelocity;
-		segmentMaxVelocity = genutil::clamp(segmentMaxVelocity, minVelocity, maxVelocity);
+		segmentMaxVelocity = aespa_lib::genutil::clamp(segmentMaxVelocity, minVelocity, maxVelocity);
 		// printf("d: %.3f, curva: %.3f, vel: %.3f, ang: %.3f\n", segmentDistance_start, curvature, segmentMaxVelocity, rotationLinearVelocity);
 
 		// Add constraint
@@ -231,7 +231,7 @@ trajectory::merged_kinematics TrajectoryPlanner::_getMergedForwardBackward() {
 		const std::vector<double> &backward_kinematics = backward_distance_kinematics[backward_index].second;
 
 		// Push smaller distance
-		if (genutil::isWithin(forward_distance, backward_distance, 1e-7)) {
+		if (aespa_lib::genutil::isWithin(forward_distance, backward_distance, 1e-7)) {
 			bothside_distance_kinematics.push_back({forward_distance, {{1, forward_kinematics}, {1, backward_kinematics}}});
 			forward_index++;
 			backward_index++;
@@ -340,7 +340,7 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 		} else {
 			if (debugPrint) printf("start1: %.3f, %.6f, %.3f\n", distanceStart, v, a);
 			if (debugPrint) printf("start2: %.3f, %.6f, %.3f\n", distanceStart, u, b);
-			if (genutil::isWithin(v, u, 1e-5)) {
+			if (aespa_lib::genutil::isWithin(v, u, 1e-5)) {
 				combined_distance_kinematics.push_back({distanceStart, {backwardTravellingKinematics}});
 				if (debugPrint) printf("chose 2\n");
 			} else if (v < u) {

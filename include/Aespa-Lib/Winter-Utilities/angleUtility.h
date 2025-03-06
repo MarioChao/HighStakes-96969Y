@@ -1,6 +1,6 @@
 #pragma once
 
-namespace angle {
+namespace aespa_lib::angle {
 	double swapFieldPolar_degrees(double degrees);
 
 	double sinc(double x);

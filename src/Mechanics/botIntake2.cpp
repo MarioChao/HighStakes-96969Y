@@ -1,6 +1,6 @@
 #include "Mechanics/botIntake2.h"
 #include "Utilities/debugFunctions.h"
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 #include "main.h"
 
 // This mechanic is for two-part intakes: roller + hook
@@ -16,7 +16,7 @@ namespace {
 
 	/* Derived values (don't change) */
 
-	double intakeVelocityVolt = genutil::pctToVolt(intakeVelocityPct);
+	double intakeVelocityVolt = aespa_lib::genutil::pctToVolt(intakeVelocityPct);
 
 	/* Factors */
 
@@ -287,7 +287,7 @@ namespace {
 
 			// Spin hook sequence
 			// wait(30, msec);
-			IntakeMotor2.spin(fwd, genutil::pctToVolt(-toArmHookReverseVelocityPct), volt);
+			IntakeMotor2.spin(fwd, aespa_lib::genutil::pctToVolt(-toArmHookReverseVelocityPct), volt);
 			wait(300, msec);
 			IntakeMotor2.spin(fwd, 0, volt);
 			wait(700, msec);
@@ -300,7 +300,7 @@ namespace {
 		else {
 			// Spin both
 			IntakeMotor1.spin(fwd, intakeVelocityVolt, volt);
-			IntakeMotor2.spin(fwd, genutil::pctToVolt(toArmHookVelocityPct), volt);
+			IntakeMotor2.spin(fwd, aespa_lib::genutil::pctToVolt(toArmHookVelocityPct), volt);
 		}
 	}
 }

@@ -8,18 +8,18 @@
 #include "GraphUtilities/trajectoryPlanner.h"
 #include "GraphUtilities/curveSampler.h"
 
-#include "Graphics/GraphicMain.h"
-#include "Graphics/GUIs/ButtonsGui.h"
-#include "Graphics/GUIs/ShapesGui.h"
-#include "Graphics/GUIs/SlidersGui.h"
-#include "Graphics/GUIs/DocksGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/ButtonsGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/SlidersGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/DocksGui.h"
 
 #include "Sensors/inertial-s.h"
 
 #include "Simulation/robotSimulator.h"
 
-#include "Utilities/angleUtility.h"
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 
 #include "Videos/video-main.h"
 
@@ -193,20 +193,20 @@ namespace {
 		double scaleY = height / 6.0;
 		double botX = x + getRobotX_tiles() * scaleX;
 		double botY = y + height - getRobotY_tiles() * scaleY;
-		botX = genutil::clamp(botX, x + 2, x + width - 2);
-		botY = genutil::clamp(botY, y + 2, y + height - 2);
+		botX = aespa_lib::genutil::clamp(botX, x + 2, x + width - 2);
+		botY = aespa_lib::genutil::clamp(botY, y + 2, y + height - 2);
 
 		/* Heading path */
 		// Get heading angle
 		double botAngle_degrees = getRobotPolarAngle_degrees();
-		double botAngle_radians = genutil::toRadians(botAngle_degrees);
+		double botAngle_radians = aespa_lib::genutil::toRadians(botAngle_degrees);
 
 		// Calculate x and y components
 		double deltaX, deltaY;
-		deltaX = genutil::signum(cos(botAngle_radians)) * width;
-		deltaX = genutil::clamp(deltaX, x - botX, x + width - botX);
-		deltaY = genutil::signum(sin(botAngle_radians)) * height;
-		deltaY = genutil::clamp(deltaY, botY - (y + height), botY - y);
+		deltaX = aespa_lib::genutil::signum(cos(botAngle_radians)) * width;
+		deltaX = aespa_lib::genutil::clamp(deltaX, x - botX, x + width - botX);
+		deltaY = aespa_lib::genutil::signum(sin(botAngle_radians)) * height;
+		deltaY = aespa_lib::genutil::clamp(deltaY, botY - (y + height), botY - y);
 
 		// Scale down to the smaller one
 		if (!(deltaX == 0 || deltaY == 0)) {
@@ -253,9 +253,9 @@ namespace {
 
 		// Variables
 		double scale = height / 1200.0;
-		double actualSpeed = genutil::clamp(0, -600, 600);
-		double aimSpeed = genutil::clamp(0, -600, 600);
-		fw_drawX = genutil::clamp(fw_drawX, x, x + width);
+		double actualSpeed = aespa_lib::genutil::clamp(0, -600, 600);
+		double aimSpeed = aespa_lib::genutil::clamp(0, -600, 600);
+		fw_drawX = aespa_lib::genutil::clamp(fw_drawX, x, x + width);
 
 		// Real velocity
 		Brain.Screen.setPenWidth(1);
@@ -685,9 +685,9 @@ namespace {
 	}
 	double getRobotPolarAngle_degrees() {
 		if (showSimulator) {
-			return genutil::toDegrees(robotSimulator.angularPosition);
+			return aespa_lib::genutil::toDegrees(robotSimulator.angularPosition);
 		}
-		return angle::swapFieldPolar_degrees(mainOdometry.getLookFieldAngle_degrees());
+		return aespa_lib::angle::swapFieldPolar_degrees(mainOdometry.getLookFieldAngle_degrees());
 	}
 
 	// Draws info

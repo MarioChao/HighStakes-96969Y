@@ -10,10 +10,11 @@
 
 #include "Mechanics/botDrive.h"
 
-#include "Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
-#include "Utilities/generalUtility.h"
 
 #include "GraphUtilities/trajectoryPlanner.h"
 
@@ -129,7 +130,7 @@ namespace pid_diff {
 			// Compute heading error
 			double rotateError = rotation - currentRotation_degrees;
 			if (_useRelativeRotation) {
-				rotateError = genutil::modRange(rotateError, 360, -180);
+				rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
 			}
 
 			// Compute heading pid-value from error
@@ -150,13 +151,13 @@ namespace pid_diff {
 			double rightMotorVelocityPct = rightVelocityFactor * averageMotorVelocityPct;
 
 			// Scale velocity to maximum
-			double scaleFactor = genutil::getScaleFactor(maxVelocity_pct, {leftMotorVelocityPct, rightMotorVelocityPct});
+			double scaleFactor = aespa_lib::genutil::getScaleFactor(maxVelocity_pct, {leftMotorVelocityPct, rightMotorVelocityPct});
 			leftMotorVelocityPct *= scaleFactor;
 			rightMotorVelocityPct *= scaleFactor;
 
 			// Drive with velocities
 			if (useVolt) {
-				botdrive::driveVoltage(genutil::pctToVolt(leftMotorVelocityPct), genutil::pctToVolt(rightMotorVelocityPct), 10);
+				botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftMotorVelocityPct), aespa_lib::genutil::pctToVolt(rightMotorVelocityPct), 10);
 			} else {
 				botdrive::driveVelocity(leftMotorVelocityPct, rightMotorVelocityPct);
 			}
@@ -300,7 +301,7 @@ namespace {
 				auto constraint = velocityConstraint_inch_pct[i];
 				motion.addDesiredMotionConstraints(
 					constraint.first / field::tileLengthIn,
-					genutil::clamp(constraint.second, 1, 100) / 100.0 * autonpaths::pathbuild::maxVel_tilesPerSec,
+					aespa_lib::genutil::clamp(constraint.second, 1, 100) / 100.0 * autonpaths::pathbuild::maxVel_tilesPerSec,
 					autonpaths::pathbuild::maxAccel, autonpaths::pathbuild::maxDecel
 				);
 			}
@@ -353,12 +354,12 @@ namespace {
 				double currentTravelDistance_inches = -1;
 				double currentTravelVelocity_inchesPerSec = -1;
 				if (useSimulator) {
-					double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * genutil::signum(targetDistanceInches);
+					double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * aespa_lib::genutil::signum(targetDistanceInches);
 					currentTravelDistance_inches = travelDistance_tiles * field::tileLengthIn;
 				} else if (useOdometryForPid) {
 					// Compute current travel distance in inches
 					Linegular currentPose = mainOdometry.getLookLinegular();
-					currentTravelDistance_inches = (currentPose - initialPose).getXYMagnitude() * field::tileLengthIn * genutil::signum(targetDistanceInches);
+					currentTravelDistance_inches = (currentPose - initialPose).getXYMagnitude() * field::tileLengthIn * aespa_lib::genutil::signum(targetDistanceInches);
 
 					double averageTravelVel = (LeftMotors.velocity(rpm) + RightMotors.velocity(rpm)) * 0.5;
 					currentTravelVelocity_inchesPerSec = averageTravelVel * (1 / 60.0) * (botinfo::driveWheelCircumIn  / botinfo::driveWheelMotorGearRatio);
@@ -402,7 +403,7 @@ namespace {
 				// Compute pid-value from error
 				driveAndTurn_drivePositionPid.computeFromError(trajectoryDistanceError_inches);
 				double positionPidVelocity_pct = driveAndTurn_drivePositionPid.getValue();
-				positionPidVelocity_pct = genutil::clamp(positionPidVelocity_pct, -100, 100);
+				positionPidVelocity_pct = aespa_lib::genutil::clamp(positionPidVelocity_pct, -100, 100);
 				// printf("t: %.3f, trajd: %.3f, cntd; %.3f,\n", runningTimer.time(seconds), trajPosition_tiles, currentTravelDistance_inches / field::tileLengthIn);
 				// printf("t: %.3f, err: %.3f, pid: %.3f\n", runningTimer.time(seconds), trajectoryDistanceError_inches, positionPidVelocity_pct);
 				
@@ -416,7 +417,7 @@ namespace {
 
 				driveAndTurn_driveMotionForward.computeFromMotion(desiredVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
 				bool useS = currentTravelVelocity_inchesPerSec < 0.5;
-				double forwardVelocity_pct = genutil::voltToPct(driveAndTurn_driveMotionForward.getValue(useS));
+				double forwardVelocity_pct = aespa_lib::genutil::voltToPct(driveAndTurn_driveMotionForward.getValue(useS));
 				
 				/* Velocity feedback */
 				
@@ -443,17 +444,17 @@ namespace {
 
 				// Get current robot heading
 				double currentRotation_degrees = InertialSensor.rotation(degrees);
-				if (useSimulator) currentRotation_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(robotSimulator.angularPosition));
+				if (useSimulator) currentRotation_degrees = aespa_lib::angle::swapFieldPolar_degrees(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 
 				// Compute heading error
 				double rotateError = targetRotation - currentRotation_degrees;
 				if (autonfunctions::_useRelativeRotation) {
-					rotateError = genutil::modRange(rotateError, 360, -180);
+					rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
 				}
 
 				// Compute heading pid-value from error
 				driveAndTurn_rotateTargetAnglePid.computeFromError(rotateError);
-				double rotateVelocity_pct = genutil::clamp(driveAndTurn_rotateTargetAnglePid.getValue(), -maxTurnVelocity_pct, maxTurnVelocity_pct);
+				double rotateVelocity_pct = aespa_lib::genutil::clamp(driveAndTurn_rotateTargetAnglePid.getValue(), -maxTurnVelocity_pct, maxTurnVelocity_pct);
 
 
 				/* Combined */
@@ -481,7 +482,7 @@ namespace {
 
 				// Drive with velocities
 				// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
-				botdrive::driveVoltage(genutil::pctToVolt(leftVelocity_pct), genutil::pctToVolt(rightVelocity_pct), 10);
+				botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftVelocity_pct), aespa_lib::genutil::pctToVolt(rightVelocity_pct), 10);
 
 				wait(5, msec);
 			}

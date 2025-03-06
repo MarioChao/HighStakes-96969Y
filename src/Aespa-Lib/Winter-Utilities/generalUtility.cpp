@@ -1,9 +1,9 @@
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 
 #include <cmath>
 #include <algorithm>
 
-namespace genutil {
+namespace aespa_lib::genutil {
 	double modRange(double num, double mod, double min) {
 		// Offset from minimum
 		double ret = fmod(num - min, mod);

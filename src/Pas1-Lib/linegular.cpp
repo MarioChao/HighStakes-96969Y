@@ -1,8 +1,8 @@
 #include "AutonUtilities/linegular.h"
 
 #include <cmath>
-#include "Utilities/angleUtility.h"
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 
 Linegular::Linegular(double x, double y, double polarTheta_degrees) {
 	this->x = x;
@@ -23,11 +23,11 @@ double Linegular::getThetaPolarAngle_degrees(){
 }
 
 double Linegular::getThetaPolarAngle_radians() {
-	return genutil::toRadians(theta_degrees);
+	return aespa_lib::genutil::toRadians(theta_degrees);
 }
 
 double Linegular::getXYMagnitude() {
-	return genutil::euclideanDistance({0, 0}, {x, y});
+	return aespa_lib::genutil::euclideanDistance({0, 0}, {x, y});
 }
 
 void Linegular::rotateXYBy(double polarRotate_radians) {
@@ -39,8 +39,8 @@ void Linegular::rotateXYBy(double polarRotate_radians) {
 
 void Linegular::rotateExponentialBy(double polarRotate_radians) {
 	// Check pose exponential in https://file.tavsys.net/control/controls-engineering-in-frc.pdf
-	double newX = x * angle::sinc(polarRotate_radians) + y * angle::cosm1_x(polarRotate_radians);
-	double newY = x * -angle::cosm1_x(polarRotate_radians) + y * angle::sinc(polarRotate_radians);
+	double newX = x * aespa_lib::angle::sinc(polarRotate_radians) + y * aespa_lib::angle::cosm1_x(polarRotate_radians);
+	double newY = x * -aespa_lib::angle::cosm1_x(polarRotate_radians) + y * aespa_lib::angle::sinc(polarRotate_radians);
 	x = newX;
 	y = newY;
 }

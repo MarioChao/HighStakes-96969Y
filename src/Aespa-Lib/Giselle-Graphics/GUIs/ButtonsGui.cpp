@@ -1,8 +1,8 @@
 // Buttons Gui Class
 
-#include "Graphics/GraphicMain.h"
-#include "Graphics/GUIs/ShapesGui.h"
-#include "Graphics/GUIs/ButtonsGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/ButtonsGui.h"
 
 using gfxmain::brightenColor;
 

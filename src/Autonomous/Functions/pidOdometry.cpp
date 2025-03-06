@@ -8,10 +8,11 @@
 
 #include "Mechanics/botDrive.h"
 
-#include "Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
-#include "Utilities/generalUtility.h"
 
 #include "global-vars.h"
 
@@ -72,7 +73,7 @@ namespace autonfunctions {
 
 	void turnToFace_tiles(double x_tiles, double y_tiles, bool isReverse, double maxTurnVelocity_pct) {
 		Linegular lg = mainOdometry.getLookLinegular();
-		double angle_degrees = angle::swapFieldPolar_degrees(genutil::toDegrees(atan2(y_tiles - lg.getY(), x_tiles - lg.getX())));
+		double angle_degrees = aespa_lib::angle::swapFieldPolar_degrees(aespa_lib::genutil::toDegrees(atan2(y_tiles - lg.getY(), x_tiles - lg.getX())));
 		if (isReverse) angle_degrees += 180;
 		pid_diff::turnToAngleVelocity(angle_degrees, maxTurnVelocity_pct);
 	}
@@ -114,8 +115,8 @@ namespace {
 		Linegular startLg = mainOdometry.getLookLinegular();
 
 		// Target state
-		const double targetDistance = genutil::euclideanDistance({startLg.getX(), startLg.getY()}, {x_tiles, y_tiles});
-		double targetRotation_degrees = genutil::toDegrees(atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX()));
+		const double targetDistance = aespa_lib::genutil::euclideanDistance({startLg.getX(), startLg.getY()}, {x_tiles, y_tiles});
+		double targetRotation_degrees = aespa_lib::genutil::toDegrees(atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX()));
 		_linearPathDistanceError = targetDistance;
 
 		// Config
@@ -153,7 +154,7 @@ namespace {
 			/* Linear */
 
 			// Compute linear distance error
-			double travelDistance = genutil::euclideanDistance({startLg.getX(), startLg.getY()}, {currentX, currentY});
+			double travelDistance = aespa_lib::genutil::euclideanDistance({startLg.getX(), startLg.getY()}, {currentX, currentY});
 			double distanceError = targetDistance - travelDistance;
 			_linearPathDistanceError = distanceError;
 
@@ -166,7 +167,7 @@ namespace {
 			} else {
 				velocity_pct = driveTurn_driveTargetDistance_velocityPid.getValue();
 			}
-			velocity_pct = genutil::clamp(velocity_pct, -maxVelocity_pct, maxVelocity_pct);
+			velocity_pct = aespa_lib::genutil::clamp(velocity_pct, -maxVelocity_pct, maxVelocity_pct);
 			velocity_pct *= velocityFactor;
 
 			// Update error patience
@@ -177,13 +178,13 @@ namespace {
 
 			// Compute target polar heading
 			if (distanceError > turnTo_distanceThreshold) {
-				targetRotation_degrees = genutil::toDegrees(std::atan2(y_tiles - currentY, x_tiles - currentX)) + rotationOffset_degrees;
+				targetRotation_degrees = aespa_lib::genutil::toDegrees(std::atan2(y_tiles - currentY, x_tiles - currentX)) + rotationOffset_degrees;
 			}
 
 			// Compute polar heading error
 			double rotateError = targetRotation_degrees - currentLg.getThetaPolarAngle_degrees();
 			if (autonfunctions::_useRelativeRotation) {
-				rotateError = genutil::modRange(rotateError, 360, -180);
+				rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
 			}
 
 			// Compute heading pid-value from error
@@ -195,7 +196,7 @@ namespace {
 			} else {
 				rotateVelocity_pct = driveTurn_rotateTargetAngle_velocityPid.getValue();
 			}
-			rotateVelocity_pct = genutil::clamp(rotateVelocity_pct, -maxTurnVelocity_pct, maxTurnVelocity_pct);
+			rotateVelocity_pct = aespa_lib::genutil::clamp(rotateVelocity_pct, -maxTurnVelocity_pct, maxTurnVelocity_pct);
 
 
 			/* Debug print */
@@ -211,7 +212,7 @@ namespace {
 
 			// Drive with velocities
 			if (useVolt) {
-				botdrive::driveVoltage(genutil::pctToVolt(leftVelocity_pct), genutil::pctToVolt(rightVelocity_pct), 12);
+				botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftVelocity_pct), aespa_lib::genutil::pctToVolt(rightVelocity_pct), 12);
 			} else {
 				botdrive::driveVelocity(leftVelocity_pct, rightVelocity_pct);
 			}

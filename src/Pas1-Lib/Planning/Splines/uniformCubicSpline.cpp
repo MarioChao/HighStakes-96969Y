@@ -1,7 +1,7 @@
 #include "GraphUtilities/uniformCubicSpline.h"
 
 #include "AutonUtilities/linegular.h"
-#include "Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
 #include <cmath>
 #include <algorithm>
 #include <stdio.h>
@@ -157,8 +157,8 @@ Linegular UniformCubicSpline::getLinegularAt(double t, bool reverseHeading) {
 
 	// Get angle
 	double angle_radians = getPolarAngleRadiansAt(t);
-	double finalAngle_degrees = genutil::toDegrees(angle_radians) + reverseHeading * 180.0;
-	finalAngle_degrees = genutil::modRange(finalAngle_degrees, 360, -180);
+	double finalAngle_degrees = aespa_lib::genutil::toDegrees(angle_radians) + reverseHeading * 180.0;
+	finalAngle_degrees = aespa_lib::genutil::modRange(finalAngle_degrees, 360, -180);
 
 	// Create and return linegular
 	Linegular lg(position[0], position[1], finalAngle_degrees);

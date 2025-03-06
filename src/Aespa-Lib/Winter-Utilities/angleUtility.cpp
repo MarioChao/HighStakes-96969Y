@@ -1,8 +1,8 @@
-#include "Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
 
 #include <cmath>
 
-namespace angle {
+namespace aespa_lib::angle {
 	double swapFieldPolar_degrees(double degrees) {
 		return 90 - degrees;
 	}

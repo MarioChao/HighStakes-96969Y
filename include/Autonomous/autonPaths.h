@@ -5,6 +5,9 @@
 #include "GraphUtilities/curveSampler.h"
 #include "GraphUtilities/trajectoryPlanner.h"
 
+#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
+#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "global-vars.h"

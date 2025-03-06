@@ -1,5 +1,5 @@
-#include "Graphics/GUIs/DocksGui.h"
-#include "Graphics/GraphicMain.h"
+#include "Aespa-Lib/Giselle-Graphics/GUIs/DocksGui.h"
+#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
 
 DockGui::DockGui(double leftX, double topY, double width, double height, vector<GuiClass *> guiList, vector<void (*)()> functionList) {
 	this->leftX = leftX;

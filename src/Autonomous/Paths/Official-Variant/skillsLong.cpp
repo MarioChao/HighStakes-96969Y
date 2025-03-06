@@ -1,8 +1,5 @@
 #include "Autonomous/autonPaths.h"
 
-#include "Utilities/generalUtility.h"
-#include "Utilities/angleUtility.h"
-
 #include "Simulation/robotSimulator.h"
 
 namespace {
@@ -33,7 +30,7 @@ void autonpaths::runAutonSkillsLong() {
 
 	if (mainUseSimulator) {
 		robotSimulator.position = Vector3(0.792, 3);
-		robotSimulator.angularPosition = genutil::toRadians(angle::swapFieldPolar_degrees(-90));
+		robotSimulator.angularPosition = aespa_lib::genutil::toRadians(aespa_lib::angle::swapFieldPolar_degrees(-90));
 	}
 
 	// Set config

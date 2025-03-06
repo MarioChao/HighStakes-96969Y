@@ -1,7 +1,7 @@
 #include "Videos/video-main.h"
 #include "Videos/video-info.h"
 #include "Videos/video-objects.h"
-#include "Graphics/GraphicMain.h"
+#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
 #include "main.h"
 
 namespace {
