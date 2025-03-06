@@ -17,10 +17,10 @@ timer drivingTimer;
 
 namespace {
 	// Sensors
-	sensor_beats::RotationSensor lookRotation_beats(LookRotation);
-	sensor_beats::OpticalShaftEncoder rightOptical_beats(RightEncoder);
-	sensor_beats::Motor lookLeftMotor_beats(LeftMotorA);
-	sensor_beats::Motor lookRightMotor_beats(RightMotorA);
+	aespa_lib::sensor_beats::RotationSensor lookRotation_beats(LookRotation);
+	aespa_lib::sensor_beats::OpticalShaftEncoder rightOptical_beats(RightEncoder);
+	aespa_lib::sensor_beats::Motor lookLeftMotor_beats(LeftMotorA);
+	aespa_lib::sensor_beats::Motor lookRightMotor_beats(RightMotorA);
 
 	// Tracking wheels
 	chassis_tracker::TrackingWheel lookLeft_trackingWheel(

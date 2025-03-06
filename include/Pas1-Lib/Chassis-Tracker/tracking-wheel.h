@@ -17,7 +17,7 @@ public:
 	 * @param offset_inches The distance between the sensor's measuring line and a parallel line passing through the tracking center. Positive means the sensor is measuring forward to the right of the tracking center.
 	 */
 	TrackingWheel(
-		sensor_beats::Encoder &sensor_encoder, double directionAngle_polarDegrees,
+		aespa_lib::sensor_beats::Encoder &sensor_encoder, double directionAngle_polarDegrees,
 		double sensorToWheel_gearRatio, double wheelDiameter_inches, double offset_inches
 	);
 
@@ -30,7 +30,7 @@ public:
 
 private:
 	/* Configs */
-	sensor_beats::Encoder &sensor_encoder;
+	aespa_lib::sensor_beats::Encoder &sensor_encoder;
 	double directionAngle_polarDegrees;
 	double sensorToWheel_gearRatio;
 	double wheelDiameter_inches;

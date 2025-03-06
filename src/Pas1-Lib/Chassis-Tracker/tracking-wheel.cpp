@@ -3,7 +3,7 @@
 
 namespace chassis_tracker {
 	TrackingWheel::TrackingWheel(
-		sensor_beats::Encoder &sensor_encoder, double directionAngle_polarDegrees,
+		aespa_lib::sensor_beats::Encoder &sensor_encoder, double directionAngle_polarDegrees,
 		double sensorToWheel_gearRatio, double wheelDiameter_inches, double offset_inches
 	)
 	: sensor_encoder(sensor_encoder),

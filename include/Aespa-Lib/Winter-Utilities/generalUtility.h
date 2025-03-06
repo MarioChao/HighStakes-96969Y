@@ -3,36 +3,40 @@
 #include <initializer_list>
 #include <vector>
 
-namespace aespa_lib::genutil {
-	/**
-	 * @brief Return the modulo of a number within a range.
-	 * 
-	 * @param num The dividend of the modulo.
-	 * @param mod The divisor of the modulo.
-	 * @param min The smallest possible number of the modulo range.
-	 * @return double num % mod in the range [min, min + mod).
-	 */
-	double modRange(double num, double mod, double min);
-	double clamp(double value, double min, double max);
+namespace aespa_lib {
+namespace genutil {
 
-	double pctToVolt(double pct);
-	double voltToPct(double volt);
+/**
+ * @brief Return the modulo of a number within a range.
+ *
+ * @param num The dividend of the modulo.
+ * @param mod The divisor of the modulo.
+ * @param min The smallest possible number of the modulo range.
+ * @return double num % mod in the range [min, min + mod).
+ */
+double modRange(double num, double mod, double min);
+double clamp(double value, double min, double max);
 
-	int signum(double value);
-	bool isWithin(double value, double target, double withinRange);
+double pctToVolt(double pct);
+double voltToPct(double volt);
 
-	double euclideanDistance(std::vector<double> point1, std::vector<double> point2);
+int signum(double value);
+bool isWithin(double value, double target, double withinRange);
 
-	double toRadians(double degrees);
-	double toDegrees(double radians);
+double euclideanDistance(std::vector<double> point1, std::vector<double> point2);
 
-	double rangeMap(double x, double inMin, double inMax, double outMin, double outMax);
+double toRadians(double degrees);
+double toDegrees(double radians);
 
-	double getScaleFactor(double scaleToMax, std::initializer_list<double> list);
-	double maxAbsolute(std::initializer_list<double> list);
+double rangeMap(double x, double inMin, double inMax, double outMin, double outMax);
 
-	double getAverage(std::vector<double> list);
+double getScaleFactor(double scaleToMax, std::initializer_list<double> list);
+double maxAbsolute(std::initializer_list<double> list);
 
-	std::pair<bool, double> getArcRadius_inches(double arcLength_inches, double rotatedAngle_polarDegrees);
-	double getChordLength_inches(double arcRadius_inches, double rotatedAngle_polarDegrees);
+double getAverage(std::vector<double> list);
+
+std::pair<bool, double> getArcRadius_inches(double arcLength_inches, double rotatedAngle_polarDegrees);
+double getChordLength_inches(double arcRadius_inches, double rotatedAngle_polarDegrees);
+
+}
 }
