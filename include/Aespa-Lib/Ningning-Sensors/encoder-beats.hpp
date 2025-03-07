@@ -1,6 +1,6 @@
 #pragma once
 
-#include "main.h"
+#include "vex.h"
 
 namespace aespa_lib {
 namespace sensor_beats {

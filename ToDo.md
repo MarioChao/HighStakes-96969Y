@@ -9,8 +9,8 @@
 			- [x] encoder beats
 			- [x] tracking wheel
 		- [x] Winter Utilities
-			- [x] angle utility
-			- [x] general utility
+			- [x] angle
+			- [x] general
 	- [ ] Pas1 Library
 		- [ ] Auton
 			- [ ] Control Loops (feedforward, feedback)
