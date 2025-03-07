@@ -2,6 +2,7 @@
 
 #include "Pas1-Lib/Auton/Control-Loops/pid.h"
 #include "Pas1-Lib/Auton/End-Conditions/patience.h"
+#include "Pas1-Lib/Auton/End-Conditions/timeout.h"
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/linegular.h"
@@ -132,10 +133,15 @@ namespace {
 		// Reset patience
 		driveError_tilesPatience.reset();
 
-		// Reset timer
-		timer timeout;
+		// Create timeout
+		pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
-		while (timeout.value() < runTimeout_sec) {
+		while (true) {
+			// Check timeout
+			if (runTimeout.isExpired()) {
+				break;
+			}
+
 			// Check settled
 			if (driveTurn_driveTargetDistance_voltPid.isSettled() && driveTurn_rotateTargetAngle_voltPid.isSettled()) {
 				printf("Settled\n");

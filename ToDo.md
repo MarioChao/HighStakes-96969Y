@@ -14,7 +14,7 @@
 	- [ ] Pas1 Library
 		- [ ] Auton
 			- [x] Control Loops (feedforward, pid feedback)
-			- [ ] End Conditions (patience, settle, timeout)
+			- [x] End Conditions (patience, settle, timeout)
 			- [ ] Pose Controls (pure pursuit, ramsete, LTV)
 		- [ ] Basic Control
 			- [ ] Diff Chassis

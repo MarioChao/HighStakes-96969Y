@@ -4,6 +4,7 @@
 #include "Pas1-Lib/Auton/Control-Loops/pid.h"
 #include "Pas1-Lib/Auton/Control-Loops/feedforward.h"
 #include "Pas1-Lib/Auton/End-Conditions/patience.h"
+#include "Pas1-Lib/Auton/End-Conditions/timeout.h"
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/linegular.h"
@@ -113,10 +114,15 @@ namespace pid_diff {
 		// Reset patience
 		angleError_degreesPatience.reset();
 
-		// Reset timer
-		timer timeout;
+		// Create timeout
+		pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
-		while (!turnToAngle_rotateTargetAngleVoltPid.isSettled() && timeout.value() < runTimeout_sec) {
+		while (!turnToAngle_rotateTargetAngleVoltPid.isSettled()) {
+			// Check timeout
+			if (runTimeout.isExpired()) {
+				break;
+			}
+
 			// Check exhausted
 			if (angleError_degreesPatience.isExhausted()) {
 				break;
@@ -330,6 +336,9 @@ namespace {
 	
 			// Reset timer
 			timer runningTimer;
+
+			// Create timeout
+			pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 	
 			// Print info
 			printf("Drive pid with trajectory of %.3f seconds\n", motion.getTotalTime());
@@ -341,7 +350,7 @@ namespace {
 				runningTimer.time(seconds) > motion.getTotalTime()
 			)) {
 				// Check timeout
-				if (runningTimer.time(seconds) >= runTimeout_sec) {
+				if (runTimeout.isExpired()) {
 					break;
 				}
 
