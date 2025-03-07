@@ -1,4 +1,4 @@
-#include "Pas1-Lib/Auton/Control-Loops/pid-controller.h"
+#include "Pas1-Lib/Auton/Control-Loops/pid.h"
 
 namespace pas1_lib {
 namespace auton {

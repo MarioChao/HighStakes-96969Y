@@ -1,6 +1,6 @@
 #include "Autonomous/autonFunctions.h"
 
-#include "Pas1-Lib/Auton/Pose-Controls/ramsete-controller.h"
+#include "Pas1-Lib/Auton/Pose-Controls/ramsete.h"
 #include "AutonUtilities/linegular.h"
 
 #include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"

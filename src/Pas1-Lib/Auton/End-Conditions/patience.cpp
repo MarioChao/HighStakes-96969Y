@@ -1,4 +1,4 @@
-#include "Pas1-Lib/Auton/End-conditions/patience-controller.h"
+#include "Pas1-Lib/Auton/End-conditions/patience.h"
 
 #include <stdio.h>
 #include <cmath>

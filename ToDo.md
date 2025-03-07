@@ -13,7 +13,7 @@
 			- [x] general
 	- [ ] Pas1 Library
 		- [ ] Auton
-			- [x] Control Loops (feedforward, feedback)
+			- [x] Control Loops (feedforward, pid feedback)
 			- [ ] End Conditions (patience, settle, timeout)
 			- [ ] Pose Controls (pure pursuit, ramsete, LTV)
 		- [ ] Basic Control
