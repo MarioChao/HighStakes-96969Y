@@ -1,7 +1,7 @@
 #include "Autonomous/autonFunctions.h"
 
-#include "Pas1-Lib/Auton/Control-Loops/pidController.h"
-#include "Pas1-Lib/Auton/End-Conditions/patienceController.h"
+#include "Pas1-Lib/Auton/Control-Loops/pid-controller.h"
+#include "Pas1-Lib/Auton/End-Conditions/patience-controller.h"
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/linegular.h"
@@ -18,6 +18,8 @@
 
 namespace {
 	using namespace autonfunctions::driveturn;
+	using pas1_lib::auton::control_loops::PIDController;
+	using pas1_lib::auton::end_conditions::PatienceController;
 
 	// Correctors
 	DriftCorrection driftCorrector(InertialSensor, 0, 0);

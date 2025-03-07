@@ -1,5 +1,8 @@
-#include "Pas1-Lib/Auton/Control-Loops/pidController.h"
-#include "main.h"
+#include "Pas1-Lib/Auton/Control-Loops/pid-controller.h"
+
+namespace pas1_lib {
+namespace auton {
+namespace control_loops {
 
 PIDController::PIDController(double kP, double kI, double kD, double settleRange, double settleFrameCount) {
 	kProp = kP, kInteg = kI, kDeriv = kD;
@@ -69,4 +72,8 @@ bool PIDController::isSettled() {
 	} else {
 		return false;
 	}
+}
+
+}
+}
 }

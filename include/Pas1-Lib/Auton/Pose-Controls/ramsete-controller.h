@@ -4,10 +4,15 @@
 
 class Linegular;
 
+
+namespace pas1_lib {
+namespace auton {
+namespace pose_controllers {
+
 class RamseteController {
 public:
-	RamseteController();
 	RamseteController(double b, double damp);
+	RamseteController();
 
 	void setDirection(bool isReversed);
 
@@ -27,3 +32,7 @@ private:
 	double b, zeta;
 	double directionFactor = 1;
 };
+
+}
+}
+}

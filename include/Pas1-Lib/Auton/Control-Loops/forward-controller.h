@@ -1,5 +1,9 @@
 #pragma once
 
+namespace pas1_lib {
+namespace auton {
+namespace control_loops {
+
 class ForwardController {
 public:
 	ForwardController(double kS = 0, double kV = 0, double kA = 0);
@@ -10,3 +14,7 @@ private:
 	double kVelo, kAcel, kStat;
 	double velocity, acceleration;
 };
+
+}
+}
+}

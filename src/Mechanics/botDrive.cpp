@@ -1,8 +1,8 @@
 #include "Mechanics/botDrive.h"
 
 #include "Autonomous/autonValues.h"
-#include "Pas1-Lib/Auton/Control-Loops/pidController.h"
-#include "Pas1-Lib/Auton/Control-Loops/forwardController.h"
+#include "Pas1-Lib/Auton/Control-Loops/pid-controller.h"
+#include "Pas1-Lib/Auton/Control-Loops/forward-controller.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
@@ -15,6 +15,8 @@
 namespace {
 	using namespace botinfo;
 	using botdrive::controlType;
+	using pas1_lib::auton::control_loops::ForwardController;
+	using pas1_lib::auton::control_loops::PIDController;
 
 	// Controls
 	void controlArcadeTwoStick();

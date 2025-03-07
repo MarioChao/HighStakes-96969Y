@@ -1,5 +1,5 @@
-#include "Pas1-Lib/Auton/Control-Loops/pidController.h"
-#include "Pas1-Lib/Auton/End-Conditions/patienceController.h"
+#include "Pas1-Lib/Auton/Control-Loops/pid-controller.h"
+#include "Pas1-Lib/Auton/End-Conditions/patience-controller.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
@@ -8,6 +8,9 @@
 #include "main.h"
 
 namespace {
+	using pas1_lib::auton::control_loops::PIDController;
+	using pas1_lib::auton::end_conditions::PatienceController;
+
 	void resolveArmExtreme();
 	void resolveArmDegrees();
 	void resolveArmDirection();

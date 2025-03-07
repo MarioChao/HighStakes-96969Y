@@ -2,6 +2,10 @@
 
 #include "vex.h"
 
+namespace pas1_lib {
+namespace auton {
+namespace control_loops {
+
 class PIDController {
 public:
 	PIDController(double kP = 0, double kI = 0, double kD = 0, double settleRange = 5, double settleFrameCount = 7);
@@ -19,3 +23,7 @@ private:
 	double settleErrorRange, settleMinFrameCount;
 	double settledFrames;
 };
+
+}
+}
+}

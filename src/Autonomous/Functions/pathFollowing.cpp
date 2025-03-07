@@ -1,6 +1,6 @@
 #include "Autonomous/autonFunctions.h"
 
-#include "Pas1-Lib/Auton/Pose-Controllers/ramseteController.h"
+#include "Pas1-Lib/Auton/Pose-Controls/ramsete-controller.h"
 #include "AutonUtilities/linegular.h"
 
 #include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
@@ -18,7 +18,7 @@
 
 namespace {
 	// Controller
-	RamseteController robotController;
+	pas1_lib::auton::pose_controllers::RamseteController robotController;
 
 	// Simulator
 	bool useSimulator = mainUseSimulator;

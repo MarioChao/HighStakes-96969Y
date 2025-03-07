@@ -1,6 +1,11 @@
-#include "Pas1-Lib/Auton/Control-loops/forwardController.h"
+#include "Pas1-Lib/Auton/Control-loops/forward-controller.h"
+
 #include "Aespa-Lib/Winter-Utilities/general.h"
 #include <cmath>
+
+namespace pas1_lib {
+namespace auton {
+namespace control_loops {
 
 ForwardController::ForwardController(double kS, double kV, double kA) {
 	kStat = kS;
@@ -27,4 +32,8 @@ double ForwardController::getValue(bool useS, bool useV, bool useA) {
 	double valA = useA ? (acceleration * kAcel) : 0;
 
 	return valV + valA + valS;
+}
+
+}
+}
 }

@@ -1,7 +1,11 @@
-#include "Pas1-Lib/Auton/End-conditions/patienceController.h"
+#include "Pas1-Lib/Auton/End-conditions/patience-controller.h"
 
 #include <stdio.h>
 #include <cmath>
+
+namespace pas1_lib {
+namespace auton {
+namespace end_conditions {
 
 PatienceController::PatienceController(int maxPatience, double minDelta, bool positiveImprovement, int delayComputePatience) {
 	maxPatienceLevel = maxPatience;
@@ -39,7 +43,7 @@ void PatienceController::computePatience(double value) {
 	// Modify patience
 	if (willResetPatience) {
 		patience = 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
 		// Update value
 		storedValue = value;
 	} else {
@@ -57,4 +61,8 @@ bool PatienceController::isExhausted() {
 
 void PatienceController::printDebug() {
 	printf("Pat: %d, val: %.3f\n", patience, storedValue);
+}
+
+}
+}
 }
