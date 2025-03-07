@@ -7,8 +7,8 @@
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
 #include "AutonUtilities/linegular.h"
 
-#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
-#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angle.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
 
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"

@@ -4,7 +4,7 @@
 #include "Mechanics/redirect.h"
 #include "Mechanics/botArm.h"
 #include "Utilities/debugFunctions.h"
-#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
 #include "main.h"
 
 // This mechanic is for one-part intake with two motors

@@ -1,7 +1,7 @@
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
 
-#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
-#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angle.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
 
 #include "AutonUtilities/driftCorrection.h"
 #include "AutonUtilities/linegular.h"

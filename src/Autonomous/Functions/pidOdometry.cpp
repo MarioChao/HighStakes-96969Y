@@ -8,8 +8,8 @@
 
 #include "Mechanics/botDrive.h"
 
-#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
-#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angle.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
 
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"

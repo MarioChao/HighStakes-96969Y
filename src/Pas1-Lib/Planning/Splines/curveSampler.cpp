@@ -1,6 +1,6 @@
 #include "Pas1-Lib/Planning/Splines/curveSampler.h"
 
-#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
 
 #include <stdio.h>
 

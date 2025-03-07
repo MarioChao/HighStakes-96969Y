@@ -1,5 +1,5 @@
 #include "Pas1-Lib/Auton/Control-loops/forwardController.h"
-#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
 #include <cmath>
 
 ForwardController::ForwardController(double kS, double kV, double kA) {

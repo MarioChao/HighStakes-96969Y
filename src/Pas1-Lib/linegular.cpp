@@ -1,8 +1,8 @@
 #include "AutonUtilities/linegular.h"
 
 #include <cmath>
-#include "Aespa-Lib/Winter-Utilities/angleUtility.h"
-#include "Aespa-Lib/Winter-Utilities/generalUtility.h"
+#include "Aespa-Lib/Winter-Utilities/angle.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
 
 Linegular::Linegular(double x, double y, double polarTheta_degrees) {
 	this->x = x;
