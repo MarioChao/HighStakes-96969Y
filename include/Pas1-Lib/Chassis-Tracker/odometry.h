@@ -1,8 +1,10 @@
 #pragma once
 
 #include "main.h"
-#include "Pas1-Lib/Chassis-Tracker/tracking-wheel.h"
+#include "Aespa-Lib/Ningning-Sensors/tracking-wheel.h"
 #include "AutonUtilities/driftCorrection.h"
+
+using aespa_lib::sensor_beats::TrackingWheel;
 
 class DriftCorrection;
 class Linegular;

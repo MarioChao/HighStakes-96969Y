@@ -23,14 +23,14 @@ namespace {
 	aespa_lib::sensor_beats::Motor lookRightMotor_beats(RightMotorA);
 
 	// Tracking wheels
-	chassis_tracker::TrackingWheel lookLeft_trackingWheel(
+	aespa_lib::sensor_beats::TrackingWheel lookLeft_trackingWheel(
 		lookLeftMotor_beats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, -botinfo::halfRobotLengthIn
 	);
-	chassis_tracker::TrackingWheel lookRight_trackingWheel(
+	aespa_lib::sensor_beats::TrackingWheel lookRight_trackingWheel(
 		lookRightMotor_beats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, botinfo::halfRobotLengthIn
 	);
-	chassis_tracker::TrackingWheel lookRotation_trackingWheel(lookRotation_beats, -90, 1, 2.0, 0);
-	chassis_tracker::TrackingWheel rightOptical_trackingWheel(rightOptical_beats, 180, 1, 2.75, -3.5);
+	aespa_lib::sensor_beats::TrackingWheel lookRotation_trackingWheel(lookRotation_beats, -90, 1, 2.0, 0);
+	aespa_lib::sensor_beats::TrackingWheel rightOptical_trackingWheel(rightOptical_beats, 180, 1, 2.75, -3.5);
 }
 
 // Odometry

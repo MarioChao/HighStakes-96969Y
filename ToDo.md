@@ -7,6 +7,7 @@
 			- [x] matrix
 		- [x] Ningning Sensors
 			- [x] encoder beats
+			- [x] tracking wheel
 		- [x] Winter Utilities
 			- [x] angle utility
 			- [x] general utility
@@ -15,9 +16,15 @@
 			- [ ] Control Loops (feedforward, feedback)
 			- [ ] End Conditions (patience, settle, timeout)
 			- [ ] Pose Controllers (pure pursuit, ramsete, LTV)
+		- [ ] Basic Control
+			- [ ] Diff Chassis
+				- [ ] Global
+					- [ ] move to
+					- [ ] path follow
+				- [ ] Local
+					- [ ] move by
 		- [ ] Chassis Tracker
 			- [ ] odometry
-			- [ ] tracking wheel
 		- [ ] Planning
 			- [ ] Splines
 				- [ ] spline segment

@@ -3,11 +3,10 @@
 #include "main.h"
 #include "Aespa-Lib/Ningning-Sensors/encoder-beats.hpp"
 
-namespace chassis_tracker {
-	class TrackingWheel;
-}
+namespace aespa_lib {
+namespace sensor_beats {
 
-class chassis_tracker::TrackingWheel {
+class TrackingWheel {
 public:
 	/**
 	 * @param encoder An encoder object that stores a sensor.
@@ -17,7 +16,7 @@ public:
 	 * @param offset_inches The distance between the sensor's measuring line and a parallel line passing through the tracking center. Positive means the sensor is measuring forward to the right of the tracking center.
 	 */
 	TrackingWheel(
-		aespa_lib::sensor_beats::Encoder &sensor_encoder, double directionAngle_polarDegrees,
+		Encoder &sensor_encoder, double directionAngle_polarDegrees,
 		double sensorToWheel_gearRatio, double wheelDiameter_inches, double offset_inches
 	);
 
@@ -30,7 +29,7 @@ public:
 
 private:
 	/* Configs */
-	aespa_lib::sensor_beats::Encoder &sensor_encoder;
+	Encoder &sensor_encoder;
 	double directionAngle_polarDegrees;
 	double sensorToWheel_gearRatio;
 	double wheelDiameter_inches;
@@ -39,3 +38,6 @@ private:
 	/* Internal states */
 	double storedDistance_inches;
 };
+
+}
+}
