@@ -4,20 +4,23 @@ namespace pas1_lib {
 namespace auton {
 namespace control_loops {
 
-PIDController::PIDController(double kP, double kI, double kD, double settleRange, double settleFrameCount) {
-	kProp = kP, kInteg = kI, kDeriv = kD;
+PIDController::PIDController(double kP, double kI, double kD, std::vector<end_conditions::Settle> settleControllers)
+	: kProp(kP), kInteg(kI), kDeriv(kD),
+	settleControllers(settleControllers) {
 	resetErrorToZero();
-
-	settleErrorRange = fabs(settleRange);
-	settleMinFrameCount = settleFrameCount;
-	settledFrames = 0;
 }
+
+PIDController::PIDController(double kP, double kI, double kD, double settleRange, double settleFrameCount)
+	: PIDController(kP, kI, kD, { end_conditions::Settle(settleRange, settleFrameCount) }) {}
 
 void PIDController::resetErrorToZero() {
 	previousError = currentError = 2e17;
 	cumulativeError = deltaError = 0;
 	pidTimer.reset();
-	settledFrames = 0;
+
+	for (end_conditions::Settle &settleControl : settleControllers) {
+		settleControl.reset();
+	}
 }
 
 void PIDController::computeFromError(double error) {
@@ -46,12 +49,9 @@ void PIDController::computeFromError(double error) {
 		deltaError = 0;
 	}
 
-	// Settle errors
-	if (fabs(error) < settleErrorRange) {
-		settledFrames++;
-		settledFrames = fmin(settledFrames, settleMinFrameCount + 1);
-	} else {
-		settledFrames = 0;
+	// Settle controllers
+	for (end_conditions::Settle &settleControl : settleControllers) {
+		settleControl.computeFromError(error);
 	}
 }
 
@@ -67,11 +67,17 @@ double PIDController::getValue(bool useP, bool useI, bool useD) {
 }
 
 bool PIDController::isSettled() {
-	if (fabs(currentError) < settleErrorRange && settledFrames >= settleMinFrameCount) {
-		return true;
-	} else {
-		return false;
+	bool isSettled_state = false;
+
+	// Check if any controllers settled
+	for (end_conditions::Settle &settleControl : settleControllers) {
+		if (settleControl.isSettled()) {
+			isSettled_state = true;
+			break;
+		}
 	}
+
+	return isSettled_state;
 }
 
 }

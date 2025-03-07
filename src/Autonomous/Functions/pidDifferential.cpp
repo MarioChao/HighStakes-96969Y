@@ -46,7 +46,7 @@ namespace {
 	PIDController turnToAngle_rotateTargetAngleVoltPid(2.3, 0.0, 0.16, autonvals::defaultTurnAngleErrorRange);
 	PIDController turnToAngle_rotateTargetAngleVelocityPctPid(0.4, 0.0, 0.03, autonvals::defaultTurnAngleErrorRange);
 
-	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange, 1);
+	PIDController driveAndTurn_reachedTargetPid(0, 0, 0, autonvals::defaultMoveWithInchesErrorRange);
 	// PIDController driveAndTurn_drivePositionPid(17, 0, 0.5, autonvals::defaultMoveWithInchesErrorRange);
 	PIDController driveAndTurn_drivePositionPid(17, 0, 0, autonvals::defaultMoveWithInchesErrorRange); // in to pct
 	PIDController driveAndTurn_driveVelocityPid(1.8, 0, 0.005); // in/s to pct

@@ -24,8 +24,7 @@ RamseteController::RamseteController(double b, double damp) {
 }
 
 RamseteController::RamseteController()
-	: RamseteController(defaultB, defaultDamp) {
-}
+	: RamseteController(defaultB, defaultDamp) {}
 
 void RamseteController::setDirection(bool isReversed) {
 	if (isReversed) {
