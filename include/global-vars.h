@@ -2,8 +2,9 @@
 
 #include "main.h"
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
-#include "Simulation/robotSimulator.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
+#include "Simulation/robotSimulator.h"
+
 
 // ---------- Global variables ----------
 
@@ -20,7 +21,7 @@ extern bool isArmPneumatic;
 extern timer drivingTimer;
 
 // Odometry
-extern chassis_tracker::Odometry mainOdometry;
+extern pas1_lib::chassis_tracker::Odometry mainOdometry;
 
 // Simulator
 extern RobotSimulator robotSimulator;

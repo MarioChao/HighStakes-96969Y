@@ -1,22 +1,18 @@
 #pragma once
 
 #include "main.h"
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Ningning-Sensors/tracking-wheel.h"
 #include "AutonUtilities/driftCorrection.h"
 
-using aespa_lib::sensor_beats::TrackingWheel;
 
-class DriftCorrection;
-class Linegular;
-
+namespace pas1_lib {
 namespace chassis_tracker {
-	class Odometry;
-}
 
-class chassis_tracker::Odometry {
+class Odometry {
 public:
 	Odometry(
-		std::vector<std::reference_wrapper<TrackingWheel>> trackingWheels,
+		std::vector<std::reference_wrapper<aespa_lib::sensor_beats::TrackingWheel>> trackingWheels,
 		std::vector<std::reference_wrapper<inertial>> inertialSensors = {}
 	);
 	Odometry();
@@ -28,7 +24,7 @@ public:
 	 * 
 	 * @param tracking_wheel The tracking wheel object.
 	 */
-	Odometry &addTrackingWheel(TrackingWheel &tracking_wheel);
+	Odometry &addTrackingWheel(aespa_lib::sensor_beats::TrackingWheel &tracking_wheel);
 
 	/**
 	 * @brief Adds an inertial sensor to track the chassis's rotation in a 2D plane.
@@ -68,40 +64,27 @@ public:
 	/// @brief Calculate robot's new position from the change in sensor measurements since the last call.
 	void odometryFrame();
 
-	/**
-	 * @brief Sets the robot's position in a 2D plane.
-	 * 
-	 * @param x Horizontal position with position factor.
-	 * @param y Vertical position with position factor.
-	 */
-	void setPosition(double x, double y);
+	void setPosition_raw(double x, double y);
+	void setPosition_scaled(double x, double y);
 
-	/**
-	 * @brief Sets the robot's rotation (look direction) in a 2D plane.
-	 * 
-	 * @param fieldAngles_degrees Robot's front/look direction. Field angle rotation in degrees.
-	 */
 	void setLookAngle(double fieldAngles_degrees);
-
-	/**
-	 * @brief Sets the robot's rotation (look direction) in a 2D plane.
-	 * 
-	 * @param fieldAngles_degrees Robot's right direction. Field angle rotation in degrees.
-	 */
 	void setRightAngle(double fieldAngle_degrees);
 
-	double getX();
-	double getY();
+	void setLookPose_raw(aespa_lib::datas::Linegular pose);
+	void setLookPose_scaled(aespa_lib::datas::Linegular pose);
+
+	double getX_scaled();
+	double getY_scaled();
 	double getLookFieldAngle_degrees();
 	double getRightFieldAngle_degrees();
 
-	Linegular getLookLinegular();
+	aespa_lib::datas::Linegular getLookPose_scaled();
 
 	void printDebug();
 
 private:
 	// Tracking wheels
-	std::vector<std::reference_wrapper<TrackingWheel>> trackingWheels;
+	std::vector<std::reference_wrapper<aespa_lib::sensor_beats::TrackingWheel>> trackingWheels;
 
 	int positionSensor_count;
 
@@ -131,3 +114,6 @@ private:
 	double getDeltaPolarAngle_degrees();
 	std::pair<double, double> getLocalDeltaXY_inches(double deltaPolarAngle_degrees);
 };
+
+}
+}

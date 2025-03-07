@@ -29,9 +29,9 @@
 #include "LedLight/led-main.h"
 
 #include "Autonomous/autonValues.h"
-#include "AutonUtilities/linegular.h"
 #include "Simulation/robotSimulator.h"
 
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
 #include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
@@ -76,14 +76,14 @@ void pre_auton(void) {
 	// /*
 	task odometryTask([]() -> int {
 		wait(500, msec);
-		mainOdometry.setPosition(1, 1);
+		mainOdometry.setPosition_scaled(1, 1);
 		mainOdometry.setLookAngle(0);
 		mainOdometry.start();
 		while (true) {
 			mainOdometry.odometryFrame();
 			Controller1.Screen.setCursor(3, 0);
 			// Controller1.Screen.print("Enc val: %.3f\n", RightEncoder.position(rev));
-			// printf("test: %.3f %.3f\n", mainOdometry.getX(), mainOdometry.getY());
+			// printf("test: %.3f %.3f\n", mainOdometry.getX_scaled(), mainOdometry.getY_scaled());
 			wait(5, msec);
 		}
 	});//*/

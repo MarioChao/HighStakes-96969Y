@@ -1,14 +1,10 @@
 #pragma once
 
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Pas1-Lib/Planning/Splines/cubicSplineSegment.h"
 
 #include <initializer_list>
 #include <vector>
-
-
-// Forward declaration
-
-class Linegular;
 
 
 // Class
@@ -44,7 +40,7 @@ public:
 
 	UniformCubicSpline getReversed();
 
-	Linegular getLinegularAt(double t, bool reverseHeading = false);
+	aespa_lib::datas::Linegular getLinegularAt(double t, bool reverseHeading = false);
 
 private:
 	std::vector<CubicSplineSegment> segments;

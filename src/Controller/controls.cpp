@@ -40,7 +40,7 @@ namespace controls {
 			rumble::runThread();
 			return 1;
 		});
-		rumble::setString(".");
+		// rumble::setString(".");
 	}
 
 	void setUpKeybinds() {

@@ -22,7 +22,7 @@ void autonpaths::runAutonSkills59() {
 	_autonTimer.reset();
 
 	// Set position and rotation
-	mainOdometry.setPosition(0.792, 3);
+	mainOdometry.setPosition_scaled(0.792, 3);
 	setRobotRotation(-90.0);
 
 	// Set config
@@ -154,7 +154,7 @@ namespace {
 			runFollowLinearYield();
 			runFollowLinearYield();
 			// Odometry wall align
-			mainOdometry.setPosition(mainOdometry.getX(), 0.45);
+			mainOdometry.setPosition_scaled(mainOdometry.getX_scaled(), 0.45);
 			driveDistanceTiles(-0.5);
 		} else {
 			autonpaths::pathbuild::linearIndex += 2;
@@ -190,7 +190,7 @@ namespace {
 			runFollowLinearYield();
 			runFollowLinearYield();
 			// Odometry wall align
-			mainOdometry.setPosition(mainOdometry.getX(), 5.55);
+			mainOdometry.setPosition_scaled(mainOdometry.getX_scaled(), 5.55);
 			driveDistanceTiles(-0.5);
 			setArmStage(0, 1);
 		} else {
@@ -225,7 +225,7 @@ namespace {
 			setArmStage(2);
 			runFollowLinearYield();
 			// Odometry wall align
-			mainOdometry.setPosition(5.5, mainOdometry.getY());
+			mainOdometry.setPosition_scaled(5.5, mainOdometry.getY_scaled());
 			driveDistanceTiles(-0.5);
 			setArmStage(0, 1.0);
 		} else {

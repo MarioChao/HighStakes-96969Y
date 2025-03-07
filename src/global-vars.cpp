@@ -34,7 +34,7 @@ namespace {
 }
 
 // Odometry
-chassis_tracker::Odometry mainOdometry = chassis_tracker::Odometry()
+pas1_lib::chassis_tracker::Odometry mainOdometry = pas1_lib::chassis_tracker::Odometry()
 .addTrackingWheel(lookLeft_trackingWheel)
 .addTrackingWheel(lookRight_trackingWheel)
 // .addTrackingWheel(lookRotation_trackingWheel)
@@ -47,7 +47,7 @@ chassis_tracker::Odometry mainOdometry = chassis_tracker::Odometry()
 /* Autonomous */
 
 RobotSimulator robotSimulator;
-bool mainUseSimulator = false;
+bool mainUseSimulator = true;
 
 TrajectoryPlanner testTrajectoryPlan;
 timer trajectoryTestTimer;

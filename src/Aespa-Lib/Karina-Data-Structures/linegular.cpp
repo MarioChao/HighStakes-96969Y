@@ -1,8 +1,11 @@
-#include "AutonUtilities/linegular.h"
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 
 #include <cmath>
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
+
+namespace aespa_lib {
+namespace datas {
 
 Linegular::Linegular(double x, double y, double polarTheta_degrees) {
 	this->x = x;
@@ -10,15 +13,15 @@ Linegular::Linegular(double x, double y, double polarTheta_degrees) {
 	this->theta_degrees = polarTheta_degrees;
 }
 
-double Linegular::getX(){
+double Linegular::getX() {
 	return x;
 }
 
-double Linegular::getY(){
+double Linegular::getY() {
 	return y;
 }
 
-double Linegular::getThetaPolarAngle_degrees(){
+double Linegular::getThetaPolarAngle_degrees() {
 	return theta_degrees;
 }
 
@@ -27,7 +30,7 @@ double Linegular::getThetaPolarAngle_radians() {
 }
 
 double Linegular::getXYMagnitude() {
-	return aespa_lib::genutil::euclideanDistance({0, 0}, {x, y});
+	return aespa_lib::genutil::euclideanDistance({ 0, 0 }, { x, y });
 }
 
 void Linegular::rotateXYBy(double polarRotate_radians) {
@@ -51,4 +54,15 @@ Linegular Linegular::operator+(Linegular &other) {
 
 Linegular Linegular::operator-(Linegular &other) {
 	return Linegular(x - other.x, y - other.y, theta_degrees - other.theta_degrees);
+}
+
+Linegular Linegular::operator*(double value) {
+	return Linegular(x * value, y * value, theta_degrees);
+}
+
+Linegular Linegular::operator/(double value) {
+	return operator*(1 / value);
+}
+
+}
 }

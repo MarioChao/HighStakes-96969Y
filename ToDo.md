@@ -4,6 +4,7 @@
 	- [ ] Aespa Library
 		- [ ] Giselle Graphics
 		- [x] Karina Data Structures
+			- [x] linegular
 			- [x] matrix
 		- [x] Ningning Sensors
 			- [x] encoder beats
@@ -17,12 +18,14 @@
 			- [x] End Conditions (patience, settle, timeout)
 			- [ ] Pose Controls (pure pursuit, ramsete, LTV)
 		- [ ] Basic Control
-			- [ ] Diff Chassis
-				- [ ] Global
-					- [ ] move to
-					- [ ] path follow
-				- [ ] Local
-					- [ ] move by
+			- [ ] Chassis
+				- [ ] chassis base
+				- [ ] differential
+				- [ ] x drive
+			- [ ] Move Chassis
+				- [ ] global move to
+				- [ ] local move by
+				- [ ] path follow
 		- [ ] Chassis Tracker
 			- [ ] odometry
 		- [ ] Planning
@@ -32,7 +35,7 @@
 				- [ ] curve sampler
 			- [ ] Trajectories
 				- [ ] trajectory planner
-	- [ ] 
+	- [ ] Others
 - [ ] Units system for consistency
 - [ ] Revamp trajectory planner
 	- [ ] Numerical integration method

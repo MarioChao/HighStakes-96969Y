@@ -1,11 +1,14 @@
 #pragma once
 
+namespace aespa_lib {
+namespace datas {
+
 // Class containing X, Y, and angle
 class Linegular {
 public:
 	/**
 	 * @brief Construct a new Linegular object.
-	 * 
+	 *
 	 * @param x The right-left position on the plane.
 	 * @param y The forward-backward position on the plane.
 	 * @param polarTheta_degrees The polar rotation in degrees.
@@ -25,6 +28,12 @@ public:
 	Linegular operator+(Linegular &other);
 	Linegular operator-(Linegular &other);
 
+	Linegular operator*(double value);
+	Linegular operator/(double value);
+
 private:
 	double x, y, theta_degrees;
 };
+
+}
+}

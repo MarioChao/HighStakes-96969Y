@@ -1,16 +1,20 @@
 #include "Pas1-Lib/Auton/Pose-Controls/ramsete.h"
 
-#include "AutonUtilities/linegular.h"
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 #include <cmath>
 #include <stdio.h>
 
 namespace {
+
+using aespa_lib::datas::Linegular;
+
 const double defaultB = 0.743; // 2.0 rad^2/m^2 * (1 m / 1.64041995 tiles)^2 = 0.7432
 const double defaultDamp = 0.7;
 
 double smallScalar = 0.0001;
+
 }
 
 

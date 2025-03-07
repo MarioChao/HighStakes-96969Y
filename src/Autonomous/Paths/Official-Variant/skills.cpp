@@ -25,7 +25,7 @@ void autonpaths::runAutonSkills() {
 	_autonTimer.reset();
 
 	// Set position and rotation
-	mainOdometry.setPosition(0.792, 3);
+	mainOdometry.setPosition_scaled(0.792, 3);
 	setRobotRotation(-90.0);
 
 	// Set config
@@ -156,7 +156,7 @@ namespace {
 			setArmStage(3);
 			runFollowLinearYield();
 			runFollowLinearYield();
-			mainOdometry.setPosition(3.0, 0.33);
+			mainOdometry.setPosition_scaled(3.0, 0.33);
 			driveDistanceTiles(-0.5);
 		} else {
 			autonpaths::pathbuild::linearIndex += 2;
@@ -192,7 +192,7 @@ namespace {
 			setIntakeState(1);
 			runFollowLinearYield();
 			runFollowLinearYield();
-			mainOdometry.setPosition(3.0, 5.67);
+			mainOdometry.setPosition_scaled(3.0, 5.67);
 			driveDistanceTiles(-0.5);
 			setArmStage(0, 1.0);
 		} else {

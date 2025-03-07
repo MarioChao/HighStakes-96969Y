@@ -675,13 +675,13 @@ namespace {
 		if (showSimulator) {
 			return robotSimulator.position.x;
 		}
-		return mainOdometry.getX();
+		return mainOdometry.getX_scaled();
 	}
 	double getRobotY_tiles() {
 		if (showSimulator) {
 			return robotSimulator.position.y;
 		}
-		return mainOdometry.getY();
+		return mainOdometry.getY_scaled();
 	}
 	double getRobotPolarAngle_degrees() {
 		if (showSimulator) {

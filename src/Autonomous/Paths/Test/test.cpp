@@ -51,7 +51,7 @@ void autonpaths::autonTest() {
 
 	setDifferentialUseRelativeRotation(true);
 
-	mainOdometry.setPosition(0, 0);
+	mainOdometry.setPosition_scaled(0, 0);
 	setRobotRotation(0);
 
 	if (false) {

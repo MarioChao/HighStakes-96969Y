@@ -17,7 +17,7 @@ void autonpaths::runLoveShape() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(1.5, 0.5);
+	mainOdometry.setPosition_scaled(1.5, 0.5);
 	setRobotRotation(0);
 	mainOdometry.printDebug();
 

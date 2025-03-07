@@ -1,8 +1,7 @@
 #pragma once
 
 #include <utility>
-
-class Linegular;
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 
 
 namespace pas1_lib {
@@ -17,14 +16,14 @@ public:
 	void setDirection(bool isReversed);
 
 	std::pair<double, double> getLinegularVelocity(
-		Linegular actual, Linegular desired
+		aespa_lib::datas::Linegular actual, aespa_lib::datas::Linegular desired
 	);
 	std::pair<double, double> getLinegularVelocity(
-		Linegular actual, Linegular desired,
+		aespa_lib::datas::Linegular actual, aespa_lib::datas::Linegular desired,
 		double desiredLinearVelocity
 	);
 	std::pair<double, double> getLinegularVelocity(
-		Linegular actual, Linegular desired,
+		aespa_lib::datas::Linegular actual, aespa_lib::datas::Linegular desired,
 		double desiredLinearVelocity, double desiredAngularVelocity_radiansPerSecond
 	);
 

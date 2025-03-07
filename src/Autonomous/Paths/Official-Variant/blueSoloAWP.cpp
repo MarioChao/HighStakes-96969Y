@@ -20,7 +20,7 @@ void autonpaths::runBlueSoloAWP() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(5.2, 3.73);
+	mainOdometry.setPosition_scaled(5.2, 3.73);
 	setRobotRotation(180);
 	mainOdometry.printDebug();
 

@@ -22,7 +22,7 @@ void autonpaths::runAutonSkillsNoWallStake() {
 	_autonTimer.reset();
 
 	// Set position and rotation
-	mainOdometry.setPosition(0.792, 3);
+	mainOdometry.setPosition_scaled(0.792, 3);
 	setRobotRotation(-90.0);
 
 	// Set config

@@ -5,8 +5,8 @@
 #include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
 #include "Pas1-Lib/Planning/Splines/curveSampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
-#include "AutonUtilities/linegular.h"
 
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 

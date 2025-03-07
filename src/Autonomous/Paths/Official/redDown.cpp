@@ -19,7 +19,7 @@ void autonpaths::runAutonRedDown() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	// mainOdometry.setPosition(0.56, 0.45);
+	// mainOdometry.setPosition_scaled(0.56, 0.45);
 	setRobotRotation(112.25);
 	mainOdometry.printDebug();
 

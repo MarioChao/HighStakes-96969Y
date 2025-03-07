@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 
+namespace {
 using aespa_lib::datas::Matrix;
+}
 
 CubicSplineSegment::CubicSplineSegment(cspline::SplineType splineType, std::vector<std::vector<double>> points) {
 	// Initializes matrices (prevents accessing them when uninitialized)
@@ -13,8 +15,7 @@ CubicSplineSegment::CubicSplineSegment(cspline::SplineType splineType, std::vect
 }
 
 CubicSplineSegment::CubicSplineSegment()
-: CubicSplineSegment(cspline::SplineType::Bezier, std::vector<std::vector<double>>(4, std::vector<double>(2)))
-{}
+	: CubicSplineSegment(cspline::SplineType::Bezier, std::vector<std::vector<double>>(4, std::vector<double>(2))) {}
 
 void CubicSplineSegment::setSplineType(cspline::SplineType splineType) {
 	if (splineType == this->splineType) {
@@ -100,58 +101,58 @@ CubicSplineSegment CubicSplineSegment::getReversed() {
 }
 
 namespace cspline {
-	namespace characteristic_matrix {
-		Matrix Bezier(0, 0);
-		Matrix Hermite(0, 0);
-		Matrix CatmullRom(0, 0);
-		Matrix B_Spline(0, 0);
+namespace characteristic_matrix {
+Matrix Bezier(0, 0);
+Matrix Hermite(0, 0);
+Matrix CatmullRom(0, 0);
+Matrix B_Spline(0, 0);
+}
+
+namespace storing_matrix {
+Matrix Bezier(0, 0);
+Matrix Hermite(0, 0);
+Matrix CatmullRom(0, 0);
+Matrix B_Spline(0, 0);
+}
+
+void setMatrices() {
+	if (characteristic_matrix::Bezier.getShape().first == 0) {
+		characteristic_matrix::Bezier = Matrix({
+			{1, 0, 0, 0},
+			{-3, 3, 0, 0},
+			{3, -6, 3, 0},
+			{-1, 3, -3, 1},
+		});
+		characteristic_matrix::Hermite = Matrix({
+			{1, 0, 0, 0},
+			{0, 1, 0, 0},
+			{-3, -2, 3, -1},
+			{2, 1, -2, 1},
+		});
+		characteristic_matrix::CatmullRom = Matrix({
+			{0, 2, 0, 0},
+			{-1, 0, 1, 0},
+			{2, -5, 4, -1},
+			{-1, 3, -3, 1},
+		}) * 0.5;
+		characteristic_matrix::B_Spline = Matrix({
+			{1, 4, 1, 0},
+			{-3, 0, 3, 0},
+			{3, -6, 3, 0},
+			{-1, 3, -3, 1},
+		}) * (1.0 / 6.0);
 	}
 
-	namespace storing_matrix {
-		Matrix Bezier(0, 0);
-		Matrix Hermite(0, 0);
-		Matrix CatmullRom(0, 0);
-		Matrix B_Spline(0, 0);
+	if (storing_matrix::Bezier.getShape().first == 0) {
+		storing_matrix::Bezier = Matrix::identity(4);
+		storing_matrix::Hermite = Matrix({
+			{1, 0, 0, 0},
+			{-1, 1, 0, 0},
+			{0, 0, 1, 0},
+			{0, 0, -1, 1},
+		});
+		storing_matrix::CatmullRom = Matrix::identity(4);
+		storing_matrix::B_Spline = Matrix::identity(4);
 	}
-
-	void setMatrices() {
-		if (characteristic_matrix::Bezier.getShape().first == 0) {
-			characteristic_matrix::Bezier = Matrix({
-				{1, 0, 0, 0},
-				{-3, 3, 0, 0},
-				{3, -6, 3, 0},
-				{-1, 3, -3, 1},
-			});
-			characteristic_matrix::Hermite = Matrix({
-				{1, 0, 0, 0},
-				{0, 1, 0, 0},
-				{-3, -2, 3, -1},
-				{2, 1, -2, 1},
-			});
-			characteristic_matrix::CatmullRom = Matrix({
-				{0, 2, 0, 0},
-				{-1, 0, 1, 0},
-				{2, -5, 4, -1},
-				{-1, 3, -3, 1},
-			}) * 0.5;
-			characteristic_matrix::B_Spline = Matrix({
-				{1, 4, 1, 0},
-				{-3, 0, 3, 0},
-				{3, -6, 3, 0},
-				{-1, 3, -3, 1},
-			}) * (1.0 / 6.0);
-		}
-
-		if (storing_matrix::Bezier.getShape().first == 0) {
-			storing_matrix::Bezier = Matrix::identity(4);
-			storing_matrix::Hermite = Matrix({
-				{1, 0, 0, 0},
-				{-1, 1, 0, 0},
-				{0, 0, 1, 0},
-				{0, 0, -1, 1},
-			});
-			storing_matrix::CatmullRom = Matrix::identity(4);
-			storing_matrix::B_Spline = Matrix::identity(4);
-		}
-	}
+}
 }

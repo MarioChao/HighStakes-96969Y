@@ -1,10 +1,15 @@
 #include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
 
-#include "AutonUtilities/linegular.h"
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 #include <cmath>
 #include <algorithm>
 #include <stdio.h>
+
+
+namespace {
+using aespa_lib::datas::Linegular;
+}
 
 UniformCubicSpline::UniformCubicSpline() {
 	this->segments.clear();

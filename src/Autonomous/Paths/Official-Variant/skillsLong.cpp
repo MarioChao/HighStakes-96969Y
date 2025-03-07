@@ -24,7 +24,7 @@ void autonpaths::runAutonSkillsLong() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(0.792, 3);
+	mainOdometry.setPosition_scaled(0.792, 3);
 	setRobotRotation(-90.0);
 	mainOdometry.printDebug();
 

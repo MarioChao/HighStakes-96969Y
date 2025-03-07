@@ -18,7 +18,7 @@ void autonpaths::runTemplate() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition(-0.00, -0.00);
+	mainOdometry.setPosition_scaled(-0.00, -0.00);
 	setRobotRotation(-0.00);
 	mainOdometry.printDebug();
 
