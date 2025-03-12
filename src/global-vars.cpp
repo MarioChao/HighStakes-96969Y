@@ -2,6 +2,13 @@
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 
+using aespa_lib::sensor_beats::RotationSensor;
+using aespa_lib::sensor_beats::OpticalShaftEncoder;
+using aespa_lib::sensor_beats::Motor;
+using aespa_lib::sensor_beats::TrackingWheel;
+using pas1_lib::chassis_tracker::Odometry;
+
+
 // ---------- Global variables ----------
 
 competition Competition;
@@ -16,29 +23,31 @@ timer drivingTimer;
 /* Odometry */
 
 namespace {
-	// Sensors
-	aespa_lib::sensor_beats::RotationSensor lookRotation_beats(LookRotation);
-	aespa_lib::sensor_beats::OpticalShaftEncoder rightOptical_beats(RightEncoder);
-	aespa_lib::sensor_beats::Motor lookLeftMotor_beats(LeftMotorA);
-	aespa_lib::sensor_beats::Motor lookRightMotor_beats(RightMotorA);
 
-	// Tracking wheels
-	aespa_lib::sensor_beats::TrackingWheel lookLeft_trackingWheel(
-		lookLeftMotor_beats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, -botinfo::halfRobotLengthIn
-	);
-	aespa_lib::sensor_beats::TrackingWheel lookRight_trackingWheel(
-		lookRightMotor_beats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, botinfo::halfRobotLengthIn
-	);
-	aespa_lib::sensor_beats::TrackingWheel lookRotation_trackingWheel(lookRotation_beats, -90, 1, 2.0, 0);
-	aespa_lib::sensor_beats::TrackingWheel rightOptical_trackingWheel(rightOptical_beats, 180, 1, 2.75, -3.5);
+// Sensors
+RotationSensor look_rotationBeats(LookRotation);
+OpticalShaftEncoder right_opticalBeats(RightEncoder);
+Motor lookLeft_motorBeats(LeftMotorA);
+Motor lookRight_motorBeats(RightMotorA);
+
+// Tracking wheels
+TrackingWheel lookLeft_trackingWheel(
+	lookLeft_motorBeats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, -botinfo::halfRobotLengthIn
+);
+TrackingWheel lookRight_trackingWheel(
+	lookRight_motorBeats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, botinfo::halfRobotLengthIn
+);
+TrackingWheel look1_trackingWheel(look_rotationBeats, -90, 1, 2.0, 0);
+TrackingWheel right1_trackingWheel(right_opticalBeats, 180, 1, 2.75, -3.5);
+
 }
 
 // Odometry
-pas1_lib::chassis_tracker::Odometry mainOdometry = pas1_lib::chassis_tracker::Odometry()
+Odometry mainOdometry = Odometry()
 .addTrackingWheel(lookLeft_trackingWheel)
 .addTrackingWheel(lookRight_trackingWheel)
-// .addTrackingWheel(lookRotation_trackingWheel)
-// .addTrackingWheel(rightOptical_trackingWheel)
+// .addTrackingWheel(look1_trackingWheel)
+// .addTrackingWheel(right1_trackingWheel)
 .addInertialSensor(InertialSensor, 0, 0)
 .setPositionFactor(1.0 / field::tileLengthIn)
 ;

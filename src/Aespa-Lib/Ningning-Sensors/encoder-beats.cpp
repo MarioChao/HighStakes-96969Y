@@ -18,8 +18,7 @@ void Encoder::setAngle_degrees(double angle_degrees) {
 // ---------- Rotation Sensor ----------
 
 RotationSensor::RotationSensor(rotation &sensor)
-	: sensor(sensor) {
-}
+	: sensor(sensor) {}
 
 double RotationSensor::getAngle_degrees() {
 	return sensor.position(degrees);
@@ -28,8 +27,7 @@ double RotationSensor::getAngle_degrees() {
 // ---------- Optical Shaft Encoder ----------
 
 OpticalShaftEncoder::OpticalShaftEncoder(encoder &sensor)
-	: sensor(sensor) {
-}
+	: sensor(sensor) {}
 
 double OpticalShaftEncoder::getAngle_degrees() {
 	return sensor.position(degrees);
@@ -38,8 +36,7 @@ double OpticalShaftEncoder::getAngle_degrees() {
 // ---------- Motor ----------
 
 Motor::Motor(motor &sensor)
-	: sensor(sensor) {
-}
+	: sensor(sensor) {}
 
 double Motor::getAngle_degrees() {
 	return sensor.position(degrees);
