@@ -3,6 +3,7 @@
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 
 namespace {
+using aespa_lib::datas::Vector2D;
 using aespa_lib::datas::Linegular;
 }
 
@@ -20,9 +21,9 @@ void ChassisBase::control_global2d(
 	double right_pct, double look_pct,
 	double angular_pct
 ) {
-	Linegular globalMove(right_pct, look_pct, 0);
-	globalMove.rotateXYBy(-getLookPose().getThetaPolarAngle_radians());
-	control_local2d(globalMove.getX(), globalMove.getY(), angular_pct);
+	Vector2D localMove(right_pct, look_pct);
+	localMove.rotateBy(-getLookPose().getThetaPolarAngle_radians());
+	control_local2d(localMove.x, localMove.y, angular_pct);
 }
 
 void ChassisBase::control() {}
