@@ -23,9 +23,6 @@ using aespa_lib::datas::Linegular;
 // Controller
 pas1_lib::auton::pose_controllers::RamseteController robotController;
 
-// Simulator
-bool useSimulator = mainUseSimulator;
-
 }
 
 
@@ -66,7 +63,7 @@ void followSplinePath(bool reverseHeading) {
 		double totalDistance_tiles = _curveSampler.getDistanceRange().second;
 
 		// Simulator initial
-		if (useSimulator) {
+		if (mainUseSimulator) {
 			// Linegular lg = _splinePath.getLinegularAt(0, _reverseHeading);
 			// robotSimulator.position = Vector3(lg.getX(), lg.getY());
 			// robotSimulator.angularPosition = lg.getThetaPolarAngle_radians();
@@ -98,7 +95,7 @@ void followSplinePath(bool reverseHeading) {
 			Linegular robotLg = mainOdometry.getLookPose_scaled();
 			Linegular targetLg = _splinePath.getLinegularAt(traj_tvalue, _reverseHeading);
 
-			if (useSimulator) {
+			if (mainUseSimulator) {
 				robotLg = Linegular(robotSimulator.position.x, robotSimulator.position.y, aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 			}
 
@@ -106,7 +103,7 @@ void followSplinePath(bool reverseHeading) {
 			std::pair<double, double> linegularVelocity = robotController.getLinegularVelocity(robotLg, targetLg, traj_velocity, traj_angularVelocity);
 
 			// Drive
-			if (!useSimulator) {
+			if (!mainUseSimulator) {
 				// Convert linear velocity units
 				linegularVelocity.first *= _pathToPctFactor;
 

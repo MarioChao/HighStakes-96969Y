@@ -86,9 +86,6 @@ namespace {
 
 	// Colors
 	color ownColor, oppColor;
-
-	// Robot visual config
-	bool showSimulator = mainUseSimulator;
 }
 
 namespace brainscreen {
@@ -672,19 +669,19 @@ namespace {
 
 	// Getters
 	double getRobotX_tiles() {
-		if (showSimulator) {
+		if (mainUseSimulator) {
 			return robotSimulator.position.x;
 		}
 		return mainOdometry.getX_scaled();
 	}
 	double getRobotY_tiles() {
-		if (showSimulator) {
+		if (mainUseSimulator) {
 			return robotSimulator.position.y;
 		}
 		return mainOdometry.getY_scaled();
 	}
 	double getRobotPolarAngle_degrees() {
-		if (showSimulator) {
+		if (mainUseSimulator) {
 			return aespa_lib::genutil::toDegrees(robotSimulator.angularPosition);
 		}
 		return aespa_lib::angle::swapFieldPolar_degrees(mainOdometry.getLookFieldAngle_degrees());

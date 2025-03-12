@@ -101,6 +101,12 @@ void pre_auton(void) {
 
 	// Debug
 	auton::showAutonRunType();
+
+	// Check motor
+	if (LeftMotors.temperature(celsius) == 21 && RightMotors.temperature(celsius) == 21) {
+		mainUseSimulator = true;
+		printf("Using simulator\n");
+	}
 }
 
 /*---------------------------------------------------------------------------*/

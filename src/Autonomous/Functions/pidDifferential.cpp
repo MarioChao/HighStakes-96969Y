@@ -58,9 +58,6 @@ ForwardController driveAndTurn_driveMotionForward(1.0, 3.1875, 0.4); // t/s to v
 PIDController driveAndTurn_rotateTargetAnglePid(1.0, 0, 0, autonvals::defaultTurnAngleErrorRange);
 PIDController driveAndTurn_synchronizeVelocityPid(0.4, 0, 0, 5.0);
 
-// Simulator
-bool useSimulator = mainUseSimulator;
-
 // Drive and turn
 namespace drive_turn {
 
@@ -382,7 +379,7 @@ void driveAndTurnDistance_inches() {
 		double targetDistanceInches = distance_inches;
 		double currentTravelDistance_inches = -1;
 		double currentTravelVelocity_inchesPerSec = -1;
-		if (useSimulator) {
+		if (mainUseSimulator) {
 			double travelDistance_tiles = (robotSimulator.position - initalSimulatorPosition).getMagnitude() * aespa_lib::genutil::signum(targetDistanceInches);
 			currentTravelDistance_inches = travelDistance_tiles * field::tileLengthIn;
 		} else if (useOdometryForPid) {
@@ -473,7 +470,7 @@ void driveAndTurnDistance_inches() {
 
 		// Get current robot heading
 		double currentRotation_degrees = InertialSensor.rotation(degrees);
-		if (useSimulator) currentRotation_degrees = aespa_lib::angle::swapFieldPolar_degrees(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
+		if (mainUseSimulator) currentRotation_degrees = aespa_lib::angle::swapFieldPolar_degrees(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 
 		// Compute heading error
 		double rotateError = fieldAngle_degrees - currentRotation_degrees;
@@ -493,7 +490,7 @@ void driveAndTurnDistance_inches() {
 		double rightVelocity_pct = linearVelocity_pct - rotateVelocity_pct;
 
 		// Compute value to synchronize velocity
-		if (!useSimulator) {
+		if (!mainUseSimulator) {
 			double velocityDifferencePct = LeftMotors.velocity(pct) - RightMotors.velocity(pct);
 			double velocityDifferenceInchesPerSecond = (velocityDifferencePct / 100.0) * (600.0 / 60.0) * (1.0 / botinfo::driveWheelMotorGearRatio) * (botinfo::driveWheelCircumIn / 1.0);
 			double finalVelocityDifferencePct = leftVelocity_pct - rightVelocity_pct;
