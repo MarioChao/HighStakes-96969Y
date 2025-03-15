@@ -11,12 +11,9 @@ void Differential::control_local2d(
 	double right_pct, double look_pct,
 	double angular_pct
 ) {
-	// TODO: Slew linear
-	/* code here */
-
 	// Linear + angular
-	double leftMotor_pct = look_pct + angular_pct;
-	double rightMotor_pct = look_pct - angular_pct;
+	double leftMotor_pct = look_pct - angular_pct;
+	double rightMotor_pct = look_pct + angular_pct;
 
 	// Scale if pct >= 100
 	double pctScaleFactor = aespa_lib::genutil::getScaleFactor(

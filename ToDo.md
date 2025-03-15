@@ -28,8 +28,8 @@
 				- [ ] LTV
 		- [ ] Basic Control
 			- [ ] Chassis
-				- [ ] chassis base
-				- [ ] differential
+				- [x] chassis base
+				- [x] differential
 				- [ ] x drive?
 			- [ ] Move Chassis
 				- [ ] global move to
