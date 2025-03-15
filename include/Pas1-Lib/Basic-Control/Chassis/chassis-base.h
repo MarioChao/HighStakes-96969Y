@@ -3,6 +3,10 @@
 #include "vex.h"
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
 
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
+#include "Aespa-Lib/Winter-Utilities/general.h"
+
+
 namespace pas1_lib {
 namespace basic_control {
 namespace chassis {

@@ -1,7 +1,5 @@
 #include "Pas1-Lib/Basic-Control/Chassis/chassis-base.h"
 
-#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
-
 namespace {
 using aespa_lib::datas::Vector2D;
 using aespa_lib::datas::Linegular;
