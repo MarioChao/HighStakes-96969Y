@@ -34,9 +34,9 @@
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
-#include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
-#include "Pas1-Lib/Planning/Splines/curveSampler.h"
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Segments/cubic-spline.h"
+#include "Pas1-Lib/Planning/Splines/curve-sampler.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
 
 /*---------------------------------------------------------------------------*/

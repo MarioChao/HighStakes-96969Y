@@ -1,6 +1,6 @@
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
-#include "Pas1-Lib/Planning/Splines/curveSampler.h"
+#include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
 #include "Utilities/robotInfo.h"
@@ -9,20 +9,23 @@
 #include <stdio.h>
 
 namespace {
+	using pas1_lib::planning::splines::SplineCurve;
+	using pas1_lib::planning::splines::CurveSampler;
+
 	bool debugPrint = false;
 }
 
-TrajectoryPlanner::TrajectoryPlanner(double totalDistance) {
+TrajectoryPlanner_Old::TrajectoryPlanner_Old(double totalDistance) {
 	_onInit(totalDistance);
 }
 
-void TrajectoryPlanner::_onInit(double totalDistance) {
+void TrajectoryPlanner_Old::_onInit(double totalDistance) {
 	distance_motionConstraints.clear();
 	this->totalDistance = fabs(totalDistance);
 	this->isNegative = totalDistance < 0;
 }
 
-TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
+TrajectoryPlanner_Old &TrajectoryPlanner_Old::autoSetMotionConstraints(
 	CurveSampler sampler, double minVelocity, double maxVelocity,
 	double maxAccel, double maxDecel,
 	int resolution,
@@ -39,7 +42,7 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 	// Get sampler info
 	double pathStart = sampler.getDistanceRange().first;
 	double pathEnd = sampler.getDistanceRange().second;
-	UniformCubicSpline spline = sampler.getSpline();
+	SplineCurve spline = sampler.getSpline();
 
 	// Set motion constraints for segments
 	for (int i = 0; i < resolution; i++) {
@@ -75,7 +78,7 @@ TrajectoryPlanner &TrajectoryPlanner::autoSetMotionConstraints(
 	return *this;
 }
 
-TrajectoryPlanner &TrajectoryPlanner::addDesiredMotionConstraints(
+TrajectoryPlanner_Old &TrajectoryPlanner_Old::addDesiredMotionConstraints(
 	double startDistance, double maxVelocity,
 	double maxAccel, double maxDecel
 ) {
@@ -86,7 +89,7 @@ TrajectoryPlanner &TrajectoryPlanner::addDesiredMotionConstraints(
 	return *this;
 }
 
-std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getForwardKinematics() {
+std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner_Old::_getForwardKinematics() {
 	// Initialize
 	std::vector<std::pair<double, std::vector<double>>> distance_kinematics = {};
 
@@ -135,7 +138,7 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getForwa
 	return distance_kinematics;
 }
 
-std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getBackwardKinematics() {
+std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner_Old::_getBackwardKinematics() {
 	// Initialize
 	std::vector<std::pair<double, std::vector<double>>> distance_kinematics = {};
 
@@ -201,7 +204,7 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getBackw
 	return distance_kinematics;
 }
 
-trajectory::merged_kinematics TrajectoryPlanner::_getMergedForwardBackward() {
+trajectory::merged_kinematics TrajectoryPlanner_Old::_getMergedForwardBackward() {
 	// Forward kinematics
 	std::vector<std::pair<double, std::vector<double>>> forward_distance_kinematics = _getForwardKinematics();
 
@@ -266,7 +269,7 @@ trajectory::merged_kinematics TrajectoryPlanner::_getMergedForwardBackward() {
 	return bothside_distance_kinematics;
 }
 
-std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombinedKinematics() {
+std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner_Old::_getCombinedKinematics() {
 	// Get merged forward and backward kinematics
 	trajectory::merged_kinematics merged_distance_kinematics = _getMergedForwardBackward();
 
@@ -385,7 +388,7 @@ std::vector<std::pair<double, std::vector<double>>> TrajectoryPlanner::_getCombi
 	return combined_distance_kinematics;
 }
 
-TrajectoryPlanner &TrajectoryPlanner::calculateMotion() {
+TrajectoryPlanner_Old &TrajectoryPlanner_Old::calculateMotion() {
 	// Get combined kinematics
 	std::vector<std::pair<double, std::vector<double>>> combined_distance_kinematics = _getCombinedKinematics();
 
@@ -425,7 +428,7 @@ TrajectoryPlanner &TrajectoryPlanner::calculateMotion() {
 	return *this;
 }
 
-std::vector<double> TrajectoryPlanner::getMotionAtTime(double time) {
+std::vector<double> TrajectoryPlanner_Old::getMotionAtTime(double time) {
 	// Validate stored motion
 	if (time_kinematics.empty()) {
 		return {0, 0, 0};
@@ -477,6 +480,6 @@ std::vector<double> TrajectoryPlanner::getMotionAtTime(double time) {
 	return motion;
 }
 
-double TrajectoryPlanner::getTotalTime() {
+double TrajectoryPlanner_Old::getTotalTime() {
 	return time_kinematics.back().first;
 }

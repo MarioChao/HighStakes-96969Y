@@ -1,5 +1,12 @@
 #include "Autonomous/autonPaths.h"
 
+
+namespace {
+using pas1_lib::planning::splines::SplineCurve;
+using pas1_lib::planning::splines::CurveSampler;
+}
+
+
 namespace autonpaths { namespace pathbuild {
 	// Build paths
 
@@ -9,9 +16,9 @@ namespace autonpaths { namespace pathbuild {
 	const double maxDecel = maxVel_tilesPerSec * 1.1;
 
 	// Global variables
-	std::vector<UniformCubicSpline> splines;
+	std::vector<SplineCurve> splines;
 	std::vector<CurveSampler> splineSamplers;
-	std::vector<TrajectoryPlanner> splineTrajectoryPlans;
+	std::vector<TrajectoryPlanner_Old> splineTrajectoryPlans;
 	std::vector<bool> willReverse;
 
 	int pathIndex;
@@ -24,10 +31,10 @@ namespace autonpaths { namespace pathbuild {
 		pathIndex = 0;
 	}
 
-	void pushNewSpline(UniformCubicSpline spline, bool reverse, double maxVel) {
+	void pushNewSpline(SplineCurve spline, bool reverse, double maxVel) {
 		CurveSampler splineSampler = CurveSampler(spline)
 			.calculateByResolution(spline.getTRange().second * 10);
-		TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(splineSampler.getDistanceRange().second)
+		TrajectoryPlanner_Old splineTrajectoryPlan = TrajectoryPlanner_Old(splineSampler.getDistanceRange().second)
 			.autoSetMotionConstraints(splineSampler, 0.3, maxVel, maxAccel, maxDecel)
 			.calculateMotion();
 		splines.push_back(spline);

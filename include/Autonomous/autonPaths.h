@@ -2,9 +2,9 @@
 
 #include "Autonomous/autonFunctions.h"
 
-#include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
-#include "Pas1-Lib/Planning/Splines/curveSampler.h"
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Segments/cubic-spline.h"
+#include "Pas1-Lib/Planning/Splines/curve-sampler.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/angle.h"
@@ -28,15 +28,15 @@ namespace autonpaths {
 		extern const double maxAccel;
 		extern const double maxDecel;
 
-		extern std::vector<UniformCubicSpline> splines;
-		extern std::vector<CurveSampler> splineSamplers;
-		extern std::vector<TrajectoryPlanner> splineTrajectoryPlans;
+		extern std::vector<pas1_lib::planning::splines::SplineCurve> splines;
+		extern std::vector<pas1_lib::planning::splines::CurveSampler> splineSamplers;
+		extern std::vector<TrajectoryPlanner_Old> splineTrajectoryPlans;
 		extern std::vector<bool> willReverse;
 
 		extern int pathIndex;
 
 		void clearSplines();
-		void pushNewSpline(UniformCubicSpline spline, bool reverse = false, double maxVel = pathbuild::maxVel_tilesPerSec);
+		void pushNewSpline(pas1_lib::planning::splines::SplineCurve spline, bool reverse = false, double maxVel = pathbuild::maxVel_tilesPerSec);
 		void runFollowSpline();
 
 		extern std::vector<std::vector<std::vector<double>>> linearPaths;

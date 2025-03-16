@@ -56,7 +56,7 @@ Odometry mainOdometry = Odometry()
 /* Autonomous */
 
 RobotSimulator robotSimulator;
-bool mainUseSimulator = true;
+bool mainUseSimulator = false;
 
-TrajectoryPlanner testTrajectoryPlan;
+TrajectoryPlanner_Old testTrajectoryPlan;
 timer trajectoryTestTimer;

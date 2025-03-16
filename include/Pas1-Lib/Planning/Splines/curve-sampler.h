@@ -2,7 +2,7 @@
 
 // Name inspired from https://github.com/FreyaHolmer/Mathfs/blob/master/Runtime/Splines/UniformCurveSampler.cs
 
-#include "Pas1-Lib/Planning/Splines/splineCurve.h"
+#include "Pas1-Lib/Planning/Splines/spline-curve.h"
 #include <vector>
 #include <memory>
 

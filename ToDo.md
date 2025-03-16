@@ -38,12 +38,12 @@
 		- [ ] Chassis Tracker
 			- [ ] odometry
 		- [ ] Planning
-			- [ ] Segments
-				- [ ] segment base
-				- [ ] cubic spline
-			- [ ] Splines
-				- [ ] spline curve
-				- [ ] curve sampler
+			- [x] Segments
+				- [x] segment base
+				- [x] cubic spline
+			- [x] Splines
+				- [x] spline curve
+				- [x] curve sampler
 			- [ ] Trajectories
 				- [ ] trajectory planner
 	- [ ] Others

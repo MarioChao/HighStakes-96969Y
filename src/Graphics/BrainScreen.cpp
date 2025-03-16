@@ -5,8 +5,8 @@
 #include "Autonomous/auton.h"
 #include "Autonomous/autonFunctions.h"
 
-#include "Pas1-Lib/Planning/Splines/curveSampler.h"
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Splines/curve-sampler.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
 #include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
 #include "Aespa-Lib/Giselle-Graphics/GUIs/ButtonsGui.h"

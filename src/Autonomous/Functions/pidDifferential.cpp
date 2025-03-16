@@ -17,7 +17,7 @@
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
 #include "Simulation/robotSimulator.h"
 
@@ -319,7 +319,7 @@ void driveAndTurnDistance_inches() {
 	Vector3 initalSimulatorPosition = robotSimulator.position;
 
 	// Motion planner
-	TrajectoryPlanner motion(distance_inches / field::tileLengthIn);
+	TrajectoryPlanner_Old motion(distance_inches / field::tileLengthIn);
 	for (int i = 0; i < (int) velocityConstraint_inch_pct.size(); i++) {
 		auto constraint = velocityConstraint_inch_pct[i];
 		motion.addDesiredMotionConstraints(

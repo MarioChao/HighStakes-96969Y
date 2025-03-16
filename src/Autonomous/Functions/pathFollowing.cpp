@@ -2,9 +2,9 @@
 
 #include "Pas1-Lib/Auton/Pose-Controls/ramsete.h"
 
-#include "Pas1-Lib/Planning/Splines/uniformCubicSpline.h"
-#include "Pas1-Lib/Planning/Splines/curveSampler.h"
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner.h"
+#include "Pas1-Lib/Planning/Segments/cubic-spline.h"
+#include "Pas1-Lib/Planning/Splines/curve-sampler.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
@@ -19,6 +19,8 @@
 namespace {
 
 using aespa_lib::datas::Linegular;
+using pas1_lib::planning::splines::SplineCurve;
+using pas1_lib::planning::splines::CurveSampler;
 
 // Controller
 pas1_lib::auton::pose_controllers::RamseteController robotController;
@@ -28,12 +30,12 @@ pas1_lib::auton::pose_controllers::RamseteController robotController;
 
 namespace autonfunctions {
 
-void setSplinePath(UniformCubicSpline &splinePath, TrajectoryPlanner &trajectoryPlan) {
+void setSplinePath(SplineCurve &splinePath, TrajectoryPlanner_Old &trajectoryPlan) {
 	double resolution = splinePath.getTRange().second * 7;
 	setSplinePath(splinePath, trajectoryPlan, CurveSampler(splinePath).calculateByResolution(resolution));
 }
 
-void setSplinePath(UniformCubicSpline &splinePath, TrajectoryPlanner &trajectoryPlan, CurveSampler &curveSampler) {
+void setSplinePath(SplineCurve &splinePath, TrajectoryPlanner_Old &trajectoryPlan, CurveSampler &curveSampler) {
 	_splinePath = splinePath;
 	_trajectoryPlan = trajectoryPlan;
 	_curveSampler = curveSampler;
@@ -59,8 +61,12 @@ void followSplinePath(bool reverseHeading) {
 		// Reset timer
 		_splinePathTimer.reset();
 
-		// Get total distance
+		// Get spline info
 		double totalDistance_tiles = _curveSampler.getDistanceRange().second;
+		double totalTime_seconds = _trajectoryPlan.getTotalTime();
+
+		// Print info
+		printf("Spline %.3f tiles %.3f sec\n", totalDistance_tiles, totalTime_seconds);
 
 		// Simulator initial
 		if (mainUseSimulator) {
@@ -72,10 +78,10 @@ void followSplinePath(bool reverseHeading) {
 		// Follow path
 		while (true) {
 			// Get time
-			double traj_time = _splinePathTimer.value();
+			double traj_time = _splinePathTimer.time(seconds);
 
 			// Exit when path completed
-			if (traj_time > _trajectoryPlan.getTotalTime() + _pathFollowDelay_seconds) {
+			if (traj_time > totalTime_seconds + _pathFollowDelay_seconds) {
 				_pathFollowCompleted = true;
 				_pathFollowDistanceRemaining_tiles = 0;
 				break;
@@ -126,8 +132,8 @@ void followSplinePath(bool reverseHeading) {
 }
 
 timer _splinePathTimer;
-UniformCubicSpline _splinePath;
-TrajectoryPlanner _trajectoryPlan;
+SplineCurve _splinePath;
+TrajectoryPlanner_Old _trajectoryPlan;
 CurveSampler _curveSampler;
 bool _reverseHeading;
 double _pathToPctFactor = botinfo::tilesPerSecond_to_pct;

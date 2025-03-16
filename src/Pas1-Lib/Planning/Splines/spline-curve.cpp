@@ -1,4 +1,4 @@
-#include "Pas1-Lib/Planning/Splines/splineCurve.h"
+#include "Pas1-Lib/Planning/Splines/spline-curve.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"

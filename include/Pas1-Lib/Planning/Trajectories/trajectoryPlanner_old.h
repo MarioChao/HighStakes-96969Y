@@ -5,7 +5,13 @@
 
 // Forward declaration
 
+namespace pas1_lib {
+namespace planning {
+namespace splines {
 class CurveSampler;
+}
+}
+}
 
 
 // Namespace
@@ -20,22 +26,22 @@ namespace trajectory {
 
 // Class
 
-class TrajectoryPlanner {
+class TrajectoryPlanner_Old {
 public:
-	TrajectoryPlanner(double totalDistance = 0);
+	TrajectoryPlanner_Old(double totalDistance = 0);
 
 	void _onInit(double totalDistance);
 
 	// Add motion constraints according to a curve's curvature.
-	TrajectoryPlanner &autoSetMotionConstraints(
-		CurveSampler sampler, double minVelocity, double maxVelocity,
+	TrajectoryPlanner_Old &autoSetMotionConstraints(
+		pas1_lib::planning::splines::CurveSampler sampler, double minVelocity, double maxVelocity,
 		double maxAccel, double maxDecel,
 		int resolution = 30,
 		double leftRightWheelDistance = -1
 	);
 
 	// Add motion constraints. Call in ascending order of `startDistance` please.
-	TrajectoryPlanner &addDesiredMotionConstraints(
+	TrajectoryPlanner_Old &addDesiredMotionConstraints(
 		double startDistance, double maxVelocity,
 		double maxAccel, double maxDecel
 	);
@@ -44,7 +50,7 @@ public:
 	std::vector<std::pair<double, std::vector<double>>> _getBackwardKinematics();
 	trajectory::merged_kinematics _getMergedForwardBackward();
 	std::vector<std::pair<double, std::vector<double>>> _getCombinedKinematics();
-	TrajectoryPlanner &calculateMotion();
+	TrajectoryPlanner_Old &calculateMotion();
 
 	std::vector<double> getMotionAtTime(double time);
 

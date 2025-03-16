@@ -29,7 +29,7 @@ void Vector2D::rotateExponentialBy(double polarRotate_radians) {
 }
 
 double Vector2D::getMagnitude() {
-	return aespa_lib::genutil::euclideanDistance({ 0, 0 }, { x, y });
+	return aespa_lib::genutil::l2Norm({ x, y });
 }
 
 
