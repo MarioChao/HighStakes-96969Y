@@ -48,10 +48,10 @@ SplineCurve SplineCurve::fromAutoTangent_cubicSpline(
 }
 
 SplineCurve &SplineCurve::extendPoint_cubicSpline(std::vector<double> &newPoint) {
-	std::shared_ptr<SegmentBase> lastSegment = getSegment((int) segments.size() - 1);
-	std::vector<std::vector<double>> points = lastSegment->getControlPoints();
+	SegmentBase &lastSegment = getSegment((int) segments.size() - 1);
+	std::vector<std::vector<double>> points = lastSegment.getControlPoints();
 	attachSegment(std::shared_ptr<SegmentBase>(
-		new CubicSplineSegment(lastSegment->getSplineType(), { points[1], points[2], points[3], newPoint })
+		new CubicSplineSegment(lastSegment.getSplineType(), { points[1], points[2], points[3], newPoint })
 	));
 
 	// Method chaining
@@ -78,7 +78,7 @@ std::vector<std::shared_ptr<SegmentBase>> SplineCurve::getSegments() {
 	return segments;
 }
 
-std::shared_ptr<SegmentBase> SplineCurve::getSegment(int id) {
+SegmentBase &SplineCurve::getSegment(int id) {
 	// Validate
 	if (!(0 <= id && id < (int) segments.size())) {
 		printf("ERR: Id not valid\n");
@@ -86,7 +86,7 @@ std::shared_ptr<SegmentBase> SplineCurve::getSegment(int id) {
 	}
 
 	// Return result
-	return segments[id];
+	return *segments[id];
 }
 
 std::pair<int, double> SplineCurve::getSegmentIndex(double t) {

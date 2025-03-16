@@ -34,7 +34,7 @@ void setMatrices();
 
 // ---------- Class ----------
 
-class CubicSplineSegment : SegmentBase {
+class CubicSplineSegment : public SegmentBase {
 public:
 	CubicSplineSegment(SplineType splineType, std::vector<std::vector<double>> points);
 	CubicSplineSegment();

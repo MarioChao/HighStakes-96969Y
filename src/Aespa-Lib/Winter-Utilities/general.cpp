@@ -48,6 +48,10 @@ double euclideanDistance(std::vector<double> point1, std::vector<double> point2)
 	return sqrt(squaredSum);
 }
 
+double l2Norm(std::vector<double> point) {
+	return euclideanDistance(point, std::vector<double>((int) point.size(), 0));
+}
+
 double toRadians(double degrees) {
 	return degrees * M_PI / 180.0;
 }

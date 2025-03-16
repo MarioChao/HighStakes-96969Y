@@ -24,6 +24,7 @@ int signum(double value);
 bool isWithin(double value, double target, double withinRange);
 
 double euclideanDistance(std::vector<double> point1, std::vector<double> point2);
+double l2Norm(std::vector<double> point);
 
 double toRadians(double degrees);
 double toDegrees(double radians);

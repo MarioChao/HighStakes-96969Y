@@ -36,7 +36,7 @@ public:
 
 	std::vector<std::shared_ptr<segments::SegmentBase>> getSegments();
 
-	std::shared_ptr<segments::SegmentBase> getSegment(int id);
+	segments::SegmentBase &getSegment(int id);
 
 	std::pair<int, double> getSegmentIndex(double t);
 

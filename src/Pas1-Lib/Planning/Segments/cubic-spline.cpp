@@ -117,6 +117,7 @@ Matrix &CubicSplineSegment::getCharacteristicMatrix() {
 		case Cubic_B_Spline:
 			return characteristic_matrix::Cubic_B_Spline;
 	}
+	return characteristic_matrix::Cubic_Bezier;
 }
 
 Matrix &CubicSplineSegment::getStoringMatrix() {
@@ -130,6 +131,7 @@ Matrix &CubicSplineSegment::getStoringMatrix() {
 		case Cubic_B_Spline:
 			return storing_matrix::Cubic_B_Spline;
 	}
+	return storing_matrix::Cubic_Bezier;
 }
 
 std::vector<double> CubicSplineSegment::getPositionAtT(double t) {
@@ -164,7 +166,7 @@ std::shared_ptr<SegmentBase> CubicSplineSegment::getReversed() {
 	resultSegment.setPoints(newControlPoints);
 
 	// Return segment
-	return std::shared_ptr<SegmentBase>(&resultSegment);
+	return std::shared_ptr<SegmentBase>(new CubicSplineSegment(resultSegment));
 }
 
 
