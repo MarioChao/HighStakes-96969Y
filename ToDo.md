@@ -36,7 +36,7 @@
 				- [ ] local move by
 				- [ ] path follow
 		- [ ] Chassis Tracker
-			- [ ] odometry
+			- [ ] odometry (require actual tests)
 		- [ ] Planning
 			- [x] Segments
 				- [x] segment base
@@ -45,6 +45,7 @@
 				- [x] spline curve
 				- [x] curve sampler
 			- [ ] Trajectories
+				- [ ] constraint
 				- [ ] trajectory planner
 	- [ ] Others
 - [ ] Units system for consistency
