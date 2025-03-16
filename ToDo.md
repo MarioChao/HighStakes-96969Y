@@ -38,9 +38,11 @@
 		- [ ] Chassis Tracker
 			- [ ] odometry
 		- [ ] Planning
+			- [ ] Segments
+				- [ ] segment base
+				- [ ] cubic spline
 			- [ ] Splines
-				- [ ] spline segment
-				- [ ] uniform spline
+				- [ ] spline curve
 				- [ ] curve sampler
 			- [ ] Trajectories
 				- [ ] trajectory planner
