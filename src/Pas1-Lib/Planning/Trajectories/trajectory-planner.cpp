@@ -1,6 +1,7 @@
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
+#include <stdio.h>
 
 
 namespace pas1_lib {
@@ -33,11 +34,12 @@ void PlanPoint::constrain(Constraint constraint) {
 
 TrajectoryPlanner::TrajectoryPlanner(
 	double distance_inches,
-	double startVelocity_inchesPerSecond,
-	double endVelocity_inchesPerSecond
+	std::vector<double> startMotion_dInches_dSec,
+	std::vector<double> endMotion_dInches_dSec
 )
-	: startVelocity(startVelocity_inchesPerSecond),
-	endVelocity(endVelocity_inchesPerSecond),
+	:
+	startMotion(startMotion_dInches_dSec),
+	endMotion(endMotion_dInches_dSec),
 	constraintSequences({}) {
 	distance = fabs(distance_inches);
 	distance_sign = aespa_lib::genutil::signum(distance_inches);
@@ -77,8 +79,11 @@ TrajectoryPlanner &TrajectoryPlanner::addConstraint_maxAngularVelocity(
 		// Get distance
 		double x = aespa_lib::genutil::rangeMap(resolutionI, 0, distanceResolution, 0, distance);
 
-		// Max linear velocity = max angular velocity / curvature
+		// Get curvature
 		double k = splineCurve.getCurvatureAt(curveSampler.distanceToParam(x));
+		// printf("x: %.3f, k: %.3f\n", x, k);
+		
+		// Max linear velocity = max angular velocity / curvature
 		double maxVelocity;
 		if (fabs(k) < 1e-5) maxVelocity = 1e8;
 		else maxVelocity = maxAngularVelocity / fabs(k);
@@ -95,7 +100,57 @@ TrajectoryPlanner &TrajectoryPlanner::addConstraint_maxAngularVelocity(
 	return *this;
 }
 
-PlanPoint TrajectoryPlanner::_getNextPlanPoint(PlanPoint node, double timeStep_seconds) {
+TrajectoryPlanner &TrajectoryPlanner::addConstraint_maxCombinedVelocity(
+	splines::CurveSampler curveSampler,
+	double maxCombinedVelocity, double trackWidth,
+	double minLinearVelocity,
+	int distanceResolution
+) {
+	splines::SplineCurve splineCurve = curveSampler.getSpline();
+	ConstraintSequence constraintSequence({});
+	for (int resolutionI = 0; resolutionI <= distanceResolution; resolutionI++) {
+		// Get distance
+		double x = aespa_lib::genutil::rangeMap(resolutionI, 0, distanceResolution, 0, distance);
+		
+		// Get curvature
+		double k = splineCurve.getCurvatureAt(curveSampler.distanceToParam(x));
+
+		// Equation:
+		// maxLinearVelocity + maxLinearVelocity * curvature * trackWidth / 2 ≤ maxCombinedVelocity
+		// -> maxLinearVelocity ≤ maxCombinedVelocity / (1 + curvature * trackWidth / 2)
+
+		double maxLinearVelocity = maxCombinedVelocity / (1 + fabs(k) * trackWidth / 2);
+
+		if (false) {
+			// From https://github.com/baylessj/robotsquiggles/blob/main/main/src/tankmodel.cpp
+			
+			// Try driving at full speed
+			double maxAngularVelocity = maxCombinedVelocity * fabs(k);
+			double leftVelocity = maxCombinedVelocity - maxAngularVelocity * trackWidth / 2;
+			double rightVelocity = maxCombinedVelocity + maxAngularVelocity * trackWidth / 2;
+
+			// Resolve overshoot
+			double scaleFactor = aespa_lib::genutil::getScaleFactor(maxCombinedVelocity, {leftVelocity, rightVelocity});
+			leftVelocity *= scaleFactor;
+			rightVelocity *= scaleFactor;
+
+			// Compute linear velocity
+			maxLinearVelocity = (leftVelocity + rightVelocity) / 2;
+		}
+
+		// Add constraint
+		constraintSequence.addConstraints({
+			{x, {maxLinearVelocity}}
+		});
+	}
+
+	// Add sequence
+	addConstraintSequence(constraintSequence);
+
+	return *this;
+}
+
+PlanPoint TrajectoryPlanner::_getNextPlanPoint(PlanPoint node, double distanceStep) {
 	// Minimum constrain
 	double oldDistance = node.distance;
 	std::vector<Constraint> constraints = getConstraintsAtDistance(
@@ -103,6 +158,33 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(PlanPoint node, double timeStep_s
 	);
 	Constraint minIsolatedConstraint = getMinimumConstraint(constraints);
 	node.constrain(minIsolatedConstraint);
+
+	// printf("%.3f ", oldDistance);
+	// for (double a : node.motion_dV_dT) {
+	// 	printf("%.3f ", a);
+	// }
+	// printf("\n");
+
+	// Binary search for time step
+	double timeStep_seconds = [&]() -> double {
+		double bs_l, bs_r, bs_m;
+		int bs_trials = 0;
+		double bs_error = 1e9;
+		bs_l = -10;
+		bs_r = 10;
+		while (fabs(bs_error) >= 1e-8 && bs_trials <= 100) {
+			bs_m = bs_l + (bs_r - bs_l) / 2;
+			double bs_distanceStep = aespa_lib::genutil::integratePolynomial(node.motion_dV_dT, bs_m).first;
+			bs_error = distanceStep - bs_distanceStep;
+			if (bs_distanceStep < distanceStep) {
+				bs_l = bs_m;
+			} else {
+				bs_r = bs_m;
+			}
+			bs_trials++;
+		}
+		return bs_m;
+	}();
 
 	// Integrate
 	auto integral = aespa_lib::genutil::integratePolynomial(
@@ -119,23 +201,34 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(PlanPoint node, double timeStep_s
 	Constraint minIsolatedConstraint2 = getMinimumConstraint(constraints2);
 	newNode.constrain(minIsolatedConstraint2);
 
+	// Derivative constrain
+	for (int i = 1; i < (int) newNode.motion_dV_dT.size(); i++) {
+		double deriv = fabs((newNode.motion_dV_dT[i - 1] - node.motion_dV_dT[i - 1]) / timeStep_seconds);
+		newNode.motion_dV_dT[i] = aespa_lib::genutil::clamp(newNode.motion_dV_dT[i], -deriv, deriv);
+	}
+
+	// printf("%.3f ", newDistance);
+	// for (double a : newNode.motion_dV_dT) {
+	// 	printf("%.3f ", a);
+	// }
+	// printf("\n");
+
 	// TODO: remove sharp deceleration
 
 	// Return
 	return newNode;
 }
 
-std::vector<PlanPoint> TrajectoryPlanner::_forwardPass(double timeStep_seconds) {
+std::vector<PlanPoint> TrajectoryPlanner::_forwardPass(double distanceStep) {
 	std::vector<PlanPoint> planningPoints;
-	planningPoints.push_back(PlanPoint(0, 0, { startVelocity }));
+	planningPoints.push_back(PlanPoint(0, 0, startMotion));
 
-	double time_seconds = timeStep_seconds;
 	while (true) {
 		// Get info
 		PlanPoint lastNode = planningPoints.back();
 
 		// Get planning point
-		PlanPoint newNode = _getNextPlanPoint(lastNode, timeStep_seconds);
+		PlanPoint newNode = _getNextPlanPoint(lastNode, distanceStep);
 
 		// Validate total distance not exceeded
 		if (newNode.distance >= distance) {
@@ -144,26 +237,22 @@ std::vector<PlanPoint> TrajectoryPlanner::_forwardPass(double timeStep_seconds) 
 
 		// Push planning point
 		planningPoints.push_back(newNode);
-
-		// Update time
-		time_seconds += timeStep_seconds;
 	}
-	planningPoints.push_back(PlanPoint(time_seconds, distance, { endVelocity }));
+	planningPoints.push_back(_getNextPlanPoint(planningPoints.back(), distance - planningPoints.back().distance));
 
 	return planningPoints;
 }
 
-std::vector<PlanPoint> TrajectoryPlanner::_backwardPass(double timeStep_seconds) {
+std::vector<PlanPoint> TrajectoryPlanner::_backwardPass(double distanceStep) {
 	std::vector<PlanPoint> planningPoints;
-	planningPoints.push_back(PlanPoint(0, distance, { endVelocity }));
+	planningPoints.push_back(PlanPoint(0, distance, endMotion));
 
-	double time_seconds = -timeStep_seconds;
 	while (true) {
 		// Get info
 		PlanPoint lastNode = planningPoints.back();
 
 		// Get planning point
-		PlanPoint newNode = _getNextPlanPoint(lastNode, -timeStep_seconds);
+		PlanPoint newNode = _getNextPlanPoint(lastNode, -distanceStep);
 
 		// Validate total distance not exceeded
 		if (newNode.distance <= 0) {
@@ -172,9 +261,6 @@ std::vector<PlanPoint> TrajectoryPlanner::_backwardPass(double timeStep_seconds)
 
 		// Push planning point
 		planningPoints.push_back(newNode);
-
-		// Update time
-		time_seconds -= timeStep_seconds;
 	}
 
 	// Flip derivatives
@@ -190,20 +276,25 @@ std::vector<PlanPoint> TrajectoryPlanner::_backwardPass(double timeStep_seconds)
 	return planningPoints;
 }
 
-TrajectoryPlanner &TrajectoryPlanner::calculateMotionProfile(double timeStep_seconds) {
+TrajectoryPlanner &TrajectoryPlanner::calculateMotionProfile(int distanceResolution) {
+	double distanceStep = distance / (double) distanceResolution;
+
 	// Backward pass constraints
-	std::vector<PlanPoint> backward_planningPoints = _backwardPass(timeStep_seconds);
+	std::vector<PlanPoint> backward_planningPoints = _backwardPass(distanceStep);
 	ConstraintSequence backward_constraintSequence({});
 	for (PlanPoint &point : backward_planningPoints) {
 		backward_constraintSequence.addConstraints({
-			{point.distance, aespa_lib::genutil::getAbsolute(point.motion_dV_dT)}
+			{point.distance, {fabs(point.motion_dV_dT[0])}}
 		});
 	}
 
 	// Forward pass
 	constraintSequences.push_back(backward_constraintSequence);
-	std::vector<PlanPoint> forward_planningPoints = _forwardPass(timeStep_seconds);
+	std::vector<PlanPoint> forward_planningPoints = _forwardPass(distanceStep);
 	constraintSequences.pop_back();
+
+	// Store points
+	profilePoints = forward_planningPoints;
 
 	return *this;
 }
@@ -213,6 +304,11 @@ double TrajectoryPlanner::getTotalTime() {
 }
 
 std::pair<double, std::vector<double>> TrajectoryPlanner::getMotionAtTime(double time_seconds) {
+	// Empty case
+	if ((int) profilePoints.size() < 2) {
+		return {0, {0, 0}};
+	}
+
 	// Sanitize time
 	time_seconds = aespa_lib::genutil::clamp(time_seconds, 0, getTotalTime());
 
@@ -238,10 +334,10 @@ std::pair<double, std::vector<double>> TrajectoryPlanner::getMotionAtTime(double
 	PlanPoint point2 = profilePoints[bs_result + 1];
 
 	// Lerp motion
-	PlanPoint result(-1, 0, {});
 	int motionDegree = fmin(
 		(int) point1.motion_dV_dT.size(), (int) point2.motion_dV_dT.size()
 	);
+	PlanPoint result(-1, 0, std::vector<double>(motionDegree, 0));
 	result.distance = aespa_lib::genutil::rangeMap(
 		time_seconds,
 		point1.time_seconds, point2.time_seconds,

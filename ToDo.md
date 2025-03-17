@@ -45,8 +45,8 @@
 				- [x] spline curve
 				- [x] curve sampler
 			- [ ] Trajectories
-				- [ ] constraint
-				- [ ] trajectory planner
+				- [x] constraint
+				- [x] trajectory planner
 	- [ ] Others
 - [ ] Units system for consistency
 - [ ] Revamp trajectory planner

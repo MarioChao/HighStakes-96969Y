@@ -30,11 +30,11 @@ struct PlanPoint {
 
 class TrajectoryPlanner {
 public:
-	// Constructor; unitless, names are just for establishing consistency.
+	// Constructor; unit names are just for establishing consistency.
 	TrajectoryPlanner(
 		double distance_inches,
-		double startVelocity_inchesPerSecond = 0,
-		double endVelocity_inchesPerSecond = 0
+		std::vector<double> startMotion_dInches_dSec = {0, 5},
+		std::vector<double> endMotion_dInches_dSec = {0, -5}
 	);
 	TrajectoryPlanner();
 
@@ -45,11 +45,17 @@ public:
 		splines::CurveSampler curveSampler, double maxAngularVelocity,
 		int distanceResolution
 	);
+	TrajectoryPlanner &addConstraint_maxCombinedVelocity(
+		splines::CurveSampler curveSampler,
+		double maxCombinedVelocity, double trackWidth,
+		double minLinearVelocity,
+		int distanceResolution
+	);
 
-	PlanPoint _getNextPlanPoint(PlanPoint node, double timeStep_seconds);
-	std::vector<PlanPoint> _forwardPass(double timeStep_seconds);
-	std::vector<PlanPoint> _backwardPass(double timeStep_seconds);
-	TrajectoryPlanner &calculateMotionProfile(double timeStep_seconds = 0.05);
+	PlanPoint _getNextPlanPoint(PlanPoint node, double distanceStep);
+	std::vector<PlanPoint> _forwardPass(double distanceStep);
+	std::vector<PlanPoint> _backwardPass(double distanceStep);
+	TrajectoryPlanner &calculateMotionProfile(int distanceResolution = 100);
 
 	double getTotalTime();
 
@@ -59,8 +65,8 @@ public:
 
 private:
 	double distance;
-	double startVelocity;
-	double endVelocity;
+	std::vector<double> startMotion;
+	std::vector<double> endMotion;
 	int distance_sign;
 
 	std::vector<ConstraintSequence> constraintSequences;
