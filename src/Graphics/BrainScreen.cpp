@@ -276,10 +276,12 @@ namespace {
 		double gph_x, gph_y;
 		double trajectoryValue;
 		if (mainUseSimulator && !autonfunctions::_pathFollowStarted) {
-			trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value())[1];
+			trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value()).second[0];
 		} else {
-			double traj_distance = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[0];
-			double traj_velocity = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value())[1];
+			std::pair<double, std::vector<double>> motion = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value());
+			double traj_distance = motion.first;
+			double traj_velocity = motion.second[0];
+			// printf("V: %.3f\n", traj_velocity);
 			// double traj_tvalue = autonfunctions::_curveSampler.distanceToParam(traj_distance);
 			// double traj_angularVelocity = traj_velocity * autonfunctions::_splinePath.getCurvatureAt(traj_tvalue);
 			trajectoryValue = traj_velocity;

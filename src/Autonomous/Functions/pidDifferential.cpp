@@ -17,7 +17,7 @@
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 
 #include "Simulation/robotSimulator.h"
 
@@ -31,6 +31,9 @@ using aespa_lib::datas::Linegular;
 using pas1_lib::auton::control_loops::ForwardController;
 using pas1_lib::auton::control_loops::PIDController;
 using pas1_lib::auton::end_conditions::PatienceController;
+
+using pas1_lib::planning::trajectories::ConstraintSequence;
+using pas1_lib::planning::trajectories::TrajectoryPlanner;
 
 std::vector<double> getMotorRevolutions();
 double getAverageDifference(std::vector<double> vector1, std::vector<double> vector2);
@@ -319,17 +322,23 @@ void driveAndTurnDistance_inches() {
 	Vector3 initalSimulatorPosition = robotSimulator.position;
 
 	// Motion planner
-	TrajectoryPlanner_Old motion(distance_inches / field::tileLengthIn);
+	TrajectoryPlanner motionProfile(distance_inches / field::tileLengthIn);
+	ConstraintSequence constraintSequence;
 	for (int i = 0; i < (int) velocityConstraint_inch_pct.size(); i++) {
 		auto constraint = velocityConstraint_inch_pct[i];
-		motion.addDesiredMotionConstraints(
-			constraint.first / field::tileLengthIn,
-			aespa_lib::genutil::clamp(constraint.second, 1, 100) / 100.0 * autonpaths::pathbuild::maxVel_tilesPerSec,
-			autonpaths::pathbuild::maxAccel, autonpaths::pathbuild::maxDecel
-		);
+		constraintSequence.addConstraints({
+			{
+				constraint.first / field::tileLengthIn,
+				{
+					aespa_lib::genutil::clamp(constraint.second, 1, 100) / 100.0 * autonpaths::pathbuild::maxVel_tilesPerSec
+				}
+			}
+		});
 	}
-	motion.calculateMotion();
-	autonfunctions::_trajectoryPlan = motion;
+	motionProfile.addConstraintSequence(constraintSequence);
+	motionProfile.addConstraint_maxMotion({autonpaths::pathbuild::maxVel_tilesPerSec, autonpaths::pathbuild::maxAccel});
+	motionProfile.calculateMotionProfile();
+	autonfunctions::_trajectoryPlan = motionProfile;
 	autonfunctions::_splinePathTimer.reset();
 
 	// Reset PID
@@ -349,13 +358,13 @@ void driveAndTurnDistance_inches() {
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
 	// Print info
-	printf("Drive pid with trajectory of %.3f seconds\n", motion.getTotalTime());
+	printf("Drive pid with trajectory of %.3f seconds\n", motionProfile.getTotalTime());
 
 	while (!(
 		driveAndTurn_reachedTargetPid.isSettled() &&
 		driveAndTurn_drivePositionPid.isSettled() &&
 		driveAndTurn_rotateTargetAnglePid.isSettled() &&
-		runningTimer.time(seconds) > motion.getTotalTime()
+		runningTimer.time(seconds) > motionProfile.getTotalTime()
 		)) {
 		// Check timeout
 		if (runTimeout.isExpired()) {
@@ -363,7 +372,7 @@ void driveAndTurnDistance_inches() {
 		}
 
 		// Check profile ended
-		if (runningTimer.time(seconds) >= motion.getTotalTime() + 0.2) {
+		if (runningTimer.time(seconds) >= motionProfile.getTotalTime() + 0.2) {
 			break;
 		}
 
@@ -411,10 +420,10 @@ void driveAndTurnDistance_inches() {
 		}
 
 		// Compute trajectory values
-		std::vector<double> motionKine = motion.getMotionAtTime(runningTimer.time(seconds));
-		double trajAcceleration_tilesPerSec2 = motionKine[2];
-		double trajVelocity_tilesPerSec = motionKine[1];
-		double trajPosition_tiles = motionKine[0];
+		std::pair<double, std::vector<double>> motion = motionProfile.getMotionAtTime(runningTimer.time(seconds));
+		double trajAcceleration_tilesPerSec2 = motion.second[1];
+		double trajVelocity_tilesPerSec = motion.second[0];
+		double trajPosition_tiles = motion.first;
 
 		/* Position feedback */
 

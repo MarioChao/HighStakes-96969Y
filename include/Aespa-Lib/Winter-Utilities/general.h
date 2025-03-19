@@ -23,12 +23,10 @@ double voltToPct(double volt);
 int signum(double value);
 bool isWithin(double value, double target, double withinRange);
 
-double euclideanDistance(std::vector<double> point1, std::vector<double> point2);
-double l2Norm(std::vector<double> point);
-
 double toRadians(double degrees);
 double toDegrees(double radians);
 
+double lerp(double value1, double value2, double t);
 double rangeMap(double x, double inMin, double inMax, double outMin, double outMax);
 
 double getScaleFactor(double scaleToMax, std::initializer_list<double> list);
@@ -36,8 +34,18 @@ double maxAbsolute(std::initializer_list<double> list);
 
 double getAverage(std::vector<double> list);
 
+std::vector<double> getAbsolute(std::vector<double> list);
+std::vector<double> multiplyVector(std::vector<double> list, double scale);
+
+double euclideanDistance(std::vector<double> point1, std::vector<double> point2);
+double l2Norm(std::vector<double> point);
+
 std::pair<bool, double> getArcRadius_inches(double arcLength_inches, double rotatedAngle_polarDegrees);
 double getChordLength_inches(double arcRadius_inches, double rotatedAngle_polarDegrees);
+
+std::pair<double, std::vector<double>> integratePolynomial(
+	std::vector<double> value_dY_dX, double dX
+);
 
 }
 }

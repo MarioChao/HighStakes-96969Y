@@ -13,8 +13,11 @@ namespace trajectories {
 Constraint::Constraint(double distance, std::vector<double> maxMotion_dV_dT)
 	: distance(distance), maxMotion_dV_dT(maxMotion_dV_dT) {}
 
-ConstraintSequence::ConstraintSequence(std::vector<Constraint> constraints)
-	: constraints(constraints), isSorted(false) {}
+ConstraintSequence::ConstraintSequence(std::vector<Constraint> constraints, bool lerped)
+	: constraints(constraints), lerped(lerped), isSorted(false) {}
+
+ConstraintSequence::ConstraintSequence()
+	: ConstraintSequence({}, false) {}
 
 ConstraintSequence &ConstraintSequence::addConstraints(
 	std::vector<std::pair<double, std::vector<double>>> constraints
@@ -47,17 +50,36 @@ Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
 	while (bs_l <= bs_r) {
 		bs_m = bs_l + (bs_r - bs_l) / 2;
 		Constraint &constraint = constraints[bs_m];
-		if (constraint.distance <= distance) {
+		if (constraint.distance <= distance + 1e-4) {
 			bs_result = bs_m;
 			bs_l = bs_m + 1;
 		} else {
 			bs_r = bs_m - 1;
 		}
 	}
-	if (bs_result == -1) bs_result = 0;
+	if (bs_result == -1) return Constraint({0, {}});
+
+	// Get segment
+	Constraint result = constraints[bs_result];
+
+	// Lerped?
+	if (lerped && bs_result + 1 < (int) constraints.size()) {
+		// Get constraint bounds
+		Constraint &c1 = constraints[bs_result];
+		Constraint &c2 = constraints[bs_result + 1];
+
+		// Linearly interpolate
+		double lerp_t = (distance - c1.distance) / (c2.distance - c1.distance);
+		result.distance = aespa_lib::genutil::lerp(c1.distance, c2.distance, lerp_t);
+		for (int degree = 0; degree < (int) result.maxMotion_dV_dT.size(); degree++) {
+			result.maxMotion_dV_dT[degree] = aespa_lib::genutil::lerp(
+				c1.maxMotion_dV_dT[degree], c2.maxMotion_dV_dT[degree], lerp_t
+			);
+		}
+	}
 
 	// Return
-	return constraints[bs_result];
+	return result;
 }
 
 Constraint getMinimumConstraint(std::vector<Constraint> constraints) {

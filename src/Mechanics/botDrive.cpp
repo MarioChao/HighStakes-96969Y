@@ -232,6 +232,7 @@ namespace {
 		double leftVelocity_pct = _linearVelocity_pct - rotationLinearVelocity_pct;
 		double rightVelocity_pct = _linearVelocity_pct + rotationLinearVelocity_pct;
 		// printf("Lin: %.3f, ang: %.3f\n", _linearVelocity_pct, rotationLinearVelocity_pct);
+		printf("LV: %.3f, RV: %.3f\n", leftVelocity_pct, rightVelocity_pct);
 
 		// Drive at velocity
 		_differentialDriveAtVelocity(leftVelocity_pct, rightVelocity_pct);
@@ -276,7 +277,7 @@ namespace {
 		rightVelocity_pct = forwardRightVelocity_pct + rightVelocityPidVelocity_pct;
 
 		// Drive at volt
-		botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftVelocity_pct), aespa_lib::genutil::pctToVolt(rightVelocity_pct), 11);
+		botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftVelocity_pct), aespa_lib::genutil::pctToVolt(rightVelocity_pct), 12);
 	}
 
 	void _differentialDriveAtVolt(double leftVelocity_volt, double rightVelocity_volt) {
@@ -286,14 +287,14 @@ namespace {
 		rightVelocity_volt *= scaleFactor;
 
 		// Smoothen voltages
-		double leftInitialVelocity_volt = LeftMotors.voltage(volt);
-		double rightInitialVelocity_volt = RightMotors.voltage(volt);
-		leftVelocity_volt = aespa_lib::genutil::clamp(
-			leftVelocity_volt, leftInitialVelocity_volt - maxDeltaVolt, leftInitialVelocity_volt + maxDeltaVolt
-		);
-		rightVelocity_volt = aespa_lib::genutil::clamp(
-			rightVelocity_volt, rightInitialVelocity_volt - maxDeltaVolt, rightInitialVelocity_volt + maxDeltaVolt
-		);
+		// double leftInitialVelocity_volt = LeftMotors.voltage(volt);
+		// double rightInitialVelocity_volt = RightMotors.voltage(volt);
+		// leftVelocity_volt = aespa_lib::genutil::clamp(
+		// 	leftVelocity_volt, leftInitialVelocity_volt - maxDeltaVolt, leftInitialVelocity_volt + maxDeltaVolt
+		// );
+		// rightVelocity_volt = aespa_lib::genutil::clamp(
+		// 	rightVelocity_volt, rightInitialVelocity_volt - maxDeltaVolt, rightInitialVelocity_volt + maxDeltaVolt
+		// );
 
 		// Spin
 		LeftMotors.spin(fwd, leftVelocity_volt, volt);

@@ -21,6 +21,7 @@ namespace {
 using aespa_lib::datas::Linegular;
 using pas1_lib::planning::splines::SplineCurve;
 using pas1_lib::planning::splines::CurveSampler;
+using pas1_lib::planning::trajectories::TrajectoryPlanner;
 
 // Controller
 pas1_lib::auton::pose_controllers::RamseteController robotController;
@@ -30,12 +31,12 @@ pas1_lib::auton::pose_controllers::RamseteController robotController;
 
 namespace autonfunctions {
 
-void setSplinePath(SplineCurve &splinePath, TrajectoryPlanner_Old &trajectoryPlan) {
+void setSplinePath(SplineCurve &splinePath, TrajectoryPlanner &trajectoryPlan) {
 	double resolution = splinePath.getTRange().second * 7;
 	setSplinePath(splinePath, trajectoryPlan, CurveSampler(splinePath).calculateByResolution(resolution));
 }
 
-void setSplinePath(SplineCurve &splinePath, TrajectoryPlanner_Old &trajectoryPlan, CurveSampler &curveSampler) {
+void setSplinePath(SplineCurve &splinePath, TrajectoryPlanner &trajectoryPlan, CurveSampler &curveSampler) {
 	_splinePath = splinePath;
 	_trajectoryPlan = trajectoryPlan;
 	_curveSampler = curveSampler;
@@ -80,20 +81,13 @@ void followSplinePath(bool reverseHeading) {
 			// Get time
 			double traj_time = _splinePathTimer.time(seconds);
 
-			// Exit when path completed
-			if (traj_time > totalTime_seconds + _pathFollowDelay_seconds) {
-				_pathFollowCompleted = true;
-				_pathFollowDistanceRemaining_tiles = 0;
-				break;
-			}
-
 			// Get trajectory motion
-			std::vector<double> motion = _trajectoryPlan.getMotionAtTime(traj_time);
-			double traj_distance = motion[0];
-			double traj_velocity = motion[1];
+			std::pair<double, std::vector<double>> motion = _trajectoryPlan.getMotionAtTime(traj_time);
+			double traj_distance = motion.first;
+			double traj_velocity = motion.second[0];
 			double traj_tvalue = _curveSampler.distanceToParam(traj_distance);
 			double traj_angularVelocity = traj_velocity * _splinePath.getCurvatureAt(traj_tvalue);
-
+			
 			// Update distance remaining
 			_pathFollowDistanceRemaining_tiles = totalDistance_tiles - traj_distance;
 
@@ -122,8 +116,15 @@ void followSplinePath(bool reverseHeading) {
 				robotSimulator.angularVelocity = linegularVelocity.second;
 			}
 
+			// Exit when path completed
+			if (traj_time > totalTime_seconds + _pathFollowDelay_seconds) {
+				_pathFollowCompleted = true;
+				_pathFollowDistanceRemaining_tiles = 0;
+				break;
+			}
+
 			// Wait
-			wait(20, msec);
+			wait(10, msec);
 		}
 
 		// Return int
@@ -133,7 +134,7 @@ void followSplinePath(bool reverseHeading) {
 
 timer _splinePathTimer;
 SplineCurve _splinePath;
-TrajectoryPlanner_Old _trajectoryPlan;
+TrajectoryPlanner _trajectoryPlan;
 CurveSampler _curveSampler;
 bool _reverseHeading;
 double _pathToPctFactor = botinfo::tilesPerSecond_to_pct;

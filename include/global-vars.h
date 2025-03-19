@@ -2,7 +2,7 @@
 
 #include "main.h"
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 #include "Simulation/robotSimulator.h"
 
 
@@ -28,5 +28,5 @@ extern RobotSimulator robotSimulator;
 extern bool mainUseSimulator;
 
 // Trajectory
-extern TrajectoryPlanner_Old testTrajectoryPlan;
+extern pas1_lib::planning::trajectories::TrajectoryPlanner testTrajectoryPlan;
 extern timer trajectoryTestTimer;

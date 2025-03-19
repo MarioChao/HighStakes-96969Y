@@ -37,15 +37,16 @@
 				- [ ] path follow
 		- [ ] Chassis Tracker
 			- [ ] odometry (require actual tests)
-		- [ ] Planning
+		- [x] Planning
 			- [x] Segments
 				- [x] segment base
 				- [x] cubic spline
 			- [x] Splines
 				- [x] spline curve
 				- [x] curve sampler
-			- [ ] Trajectories
+			- [x] Trajectories
 				- [x] constraint
+				- [x] curvature
 				- [x] trajectory planner
 	- [ ] Others
 - [ ] Units system for consistency

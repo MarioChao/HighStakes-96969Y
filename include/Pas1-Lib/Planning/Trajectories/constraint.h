@@ -20,7 +20,8 @@ struct Constraint {
 };
 
 struct ConstraintSequence {
-	ConstraintSequence(std::vector<Constraint> constraints);
+	ConstraintSequence(std::vector<Constraint> constraints, bool lerped);
+	ConstraintSequence();
 
 	ConstraintSequence &addConstraints(std::vector<std::pair<double, std::vector<double>>> constraints);
 
@@ -29,6 +30,7 @@ struct ConstraintSequence {
 
 
 	std::vector<Constraint> constraints;
+	bool lerped;
 
 	bool isSorted;
 };

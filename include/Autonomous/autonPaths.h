@@ -4,12 +4,13 @@
 
 #include "Pas1-Lib/Planning/Segments/cubic-spline.h"
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
-#include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
+#include "Utilities/fieldInfo.h"
 #include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "global-vars.h"
@@ -30,7 +31,7 @@ namespace autonpaths {
 
 		extern std::vector<pas1_lib::planning::splines::SplineCurve> splines;
 		extern std::vector<pas1_lib::planning::splines::CurveSampler> splineSamplers;
-		extern std::vector<TrajectoryPlanner_Old> splineTrajectoryPlans;
+		extern std::vector<pas1_lib::planning::trajectories::TrajectoryPlanner> splineTrajectoryPlans;
 		extern std::vector<bool> willReverse;
 
 		extern int pathIndex;

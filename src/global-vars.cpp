@@ -2,11 +2,15 @@
 #include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 
+
+namespace {
 using aespa_lib::sensor_beats::RotationSensor;
 using aespa_lib::sensor_beats::OpticalShaftEncoder;
 using aespa_lib::sensor_beats::Motor;
 using aespa_lib::sensor_beats::TrackingWheel;
 using pas1_lib::chassis_tracker::Odometry;
+using pas1_lib::planning::trajectories::TrajectoryPlanner;
+}
 
 
 // ---------- Global variables ----------
@@ -58,5 +62,5 @@ Odometry mainOdometry = Odometry()
 RobotSimulator robotSimulator;
 bool mainUseSimulator = false;
 
-TrajectoryPlanner_Old testTrajectoryPlan;
+TrajectoryPlanner testTrajectoryPlan;
 timer trajectoryTestTimer;

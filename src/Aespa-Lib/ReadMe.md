@@ -1,4 +1,4 @@
-# Pas1 Library
+# Aespa Library
 
 This is a utility library with **sensors** and **general functions**.
 

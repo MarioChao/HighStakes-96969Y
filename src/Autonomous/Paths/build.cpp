@@ -4,75 +4,86 @@
 namespace {
 using pas1_lib::planning::splines::SplineCurve;
 using pas1_lib::planning::splines::CurveSampler;
+using pas1_lib::planning::trajectories::TrajectoryPlanner;
 }
 
 
-namespace autonpaths { namespace pathbuild {
-	// Build paths
+namespace autonpaths {
+namespace pathbuild {
+// Build paths
 
-	// Default constants / constraints
-	const double maxVel_tilesPerSec = botinfo::maxV_tilesPerSec;
-	const double maxAccel = maxVel_tilesPerSec * 1.1;
-	const double maxDecel = maxVel_tilesPerSec * 1.1;
+// Default constants / constraints
+const double maxVel_tilesPerSec = botinfo::maxV_tilesPerSec;
+const double maxAccel = maxVel_tilesPerSec * 0.9;
+const double maxDecel = maxVel_tilesPerSec * 0.9;
+// const double maxJerk = maxAccel * 2.0;
 
-	// Global variables
-	std::vector<SplineCurve> splines;
-	std::vector<CurveSampler> splineSamplers;
-	std::vector<TrajectoryPlanner_Old> splineTrajectoryPlans;
-	std::vector<bool> willReverse;
+// Global variables
+std::vector<SplineCurve> splines;
+std::vector<CurveSampler> splineSamplers;
+std::vector<TrajectoryPlanner> splineTrajectoryPlans;
+std::vector<bool> willReverse;
 
-	int pathIndex;
+int pathIndex;
 
-	void clearSplines() {
-		splines.clear();
-		splineSamplers.clear();
-		splineTrajectoryPlans.clear();
-		willReverse.clear();
-		pathIndex = 0;
-	}
+void clearSplines() {
+	splines.clear();
+	splineSamplers.clear();
+	splineTrajectoryPlans.clear();
+	willReverse.clear();
+	pathIndex = 0;
+}
 
-	void pushNewSpline(SplineCurve spline, bool reverse, double maxVel) {
-		CurveSampler splineSampler = CurveSampler(spline)
-			.calculateByResolution(spline.getTRange().second * 10);
-		TrajectoryPlanner_Old splineTrajectoryPlan = TrajectoryPlanner_Old(splineSampler.getDistanceRange().second)
-			.autoSetMotionConstraints(splineSampler, 0.3, maxVel, maxAccel, maxDecel)
-			.calculateMotion();
-		splines.push_back(spline);
-		splineSamplers.push_back(splineSampler);
-		splineTrajectoryPlans.push_back(splineTrajectoryPlan);
-		willReverse.push_back(reverse);
-	}
+void pushNewSpline(SplineCurve spline, bool reverse, double maxVel) {
+	CurveSampler curveSampler = CurveSampler(spline)
+		.calculateByResolution(spline.getTRange().second * 10);
+	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(
+		curveSampler.getDistanceRange().second, robotLengthIn / field::tileLengthIn,
+		64
+	)
+		.setCurvatureFunction([&](double d) -> double {
+			return spline.getCurvatureAt(curveSampler.distanceToParam(d));
+		})
+		// .smoothenCurvature()
+		.addConstraint_maxMotion({maxVel, maxAccel * 0.5})
+		.calculateMotionProfile();
+	splines.push_back(spline);
+	splineSamplers.push_back(curveSampler);
+	splineTrajectoryPlans.push_back(splineTrajectoryPlan);
+	willReverse.push_back(reverse);
+}
 
-	void runFollowSpline() {
-		aespa_lib::datas::Linegular lg = splines[pathIndex].getLinegularAt(0, willReverse[pathIndex]);
-		autonfunctions::pid_diff::turnToAngle(aespa_lib::angle::swapFieldPolar_degrees(lg.getThetaPolarAngle_degrees()));
-		autonfunctions::setSplinePath(splines[pathIndex], splineTrajectoryPlans[pathIndex], splineSamplers[pathIndex]);
-		autonfunctions::followSplinePath(willReverse[pathIndex]);
+void runFollowSpline() {
+	aespa_lib::datas::Linegular lg = splines[pathIndex].getLinegularAt(0, willReverse[pathIndex]);
+	autonfunctions::pid_diff::turnToAngle(aespa_lib::angle::swapFieldPolar_degrees(lg.getThetaPolarAngle_degrees()));
+	autonfunctions::setSplinePath(splines[pathIndex], splineTrajectoryPlans[pathIndex], splineSamplers[pathIndex]);
+	autonfunctions::followSplinePath(willReverse[pathIndex]);
 
-		pathIndex++;
-	}
+	pathIndex++;
+}
 
-	std::vector<std::vector<std::vector<double>>> linearPaths;
-	std::vector<double> linearMaxVelocity_pct;
-	std::vector<bool> linearWillReverse;
+std::vector<std::vector<std::vector<double>>> linearPaths;
+std::vector<double> linearMaxVelocity_pct;
+std::vector<bool> linearWillReverse;
 
-	int linearIndex;
+int linearIndex;
 
-	void clearLinear() {
-		linearPaths.clear();
-		linearMaxVelocity_pct.clear();
-		linearWillReverse.clear();
-		linearIndex = 0;
-	}
+void clearLinear() {
+	linearPaths.clear();
+	linearMaxVelocity_pct.clear();
+	linearWillReverse.clear();
+	linearIndex = 0;
+}
 
-	void pushNewLinear(std::vector<std::vector<double>> path, bool reverse,  double maxVelocity_pct) {
-		linearPaths.push_back(path);
-		linearMaxVelocity_pct.push_back(maxVelocity_pct);
-		linearWillReverse.push_back(reverse);
-	}
+void pushNewLinear(std::vector<std::vector<double>> path, bool reverse, double maxVelocity_pct) {
+	linearPaths.push_back(path);
+	linearMaxVelocity_pct.push_back(maxVelocity_pct);
+	linearWillReverse.push_back(reverse);
+}
 
-	void runFollowLinearYield() {
-		runLinearPIDPath(linearPaths[linearIndex], linearMaxVelocity_pct[linearIndex], linearWillReverse[linearIndex]);
-		linearIndex++;
-	}
-}}
+void runFollowLinearYield() {
+	runLinearPIDPath(linearPaths[linearIndex], linearMaxVelocity_pct[linearIndex], linearWillReverse[linearIndex]);
+	linearIndex++;
+}
+}
+}

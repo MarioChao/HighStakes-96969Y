@@ -14,10 +14,11 @@ namespace splines {
 class SplineCurve;
 class CurveSampler;
 }
+namespace trajectories {
+class TrajectoryPlanner;
 }
 }
-
-class TrajectoryPlanner_Old;
+}
 
 
 // Namespace
@@ -81,14 +82,14 @@ void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelo
 
 /* Path following */
 
-void setSplinePath(pas1_lib::planning::splines::SplineCurve &splinePath, TrajectoryPlanner_Old &trajectoryPlan);
-void setSplinePath(pas1_lib::planning::splines::SplineCurve &splinePath, TrajectoryPlanner_Old &trajectoryPlan, pas1_lib::planning::splines::CurveSampler &curveSampler);
+void setSplinePath(pas1_lib::planning::splines::SplineCurve &splinePath, pas1_lib::planning::trajectories::TrajectoryPlanner &trajectoryPlan);
+void setSplinePath(pas1_lib::planning::splines::SplineCurve &splinePath, pas1_lib::planning::trajectories::TrajectoryPlanner &trajectoryPlan, pas1_lib::planning::splines::CurveSampler &curveSampler);
 void setPathToPctFactor(double factor = botinfo::tilesPerSecond_to_pct);
 void followSplinePath(bool reverseHeading = false);
 
 extern timer _splinePathTimer;
 extern pas1_lib::planning::splines::SplineCurve _splinePath;
-extern TrajectoryPlanner_Old _trajectoryPlan;
+extern pas1_lib::planning::trajectories::TrajectoryPlanner _trajectoryPlan;
 extern pas1_lib::planning::splines::CurveSampler _curveSampler;
 extern bool _reverseHeading;
 extern double _pathToPctFactor;
