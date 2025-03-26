@@ -47,8 +47,12 @@ void loadPaths(int section) {
 
 	if (section == 1) {
 		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{{1.59, -0.42}, {1.52, 0.33}, {1.49, 0.81}, {0.48, 1}, {1.55, 1.02}, {2.51, 1}, {1.57, 1.28}, {1.53, 1.81}, {1.53, 2.79}}
+			{{1.59, -0.42}, {1.52, 0.5}, {1.49, 0.81}, {0.48, 1}, {1.55, 1.02}, {2.51, 1}, {1.57, 1.28}, {1.53, 1.81}, {1.53, 2.79}}
 			}));
+
+		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
+			{{1.53, 2.79}, {1.53, 1.81}, {1.57, 1.28}, {2.51, 1}, {1.55, 1.02}, {0.48, 1}, {1.49, 0.81}, {1.52, 0.5}, {1.59, -0.42}}
+			}), true);
 
 		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
 			{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}, {1.54, 1.8},
@@ -70,6 +74,15 @@ void loadPaths(int section) {
 
 void doAuton() {
 	printf("master spark\n");
+
+	// Follow path
+	runFollowSpline();
+	waitUntil(_pathFollowCompleted);
+	printf("done\n");
+	// Follow path
+	runFollowSpline();
+	waitUntil(_pathFollowCompleted);
+	printf("done\n");
 
 	// Follow path
 	runFollowSpline();

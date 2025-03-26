@@ -5,6 +5,12 @@
 #include "Autonomous/auton.h"
 #include "Autonomous/autonFunctions.h"
 
+#include "Utilities/fieldInfo.h"
+
+#include "Controller/controls.h"
+
+#include "Mechanics/botDrive.h"
+
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
@@ -74,6 +80,7 @@ namespace {
 	vector<ButtonGui *> mainDockButtons;
 	vector<ButtonGui *> autonDockButtons, allianceButtons;
 	vector<ButtonGui *> autonSubdock1Buttons, autonSubdock2Buttons, autonSubdock3Buttons, autonSubdock4Buttons;
+	vector<ButtonGui *> simulationDockButtons;
 	SliderGui *slider;
 	DockGui *mainDock, *mainDock_dockDock;
 	DockGui *simulationDock;
@@ -285,6 +292,9 @@ namespace {
 			// double traj_tvalue = autonfunctions::_curveSampler.distanceToParam(traj_distance);
 			// double traj_angularVelocity = traj_velocity * autonfunctions::_splinePath.getCurvatureAt(traj_tvalue);
 			trajectoryValue = traj_velocity;
+
+			double linearVelocity = robotSimulator.velocity.getMagnitude();
+			trajectoryValue = linearVelocity + fabs(robotSimulator.angularVelocity) * (botinfo::robotLengthIn / field::tileLengthIn / 2);
 		}
 		gph_x = fw_drawX;
 		gph_y = y + height / 2.0 - (trajectoryValue / 7 * height);
@@ -373,6 +383,23 @@ namespace {
 			autonDockButtons[3]->enable();
 			autonDock_dockDock->setEnabled(false);
 			autonSubdock4->setEnabled(true);
+		}));
+
+		// Simulation Dock buttons
+		simulationDockButtons.push_back(new ButtonGui(new Rectangle(450, 210, 40, 40, color(100, 200, 100), color(50, 50, 50), 2), "Auto", white, [] {
+			simulationDockButtons[0]->setUsability(false);
+			task autonTask([]() -> int {
+				botdrive::setControlState(false);
+				controls::resetStates();
+	
+				auton::runAutonomous();
+	
+				botdrive::setControlState(true);
+				botdrive::preauton();
+				simulationDockButtons[0]->setUsability(true);
+
+				return 1;
+			});
 		}));
 
 		// -----------------------------------------
@@ -547,9 +574,9 @@ namespace {
 		// Simulation Dock
 		simulationDock = new DockGui(0, 20, 480, 220, {}, {});
 		simulationDock->addFunction([] {
-			drawCoordinate(20, 40, 200, 180);
+			drawCoordinate(10, 40, 200, 180);
 			// drawCoordinate(20, 40, 100, 100);
-			drawFlywheel(240, 40, 200, 180);
+			drawFlywheel(220, 40, 200, 180);
 			// drawFlywheel(20, 160, 100, 60);
 			// drawFlywheel(20, 40, 300, 160);
 		});
@@ -592,6 +619,9 @@ namespace {
 		for (GuiClass *gui : autonSubdock2Buttons) autonSubdock2->addGui(gui);
 		for (GuiClass *gui : autonSubdock3Buttons) autonSubdock3->addGui(gui);
 		for (GuiClass *gui : autonSubdock4Buttons) autonSubdock4->addGui(gui);
+		
+		// Simulation Dock
+		for (GuiClass *gui : simulationDockButtons) simulationDock->addGui(gui);
 
 		// QR-Code Dock
 		qrCodeDock->addGuis({slider});

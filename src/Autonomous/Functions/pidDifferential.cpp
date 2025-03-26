@@ -335,8 +335,9 @@ void driveAndTurnDistance_inches() {
 			}
 		});
 	}
-	motionProfile.addConstraintSequence(constraintSequence);
-	motionProfile.addConstraint_maxMotion({autonpaths::pathbuild::maxVel_tilesPerSec, autonpaths::pathbuild::maxAccel});
+	motionProfile.addCenterConstraintSequence(constraintSequence);
+	motionProfile.addCenterConstraint_maxMotion({autonpaths::pathbuild::maxVel_tilesPerSec, autonpaths::pathbuild::maxAccel});
+	motionProfile.addTrackConstraint_maxMotion({autonpaths::pathbuild::maxVel_tilesPerSec, autonpaths::pathbuild::maxAccel});
 	motionProfile.calculateMotionProfile();
 	autonfunctions::_trajectoryPlan = motionProfile;
 	autonfunctions::_splinePathTimer.reset();

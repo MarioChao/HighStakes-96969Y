@@ -93,6 +93,7 @@ void pre_auton(void) {
 	robotSimulator.angularPosition = aespa_lib::genutil::toRadians(90);
 	task simulatorTask([]() -> int {
 		while (true) {
+			robotSimulator.constrainMotion(botinfo::maxV_tilesPerSec, botinfo::robotLengthIn / field::tileLengthIn);
 			robotSimulator.updatePhysics();
 			robotSimulator.updateDistance();
 			wait(5, msec);

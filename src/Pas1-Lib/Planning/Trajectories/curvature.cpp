@@ -24,10 +24,11 @@ void CurvatureSequence::addPoint(double distance, double curvature) {
 
 double CurvatureSequence::getCurvatureAtDistance(double distance) {
 	sort();
+	if (points.empty()) return 0;
 
 	// Binary search
 	int bs_l, bs_r, bs_m;
-	int bs_result = -1;
+	int bs_result = 0;
 	bs_l = 0;
 	bs_r = (int) points.size() - 1;
 	while (bs_l <= bs_r) {
@@ -40,7 +41,6 @@ double CurvatureSequence::getCurvatureAtDistance(double distance) {
 			bs_r = bs_m - 1;
 		}
 	}
-	if (bs_result == -1) return 0;
 
 	// Lerp
 	double result = points[bs_result].curvature;
@@ -54,6 +54,31 @@ double CurvatureSequence::getCurvatureAtDistance(double distance) {
 	}
 
 	return result;
+}
+
+double CurvatureSequence::getControlPointDistance(double distance, bool nextPoint) {
+	sort();
+	if (points.empty()) return distance;
+
+	// Binary search
+	int bs_l, bs_r, bs_m;
+	int bs_result = 0;
+	bs_l = 0;
+	bs_r = (int) points.size() - 1;
+	while (bs_l <= bs_r) {
+		bs_m = bs_l + (bs_r - bs_l) / 2;
+		CurvaturePoint &point = points[bs_m];
+		if (point.distance <= distance + 1e-5) {
+			bs_result = bs_m;
+			bs_l = bs_m + 1;
+		} else {
+			bs_r = bs_m - 1;
+		}
+	}
+	if (nextPoint) bs_result++;
+	if (bs_result >= (int) points.size()) return distance;
+
+	return points[bs_result].distance;
 }
 
 void CurvatureSequence::sort() {

@@ -10,6 +10,8 @@ using aespa_lib::sensor_beats::Motor;
 using aespa_lib::sensor_beats::TrackingWheel;
 using pas1_lib::chassis_tracker::Odometry;
 using pas1_lib::planning::trajectories::TrajectoryPlanner;
+using pas1_lib::planning::profiles::SplineProfile;
+using aespa_lib::datas::NamedStorage;
 }
 
 
@@ -30,6 +32,7 @@ namespace {
 
 // Sensors
 RotationSensor look_rotationBeats(LookRotation);
+RotationSensor right_rotationBeats(RightRotation);
 OpticalShaftEncoder right_opticalBeats(RightEncoder);
 Motor lookLeft_motorBeats(LeftMotorA);
 Motor lookRight_motorBeats(RightMotorA);
@@ -42,7 +45,8 @@ TrackingWheel lookRight_trackingWheel(
 	lookRight_motorBeats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, botinfo::halfRobotLengthIn
 );
 TrackingWheel look1_trackingWheel(look_rotationBeats, -90, 1, 2.0, 0);
-TrackingWheel right1_trackingWheel(right_opticalBeats, 180, 1, 2.75, -3.5);
+TrackingWheel right1_trackingWheel(right_rotationBeats, 180, 1, 2.0, 0);
+TrackingWheel right2_trackingWheel(right_opticalBeats, 180, 1, 2.75, -3.5);
 
 }
 
@@ -51,7 +55,7 @@ Odometry mainOdometry = Odometry()
 .addTrackingWheel(lookLeft_trackingWheel)
 .addTrackingWheel(lookRight_trackingWheel)
 // .addTrackingWheel(look1_trackingWheel)
-// .addTrackingWheel(right1_trackingWheel)
+.addTrackingWheel(right1_trackingWheel)
 .addInertialSensor(InertialSensor, 0, 0)
 .setPositionFactor(1.0 / field::tileLengthIn)
 ;
@@ -64,3 +68,6 @@ bool mainUseSimulator = false;
 
 TrajectoryPlanner testTrajectoryPlan;
 timer trajectoryTestTimer;
+
+// Spline Profile Storage
+NamedStorage<SplineProfile> splineProfile_storage;

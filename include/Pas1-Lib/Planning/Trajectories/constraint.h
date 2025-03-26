@@ -35,10 +35,15 @@ struct ConstraintSequence {
 	bool isSorted;
 };
 
+double getMinimumMotionAtDegree(std::vector<Constraint> constraints, int dV_dT_degree);
 Constraint getMinimumConstraint(std::vector<Constraint> constraints);
 
 std::vector<Constraint> getConstraintsAtDistance(
 	std::vector<ConstraintSequence> constraintSequences, double distance
+);
+
+std::vector<Constraint> getConstraintsAtIndex(
+	std::vector<ConstraintSequence> constraintSequences, int index
 );
 
 

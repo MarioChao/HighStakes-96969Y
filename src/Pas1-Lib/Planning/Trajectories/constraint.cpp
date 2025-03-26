@@ -1,6 +1,7 @@
 #include "Pas1-Lib/Planning/Trajectories/constraint.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
+#include <cmath>
 
 
 namespace pas1_lib {
@@ -43,7 +44,9 @@ void ConstraintSequence::sort() {
 Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
 	// Binary search for segment
 	sort();
-	int bs_result = -1;
+	if (constraints.empty()) return Constraint({0, {}});
+
+	int bs_result = 0;
 	int bs_l, bs_r, bs_m;
 	bs_l = 0;
 	bs_r = (int) constraints.size() - 1;
@@ -57,7 +60,6 @@ Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
 			bs_r = bs_m - 1;
 		}
 	}
-	if (bs_result == -1) return Constraint({0, {}});
 
 	// Get segment
 	Constraint result = constraints[bs_result];
@@ -79,6 +81,22 @@ Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
 	}
 
 	// Return
+	return result;
+}
+
+double getMinimumMotionAtDegree(std::vector<Constraint> constraints, int dV_dT_degree) {
+	double result = -1;
+	for (Constraint &constraint : constraints) {
+		// Get motion value
+		if (dV_dT_degree >= (int) constraint.maxMotion_dV_dT.size()) {
+			continue;
+		}
+		double motionValue = constraint.maxMotion_dV_dT[dV_dT_degree];
+
+		// Get minimum
+		if (result < 0) result = motionValue;
+		else result = std::fmin(result, motionValue);
+	}
 	return result;
 }
 
@@ -113,6 +131,21 @@ std::vector<Constraint> getConstraintsAtDistance(
 	for (ConstraintSequence &sequence : constraintSequences) {
 		Constraint constraint = sequence.getConstraintAtDistance(distance);
 		result.push_back(constraint);
+	}
+
+	// Return
+	return result;
+}
+
+std::vector<Constraint> getConstraintsAtIndex(
+	std::vector<ConstraintSequence> constraintSequences, int index
+) {
+	std::vector<Constraint> result;
+	for (ConstraintSequence &sequence : constraintSequences) {
+		if (index < (int) sequence.constraints.size()) {
+			Constraint constraint = sequence.constraints[index];
+			result.push_back(constraint);
+		}
 	}
 
 	// Return

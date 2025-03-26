@@ -38,6 +38,8 @@
 		- [ ] Chassis Tracker
 			- [ ] odometry (require actual tests)
 		- [x] Planning
+			- [x] Profiles
+				- [x] spline profile
 			- [x] Segments
 				- [x] segment base
 				- [x] cubic spline

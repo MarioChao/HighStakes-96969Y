@@ -23,6 +23,7 @@ struct CurvatureSequence {
 	void addPoint(double distance, double curvature);
 
 	double getCurvatureAtDistance(double distance);
+	double getControlPointDistance(double distance, bool nextPoint = true);
 
 	void sort();
 	void smoothen(double alpha);

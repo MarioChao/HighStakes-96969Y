@@ -14,8 +14,8 @@ namespace pathbuild {
 
 // Default constants / constraints
 const double maxVel_tilesPerSec = botinfo::maxV_tilesPerSec;
-const double maxAccel = maxVel_tilesPerSec * 0.9;
-const double maxDecel = maxVel_tilesPerSec * 0.9;
+const double maxAccel = maxVel_tilesPerSec * 1.5;
+const double maxDecel = maxVel_tilesPerSec * 1.5;
 // const double maxJerk = maxAccel * 2.0;
 
 // Global variables
@@ -45,7 +45,8 @@ void pushNewSpline(SplineCurve spline, bool reverse, double maxVel) {
 			return spline.getCurvatureAt(curveSampler.distanceToParam(d));
 		})
 		// .smoothenCurvature()
-		.addConstraint_maxMotion({maxVel, maxAccel * 0.5})
+		.addCenterConstraint_maxMotion({maxVel, maxAccel})
+		.addTrackConstraint_maxMotion({maxVel, maxAccel})
 		.calculateMotionProfile();
 	splines.push_back(spline);
 	splineSamplers.push_back(curveSampler);

@@ -2,6 +2,7 @@
 
 #include <initializer_list>
 #include <vector>
+#include <functional>
 
 namespace aespa_lib {
 namespace genutil {
@@ -44,7 +45,14 @@ std::pair<bool, double> getArcRadius_inches(double arcLength_inches, double rota
 double getChordLength_inches(double arcRadius_inches, double rotatedAngle_polarDegrees);
 
 std::pair<double, std::vector<double>> integratePolynomial(
-	std::vector<double> value_dY_dX, double dX
+	std::vector<double> value_dY_dX, double dX,
+	bool isSimple = false
+);
+
+std::pair<bool, double> newtonsMethod(
+	std::function<std::pair<double, double>(double)> f_fprime_function,
+	double startX = 0,
+	double xSkip_step = 0.1, int skipStep_sign = 1
 );
 
 }

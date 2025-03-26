@@ -8,6 +8,8 @@ public:
 	RobotSimulator();
 
 	void resetTimer();
+
+	void constrainMotion(double maxVelocity, double trackWidth);
 	void updatePhysics();
 
 	void setDistance(double distance);

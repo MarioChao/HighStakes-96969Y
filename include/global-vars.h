@@ -3,6 +3,8 @@
 #include "main.h"
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
+#include "Pas1-Lib/Planning/Profiles/spline-profile.h"
+#include "Aespa-Lib/Karina-Data-Structures/named-storage.h"
 #include "Simulation/robotSimulator.h"
 
 
@@ -30,3 +32,6 @@ extern bool mainUseSimulator;
 // Trajectory
 extern pas1_lib::planning::trajectories::TrajectoryPlanner testTrajectoryPlan;
 extern timer trajectoryTestTimer;
+
+// Spline Profile Storage
+extern aespa_lib::datas::NamedStorage<pas1_lib::planning::profiles::SplineProfile> splineProfile_storage;

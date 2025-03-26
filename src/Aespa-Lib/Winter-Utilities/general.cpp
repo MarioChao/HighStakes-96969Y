@@ -125,9 +125,23 @@ double getChordLength_inches(double arcRadius_inches, double rotatedAngle_polarD
 	return chordLength_inches;
 }
 
-std::pair<double, std::vector<double>> integratePolynomial(std::vector<double> value_dY_dX, double dX) {
-	// Integrate
+std::pair<double, std::vector<double>> integratePolynomial(
+	std::vector<double> value_dY_dX, double dX,
+	bool isSimple
+) {
 	const int polyDegree = (int) value_dY_dX.size();
+
+	// Simple version
+	if (isSimple) {
+		std::vector<double> result_dY_dX = value_dY_dX;
+		double deltaValue = value_dY_dX[0] * dX;
+		for (int degree = 0; degree < polyDegree - 1; degree++) {
+			result_dY_dX[degree] += value_dY_dX[degree + 1] * dX;
+		}
+		return {deltaValue, result_dY_dX};
+	}
+
+	// Integrate
 	std::vector<double> integrated_dY_dX = value_dY_dX;
 	std::vector<double> result_dY_dX = value_dY_dX, dXSign;
 	double deltaValue = 0;
@@ -144,6 +158,61 @@ std::pair<double, std::vector<double>> integratePolynomial(std::vector<double> v
 		}
 	}
 	return {deltaValue, result_dY_dX};
+}
+
+std::pair<bool, double> newtonsMethod(
+	std::function<std::pair<double, double>(double)> f_fprime_function,
+	double startX,
+	double xSkip_step, int skipStep_sign
+) {
+	// Newton's method
+	double x = startX;
+	double lastX = startX;
+	bool isLastOut = false;
+	std::pair<double, double> newtonRange = { -1e5, 1e5 };
+	for (int iter = 0; iter < 20; iter++) {
+		// Get f(x) and f'(x)
+		auto f_fp = f_fprime_function(x);
+		double f_x = f_fp.first;
+		double f_p_x = f_fp.second;
+
+		// Extreme conditions
+		if (fabs(f_p_x) < 1e-6) {
+			// printf("skip %.3f\n", x);
+			x += xSkip_step * skipStep_sign;
+			continue;
+		}
+
+		// Not converging
+		double dx = -f_x / f_p_x;
+		double newX = x + dx;
+		bool newXIsOut = newX < newtonRange.first || newtonRange.second < newX;
+		lastX = newX;
+		if (newXIsOut) {
+			// Further out
+			int outSign = genutil::signum(newX - newtonRange.second);
+			int deltaOutSign = genutil::signum(newX - lastX);
+			if (isLastOut && outSign == deltaOutSign) {
+				break;
+			}
+			// printf("out %.3f, %.3f %.3f\n", x, newtonRange.first, newtonRange.second);
+			x -= xSkip_step * outSign;
+			isLastOut = true;
+			continue;
+		}
+		isLastOut = false;
+
+		// Converged
+		if (fabs(dx) < 1e-5) return {true, x};
+
+		// Iterate
+		if (dx < 0) newtonRange.second = fmin(newtonRange.second, x);
+		else newtonRange.first = fmax(newtonRange.first, x);
+		x = newX;
+	}
+
+	// Didn't converge
+	return {false, 0};
 }
 
 }

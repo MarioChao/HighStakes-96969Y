@@ -155,7 +155,7 @@ double CurveSampler::paramToDistance(double t) {
 				t_distance1.t, t_distance2.t,
 				t_distance1.distance, t_distance2.distance
 			);
-		} else if (t < t_distance1.t) {
+		} else if (t_distance1.t < t) {
 			bL = bM1 + 1;
 		} else {
 			bR = bM1 - 1;
@@ -199,10 +199,10 @@ double CurveSampler::distanceToParam(double distance) {
 				t_distance1.distance, t_distance2.distance,
 				t_distance1.t, t_distance2.t
 			);
-		} else if (distance < t_distance1.distance) {
-			bR = bM1 - 1;
-		} else {
+		} else if (t_distance1.distance < distance) {
 			bL = bM1 + 1;
+		} else {
+			bR = bM1 - 1;
 		}
 	}
 
