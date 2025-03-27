@@ -13,6 +13,7 @@
 #include "MatchSequence/preauton.h"
 #include "MatchSequence/match-end.h"
 #include "Autonomous/auton.h"
+#include "Autonomous/autonPaths.h"
 
 #include "Controller/controls.h"
 
@@ -57,6 +58,9 @@ void pre_auton(void) {
 
 	printf("maxV: %.3f\n", botinfo::maxV_tilesPerSec);
 	// printf("tps2%%: %.3f\n", botinfo::tilesPerSecond_to_pct);
+
+	// Splines
+	task storeProfiles([]() -> int { autonpaths::storeSplineProfiles(); return 1; });
 
 	// Tasks
 	controls::startThreads();
@@ -189,13 +193,13 @@ void usercontrol(void) {
 
 	// User control code here, inside the loop
 	double v = 0;
-	std::vector<double> velocities = {0};
+	std::vector<double> velocities = { 0 };
 	while (1) {
 		if (false) {
 			LeftRightMotors.spin(forward, v, volt);
 
 			double velocity = LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
-			if (velocities.size() > 10) velocities = {velocity};
+			if (velocities.size() > 10) velocities = { velocity };
 			else velocities.push_back(velocity);
 			double avgV = aespa_lib::genutil::getAverage(velocities);
 			if (fabs(v) > 1) printf("volt: %.3f, vel: %.3f\n", v, avgV);

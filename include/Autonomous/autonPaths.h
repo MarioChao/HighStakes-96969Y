@@ -16,75 +16,79 @@
 #include "global-vars.h"
 #include "main.h"
 
+#include <string>
+
+
 namespace autonpaths {
-	using namespace autonfunctions;
-	using namespace autonfunctions::pid_diff;
-	using namespace autonfunctions::driveturn;
-	using namespace botinfo;
+using namespace autonfunctions;
+using namespace autonfunctions::pid_diff;
+using namespace autonfunctions::driveturn;
+using namespace botinfo;
 
-	// Build paths
+// Build paths
 
-	namespace pathbuild {
-		extern const double maxVel_tilesPerSec;
-		extern const double maxAccel;
-		extern const double maxDecel;
+namespace pathbuild {
+extern const double maxVel_tilesPerSec;
+extern const double maxAccel;
+extern const double maxDecel;
 
-		extern std::vector<pas1_lib::planning::splines::SplineCurve> splines;
-		extern std::vector<pas1_lib::planning::splines::CurveSampler> splineSamplers;
-		extern std::vector<pas1_lib::planning::trajectories::TrajectoryPlanner> splineTrajectoryPlans;
-		extern std::vector<bool> willReverse;
+void clearSplines();
+void storeNewSplineProfile(
+	std::string profileName,
+	pas1_lib::planning::splines::SplineCurve spline, bool reverse = false, double maxVel = pathbuild::maxVel_tilesPerSec
+);
+void runFollowSpline(std::string profileName);
 
-		extern int pathIndex;
+extern std::vector<std::vector<std::vector<double>>> linearPaths;
+extern std::vector<double> linearMaxVelocity_pct;
+extern std::vector<bool> linearWillReverse;
 
-		void clearSplines();
-		void pushNewSpline(pas1_lib::planning::splines::SplineCurve spline, bool reverse = false, double maxVel = pathbuild::maxVel_tilesPerSec);
-		void runFollowSpline();
+extern int linearIndex;
 
-		extern std::vector<std::vector<std::vector<double>>> linearPaths;
-		extern std::vector<double> linearMaxVelocity_pct;
-		extern std::vector<bool> linearWillReverse;
-
-		extern int linearIndex;
-
-		void clearLinear();
-		void pushNewLinear(std::vector<std::vector<double>> path, bool reverse = false, double maxVelocity_pct = 100);
-		void runFollowLinearYield();
-	}
+void clearLinear();
+void pushNewLinear(std::vector<std::vector<double>> path, bool reverse = false, double maxVelocity_pct = 100);
+void runFollowLinearYield();
+}
 
 
-	// Combinations
+// Combinations
 
-	namespace combination {
-		void grabGoalAt(double x_tiles, double y_tiles, double grabAtDistanceError = 0.15);
-	}
+namespace combination {
+void grabGoalAt(double x_tiles, double y_tiles, double grabAtDistanceError = 0.15);
+}
 
 
-	// Paths
+// Store profiles
 
-	void runTemplate();
+void storeSplineProfiles();
 
-	void autonTest();
-	void odometryRadiusTest();
 
-	void runAutonRedUp();
-	void runAutonRedUpSafe();
-	void runAutonBlueUp();
-	void runAutonBlueUpSafe();
+// Paths
 
-	void runAutonRedDown();
-	void runAutonRedDownSafe();
-	void runAutonBlueDown();
-	void runAutonBlueDownSafe();
+void runTemplate();
 
-	void runRedSoloAWP();
-	void runBlueSoloAWP();
+void autonTest();
+void odometryRadiusTest();
 
-	void runAutonSkills59();
-	void runAutonSkillsNoWallStake();
-	void runAutonSkillsLong();
-	void runAutonSkills();
+void runAutonRedUp();
+void runAutonRedUpSafe();
+void runAutonBlueUp();
+void runAutonBlueUpSafe();
 
-	void runAllianceWallStake();
-	void runLoveShape();
-	void runFieldTour();
+void runAutonRedDown();
+void runAutonRedDownSafe();
+void runAutonBlueDown();
+void runAutonBlueDownSafe();
+
+void runRedSoloAWP();
+void runBlueSoloAWP();
+
+void runAutonSkills59();
+void runAutonSkillsNoWallStake();
+void runAutonSkillsLong();
+void runAutonSkills();
+
+void runAllianceWallStake();
+void runLoveShape();
+void runFieldTour();
 }

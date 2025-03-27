@@ -46,29 +46,6 @@ void loadPaths(int section) {
 	clearSplines();
 
 	if (section == 1) {
-		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{{1.59, -0.42}, {1.52, 0.5}, {1.49, 0.81}, {0.48, 1}, {1.55, 1.02}, {2.51, 1}, {1.57, 1.28}, {1.53, 1.81}, {1.53, 2.79}}
-			}));
-
-		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{{1.53, 2.79}, {1.53, 1.81}, {1.57, 1.28}, {2.51, 1}, {1.55, 1.02}, {0.48, 1}, {1.49, 0.81}, {1.52, 0.5}, {1.59, -0.42}}
-			}), true);
-
-		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}, {1.54, 1.8},
-			{2.06, 1.95}, {2.49, 1.34}, {1.54, 0.48}, {0.48, 0.05},
-			}));
-
-		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{2.62, 0.09}, {1.52, 0.49}, {0.67, 1.35}, {1.03, 1.97}, {1.54, 1.8},
-			{2.06, 1.95}, {2.49, 1.34}, {1.54, 0.48}, {0.48, 0.05},
-			}), true);
-
-		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{4.07, -0.01}, {3, 0.55}, {1.99, 1.99}, {0.92, 4.03}, {1.5, 5.2},
-			{3.02, 4.68}, {4.52, 5.2}, {5.08, 4.01}, {4.03, 2.03}, {3.02, 0.57},
-			{1.97, -0.07}
-			}));
 	}
 }
 
@@ -76,16 +53,16 @@ void doAuton() {
 	printf("master spark\n");
 
 	// Follow path
-	runFollowSpline();
+	runFollowSpline("big curvature 1");
 	waitUntil(_pathFollowCompleted);
 	printf("done\n");
 	// Follow path
-	runFollowSpline();
+	runFollowSpline("big curvature 1br");
 	waitUntil(_pathFollowCompleted);
 	printf("done\n");
 
 	// Follow path
-	runFollowSpline();
+	runFollowSpline("love 1");
 
 	// Wait
 	waitUntil(_pathFollowCompleted);
@@ -93,7 +70,7 @@ void doAuton() {
 
 	// Follow path again
 	printf("<3\n");
-	runFollowSpline();
+	runFollowSpline("love 1r");
 
 	// Wait
 	waitUntil(_pathFollowCompleted);
@@ -101,7 +78,7 @@ void doAuton() {
 
 	// Follow path
 	printf("<3 big\n");
-	// runFollowSpline();
+	// runFollowSpline("love 2");
 
 	// Wait
 	waitUntil(_pathFollowCompleted);

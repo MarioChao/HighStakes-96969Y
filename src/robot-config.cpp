@@ -7,7 +7,7 @@ brain Brain;
 
 // PORT22 is used for the Brain's default ThreeWirePort
 
-const int emptyPort = PORT4;
+const int emptyPort = PORT20;
 
 // Devices
 
@@ -16,12 +16,12 @@ controller Controller2(partner);
 
 // Wheel motors
 
-motor LeftMotorA(PORT14, ratio6_1);
-motor LeftMotorB(PORT16, ratio6_1);
-motor LeftMotorC(PORT15, ratio6_1, true);
-motor RightMotorA(PORT11, ratio6_1, true);
-motor RightMotorB(PORT13, ratio6_1, true);
-motor RightMotorC(PORT12, ratio6_1);
+motor LeftMotorA(PORT8, ratio6_1, true);
+motor LeftMotorB(PORT9, ratio6_1, true);
+motor LeftMotorC(PORT10, ratio6_1, true);
+motor RightMotorA(PORT1, ratio6_1, false);
+motor RightMotorB(PORT2, ratio6_1, false);
+motor RightMotorC(PORT3, ratio6_1, false);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
 motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA,
@@ -29,13 +29,13 @@ motor_group LeftRightMotors(LeftMotorA, LeftMotorB, LeftMotorC, RightMotorA,
 
 // Intake motors
 
-motor IntakeMotor1(PORT17, ratio6_1);
+motor IntakeMotor1(PORT4, ratio6_1);
 motor IntakeMotor2(emptyPort, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
 // arm motor
 
-motor ArmMotor(PORT18, ratio36_1);
+motor ArmMotor(emptyPort, ratio36_1);
 
 // Expander
 
@@ -60,15 +60,15 @@ pneumatics RedirectPneumatics(Expander1.B);
 encoder LookEncoder(Expander1.A);
 encoder RightEncoder(Expander1.A);
 rotation LookRotation(emptyPort);
-rotation RightRotation(emptyPort);
+rotation RightRotation(PORT21);
 
-rotation ArmRotationSensor(PORT19, true);
+rotation ArmRotationSensor(emptyPort, true);
 
-inertial InertialSensor(PORT20);
+inertial InertialSensor(PORT7);
 distance DistanceSensor(emptyPort);
 
 distance RingDistanceSensor(emptyPort);
-optical RingOpticalSensor(PORT9);
+optical RingOpticalSensor(emptyPort);
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

@@ -74,9 +74,6 @@ void loadPaths(int section) {
 		// Score 3 rings
 		// pushNewLinear({{2.01, 1.02}, {3, 0.51}, {3.99, 1}});
 		pushNewLinear({ {2.01, 1.02} });
-		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{0.9, 2.33}, {2.01, 1.02}, {2.98, 0.53}, {4.07, 1.08}, {5.06, 2.31}
-			}));
 
 		// Score on neutral wall stake
 		pushNewLinear({ {3, 1.2} }, true);
@@ -136,9 +133,6 @@ void loadPaths(int section) {
 		pushNewLinear({ {1, 3}, {0, 3} });
 
 		// Climb on ladder
-		pushNewSpline(SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-			{0.13, 3.81}, {0.51, 2.99}, {1.38, 1.87}, {2.24, 2.35}, {3.23, 3.42}
-			}));
 	}
 }
 
@@ -181,7 +175,7 @@ void firstCorner() {
 
 	// Follow path
 	turnToAngle(120);
-	runFollowSpline();
+	runFollowSpline("skills 1");
 
 	// Wait
 	waitUntil(_pathFollowCompleted);
@@ -422,7 +416,7 @@ void finalSkills() {
 	setArmStage(3);
 
 	// Follow path
-	runFollowSpline();
+	runFollowSpline("skills ladder");
 
 	// Wait
 	waitUntil(_pathFollowCompleted);
