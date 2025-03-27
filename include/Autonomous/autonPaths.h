@@ -64,8 +64,19 @@ void grabGoalAt(double x_tiles, double y_tiles, double grabAtDistanceError = 0.1
 
 // Store profiles
 
-void storeSplineProfiles();
-
+void storeProfiles_redUp();
+void storeProfiles_redUpSafe();
+void storeProfiles_blueUp();
+void storeProfiles_blueUpSafe();
+void storeProfiles_redDown();
+void storeProfiles_redDownSafe();
+void storeProfiles_blueDown();
+void storeProfiles_blueDownSafe();
+void storeProfiles_redSoloAWP();
+void storeProfiles_blueSoloAWP();
+void storeProfiles_skills();
+void storeProfiles_loveShape();
+void storeProfiles_fieldTour();
 
 // Paths
 
@@ -87,9 +98,6 @@ void runAutonBlueDownSafe();
 void runRedSoloAWP();
 void runBlueSoloAWP();
 
-void runAutonSkills59();
-void runAutonSkillsNoWallStake();
-void runAutonSkillsLong();
 void runAutonSkills();
 
 void runAllianceWallStake();

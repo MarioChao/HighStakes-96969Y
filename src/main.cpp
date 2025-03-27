@@ -59,9 +59,6 @@ void pre_auton(void) {
 	printf("maxV: %.3f\n", botinfo::maxV_tilesPerSec);
 	// printf("tps2%%: %.3f\n", botinfo::tilesPerSecond_to_pct);
 
-	// Splines
-	// task storeProfiles([]() -> int { autonpaths::storeSplineProfiles(); return 1; });
-
 	// Tasks
 	controls::startThreads();
 	task rum([]() -> int { preauton::controllerThread(); return 1; });
@@ -104,7 +101,8 @@ void pre_auton(void) {
 		}
 	});
 
-	// Debug
+	// Set auton
+	waitUntil(preauton::isBufferFinished());
 	auton::showAutonRunType();
 
 	// Check motor
@@ -180,7 +178,7 @@ void usercontrol(void) {
 		// botarm::setResetDefaultStage(2);
 		botintake::setFilterOutColor("none");
 	} else if (auton::getAutonRunType() == auton::autonomousType::DrivingRunAutonSkills) {
-		auton::setAutonRunType(0, auton::autonomousType::AutonSkills59);
+		auton::setAutonRunType(0, auton::autonomousType::AutonSkills);
 		autonomous();
 	}
 

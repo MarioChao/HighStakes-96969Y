@@ -10,6 +10,7 @@ namespace {
 	void bufferScreen();
 
 	bool initComponentFinished = false;
+	bool bufferFinished = false;
 }
 
 namespace preauton {
@@ -29,6 +30,10 @@ namespace preauton {
 
 	bool isFinished() {
 		return initComponentFinished;
+	}
+
+	bool isBufferFinished() {
+		return bufferFinished;
 	}
 }
 
@@ -53,6 +58,8 @@ namespace {
 	}
 
 	void bufferScreen() {
+		bufferFinished = false;
+
 		// White / buffer screen
 		Brain.Screen.clearScreen(color::white);
 		Brain.Screen.setPenColor(color::black);
@@ -90,5 +97,7 @@ namespace {
 			brainscreen::brainScreenThread();
 			return 1;
 		});
+
+		bufferFinished = true;
 	}
 }

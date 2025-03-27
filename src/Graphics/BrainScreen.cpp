@@ -489,6 +489,17 @@ namespace {
 			allianceButtons[9]->enable();
 			setAutonRunType(2, autonomousType::BlueSoloAWP);
 		});
+		ButtonGui *loveShape = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 160, 160), white, 2, "Love", red, [] {
+			allianceDisable(10);
+			allianceButtons[10]->enable();
+			setAutonRunType(0, autonomousType::LoveShape);
+		});
+		// Blue Solo AWP
+		ButtonGui *fieldTour = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(160, 160, 255), white, 2, "Tour", blue, [] {
+			allianceDisable(11);
+			allianceButtons[11]->enable();
+			setAutonRunType(0, autonomousType::FieldTour);
+		});
 
 		/* Skills Autons */
 		// Auton Skills 59
@@ -497,7 +508,7 @@ namespace {
 			oppColor = color::purple;
 			allianceDisable(12);
 			allianceButtons[12]->enable();
-			setAutonRunType(0, autonomousType::AutonSkills59);
+			setAutonRunType(0, autonomousType::AutonSkills);
 		});
 		// Auton Skills no wall stake
 		ButtonGui *skillsAutonNoWS = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 200, 0), white, 1, "No Wall Stake", white, [] {
@@ -505,7 +516,7 @@ namespace {
 			oppColor = color::purple;
 			allianceDisable(13);
 			allianceButtons[13]->enable();
-			setAutonRunType(0, autonomousType::AutonSkillsNoWallStake);
+			setAutonRunType(0, autonomousType::AutonSkills);
 		});
 		// Driver run Auton Skills
 		ButtonGui *skillsDriverRunAuton = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(200, 0, 200), white, 1, "Drive Run Auton", white, [] {
@@ -528,12 +539,12 @@ namespace {
 		allianceButtons = {
 			redUp, redDown, blueUp, blueDown,
 			redUpSafe, redDownSafe, blueUpSafe, blueDownSafe,
-			redSoloAWP, blueSoloAWP, nullptr, nullptr,
+			redSoloAWP, blueSoloAWP, loveShape, fieldTour,
 			skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver,
 		};
 		autonSubdock1Buttons = { redUp, redDown, blueUp, blueDown };
 		autonSubdock2Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
-		autonSubdock3Buttons = { redSoloAWP, blueSoloAWP };
+		autonSubdock3Buttons = { redSoloAWP, blueSoloAWP, loveShape, fieldTour };
 		autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver };
 	}
 

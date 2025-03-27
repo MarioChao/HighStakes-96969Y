@@ -24,6 +24,7 @@ namespace autonfunctions {
 
 	void setDifferentialUseRelativeRotation(bool useRelativeRotation) {
 		_useRelativeRotation = useRelativeRotation;
+		robotChassis.autonSettings.useRelativeRotation = useRelativeRotation;
 	}
 
 	bool _useRelativeRotation = false;

@@ -14,9 +14,13 @@ class NamedStorage {
 public:
 	NamedStorage() {}
 
+	bool hasKey(std::string key) {
+		return storage_map.find(key) != storage_map.end();
+	}
+
 	std::shared_ptr<T> getStored(std::string key) {
 		if (storage_map.find(key) == storage_map.end()) {
-			printf("Key %s not found in storage!\n", key.c_str());
+			printf("Key '%s' not found in storage!\n", key.c_str());
 			return nullptr;
 		}
 		return storage_map[key];
@@ -24,7 +28,7 @@ public:
 
 	NamedStorage<T> &store(std::string key, T object) {
 		if (storage_map.find(key) != storage_map.end()) {
-			printf("Key %s already exists in storage!\n", key.c_str());
+			printf("Key '%s' already exists in storage!\n", key.c_str());
 			return *this;
 		}
 		storage_map[key] = std::shared_ptr<T>(new T(object));

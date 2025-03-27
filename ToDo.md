@@ -28,7 +28,7 @@
 				- [x] ramsete
 				- [ ] LTV
 		- [ ] Basic Control
-			- [ ] Chassis
+			- [x] Chassis
 				- [x] auton settings
 				- [x] chassis base
 				- [x] differential
@@ -54,6 +54,6 @@
 				- [x] trajectory planner
 	- [ ] Others
 - [ ] Units system for consistency
-- [ ] Revamp trajectory planner
-	- [ ] Numerical integration method
+- [x] Revamp trajectory planner
+	- [x] Numerical integration method (may be slower than switching times method)
 	- [ ] Higher-order derivative constraints on position

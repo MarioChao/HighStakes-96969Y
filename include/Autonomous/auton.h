@@ -9,8 +9,7 @@ namespace auton {
 		RedUpSafe, RedDownSafe,
 		BlueUpSafe, BlueDownSafe,
 		RedSoloAWP, BlueSoloAWP,
-		AutonSkillsLong,
-		AutonSkills59, AutonSkillsNoWallStake,
+		AutonSkills,
 		DrivingRunAutonSkills, DrivingSkills,
 		AllianceWallStake, LoveShape, FieldTour,
 		Test, OdometryRadiusTest,
@@ -24,7 +23,6 @@ namespace auton {
 	/// @param autonType The type of autonomus to run.
 	void setAutonRunType(int allianceId, autonomousType autonType);
 
-	/// @brief Show the current autonomous run type on the controller.
 	void showAutonRunType();
 
 	/// @brief Get the type of autonomous that is selected.

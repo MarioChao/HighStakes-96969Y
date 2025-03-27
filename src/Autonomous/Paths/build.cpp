@@ -21,6 +21,11 @@ const double maxDecel = maxVel_tilesPerSec * 1.5;
 void clearSplines() {}
 
 void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool reverse, double maxVel) {
+	if (splineProfile_storage.hasKey(profileName)) {
+		// printf("Profile '%s' already exists!\n", profileName.c_str());
+		return;
+	}
+
 	CurveSampler curveSampler = CurveSampler(spline)
 		.calculateByResolution(spline.getTRange().second * 10);
 	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(
