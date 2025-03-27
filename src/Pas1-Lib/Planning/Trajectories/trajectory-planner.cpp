@@ -240,19 +240,29 @@ TrajectoryPlanner &TrajectoryPlanner::addTrackConstraintSequence(ConstraintSeque
 	return *this;
 }
 
-TrajectoryPlanner &TrajectoryPlanner::addCenterConstraint_maxMotion(std::vector<double> maxMotion_dV_dT) {
+TrajectoryPlanner &TrajectoryPlanner::addCenterConstraints(std::vector<std::pair<double, std::vector<double>>> constraints) {
 	addCenterConstraintSequence(
 		ConstraintSequence()
-		.addConstraints({ {0, maxMotion_dV_dT} })
+		.addConstraints(constraints)
 	);
 	return *this;
 }
 
-TrajectoryPlanner &TrajectoryPlanner::addTrackConstraint_maxMotion(std::vector<double> maxMotion_dV_dT) {
+TrajectoryPlanner &TrajectoryPlanner::addTrackConstraints(std::vector<std::pair<double, std::vector<double>>> constraints) {
 	addTrackConstraintSequence(
 		ConstraintSequence()
-		.addConstraints({ {0, maxMotion_dV_dT} })
+		.addConstraints(constraints)
 	);
+	return *this;
+}
+
+TrajectoryPlanner &TrajectoryPlanner::addCenterConstraint_maxMotion(std::vector<double> maxMotion_dV_dT) {
+	addCenterConstraints({ {0, maxMotion_dV_dT} });
+	return *this;
+}
+
+TrajectoryPlanner &TrajectoryPlanner::addTrackConstraint_maxMotion(std::vector<double> maxMotion_dV_dT) {
+	addTrackConstraints({ {0, maxMotion_dV_dT} });
 	return *this;
 }
 
@@ -572,7 +582,7 @@ TrajectoryPlanner &TrajectoryPlanner::calculateMotionProfile() {
 		passesCount = 0;
 		// break;
 
-		if (degree == 0 && false) {break;}
+		if (degree == 0 && false) { break; }
 
 		// Constrain
 		passesCount++;

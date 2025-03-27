@@ -14,7 +14,8 @@ namespace {
 	bool runningAutonUponStart = false;
 
 	// autonomousType auton_runType = autonomousType::DrivingSkills;
-	autonomousType auton_runType = autonomousType::FieldTour;
+	autonomousType auton_runType = autonomousType::LoveShape;
+	// autonomousType auton_runType = autonomousType::FieldTour;
 	// autonomousType auton_runType = autonomousType::AutonSkillsLong;
 	// autonomousType auton_runType = autonomousType::BlueSoloAWP;
 	// autonomousType auton_runType = autonomousType::OdometryRadiusTest;
@@ -97,6 +98,16 @@ namespace auton {
 				debug::printOnController("Driving Skills");
 				printf("DrSk\n");
 				autonFilterOutColor = "blue";
+				break;
+			case autonomousType::LoveShape:
+				debug::printOnController("Love Shape");
+				printf("LoveShape\n");
+				autonFilterOutColor = "none";
+				break;
+			case autonomousType::FieldTour:
+				debug::printOnController("Field Tour");
+				printf("Field Tour\n");
+				autonFilterOutColor = "none";
 				break;
 			default:
 				debug::printOnController("Auton: None");

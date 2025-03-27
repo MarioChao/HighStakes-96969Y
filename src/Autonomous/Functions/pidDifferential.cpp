@@ -173,7 +173,7 @@ void turnToAngleVelocity(double fieldAngle_degrees, double maxVelocity_pct, doub
 
 		// Drive with velocities
 		if (mainUseSimulator) {
-			robotSimulator.angularVelocity = (rightMotorVelocityPct - leftMotorVelocityPct) / 2 / 100 * botinfo::maxV_tilesPerSec / (botinfo::halfRobotLengthIn / field::tileLengthIn);
+			robotSimulator.angularVelocity = (rightMotorVelocityPct - leftMotorVelocityPct) / 2 / botinfo::tilesPerSecond_to_pct / (botinfo::robotLengthIn / field::tileLengthIn / 2);
 		} else if (useVolt) {
 			botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftMotorVelocityPct), aespa_lib::genutil::pctToVolt(rightMotorVelocityPct), 10);
 		} else {
@@ -322,7 +322,7 @@ void driveAndTurnDistance_inches() {
 	Vector3 initalSimulatorPosition = robotSimulator.position;
 
 	// Motion planner
-	TrajectoryPlanner motionProfile(distance_inches / field::tileLengthIn);
+	TrajectoryPlanner motionProfile(distance_inches / field::tileLengthIn, 0, 64);
 	ConstraintSequence constraintSequence;
 	for (int i = 0; i < (int) velocityConstraint_inch_pct.size(); i++) {
 		auto constraint = velocityConstraint_inch_pct[i];
@@ -517,8 +517,13 @@ void driveAndTurnDistance_inches() {
 		}
 
 		// Drive with velocities
-		// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
-		botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftVelocity_pct), aespa_lib::genutil::pctToVolt(rightVelocity_pct), 10);
+		if (!mainUseSimulator) {
+			// printf("DisErr: %.3f, AngErr: %.3f\n", distanceError, rotateError);
+			botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftVelocity_pct), aespa_lib::genutil::pctToVolt(rightVelocity_pct), 10);
+		} else {
+			robotSimulator.setForwardVelocity(linearVelocity_pct / botinfo::tilesPerSecond_to_pct);
+			robotSimulator.angularVelocity = -rotateVelocity_pct / botinfo::tilesPerSecond_to_pct / (botinfo::robotLengthIn / field::tileLengthIn / 2);
+		}
 
 		wait(5, msec);
 	}

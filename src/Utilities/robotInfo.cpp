@@ -5,7 +5,7 @@
 namespace botinfo {
 	// Robot info
 	const double robotLengthHoles = 24.0; // Left wheel to right wheel
-	const double driveWheelDiameterIn = 2.75;
+	const double driveWheelDiameterIn = 3.25;
 	const double driveWheelMotorGearRatio = (36.0 / 36.0); // Wheel to Motor (wheel teeth / motor teeth)
 	const double chassisMotorRpm = 600.0;
 	const double trackingLookWheelDiameterIn = 2.00; // Look wheel -> spins in the forward/backward direction

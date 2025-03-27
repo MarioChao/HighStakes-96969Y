@@ -86,7 +86,9 @@ void followSplinePath(bool reverseHeading) {
 			double traj_distance = motion.first;
 			double traj_velocity = motion.second[0];
 			double traj_tvalue = _curveSampler.distanceToParam(traj_distance);
-			double traj_angularVelocity = traj_velocity * _splinePath.getCurvatureAt(traj_tvalue);
+			// double traj_curvature = _splinePath.getCurvatureAt(traj_tvalue);
+			double traj_curvature = _trajectoryPlan.getCurvatureAtDistance(traj_distance);
+			double traj_angularVelocity = traj_velocity * traj_curvature;
 			
 			// Update distance remaining
 			_pathFollowDistanceRemaining_tiles = totalDistance_tiles - traj_distance;

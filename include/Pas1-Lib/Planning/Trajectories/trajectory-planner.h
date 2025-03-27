@@ -64,6 +64,8 @@ public:
 
 	TrajectoryPlanner &addCenterConstraintSequence(ConstraintSequence constraints);
 	TrajectoryPlanner &addTrackConstraintSequence(ConstraintSequence constraints);
+	TrajectoryPlanner &addCenterConstraints(std::vector<std::pair<double, std::vector<double>>> constraints);
+	TrajectoryPlanner &addTrackConstraints(std::vector<std::pair<double, std::vector<double>>> constraints);
 
 	// For now, only use up to dA/dT
 	TrajectoryPlanner &addCenterConstraint_maxMotion(std::vector<double> maxMotion_dV_dT);
