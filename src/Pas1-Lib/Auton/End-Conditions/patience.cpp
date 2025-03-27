@@ -15,6 +15,9 @@ PatienceController::PatienceController(int maxPatience, double minDelta, bool po
 	reset();
 }
 
+PatienceController::PatienceController()
+	: PatienceController(0, 0) {}
+
 void PatienceController::reset() {
 	// Reset patience
 	patience = 0;

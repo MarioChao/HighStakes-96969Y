@@ -9,6 +9,13 @@ using aespa_lib::sensor_beats::OpticalShaftEncoder;
 using aespa_lib::sensor_beats::Motor;
 using aespa_lib::sensor_beats::TrackingWheel;
 using pas1_lib::chassis_tracker::Odometry;
+
+using pas1_lib::basic_control::chassis::Differential;
+using pas1_lib::basic_control::chassis::AutonSettings;
+using pas1_lib::auton::control_loops::ForwardController;
+using pas1_lib::auton::control_loops::PIDController;
+using pas1_lib::auton::end_conditions::PatienceController;
+
 using pas1_lib::planning::trajectories::TrajectoryPlanner;
 using pas1_lib::planning::profiles::SplineProfile;
 using aespa_lib::datas::NamedStorage;
@@ -59,6 +66,27 @@ Odometry mainOdometry = Odometry()
 .addInertialSensor(InertialSensor, 0, 0)
 .setPositionFactor(1.0 / field::tileLengthIn)
 ;
+
+
+/* Chassis */
+
+namespace {
+AutonSettings autonSettings(
+	ForwardController(1.0, 3.1875, 0.4), // feedforward
+	PIDController(400, 0, 0, 0.04), // position feedback
+	PIDController(1.8, 0, 0.005), // velocity feedback
+	PIDController(70, 0, 0, 0.04), // linear pid
+	PIDController(1.0, 0, 0, 5), // angular pid
+	PatienceController(4, 0.5, false), // linear patience
+	PatienceController(40, 0.5, false), // angular patience
+	false // reverse
+);
+}
+
+Differential robotChassis = Differential(
+	mainOdometry, autonSettings,
+	LeftMotors, RightMotors
+);
 
 
 /* Autonomous */

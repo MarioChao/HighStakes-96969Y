@@ -9,7 +9,10 @@ namespace chassis {
 
 class Differential : public ChassisBase {
 public:
-	Differential(motor_group &left_motors, motor_group &right_motors);
+	Differential(
+		chassis_tracker::Odometry &odometry, AutonSettings &autonSettings,
+		motor_group &left_motors, motor_group &right_motors
+	);
 
 	void control_local2d(
 		double right_pct, double look_pct,

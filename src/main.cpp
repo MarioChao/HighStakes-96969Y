@@ -60,7 +60,7 @@ void pre_auton(void) {
 	// printf("tps2%%: %.3f\n", botinfo::tilesPerSecond_to_pct);
 
 	// Splines
-	task storeProfiles([]() -> int { autonpaths::storeSplineProfiles(); return 1; });
+	// task storeProfiles([]() -> int { autonpaths::storeSplineProfiles(); return 1; });
 
 	// Tasks
 	controls::startThreads();

@@ -6,6 +6,7 @@
 		- [x] Karina Data Structures
 			- [x] linegular
 			- [x] matrix
+			- [x] named storage
 		- [x] Ningning Sensors
 			- [x] encoder beats
 			- [x] tracking wheel
@@ -28,11 +29,12 @@
 				- [ ] LTV
 		- [ ] Basic Control
 			- [ ] Chassis
+				- [x] auton settings
 				- [x] chassis base
 				- [x] differential
 				- [ ] x drive?
 			- [ ] Move Chassis
-				- [ ] global move to
+				- [x] global move to (need actual tests)
 				- [ ] local move by
 				- [ ] path follow
 		- [ ] Chassis Tracker

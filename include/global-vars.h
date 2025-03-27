@@ -2,6 +2,7 @@
 
 #include "main.h"
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
+#include "Pas1-Lib/Basic-Control/Chassis/differential.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 #include "Pas1-Lib/Planning/Profiles/spline-profile.h"
 #include "Aespa-Lib/Karina-Data-Structures/named-storage.h"
@@ -24,6 +25,9 @@ extern timer drivingTimer;
 
 // Odometry
 extern pas1_lib::chassis_tracker::Odometry mainOdometry;
+
+// Chassis
+extern pas1_lib::basic_control::chassis::Differential robotChassis;
 
 // Simulator
 extern RobotSimulator robotSimulator;

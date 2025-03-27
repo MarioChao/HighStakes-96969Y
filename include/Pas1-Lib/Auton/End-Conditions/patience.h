@@ -7,6 +7,7 @@ namespace end_conditions {
 class PatienceController {
 public:
 	PatienceController(int maxPatience, double minDelta, bool positiveImprovement = true, int delayComputePatience = 15);
+	PatienceController();
 
 	void reset();
 	void computePatience(double value);
