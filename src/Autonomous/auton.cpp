@@ -13,6 +13,8 @@ using namespace auton;
 bool userRunningAutonomous = false;
 bool runningAutonUponStart = false;
 
+bool runningState = false;
+
 // autonomousType auton_runType = autonomousType::DrivingSkills;
 autonomousType auton_runType = autonomousType::Test;
 // autonomousType auton_runType = autonomousType::AutonSkillsLong;
@@ -25,6 +27,10 @@ std::string autonFilterOutColor = "";
 
 namespace auton {
 void setAutonRunType(int allianceId, autonomousType autonType) {
+	// Validate not running
+	if (isRunning()) return;
+
+	// Switch run type
 	switch (autonType) {
 		case autonomousType::RedUp:
 			autonpaths::storeProfiles_redUp();
@@ -149,13 +155,14 @@ bool isRunningAutonUponStart() {
 
 void runAutonomous() {
 	printf("Auton time!\n");
+	runningState = true;
 
 	// Set config
 	userRunningAutonomous = false;
 	botintake::setFilterOutColor(autonFilterOutColor);
 	botintake2::setFilterOutColor(autonFilterOutColor);
 	botdrive::setMaxDeltaVolt(2.0);
-
+	
 	// Run auton
 	switch (auton_runType) {
 		case autonomousType::RedUp:
@@ -209,5 +216,11 @@ void runAutonomous() {
 		default:
 			break;
 	}
+
+	runningState = false;
+}
+
+bool isRunning() {
+	return runningState;
 }
 }

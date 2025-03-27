@@ -36,6 +36,8 @@ namespace auton {
 	/// @brief Run the autonomous set by setAutonRunType().
 	void runAutonomous();
 
-	/// @brief Run the intro of the autonomous skills. Can be used for driving skills.
 	void autonSkillsIntro();
+
+	/// @brief Check whether an autonomous route is running.
+	bool isRunning();
 }
