@@ -5,10 +5,10 @@ namespace basic_control {
 namespace chassis {
 
 Differential::Differential(
-	chassis_tracker::Odometry &odometry, AutonSettings &autonSettings,
+	chassis_tracker::Odometry &odometry, BotInfo &botInfo, AutonSettings &autonSettings,
 	motor_group &left_motors, motor_group &right_motors
 )
-	: ChassisBase(odometry, autonSettings),
+	: ChassisBase(odometry, botInfo, autonSettings),
 	left_motors(left_motors), right_motors(right_motors) {}
 
 void Differential::control_local2d(
@@ -38,6 +38,11 @@ void Differential::control_local2d(
 void Differential::stopMotors(brakeType mode) {
 	left_motors.stop(mode);
 	right_motors.stop(mode);
+}
+
+double Differential::getLookVelocity() {
+	double averageVelocity_rpm = (left_motors.velocity(rpm) + right_motors.velocity(rpm)) / 2.0;
+	return averageVelocity_rpm * (1.0 / 60.0) * botInfo.wheelCircum_tiles * botInfo.motorToWheel_gearRatio;
 }
 
 }

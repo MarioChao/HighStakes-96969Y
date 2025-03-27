@@ -10,8 +10,8 @@ namespace global {
 
 
 struct driveToPoint_params {
-	driveToPoint_params(double x_tiles, double y_tiles, bool isReverse = false)
-		: x_tiles(x_tiles), y_tiles(y_tiles), isReverse(isReverse) {}
+	driveToPoint_params(double x_tiles, double y_tiles, bool isReverse = false, double maxVelocity_pct = 100)
+		: x_tiles(x_tiles), y_tiles(y_tiles), isReverse(isReverse), maxVelocity_pct(maxVelocity_pct) {}
 
 	double x_tiles;
 	double y_tiles;
@@ -23,12 +23,7 @@ struct driveToPoint_params {
 void driveToPoint(chassis::Differential &chassis, driveToPoint_params params, bool async);
 
 extern double _linearPathDistanceError;
-extern double _targetX, _targetY;
-extern bool _isReverseHeading;
-extern double _maxVelocity_pct, _maxTurnVelocity_pct;
-extern double _runTimeout_sec;
-extern bool _isDriveTurnSettled;
-extern chassis::Differential *_diff_chassis;
+extern bool _isDriveToPointSettled;
 
 
 }

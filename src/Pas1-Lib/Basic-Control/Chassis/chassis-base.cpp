@@ -10,8 +10,8 @@ namespace pas1_lib {
 namespace basic_control {
 namespace chassis {
 
-ChassisBase::ChassisBase(chassis_tracker::Odometry &odometry, AutonSettings &autonSettings)
-	: autonSettings(autonSettings), odometry(odometry) {}
+ChassisBase::ChassisBase(chassis_tracker::Odometry &odometry, BotInfo &botInfo, AutonSettings &autonSettings)
+	: botInfo(botInfo), autonSettings(autonSettings), odometry(odometry) {}
 
 void ChassisBase::control_local2d(
 	double right_pct, double look_pct,
@@ -37,6 +37,10 @@ void ChassisBase::setLookPose(Linegular pose) {
 
 Linegular ChassisBase::getLookPose() {
 	return odometry.getLookPose_scaled();
+}
+
+double ChassisBase::getLookVelocity() {
+	return 0;
 }
 
 }

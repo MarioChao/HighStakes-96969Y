@@ -7,6 +7,7 @@
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 
 #include "Pas1-Lib/Basic-Control/Move-Chassis/global-move-to.h"
+#include "Pas1-Lib/Basic-Control/Move-Chassis/local-move-by.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/angle.h"

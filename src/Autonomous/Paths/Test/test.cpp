@@ -5,9 +5,14 @@ void autonpaths::autonTest() {
 
 	if (true) {
 		global::driveToPoint(robotChassis, global::driveToPoint_params(0, 1, false), true);
-		waitUntil(global::_isDriveTurnSettled);
+		waitUntil(global::_isDriveToPointSettled);
 		global::driveToPoint(robotChassis, global::driveToPoint_params(0, 0, true), true);
-		waitUntil(global::_isDriveTurnSettled);
+		waitUntil(global::_isDriveToPointSettled);
+
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(1, 90, 75), true);
+		waitUntil(local::_isDriveAndTurnSettled);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 90, {{0, 100}, {0.5, 50}}), true);
+		waitUntil(local::_isDriveAndTurnSettled);
 	}
 
 	if (false) {

@@ -13,6 +13,12 @@ using namespace pas1_lib::basic_control::move_chassis::global;
 void runDriveToPoint();
 
 const double turnTo_distanceThreshold = 0.3;
+
+double _targetX, _targetY;
+bool _isReverseHeading;
+double _maxVelocity_pct, _maxTurnVelocity_pct;
+double _runTimeout_sec;
+Differential *_diff_chassis;
 }
 
 
@@ -30,7 +36,8 @@ void driveToPoint(Differential &chassis, driveToPoint_params params, bool async)
 	_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
 	_runTimeout_sec = params.runTimeout_sec;
 	_diff_chassis = &chassis;
-	_isDriveTurnSettled = false;
+
+	_isDriveToPointSettled = false;
 
 	if (async) {
 		task asyncDrive([]() -> int {
@@ -43,12 +50,7 @@ void driveToPoint(Differential &chassis, driveToPoint_params params, bool async)
 }
 
 double _linearPathDistanceError;
-double _targetX, _targetY;
-bool _isReverseHeading;
-double _maxVelocity_pct, _maxTurnVelocity_pct;
-double _runTimeout_sec;
-bool _isDriveTurnSettled;
-Differential *_diff_chassis;
+bool _isDriveToPointSettled;
 
 
 }
@@ -186,6 +188,6 @@ void runDriveToPoint() {
 
 	// Settled
 	_linearPathDistanceError = -1;
-	_isDriveTurnSettled = true;
+	_isDriveToPointSettled = true;
 }
 }

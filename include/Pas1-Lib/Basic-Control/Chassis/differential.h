@@ -10,7 +10,7 @@ namespace chassis {
 class Differential : public ChassisBase {
 public:
 	Differential(
-		chassis_tracker::Odometry &odometry, AutonSettings &autonSettings,
+		chassis_tracker::Odometry &odometry, BotInfo &botInfo, AutonSettings &autonSettings,
 		motor_group &left_motors, motor_group &right_motors
 	);
 
@@ -19,6 +19,8 @@ public:
 		double angular_pct
 	) override;
 	void stopMotors(brakeType mode) override;
+
+	double getLookVelocity() override;
 
 private:
 	motor_group &left_motors, &right_motors;

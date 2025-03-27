@@ -2,6 +2,7 @@
 
 #include "vex.h"
 #include "Pas1-Lib/Chassis-Tracker/odometry.h"
+#include "Pas1-Lib/Basic-Control/Chassis/bot-info.h"
 #include "Pas1-Lib/Basic-Control/Chassis/auton-settings.h"
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
@@ -13,7 +14,7 @@ namespace chassis {
 
 class ChassisBase {
 public:
-	ChassisBase(chassis_tracker::Odometry &odometry, AutonSettings &autonSettings);
+	ChassisBase(chassis_tracker::Odometry &odometry, BotInfo &botInfo, AutonSettings &autonSettings);
 
 	virtual void control_local2d(
 		double right_pct, double look_pct,
@@ -29,7 +30,10 @@ public:
 	void setLookPose(aespa_lib::datas::Linegular pose);
 	aespa_lib::datas::Linegular getLookPose();
 
+	virtual double getLookVelocity();
 
+
+	chassis::BotInfo &botInfo;
 	chassis::AutonSettings &autonSettings;
 
 private:

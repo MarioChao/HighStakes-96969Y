@@ -11,6 +11,7 @@ using aespa_lib::sensor_beats::TrackingWheel;
 using pas1_lib::chassis_tracker::Odometry;
 
 using pas1_lib::basic_control::chassis::Differential;
+using pas1_lib::basic_control::chassis::BotInfo;
 using pas1_lib::basic_control::chassis::AutonSettings;
 using pas1_lib::auton::control_loops::ForwardController;
 using pas1_lib::auton::control_loops::PIDController;
@@ -71,20 +72,27 @@ Odometry mainOdometry = Odometry()
 /* Chassis */
 
 namespace {
+BotInfo botInfo(
+	24, // track width (holes)
+	3.25, // wheel diameter (inches)
+	36.0 / 36.0, // wheel to motor gear ratio
+	600 // motor rpm
+);
+
 AutonSettings autonSettings(
-	ForwardController(1.0, 3.1875, 0.4), // feedforward
-	PIDController(400, 0, 0, 0.04), // position feedback
-	PIDController(1.8, 0, 0.005), // velocity feedback
-	PIDController(70, 0, 0, 0.04), // linear pid
-	PIDController(1.0, 0, 0, 5), // angular pid
-	PatienceController(4, 0.5, false), // linear patience
-	PatienceController(40, 0.5, false), // angular patience
+	ForwardController(1.0, 12.0 / botInfo.maxVel_tilesPerSec, 0.4), // feedforward (tiles/sec to volt)
+	PIDController(15.06, 0, 0, 0.04), // position feedback (tiles to tiles/sec)
+	PIDController(5.184, 0, 0), // velocity feedback (tiles/sec to volt)
+	PIDController(70, 0, 0, 0.04), // linear pid (tiles to pct)
+	PIDController(1.0, 0, 0, 5), // angular pid (degrees to pct)
+	PatienceController(10, 0.5, false), // linear patience (tiles)
+	PatienceController(40, 0.5, false), // angular patience (degrees)
 	false // reverse
 );
 }
 
 Differential robotChassis = Differential(
-	mainOdometry, autonSettings,
+	mainOdometry, botInfo, autonSettings,
 	LeftMotors, RightMotors
 );
 
