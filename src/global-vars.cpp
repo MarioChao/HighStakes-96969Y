@@ -85,9 +85,9 @@ AutonSettings autonSettings(
 	PIDController(5.184, 0, 0), // velocity feedback (tiles/sec to volt)
 	PIDController(70, 0, 0, 0.04), // linear pid (tiles to pct)
 	PIDController(1.0, 0, 0, 5), // angular pid (degrees to pct)
-	PatienceController(10, 0.5, false), // linear patience (tiles)
+	PatienceController(10, 0.001, false), // linear patience (tiles)
 	PatienceController(40, 0.5, false), // angular patience (degrees)
-	false // reverse
+	false // relative rotation
 );
 }
 

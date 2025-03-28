@@ -117,8 +117,8 @@ void runTurnToAngle() {
 	double averageRotateRadius_tiles = (leftRotateRadius_tiles + rightRotateRadius_tiles) / 2;
 
 	// Velocity factors
-	double leftVelocityFactor = leftRotateRadius_tiles / averageRotateRadius_tiles;
-	double rightVelocityFactor = -rightRotateRadius_tiles / averageRotateRadius_tiles;
+	double leftVelocityFactor = -leftRotateRadius_tiles / averageRotateRadius_tiles;
+	double rightVelocityFactor = rightRotateRadius_tiles / averageRotateRadius_tiles;
 	// L_vel = L_dist / time
 	// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 
@@ -161,7 +161,7 @@ void runTurnToAngle() {
 			rotateError_degrees = aespa_lib::genutil::modRange(rotateError_degrees, 360, -180);
 		}
 		_turnAngleError_degrees = std::fabs(rotateError_degrees);
-
+		
 		// Compute heading pid-value from error
 		// turnToAngle_rotateTargetAngleVoltPid.computeFromError(rotateError);
 		// turnToAngle_rotateTargetAngleVelocityPctPid.computeFromError(rotateError);
@@ -181,6 +181,7 @@ void runTurnToAngle() {
 		double averageMotorVelocity_pct = autonSettings.angleError_degrees_to_velocity_pct_pid.getValue();
 		double leftMotorVelocity_pct = leftVelocityFactor * averageMotorVelocity_pct;
 		double rightMotorVelocity_pct = rightVelocityFactor * averageMotorVelocity_pct;
+		// printf("CUR: %.3f, TAR: %.3f, RotERR: %.3f, PID: %.3f\n", currentRotation_degrees, targetAngle_polarDegrees, rotateError_degrees, averageMotorVelocity_pct);
 
 		// Scale velocity to maximum
 		// double scaleFactor = aespa_lib::genutil::getScaleFactor(maxVelocity_pct, { leftMotorVelocityPct, rightMotorVelocityPct });
@@ -237,12 +238,14 @@ void runDriveAndTurn() {
 		});
 	}
 	motionProfile.addCenterConstraintSequence(constraintSequence);
-	double maxAccel = botInfo.maxVel_tilesPerSec * 1.5;
+	double maxAccel = botInfo.maxVel_tilesPerSec * 1.0;
 	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, maxAccel });
 	motionProfile.addTrackConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, maxAccel });
 	motionProfile.calculateMotionProfile();
-	// testTrajectoryPlan = motionProfile;
-	// trajectoryTestTimer.reset();
+
+	// Trajectory graph
+	testTrajectoryPlan = motionProfile;
+	trajectoryTestTimer.reset();
 
 	// Reset PID
 	// driveAndTurn_reachedTargetPid.resetErrorToZero();
@@ -286,6 +289,7 @@ void runDriveAndTurn() {
 
 		// Check exhausted
 		if (autonSettings.distanceError_tiles_patience.isExhausted()) {
+			printf("Exhausted\n");
 			break;
 		}
 
@@ -330,6 +334,7 @@ void runDriveAndTurn() {
 		// Update error patience
 		// driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(targetDistanceError));
+		// printf("DERR: %.3f\n", targetDistanceError);
 
 		/* Feedforward */
 

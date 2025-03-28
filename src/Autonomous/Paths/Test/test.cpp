@@ -1,9 +1,21 @@
 #include "Autonomous/autonPaths.h"
 
-void autonpaths::autonTest() {
+void autonpaths::runAutonTest() {
 	setRobotRotation(0.0);
 
 	if (true) {
+		robotChassis.setLookPose(aespa_lib::datas::Linegular(1.5, 0.5, 90));
+		
+		pas1_lib::planning::profiles::SplineProfile *splineProfile = splineProfile_storage.getStored("test").get();
+		double startAngle_degrees = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse).getThetaPolarAngle_degrees();
+		local::turnToAngle(robotChassis, local::turnToAngle_params(startAngle_degrees), false);
+		follow::followPath(robotChassis, follow::followPath_params(splineProfile), true);
+		waitUntil(follow::_isPathFollowCompleted);
+	}
+
+	if (false) {
+		robotChassis.setLookPose(aespa_lib::datas::Linegular(0, 0, 90));
+
 		global::driveToPoint(robotChassis, global::driveToPoint_params(0, 1, false), true);
 		waitUntil(global::_isDriveToPointSettled);
 		global::driveToPoint(robotChassis, global::driveToPoint_params(0, 0, true), true);
@@ -11,12 +23,16 @@ void autonpaths::autonTest() {
 
 		local::driveAndTurn(robotChassis, local::driveAndTurn_params(1, 90, 75), true);
 		waitUntil(local::_isDriveAndTurnSettled);
-		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 90, {{0, 100}, {0.5, 50}}), true);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 90, {{0, 20}, {0.5, 60}}), true);
 		waitUntil(local::_isDriveAndTurnSettled);
 
 		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), true);
 		waitUntil(local::_isTurnToAngleSettled);
 		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, robotChassis.botInfo.trackWidth_tiles / 2.0), true);
+		waitUntil(local::_isTurnToAngleSettled);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), true);
+		waitUntil(local::_isTurnToAngleSettled);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, -robotChassis.botInfo.trackWidth_tiles / 2.0), true);
 		waitUntil(local::_isTurnToAngleSettled);
 	}
 

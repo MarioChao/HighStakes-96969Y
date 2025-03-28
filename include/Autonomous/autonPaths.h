@@ -8,6 +8,7 @@
 
 #include "Pas1-Lib/Basic-Control/Move-Chassis/global-move-to.h"
 #include "Pas1-Lib/Basic-Control/Move-Chassis/local-move-by.h"
+#include "Pas1-Lib/Basic-Control/Move-Chassis/path-follow.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/angle.h"
@@ -64,6 +65,7 @@ void grabGoalAt(double x_tiles, double y_tiles, double grabAtDistanceError = 0.1
 
 // Store profiles
 
+void storeProfiles_test();
 void storeProfiles_redUp();
 void storeProfiles_redUpSafe();
 void storeProfiles_blueUp();
@@ -82,7 +84,7 @@ void storeProfiles_fieldTour();
 
 void runTemplate();
 
-void autonTest();
+void runAutonTest();
 void odometryRadiusTest();
 
 void runAutonRedUp();

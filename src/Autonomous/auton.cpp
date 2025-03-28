@@ -127,6 +127,12 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 			printf("Field Tour\n");
 			autonFilterOutColor = "none";
 			break;
+		case autonomousType::Test:
+			autonpaths::storeProfiles_test();
+			debug::printOnController("Auton Test");
+			printf("Auton Test\n");
+			autonFilterOutColor = "none";
+			break;
 		default:
 			debug::printOnController("Auton: None");
 			printf("None\n");
@@ -211,7 +217,7 @@ void runAutonomous() {
 			autonpaths::runFieldTour();
 			break;
 		case autonomousType::Test:
-			autonpaths::autonTest();
+			autonpaths::runAutonTest();
 			break;
 		case autonomousType::OdometryRadiusTest:
 			autonpaths::odometryRadiusTest();

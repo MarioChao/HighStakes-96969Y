@@ -83,7 +83,7 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 
 	// Compute output velocities
 	double outputLinearVelocity = (v_desired * cos(e_theta)) + (k * e_look);
-	double outputAngularVelocity = (w_desired) +(k * e_theta) - (b * v_desired * aespa_lib::angle::sinc(e_theta) * e_right);
+	double outputAngularVelocity = (w_desired) + (k * e_theta) - (b * v_desired * aespa_lib::angle::sinc(e_theta) * e_right);
 	// printf("dVel: %7.3f, dAng: %7.3f, oVel: %7.3f, oAng: %7.3f\n", desiredLinearVelocity, desiredAngularVelocity_radiansPerSecond, outputLinearVelocity, outputAngularVelocity);
 
 	// Return linegular velocities

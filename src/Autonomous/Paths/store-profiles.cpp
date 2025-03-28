@@ -11,15 +11,10 @@ using namespace pas1_lib::planning::segments;
 
 namespace autonpaths {
 
-void storeProfiles_skills() {
-	// Skills
-	storeNewSplineProfile("skills 1",
+void storeProfiles_test() {
+	storeNewSplineProfile("test",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-		{0.9, 2.33}, {2.01, 1.02}, {2.98, 0.53}, {4.07, 1.08}, {5.06, 2.31}
-			}));
-	storeNewSplineProfile("skills ladder",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
-		{0.13, 3.81}, {0.51, 2.99}, {1.38, 1.87}, {2.24, 2.35}, {3.23, 3.42}
+			{{2.54, 0.49}, {1.54, 0.47}, {0.47, 0.94}, {1.32, 1.59}, {1.54, 0.47}, {1.5, -0.46}}
 			}));
 }
 
@@ -33,6 +28,18 @@ void storeProfiles_blueDown() {}
 void storeProfiles_blueDownSafe() {}
 void storeProfiles_redSoloAWP() {}
 void storeProfiles_blueSoloAWP() {}
+
+void storeProfiles_skills() {
+	// Skills
+	storeNewSplineProfile("skills 1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
+		{0.9, 2.33}, {2.01, 1.02}, {2.98, 0.53}, {4.07, 1.08}, {5.06, 2.31}
+			}));
+	storeNewSplineProfile("skills ladder",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom, {
+		{0.13, 3.81}, {0.51, 2.99}, {1.38, 1.87}, {2.24, 2.35}, {3.23, 3.42}
+			}));
+}
 
 void storeProfiles_loveShape() {
 	storeNewSplineProfile("big curvature 1",
