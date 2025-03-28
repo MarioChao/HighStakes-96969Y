@@ -297,7 +297,7 @@ namespace {
 			trajectoryValue = linearVelocity + fabs(robotSimulator.angularVelocity) * (botinfo::robotLengthIn / field::tileLengthIn / 2);
 		}
 		gph_x = fw_drawX;
-		gph_y = y + height / 2.0 - (trajectoryValue / 7 * height);
+		gph_y = y + height / 2.0 - (trajectoryValue / botinfo::maxV_tilesPerSec * height / 2);
 		// printf("Vel: %.3f\n", trajectoryValue);
 		Brain.Screen.drawPixel(gph_x, gph_y);
 

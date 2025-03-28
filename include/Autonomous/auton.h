@@ -40,4 +40,7 @@ namespace auton {
 
 	/// @brief Check whether an autonomous route is running.
 	bool isRunning();
+
+	bool canChangeAuton();
+	void setCanChangeAuton(bool state);
 }

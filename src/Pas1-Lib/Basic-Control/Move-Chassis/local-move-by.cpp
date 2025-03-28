@@ -16,6 +16,17 @@ using pas1_lib::basic_control::chassis::BotInfo;
 using pas1_lib::basic_control::chassis::AutonSettings;
 using namespace pas1_lib::basic_control::move_chassis::local;
 
+namespace turn_to_angle {
+void runTurnToAngle();
+
+double _targetAngle_polarDegrees;
+double _maxTurnVelocity_pct;
+double _centerOffset_tiles;
+double _runTimeout_sec;
+Differential *_diff_chassis;
+}
+
+namespace drive_and_turn {
 void runDriveAndTurn();
 
 double _distance_tiles, _targetAngle_polarDegrees;
@@ -25,6 +36,8 @@ double _runTimeout_sec;
 Differential *_diff_chassis;
 }
 
+}
+
 
 namespace pas1_lib {
 namespace basic_control {
@@ -32,23 +45,46 @@ namespace move_chassis {
 namespace local {
 
 
+void turnToAngle(chassis::Differential &chassis, turnToAngle_params params, bool async) {
+	turn_to_angle::_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
+	turn_to_angle::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
+	turn_to_angle::_centerOffset_tiles = params.centerOffset_tiles;
+	turn_to_angle::_runTimeout_sec = params.runTimeout_sec;
+	turn_to_angle::_diff_chassis = &chassis;
+
+	_isTurnToAngleSettled = false;
+
+	if (async) {
+		task asyncDrive([]() -> int {
+			turn_to_angle::runTurnToAngle();
+			return 1;
+		});
+	} else {
+		turn_to_angle::runTurnToAngle();
+	}
+}
+
+double _turnAngleError_degrees;
+bool _isTurnToAngleSettled;
+
+
 void driveAndTurn(chassis::Differential &chassis, driveAndTurn_params params, bool async) {
-	_distance_tiles = params.distance_tiles;
-	_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
-	_velocityConstraint_tiles_pct = params.velocityConstraint_tiles_pct;
-	_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
-	_runTimeout_sec = params.runTimeout_sec;
-	_diff_chassis = &chassis;
+	drive_and_turn::_distance_tiles = params.distance_tiles;
+	drive_and_turn::_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
+	drive_and_turn::_velocityConstraint_tiles_pct = params.velocityConstraint_tiles_pct;
+	drive_and_turn::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
+	drive_and_turn::_runTimeout_sec = params.runTimeout_sec;
+	drive_and_turn::_diff_chassis = &chassis;
 
 	_isDriveAndTurnSettled = false;
 
 	if (async) {
 		task asyncDrive([]() -> int {
-			runDriveAndTurn();
+			drive_and_turn::runDriveAndTurn();
 			return 1;
 		});
 	} else {
-		runDriveAndTurn();
+		drive_and_turn::runDriveAndTurn();
 	}
 }
 
@@ -63,6 +99,115 @@ bool _isDriveAndTurnSettled;
 
 
 namespace {
+
+namespace turn_to_angle {
+void runTurnToAngle() {
+	// Get global variables
+	double targetAngle_polarDegrees = _targetAngle_polarDegrees;
+	double maxTurnVelocity_pct = _maxTurnVelocity_pct;
+	double centerOffset_tiles = _centerOffset_tiles;
+	double runTimeout_sec = _runTimeout_sec;
+	Differential *chassis = _diff_chassis;
+	BotInfo &botInfo = chassis->botInfo;
+	AutonSettings &autonSettings = chassis->autonSettings;
+
+	// Center of rotations
+	double leftRotateRadius_tiles = botInfo.trackWidth_tiles / 2.0 + centerOffset_tiles;
+	double rightRotateRadius_tiles = botInfo.trackWidth_tiles / 2.0 - centerOffset_tiles;
+	double averageRotateRadius_tiles = (leftRotateRadius_tiles + rightRotateRadius_tiles) / 2;
+
+	// Velocity factors
+	double leftVelocityFactor = leftRotateRadius_tiles / averageRotateRadius_tiles;
+	double rightVelocityFactor = -rightRotateRadius_tiles / averageRotateRadius_tiles;
+	// L_vel = L_dist / time
+	// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
+
+	// Reset PID
+	// turnToAngle_rotateTargetAngleVoltPid.resetErrorToZero();
+	// turnToAngle_rotateTargetAngleVelocityPctPid.resetErrorToZero();
+	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
+
+	// Reset patience
+	// angleError_degreesPatience.reset();
+	autonSettings.angleError_degrees_patience.reset();
+
+	// Create timeout
+	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
+
+	// while (!turnToAngle_rotateTargetAngleVoltPid.isSettled()) {
+	while (!autonSettings.angleError_degrees_to_velocity_pct_pid.isSettled()) {
+		// Check timeout
+		if (runTimeout.isExpired()) {
+			break;
+		}
+
+		// Check exhausted
+		// if (angleError_degreesPatience.isExhausted()) {
+		if (autonSettings.angleError_degrees_patience.isExhausted()) {
+			printf("Exhausted\n");
+			break;
+		}
+
+		// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
+
+		// Get current robot heading
+		// double currentRotation_degrees = InertialSensor.rotation(degrees);
+		double currentRotation_degrees = chassis->getLookPose().getThetaPolarAngle_degrees();
+
+		// Compute heading error
+		// double rotateError = fieldAngle_degrees - currentRotation_degrees;
+		double rotateError_degrees = targetAngle_polarDegrees - currentRotation_degrees;
+		if (autonSettings.useRelativeRotation) {
+			rotateError_degrees = aespa_lib::genutil::modRange(rotateError_degrees, 360, -180);
+		}
+		_turnAngleError_degrees = std::fabs(rotateError_degrees);
+
+		// Compute heading pid-value from error
+		// turnToAngle_rotateTargetAngleVoltPid.computeFromError(rotateError);
+		// turnToAngle_rotateTargetAngleVelocityPctPid.computeFromError(rotateError);
+		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError(rotateError_degrees);
+
+		// Update error patience
+		// angleError_degreesPatience.computePatience(std::fabs(rotateError));
+		autonSettings.angleError_degrees_patience.computePatience(std::fabs(rotateError_degrees));
+
+		// Compute motor rotate velocities
+		// double averageMotorVelocityPct;
+		// if (useVolt) {
+		// 	averageMotorVelocityPct = turnToAngle_rotateTargetAngleVoltPid.getValue();
+		// } else {
+		// 	averageMotorVelocityPct = turnToAngle_rotateTargetAngleVelocityPctPid.getValue();
+		// }
+		double averageMotorVelocity_pct = autonSettings.angleError_degrees_to_velocity_pct_pid.getValue();
+		double leftMotorVelocity_pct = leftVelocityFactor * averageMotorVelocity_pct;
+		double rightMotorVelocity_pct = rightVelocityFactor * averageMotorVelocity_pct;
+
+		// Scale velocity to maximum
+		// double scaleFactor = aespa_lib::genutil::getScaleFactor(maxVelocity_pct, { leftMotorVelocityPct, rightMotorVelocityPct });
+		double scaleFactor = aespa_lib::genutil::getScaleFactor(maxTurnVelocity_pct, { leftMotorVelocity_pct, rightMotorVelocity_pct });
+		leftMotorVelocity_pct *= scaleFactor;
+		rightMotorVelocity_pct *= scaleFactor;
+
+		// Get linear & angular
+		double linearVelocity_pct = (leftMotorVelocity_pct + rightMotorVelocity_pct) / 2.0;
+		double angularVelocity_pct = (rightMotorVelocity_pct - leftMotorVelocity_pct) / 2.0;
+
+		// Drive with velocities
+		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct);
+
+		wait(5, msec);
+	}
+
+	// Stop
+	chassis->stopMotors(coast);
+
+	// Settled
+	_turnAngleError_degrees = -1;
+	_isTurnToAngleSettled = true;
+}
+}
+
+namespace drive_and_turn {
 void runDriveAndTurn() {
 	// Get global variables
 	double distance_tiles = _distance_tiles;
@@ -93,8 +238,8 @@ void runDriveAndTurn() {
 	}
 	motionProfile.addCenterConstraintSequence(constraintSequence);
 	double maxAccel = botInfo.maxVel_tilesPerSec * 1.5;
-	motionProfile.addCenterConstraint_maxMotion({botInfo.maxVel_tilesPerSec, maxAccel});
-	motionProfile.addTrackConstraint_maxMotion({botInfo.maxVel_tilesPerSec, maxAccel});
+	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, maxAccel });
+	motionProfile.addTrackConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, maxAccel });
 	motionProfile.calculateMotionProfile();
 	// testTrajectoryPlan = motionProfile;
 	// trajectoryTestTimer.reset();
@@ -152,7 +297,7 @@ void runDriveAndTurn() {
 		Linegular currentPose = chassis->getLookPose();
 		double currentTravelDistance_tiles = (currentPose - initialPose).getXYMagnitude() * aespa_lib::genutil::signum(targetDistance_tiles);
 		double currentTravelVelocity_tilesPerSec = chassis->getLookVelocity();
-		
+
 		// Compute trajectory values
 		std::pair<double, std::vector<double>> motion = motionProfile.getMotionAtTime(runningTimer.time(seconds));
 		double trajAcceleration_tilesPerSec2 = motion.second[1];
@@ -260,4 +405,6 @@ void runDriveAndTurn() {
 	_driveDistanceError_tiles = -1;
 	_isDriveAndTurnSettled = true;
 }
+}
+
 }

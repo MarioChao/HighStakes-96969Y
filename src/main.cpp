@@ -89,26 +89,29 @@ void pre_auton(void) {
 		}
 	});//*/
 
-	// Simulator
-	robotSimulator.position = Vector3(1, 1);
-	robotSimulator.angularPosition = aespa_lib::genutil::toRadians(90);
-	task simulatorTask([]() -> int {
-		while (true) {
-			robotSimulator.constrainMotion(botinfo::maxV_tilesPerSec, botinfo::robotLengthIn / field::tileLengthIn);
-			robotSimulator.updatePhysics();
-			robotSimulator.updateDistance();
-			wait(5, msec);
-		}
-	});
-
 	// Set auton
 	waitUntil(preauton::isBufferFinished());
+	auton::setCanChangeAuton(true);
 	auton::showAutonRunType();
 
 	// Check motor
 	if (LeftMotors.temperature(celsius) == 21 && RightMotors.temperature(celsius) == 21) {
 		mainUseSimulator = true;
 		printf("Using simulator\n");
+	}
+
+	// Simulator
+	if (mainUseSimulator) {
+		robotSimulator.position = Vector3(1, 1);
+		robotSimulator.angularPosition = aespa_lib::genutil::toRadians(90);
+		task simulatorTask([]() -> int {
+			while (true) {
+				robotSimulator.constrainMotion(botinfo::maxV_tilesPerSec, botinfo::robotLengthIn / field::tileLengthIn);
+				robotSimulator.updatePhysics();
+				robotSimulator.updateDistance();
+				wait(10, msec);
+			}
+		});
 	}
 }
 
@@ -129,6 +132,7 @@ void autonomous(void) {
 	// Switch to a random video
 	task switchVideo([]() -> int {
 		// video::switchVideoState(1);
+		auton::setCanChangeAuton(false);
 		return 1;
 	});
 	controls::resetStates();

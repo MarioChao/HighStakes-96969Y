@@ -15,6 +15,8 @@ bool runningAutonUponStart = false;
 
 bool runningState = false;
 
+bool canChangeAutonState = true;
+
 // autonomousType auton_runType = autonomousType::DrivingSkills;
 autonomousType auton_runType = autonomousType::Test;
 // autonomousType auton_runType = autonomousType::AutonSkillsLong;
@@ -27,8 +29,9 @@ std::string autonFilterOutColor = "";
 
 namespace auton {
 void setAutonRunType(int allianceId, autonomousType autonType) {
-	// Validate not running
+	// Validation
 	if (isRunning()) return;
+	if (!canChangeAuton()) return;
 
 	// Switch run type
 	switch (autonType) {
@@ -222,5 +225,13 @@ void runAutonomous() {
 
 bool isRunning() {
 	return runningState;
+}
+
+bool canChangeAuton() {
+	return canChangeAutonState;
+}
+
+void setCanChangeAuton(bool state) {
+	canChangeAutonState = state;
 }
 }

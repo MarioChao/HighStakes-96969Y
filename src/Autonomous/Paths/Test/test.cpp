@@ -13,6 +13,11 @@ void autonpaths::autonTest() {
 		waitUntil(local::_isDriveAndTurnSettled);
 		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 90, {{0, 100}, {0.5, 50}}), true);
 		waitUntil(local::_isDriveAndTurnSettled);
+
+		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), true);
+		waitUntil(local::_isTurnToAngleSettled);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, robotChassis.botInfo.trackWidth_tiles / 2.0), true);
+		waitUntil(local::_isTurnToAngleSettled);
 	}
 
 	if (false) {

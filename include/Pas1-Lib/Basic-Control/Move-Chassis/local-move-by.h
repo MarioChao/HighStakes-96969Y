@@ -10,6 +10,28 @@ namespace move_chassis {
 namespace local {
 
 
+struct turnToAngle_params {
+	turnToAngle_params(
+		double targetAngle_polarDegrees,
+		double maxTurnVelocity_pct = 100,
+		double centerOffset_tiles = 0
+	)
+		: targetAngle_polarDegrees(targetAngle_polarDegrees),
+		maxTurnVelocity_pct(maxTurnVelocity_pct),
+		centerOffset_tiles(centerOffset_tiles) {}
+
+	double targetAngle_polarDegrees;
+	double maxTurnVelocity_pct = 100;
+	double centerOffset_tiles = 0;
+	double runTimeout_sec = 3;
+};
+
+void turnToAngle(chassis::Differential &chassis, turnToAngle_params params, bool async);
+
+extern double _turnAngleError_degrees;
+extern bool _isTurnToAngleSettled;
+
+
 struct driveAndTurn_params {
 	driveAndTurn_params(
 		double distance_tiles, double targetAngle_polarDegrees,
@@ -24,7 +46,7 @@ struct driveAndTurn_params {
 		double distance_tiles, double targetAngle_polarDegrees,
 		double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100
 	)
-		: driveAndTurn_params(distance_tiles, targetAngle_polarDegrees, {{0, maxVelocity_pct}}, maxTurnVelocity_pct) {}
+		: driveAndTurn_params(distance_tiles, targetAngle_polarDegrees, { {0, maxVelocity_pct} }, maxTurnVelocity_pct) {}
 
 	double distance_tiles;
 	double targetAngle_polarDegrees;
