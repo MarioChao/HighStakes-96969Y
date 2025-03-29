@@ -36,6 +36,9 @@ extern pneumatics SwordPneumatics;
 extern pneumatics Sword2Pneumatics;
 extern pneumatics RedirectPneumatics;
 
+extern pneumatics ClimbPTO_pneumatics;
+extern pneumatics ClimbHook_pneumatics;
+
 extern encoder LookEncoder;
 extern encoder RightEncoder;
 extern rotation LookRotation;

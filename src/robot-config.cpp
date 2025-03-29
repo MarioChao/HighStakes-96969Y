@@ -47,13 +47,16 @@ pneumatics FrontWingsPneumatic(Expander1.A);
 pneumatics LeftWingPneumatic(Expander1.B);
 pneumatics RightWingPneumatic(Expander1.C);
 
-pneumatics IntakeLiftPneumatic(Brain.ThreeWirePort.E);
+pneumatics IntakeLiftPneumatic(Expander1.B);
 pneumatics HangPneumatic(Expander1.E);
-pneumatics GoalClampPneumatic(Brain.ThreeWirePort.H);
+pneumatics GoalClampPneumatic(Brain.ThreeWirePort.F);
 pneumatics BotArmPneumatics(Expander1.B);
-pneumatics SwordPneumatics(Brain.ThreeWirePort.G);
+pneumatics SwordPneumatics(Expander1.B);
 pneumatics Sword2Pneumatics(Expander1.B);
 pneumatics RedirectPneumatics(Expander1.B);
+
+pneumatics ClimbPTO_pneumatics(Brain.ThreeWirePort.H);
+pneumatics ClimbHook_pneumatics(Brain.ThreeWirePort.G);
 
 // Sensors
 

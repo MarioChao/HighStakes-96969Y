@@ -10,6 +10,8 @@
 #include "Controller/controls.h"
 #include "Controller/rumble.h"
 #include "Mechanics/goalClamp.h"
+#include "Mechanics/climb-hook.h"
+#include "Mechanics/climb-pto.h"
 #include "Utilities/debugFunctions.h"
 
 #include "Autonomous/autonFunctions.h"
@@ -58,101 +60,46 @@ namespace controls {
 		// Controller 1
 
 		/* Arm stages */
+		// Stage 0
 		Controller1.ButtonUp.pressed([]() -> void {
-			if (intakePartType == 1) {
-				if (!botarm::isArmResetted()) {
-					return;
-				}
+			if (!botarm::isArmResetted()) return;
 
-				// Alliance wall stake
-				botarm::setArmStage(0);
-				botintake::setColorFiltering(true);
-			} else {
-				botintake2::switchMode();
-			}
+			botarm::setArmStage(0);
+			botintake::setColorFiltering(true);
 		});
+		// Stage 1
 		Controller1.ButtonB.pressed([]() -> void {
-			if (intakePartType == 1) {
-				if (!botarm::isArmResetted()) {
-					return;
-				}
+			if (!botarm::isArmResetted()) return;
 
-				botarm::setArmStage(1);
-				botintake::setColorFiltering(false);
-
-				/*
-				if (botintake::isColorFiltering()) {
-					botintake::setColorFiltering(false);
-					redirect::setState(1);
-					botarm::setArmStage(1);
-					task closeRedirect([]() -> int {
-						wait(5, sec);
-						botintake::setColorFiltering(true);
-						return 1;
-					});
-				} else {
-					botarm::setArmStage(2);
-					botintake::setColorFiltering(true);
-				}
-				*/
-			}
+			botarm::setArmStage(1);
+			botintake::setColorFiltering(false);
 		});
+		// Stage 2
 		Controller1.ButtonX.pressed([]() -> void {
-			if (!botarm::isArmResetted()) {
-				return;
-			}
+			if (!botarm::isArmResetted()) return;
+
 			botarm::setArmStage(3);
 			botintake::setColorFiltering(true);
 		});
+		// Stage 0 or 4
 		Controller1.ButtonL1.pressed([]() -> void {
-			// if (botarmpneu::pressedCount < 14 || drivingTimer.value() > 105 - 15) {
-			// 	botarmpneu::switchState();
-			// }
-			if (!botarm::isArmResetted()) {
-				return;
-			}
+			if (!botarm::isArmResetted()) return;
 
-			// Neutral wall stake
-			if (botarm::getArmStage() == 4) {
-				botarm::setArmStage(0);
-			} else {
-				botarm::setArmStage(4);
-			}
+			if (botarm::getArmStage() == 4) botarm::setArmStage(0);
+			else botarm::setArmStage(4);
 			botintake::setColorFiltering(true);
 		});
-		// Controller1.ButtonY.pressed([]() -> void {
-		// 	if (intakePart == 1) {
-		// 		if (botintake::getIntakeVelocity() == 100) {
-		// 			botintake::setIntakeVelocity(80);
-		// 		} else {
-		// 			botintake::setIntakeVelocity(100);
-		// 		}
-		// 	}
-		// });
+
 		/* Ring color filter */
-		Controller1.ButtonY.pressed([]() -> void {
+		Controller2.ButtonB.pressed([]() -> void {
 			rumble::setConstantRumbling(false);
 			rumble::setString(".");
 			if (intakePartType == 1) botintake::switchFilterColor();
 			else botintake2::switchFilterColor();
 		});
-		/*Controller1.ButtonDown.pressed([]() -> void {
-			// if (botdrive::getMaxDriveVelocity() >= 99.0) {
-			// 	botdrive::setMaxDriveVelocity(50.0);
-			// 	debug::printOnController("50\% drive speed");
-			// } else {
-			// 	botdrive::setMaxDriveVelocity(100.0);
-			// 	debug::printOnController("100\% drive speed");
-			// }
-			if (intakePartType == 1) {
-				botintake::setFilterOutColor("none");
-				debug::printOnController("filter none");
-				rumble::setConstantRumbling(true);
-			}
-		});*/
 
 		/* Macro */
-		Controller1.ButtonDown.pressed([]() -> void {
+		Controller2.ButtonB.pressed([]() -> void {
 			botdrive::setControlState(false);
 			autonfunctions::pid_diff::driveDistanceTiles(0.1);
 			botdrive::setControlState(true);
@@ -160,15 +107,26 @@ namespace controls {
 		});
 
 		/* Pneumatics */
-		Controller1.ButtonA.pressed([]() -> void {
+		// Swing
+		Controller2.ButtonB.pressed([]() -> void {
 			swing::switchState();
 		});
+		// Clamp
 		Controller1.ButtonL2.pressed([]() -> void {
 			printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
 			goalclamp::switchState();
 		});
-		Controller1.ButtonLeft.pressed([]() -> void {
+		// Intake lift
+		Controller2.ButtonB.pressed([]() -> void {
 			botintakelift::switchState();
+		});
+		// Climbing PTO
+		Controller1.ButtonRight.pressed([]() -> void {
+			climb_pto::switchState();
+		});
+		// Moving hook
+		Controller1.ButtonY.pressed([]() -> void {
+			climb_hook::switchState();
 		});
 	}
 
