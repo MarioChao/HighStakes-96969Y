@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Pas1-Lib/Basic-Control/Chassis/differential.h"
+#include "Pas1-Lib/Chassis/Base/differential.h"
 #include <vector>
 
 
 namespace pas1_lib {
-namespace basic_control {
-namespace move_chassis {
+namespace chassis {
+namespace move {
 namespace local {
 
 
@@ -26,7 +26,7 @@ struct turnToAngle_params {
 	double runTimeout_sec = 3;
 };
 
-void turnToAngle(chassis::Differential &chassis, turnToAngle_params params, bool async);
+void turnToAngle(base::Differential &chassis, turnToAngle_params params, bool async);
 
 extern double _turnAngleError_degrees;
 extern bool _isTurnToAngleSettled;
@@ -55,7 +55,7 @@ struct driveAndTurn_params {
 	double runTimeout_sec = 3;
 };
 
-void driveAndTurn(chassis::Differential &chassis, driveAndTurn_params params, bool async);
+void driveAndTurn(base::Differential &chassis, driveAndTurn_params params, bool async);
 
 extern double _driveDistanceError_tiles;
 extern bool _isDriveAndTurnSettled;

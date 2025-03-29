@@ -1,20 +1,20 @@
 #pragma once
 
 #include "vex.h"
-#include "Pas1-Lib/Chassis-Tracker/odometry.h"
-#include "Pas1-Lib/Basic-Control/Chassis/bot-info.h"
-#include "Pas1-Lib/Basic-Control/Chassis/auton-settings.h"
+#include "Pas1-Lib/Chassis/Settings/odometry.h"
+#include "Pas1-Lib/Chassis/Settings/bot-info.h"
+#include "Pas1-Lib/Chassis/Settings/auton-settings.h"
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
 
 namespace pas1_lib {
-namespace basic_control {
 namespace chassis {
+namespace base {
 
 class ChassisBase {
 public:
-	ChassisBase(chassis_tracker::Odometry &odometry, BotInfo &botInfo, AutonSettings &autonSettings);
+	ChassisBase(settings::Odometry &odometry, settings::BotInfo &botInfo, settings::AutonSettings &autonSettings);
 
 	virtual void control_local2d(
 		double right_pct, double look_pct,
@@ -33,11 +33,11 @@ public:
 	virtual double getLookVelocity();
 
 
-	chassis::BotInfo &botInfo;
-	chassis::AutonSettings &autonSettings;
+	settings::BotInfo &botInfo;
+	settings::AutonSettings &autonSettings;
 
 private:
-	chassis_tracker::Odometry &odometry;
+	settings::Odometry &odometry;
 };
 
 }

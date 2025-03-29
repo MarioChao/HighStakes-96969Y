@@ -1,11 +1,12 @@
-#include "Pas1-Lib/Basic-Control/Chassis/differential.h"
+#include "Pas1-Lib/Chassis/Base/differential.h"
+
 
 namespace pas1_lib {
-namespace basic_control {
 namespace chassis {
+namespace base {
 
 Differential::Differential(
-	chassis_tracker::Odometry &odometry, BotInfo &botInfo, AutonSettings &autonSettings,
+	settings::Odometry &odometry, settings::BotInfo &botInfo, settings::AutonSettings &autonSettings,
 	motor_group &left_motors, motor_group &right_motors
 )
 	: ChassisBase(odometry, botInfo, autonSettings),

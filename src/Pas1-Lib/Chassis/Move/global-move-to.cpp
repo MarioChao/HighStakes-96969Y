@@ -1,4 +1,4 @@
-#include "Pas1-Lib/Basic-Control/Move-Chassis/global-move-to.h"
+#include "Pas1-Lib/Chassis/Move/global-move-to.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Pas1-Lib/Auton/End-Conditions/timeout.h"
@@ -6,9 +6,10 @@
 
 namespace {
 using aespa_lib::datas::Linegular;
-using pas1_lib::basic_control::chassis::Differential;
-using pas1_lib::basic_control::chassis::AutonSettings;
-using namespace pas1_lib::basic_control::move_chassis::global;
+using pas1_lib::chassis::base::Differential;
+using pas1_lib::chassis::settings::BotInfo;
+using pas1_lib::chassis::settings::AutonSettings;
+using namespace pas1_lib::chassis::move::global;
 
 void runDriveToPoint();
 
@@ -23,8 +24,8 @@ Differential *_diff_chassis;
 
 
 namespace pas1_lib {
-namespace basic_control {
-namespace move_chassis {
+namespace chassis {
+namespace move {
 namespace global {
 
 

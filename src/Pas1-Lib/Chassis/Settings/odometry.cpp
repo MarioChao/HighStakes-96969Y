@@ -1,4 +1,4 @@
-#include "Pas1-Lib/Chassis-Tracker/odometry.h"
+#include "Pas1-Lib/Chassis/Settings/odometry.h"
 
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
@@ -21,7 +21,8 @@ bool errorPrinted[3] = {};
 
 
 namespace pas1_lib {
-namespace chassis_tracker {
+namespace chassis {
+namespace settings {
 
 /* ---------- Public functions ---------- */
 
@@ -159,7 +160,7 @@ void Odometry::odometryFrame() {
 	/* Local to Absolute */
 
 	// bool useForwardEuler = aespa_lib::genutil::isWithin(deltaPolarAngle_degrees, 0, integralSmallAngle_degrees);
-	bool useForwardEuler = true;
+	bool useForwardEuler = false;
 	if (useForwardEuler) {
 		// Rotate by half angle (euler integration)
 		// see https://docs.ftclib.org/ftclib/master/kinematics/odometry
@@ -350,5 +351,6 @@ std::pair<double, double> Odometry::getLocalDeltaXY_inches(double deltaPolarAngl
 	return { totalDeltaX_inches / xValidSensorsCount, totalDeltaY_inches / yValidSensorsCount };
 }
 
+}
 }
 }

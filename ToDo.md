@@ -27,18 +27,19 @@
 				- [ ] pure pursuit
 				- [x] ramsete
 				- [ ] LTV
-		- [ ] Basic Control
-			- [x] Chassis
-				- [x] auton settings
+		- [ ] Chassis
+			- [ ] Base
 				- [x] chassis base
 				- [x] differential
 				- [ ] x drive?
-			- [ ] Move Chassis
+			- [ ] Move
 				- [x] global move to (need actual tests)
-				- [ ] local move by
+				- [x] local move by
 				- [ ] path follow
-		- [ ] Chassis Tracker
-			- [ ] odometry (require actual tests)
+			- [ ] Settings
+				- [x] auton settings
+				- [x] bot info
+				- [ ] odometry (require actual tests)
 		- [x] Planning
 			- [x] Profiles
 				- [x] spline profile

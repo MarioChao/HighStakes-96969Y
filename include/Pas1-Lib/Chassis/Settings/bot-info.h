@@ -9,8 +9,8 @@ const double inchesPerTile = 23 + 13.0 / 16;
 
 
 namespace pas1_lib {
-namespace basic_control {
 namespace chassis {
+namespace settings {
 
 
 struct BotInfo {

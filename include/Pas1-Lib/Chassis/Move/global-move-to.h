@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Pas1-Lib/Basic-Control/Chassis/differential.h"
+#include "Pas1-Lib/Chassis/Base/differential.h"
 
 
 namespace pas1_lib {
-namespace basic_control {
-namespace move_chassis {
+namespace chassis {
+namespace move {
 namespace global {
 
 
@@ -20,7 +20,7 @@ struct driveToPoint_params {
 	double runTimeout_sec = 3;
 };
 
-void driveToPoint(chassis::Differential &chassis, driveToPoint_params params, bool async);
+void driveToPoint(base::Differential &chassis, driveToPoint_params params, bool async);
 
 extern double _linearPathDistanceError;
 extern bool _isDriveToPointSettled;

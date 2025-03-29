@@ -1,4 +1,5 @@
-#include "Pas1-Lib/Basic-Control/Chassis/chassis-base.h"
+#include "Pas1-Lib/Chassis/Base/chassis-base.h"
+
 
 namespace {
 using aespa_lib::datas::Vector2D;
@@ -7,10 +8,10 @@ using aespa_lib::datas::Linegular;
 
 
 namespace pas1_lib {
-namespace basic_control {
 namespace chassis {
+namespace base {
 
-ChassisBase::ChassisBase(chassis_tracker::Odometry &odometry, BotInfo &botInfo, AutonSettings &autonSettings)
+ChassisBase::ChassisBase(settings::Odometry &odometry, settings::BotInfo &botInfo, settings::AutonSettings &autonSettings)
 	: botInfo(botInfo), autonSettings(autonSettings), odometry(odometry) {}
 
 void ChassisBase::control_local2d(

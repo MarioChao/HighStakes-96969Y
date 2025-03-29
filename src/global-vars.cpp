@@ -8,11 +8,11 @@ using aespa_lib::sensor_beats::RotationSensor;
 using aespa_lib::sensor_beats::OpticalShaftEncoder;
 using aespa_lib::sensor_beats::Motor;
 using aespa_lib::sensor_beats::TrackingWheel;
-using pas1_lib::chassis_tracker::Odometry;
 
-using pas1_lib::basic_control::chassis::Differential;
-using pas1_lib::basic_control::chassis::BotInfo;
-using pas1_lib::basic_control::chassis::AutonSettings;
+using pas1_lib::chassis::settings::Odometry;
+using pas1_lib::chassis::settings::BotInfo;
+using pas1_lib::chassis::settings::AutonSettings;
+using pas1_lib::chassis::base::Differential;
 using pas1_lib::auton::control_loops::ForwardController;
 using pas1_lib::auton::control_loops::PIDController;
 using pas1_lib::auton::end_conditions::PatienceController;

@@ -6,9 +6,9 @@
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 
-#include "Pas1-Lib/Basic-Control/Move-Chassis/global-move-to.h"
-#include "Pas1-Lib/Basic-Control/Move-Chassis/local-move-by.h"
-#include "Pas1-Lib/Basic-Control/Move-Chassis/path-follow.h"
+#include "Pas1-Lib/Chassis/Move/global-move-to.h"
+#include "Pas1-Lib/Chassis/Move/local-move-by.h"
+#include "Pas1-Lib/Chassis/Move/path-follow.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/angle.h"
@@ -28,7 +28,7 @@ using namespace autonfunctions;
 using namespace autonfunctions::pid_diff;
 using namespace autonfunctions::driveturn;
 using namespace botinfo;
-using namespace pas1_lib::basic_control::move_chassis;
+using namespace pas1_lib::chassis::move;
 
 // Build paths
 

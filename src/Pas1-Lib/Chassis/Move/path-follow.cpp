@@ -1,4 +1,4 @@
-#include "Pas1-Lib/Basic-Control/Move-Chassis/path-follow.h"
+#include "Pas1-Lib/Chassis/Move/path-follow.h"
 
 #include "Pas1-Lib/Auton/Pose-Controls/ramsete.h"
 
@@ -8,10 +8,10 @@
 namespace {
 using aespa_lib::datas::Linegular;
 using pas1_lib::planning::profiles::SplineProfile;
-using pas1_lib::basic_control::chassis::Differential;
-using pas1_lib::basic_control::chassis::BotInfo;
-using pas1_lib::basic_control::chassis::AutonSettings;
-using namespace pas1_lib::basic_control::move_chassis::follow;
+using pas1_lib::chassis::base::Differential;
+using pas1_lib::chassis::settings::BotInfo;
+using pas1_lib::chassis::settings::AutonSettings;
+using namespace pas1_lib::chassis::move::follow;
 
 void runFollowPath();
 
@@ -26,12 +26,12 @@ Differential *_diff_chassis;
 
 
 namespace pas1_lib {
-namespace basic_control {
-namespace move_chassis {
+namespace chassis {
+namespace move {
 namespace follow {
 
 
-void followPath(chassis::Differential &chassis, followPath_params params, bool async) {
+void followPath(Differential &chassis, followPath_params params, bool async) {
 	_splineProfile = params.splineProfile;
 	_diff_chassis = &chassis;
 

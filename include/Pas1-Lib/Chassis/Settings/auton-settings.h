@@ -7,8 +7,8 @@
 
 
 namespace pas1_lib {
-namespace basic_control {
 namespace chassis {
+namespace settings {
 
 
 struct AutonSettings {

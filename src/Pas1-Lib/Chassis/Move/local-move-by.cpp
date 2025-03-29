@@ -1,4 +1,4 @@
-#include "Pas1-Lib/Basic-Control/Move-Chassis/local-move-by.h"
+#include "Pas1-Lib/Chassis/Move/local-move-by.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
@@ -11,10 +11,10 @@ namespace {
 using aespa_lib::datas::Linegular;
 using pas1_lib::planning::trajectories::TrajectoryPlanner;
 using pas1_lib::planning::trajectories::ConstraintSequence;
-using pas1_lib::basic_control::chassis::Differential;
-using pas1_lib::basic_control::chassis::BotInfo;
-using pas1_lib::basic_control::chassis::AutonSettings;
-using namespace pas1_lib::basic_control::move_chassis::local;
+using pas1_lib::chassis::base::Differential;
+using pas1_lib::chassis::settings::BotInfo;
+using pas1_lib::chassis::settings::AutonSettings;
+using namespace pas1_lib::chassis::move::local;
 
 namespace turn_to_angle {
 void runTurnToAngle();
@@ -40,12 +40,12 @@ Differential *_diff_chassis;
 
 
 namespace pas1_lib {
-namespace basic_control {
-namespace move_chassis {
+namespace chassis {
+namespace move {
 namespace local {
 
 
-void turnToAngle(chassis::Differential &chassis, turnToAngle_params params, bool async) {
+void turnToAngle(Differential &chassis, turnToAngle_params params, bool async) {
 	turn_to_angle::_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
 	turn_to_angle::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
 	turn_to_angle::_centerOffset_tiles = params.centerOffset_tiles;
@@ -68,7 +68,7 @@ double _turnAngleError_degrees;
 bool _isTurnToAngleSettled;
 
 
-void driveAndTurn(chassis::Differential &chassis, driveAndTurn_params params, bool async) {
+void driveAndTurn(Differential &chassis, driveAndTurn_params params, bool async) {
 	drive_and_turn::_distance_tiles = params.distance_tiles;
 	drive_and_turn::_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
 	drive_and_turn::_velocityConstraint_tiles_pct = params.velocityConstraint_tiles_pct;

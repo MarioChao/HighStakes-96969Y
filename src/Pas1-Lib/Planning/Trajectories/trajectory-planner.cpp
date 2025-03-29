@@ -383,6 +383,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 		for (int index = 0; index < (int) factor0s.size(); index++) {
 			double factor0 = factor0s[index];
 			double factor1 = factor1s[index];
+			if (factor0 < 0 || factor1 < 0) continue;
 
 			// Scale to track
 			newNode.motion_dV_dT = aespa_lib::genutil::multiplyVector(newNode.motion_dV_dT, factor1);
