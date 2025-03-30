@@ -90,6 +90,10 @@ void runDriveToPoint() {
 	autonSettings.distanceError_tiles_to_velocity_pct_pid.resetErrorToZero();
 	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
 
+	// Reset slew
+	autonSettings.linearAcceleration_pctPerSec_slew.reset();
+	autonSettings.angularAcceleration_pctPerSec_slew.reset();
+
 	// Reset patience
 	// driveError_tilesPatience.reset();
 	autonSettings.distanceError_tiles_patience.reset();
@@ -126,7 +130,7 @@ void runDriveToPoint() {
 		double currentY = currentLg.getY();
 
 
-		/* Linear */
+		/* ---------- Linear ---------- */
 
 		// Compute linear distance error
 		double travelDistance = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { currentX, currentY });
@@ -147,7 +151,7 @@ void runDriveToPoint() {
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(distanceError));
 
 
-		/* Angular */
+		/* ---------- Angular ---------- */
 
 		// Compute target polar heading
 		if (distanceError > turnTo_distanceThreshold) {
@@ -175,13 +179,28 @@ void runDriveToPoint() {
 		// printf("ANG CUR: %.3f, TGT: %.3f, DE: %.3f\n", currentLg.getThetaPolarAngle_degrees(), targetRotation_degrees, rotateError);
 
 
-		/* Combined */
+		/* ---------- Combined---------- */
+
+		// Scale velocity overshoot
+		double leftVelocity_pct = velocity_pct - rotateVelocity_pct;
+		double rightVelocity_pct = velocity_pct + rotateVelocity_pct;
+		double scaleFactor = aespa_lib::genutil::getScaleFactor(100.0, { leftVelocity_pct, rightVelocity_pct });
+		leftVelocity_pct *= scaleFactor;
+		rightVelocity_pct *= scaleFactor;
+		velocity_pct = (leftVelocity_pct + rightVelocity_pct) / 2.0;
+		rotateVelocity_pct = (rightVelocity_pct - leftVelocity_pct) / 2.0;
+
+		// Slew
+		autonSettings.linearAcceleration_pctPerSec_slew.computeFromTarget(velocity_pct);
+		autonSettings.angularAcceleration_pctPerSec_slew.computeFromTarget(rotateVelocity_pct);
+		velocity_pct = autonSettings.linearAcceleration_pctPerSec_slew.getValue();
+		rotateVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
 
 		// Drive
 		chassis->control_local2d(0, velocity_pct, rotateVelocity_pct);
 
 		// Delay
-		wait(20, msec);
+		wait(10, msec);
 	}
 
 	// Stop

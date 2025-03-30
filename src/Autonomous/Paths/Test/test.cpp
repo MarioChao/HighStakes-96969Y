@@ -3,7 +3,9 @@
 void autonpaths::runAutonTest() {
 	setRobotRotation(0.0);
 
-	if (true) {
+	setDifferentialUseRelativeRotation(false);
+
+	if (false) {
 		robotChassis.setLookPose(aespa_lib::datas::Linegular(1.5, 0.5, 90));
 		
 		pas1_lib::planning::profiles::SplineProfile *splineProfile = splineProfile_storage.getStored("test").get();
@@ -34,6 +36,19 @@ void autonpaths::runAutonTest() {
 		waitUntil(local::_isTurnToAngleSettled);
 		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, -robotChassis.botInfo.trackWidth_tiles / 2.0), true);
 		waitUntil(local::_isTurnToAngleSettled);
+	}
+
+	if (true) {
+		robotChassis.setLookPose(aespa_lib::datas::Linegular(0, 0, 90));
+
+		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(270, 100, 0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 50, 0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, 0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(270, 100, 0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(0, 50, 0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 100, 0), false);
 	}
 
 	if (false) {

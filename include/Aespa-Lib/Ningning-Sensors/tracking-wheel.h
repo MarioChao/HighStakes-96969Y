@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vex.h"
 #include "Aespa-Lib/Ningning-Sensors/encoder-beats.hpp"
+
 
 namespace aespa_lib {
 namespace sensor_beats {

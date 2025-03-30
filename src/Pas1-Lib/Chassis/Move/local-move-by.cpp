@@ -127,6 +127,10 @@ void runTurnToAngle() {
 	// turnToAngle_rotateTargetAngleVelocityPctPid.resetErrorToZero();
 	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
 
+	// Reset slew
+	autonSettings.linearAcceleration_pctPerSec_slew.reset();
+	autonSettings.angularAcceleration_pctPerSec_slew.reset();
+
 	// Reset patience
 	// angleError_degreesPatience.reset();
 	autonSettings.angleError_degrees_patience.reset();
@@ -135,18 +139,25 @@ void runTurnToAngle() {
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
 	// while (!turnToAngle_rotateTargetAngleVoltPid.isSettled()) {
-	while (!autonSettings.angleError_degrees_to_velocity_pct_pid.isSettled()) {
+	while (true) {
 		// Check timeout
 		if (runTimeout.isExpired()) {
 			break;
 		}
 
+		// Check settled
+		if (autonSettings.angleError_degrees_to_velocity_pct_pid.isSettled()) {
+			printf("Settled\n");
+			break;
+		}
+
 		// Check exhausted
-		// if (angleError_degreesPatience.isExhausted()) {
 		if (autonSettings.angleError_degrees_patience.isExhausted()) {
 			printf("Exhausted\n");
 			break;
 		}
+
+		/* ---------- Angular ---------- */
 
 		// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
 
@@ -162,6 +173,8 @@ void runTurnToAngle() {
 		}
 		_turnAngleError_degrees = std::fabs(rotateError_degrees);
 		
+		/* PID */
+
 		// Compute heading pid-value from error
 		// turnToAngle_rotateTargetAngleVoltPid.computeFromError(rotateError);
 		// turnToAngle_rotateTargetAngleVelocityPctPid.computeFromError(rotateError);
@@ -172,19 +185,12 @@ void runTurnToAngle() {
 		autonSettings.angleError_degrees_patience.computePatience(std::fabs(rotateError_degrees));
 
 		// Compute motor rotate velocities
-		// double averageMotorVelocityPct;
-		// if (useVolt) {
-		// 	averageMotorVelocityPct = turnToAngle_rotateTargetAngleVoltPid.getValue();
-		// } else {
-		// 	averageMotorVelocityPct = turnToAngle_rotateTargetAngleVelocityPctPid.getValue();
-		// }
 		double averageMotorVelocity_pct = autonSettings.angleError_degrees_to_velocity_pct_pid.getValue();
 		double leftMotorVelocity_pct = leftVelocityFactor * averageMotorVelocity_pct;
 		double rightMotorVelocity_pct = rightVelocityFactor * averageMotorVelocity_pct;
 		// printf("CUR: %.3f, TAR: %.3f, RotERR: %.3f, PID: %.3f\n", currentRotation_degrees, targetAngle_polarDegrees, rotateError_degrees, averageMotorVelocity_pct);
 
-		// Scale velocity to maximum
-		// double scaleFactor = aespa_lib::genutil::getScaleFactor(maxVelocity_pct, { leftMotorVelocityPct, rightMotorVelocityPct });
+		// Scale velocity overshoot
 		double scaleFactor = aespa_lib::genutil::getScaleFactor(maxTurnVelocity_pct, { leftMotorVelocity_pct, rightMotorVelocity_pct });
 		leftMotorVelocity_pct *= scaleFactor;
 		rightMotorVelocity_pct *= scaleFactor;
@@ -193,10 +199,16 @@ void runTurnToAngle() {
 		double linearVelocity_pct = (leftMotorVelocity_pct + rightMotorVelocity_pct) / 2.0;
 		double angularVelocity_pct = (rightMotorVelocity_pct - leftMotorVelocity_pct) / 2.0;
 
+		// Slew
+		autonSettings.linearAcceleration_pctPerSec_slew.computeFromTarget(linearVelocity_pct);
+		autonSettings.angularAcceleration_pctPerSec_slew.computeFromTarget(angularVelocity_pct);
+		linearVelocity_pct = autonSettings.linearAcceleration_pctPerSec_slew.getValue();
+		angularVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
+
 		// Drive with velocities
 		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct);
 
-		wait(5, msec);
+		wait(10, msec);
 	}
 
 	// Stop
@@ -395,12 +407,12 @@ void runDriveAndTurn() {
 		);
 
 
-		/* Combined */
+		/* ---------- Combined ---------- */
 
 		// Drive with velocities
 		chassis->control_local2d(0, linearVelocity_pct, rotateVelocity_pct);
 
-		wait(5, msec);
+		wait(10, msec);
 	}
 
 	// Stop

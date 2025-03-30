@@ -15,6 +15,7 @@ using pas1_lib::chassis::settings::AutonSettings;
 using pas1_lib::chassis::base::Differential;
 using pas1_lib::auton::control_loops::ForwardController;
 using pas1_lib::auton::control_loops::PIDController;
+using pas1_lib::auton::control_loops::SlewController;
 using pas1_lib::auton::end_conditions::PatienceController;
 
 using pas1_lib::planning::trajectories::TrajectoryPlanner;
@@ -84,9 +85,11 @@ AutonSettings autonSettings(
 	PIDController(15.06, 0, 0, 0.04), // position feedback (tiles to tiles/sec)
 	PIDController(5.184, 0, 0), // velocity feedback (tiles/sec to volt)
 	PIDController(70, 0, 0, 0.04), // linear pid (tiles to pct)
-	PIDController(1.0, 0, 0, 5), // angular pid (degrees to pct)
+	PIDController(3.5, 0, 0.2, 3), // angular pid (degrees to pct)
+	SlewController(200), // linear slew (pct/sec)
+	SlewController(200), // angular slew (pct/sec)
 	PatienceController(10, 0.001, false), // linear patience (tiles)
-	PatienceController(40, 0.5, false), // angular patience (degrees)
+	PatienceController(100, 0.5, false), // angular patience (degrees)
 	false // relative rotation
 );
 }

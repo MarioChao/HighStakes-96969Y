@@ -128,11 +128,19 @@ void runFollowPath() {
 		// double linearVelocity_pct = linegularVelocity.first * botInfo.tilesPerSecond_to_pct;
 		double angularVelocity_pct = linegularVelocity.second * botInfo.trackWidth_tiles / 2 * botInfo.tilesPerSecond_to_pct;
 
+
+		/* ---------- Linear ---------- */
+
+		/* Feedforward + feedback */
+
 		autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.computeFromMotion(linegularVelocity.first, 0);
 		autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.computeFromError(linegularVelocity.first - robotChassis.getLookVelocity());
 		double forwardVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(false);
 		double feedbackVelocity_volt = autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.getValue();
 		double linearVelocity_pct = aespa_lib::genutil::voltToPct(forwardVelocity_volt + feedbackVelocity_volt);
+
+
+		/* ---------- Combined ---------- */
 
 		// Drive
 		// botdrive::driveLinegularVelocity(linegularVelocity.first, linegularVelocity.second);
@@ -141,6 +149,13 @@ void runFollowPath() {
 
 		// Wait
 		wait(10, msec);
+	}
+
+	// Stop if needed
+	if (std::fabs(splineProfile->trajectoryPlan.getMotionAtTime(
+		splineProfile->trajectoryPlan.getTotalTime()
+	).second[0]) <= 1e-2) {
+		chassis->stopMotors(coast);
 	}
 
 	// Settled

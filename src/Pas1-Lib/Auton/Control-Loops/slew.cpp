@@ -12,8 +12,12 @@ SlewController::SlewController(double maxChangeRate_valPerSec)
 	reset();
 }
 
-void SlewController::reset(bool ignoreFirst) {
-	if (ignoreFirst) this->ignoreFirst = ignoreFirst;
+SlewController::SlewController()
+	: SlewController(-1) {}
+
+void SlewController::reset(double defaultValue, bool ignoreFirst) {
+	storedValue = defaultValue;
+	this->ignoreFirst = ignoreFirst;
 	slewTimer.reset();
 }
 

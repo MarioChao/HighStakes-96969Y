@@ -12,8 +12,9 @@ public:
 	/// @brief Constructor
 	/// @param maxChangeRate_valPerSec Use a negative value to disable the controller.
 	SlewController(double maxChangeRate_valPerSec);
+	SlewController();
 
-	void reset(bool ignoreFirst = true);
+	void reset(double defaultValue = 0, bool ignoreFirst = false);
 
 	void computeFromTarget(double targetValue);
 
