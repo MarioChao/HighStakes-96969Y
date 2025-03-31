@@ -14,6 +14,8 @@ namespace trajectories {
 struct CurvaturePoint {
 	CurvaturePoint(double distance, double curvature);
 
+	void maxSmooth(CurvaturePoint &previousPoint, double epsilon);
+
 	double distance, curvature;
 };
 
@@ -26,7 +28,7 @@ struct CurvatureSequence {
 	double getControlPointDistance(double distance, bool nextPoint = true);
 
 	void sort();
-	void smoothen(double alpha);
+	void maxSmooth(double epsilon);
 
 
 	std::vector<CurvaturePoint> points;

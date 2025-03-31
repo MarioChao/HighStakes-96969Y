@@ -17,6 +17,7 @@ bool runningState = false;
 
 bool canChangeAutonState = true;
 
+// autonomousType auton_runType = autonomousType::None;
 // autonomousType auton_runType = autonomousType::DrivingSkills;
 autonomousType auton_runType = autonomousType::Test;
 // autonomousType auton_runType = autonomousType::AutonSkillsLong;

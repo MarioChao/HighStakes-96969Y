@@ -9,6 +9,25 @@ namespace planning {
 namespace trajectories {
 
 
+// ---------- Curvature Point ----------
+
+void CurvaturePoint::maxSmooth(CurvaturePoint &previousPoint, double epsilon) {
+	// See https://en.wikipedia.org/wiki/Smooth_maximum
+	double k1 = previousPoint.curvature;
+	double k2 = curvature;
+	int sign1 = aespa_lib::genutil::signum(k1);
+	int sign2 = aespa_lib::genutil::signum(k2);
+	if (
+		std::fabs(k2) < std::fabs(k1)
+		&& sign1 == sign2
+	) {
+		double e = std::fmin(epsilon, std::pow(k1 - k2, 2));
+		double maxK = (k1 + k2 + sign1 * std::sqrt(std::pow(k1 - k2, 2) - e)) / 2;
+		curvature = maxK;
+	}
+}
+
+
 // ---------- Curvature Sequence ----------
 
 CurvaturePoint::CurvaturePoint(double distance, double curvature)
@@ -90,13 +109,18 @@ void CurvatureSequence::sort() {
 	}
 }
 
-void CurvatureSequence::smoothen(double alpha) {
-	// Apply smoothing with EMA
-	double newCurvature = 0;
-	for (CurvaturePoint &point : points) {
-		double k = point.curvature;
-		newCurvature = alpha * k + (1 - alpha) * newCurvature;
-		point.curvature = newCurvature;
+void CurvatureSequence::maxSmooth(double epsilon) {
+	// Forward and backward max smoothing
+	int pointsCount = points.size();
+	for (int i = 0; i < pointsCount - 1; i++) {
+		CurvaturePoint &point1 = points[i];
+		CurvaturePoint &point2 = points[i + 1];
+		point2.maxSmooth(point1, epsilon);
+	}
+	for (int i = pointsCount - 1; i > 0; i--) {
+		CurvaturePoint &point1 = points[i];
+		CurvaturePoint &point2 = points[i - 1];
+		point2.maxSmooth(point1, epsilon);
 	}
 }
 

@@ -54,34 +54,29 @@ void doAuton() {
 
 	// Follow path
 	runFollowSpline("big curvature 1");
-	waitUntil(_pathFollowCompleted);
+	waitUntil(follow::_isPathFollowCompleted);
 	printf("done\n");
+
 	// Follow path
 	runFollowSpline("big curvature 1br");
-	waitUntil(_pathFollowCompleted);
+	waitUntil(follow::_isPathFollowCompleted);
 	printf("done\n");
 
 	// Follow path
 	runFollowSpline("love 1");
-
-	// Wait
-	waitUntil(_pathFollowCompleted);
+	waitUntil(follow::_isPathFollowCompleted);
 	printf("done\n");
 
 	// Follow path again
 	printf("<3\n");
 	runFollowSpline("love 1r");
-
-	// Wait
-	waitUntil(_pathFollowCompleted);
+	waitUntil(follow::_isPathFollowCompleted);
 	printf("done\n");
 
 	// Follow path
 	printf("<3 big\n");
 	// runFollowSpline("love 2");
-
-	// Wait
-	waitUntil(_pathFollowCompleted);
+	waitUntil(follow::_isPathFollowCompleted);
 	printf("done\n");
 
 	// Turn to 0

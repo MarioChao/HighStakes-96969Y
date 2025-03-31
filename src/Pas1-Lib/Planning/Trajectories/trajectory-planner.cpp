@@ -221,8 +221,8 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 	return *this;
 }
 
-TrajectoryPlanner &TrajectoryPlanner::smoothenCurvature(double alpha) {
-	curvatureSequence.smoothen(alpha);
+TrajectoryPlanner &TrajectoryPlanner::maxSmoothCurvature(double epsilon) {
+	curvatureSequence.maxSmooth(epsilon);
 	return *this;
 }
 
@@ -442,6 +442,7 @@ std::vector<PlanPoint> TrajectoryPlanner::_forwardPass(int dV_dT_degree) {
 		// Get info
 		PlanPoint lastNode = planningPoints.back();
 		double deltaX = planPoint_distances[i + 1] - planPoint_distances[i];
+		if (std::fabs(deltaX) < 1e-5) continue;
 
 		// Get planning point
 		PlanPoint newNode = _getNextPlanPoint(lastNode, deltaX, dV_dT_degree);
@@ -471,6 +472,7 @@ std::vector<PlanPoint> TrajectoryPlanner::_backwardPass(int dV_dT_degree) {
 		// Get info
 		PlanPoint lastNode = planningPoints.back();
 		double deltaX = planPoint_distances[i + 1] - planPoint_distances[i];
+		if (std::fabs(deltaX) < 1e-5) continue;
 
 		// Get planning point
 		PlanPoint newNode = _getNextPlanPoint(lastNode, -deltaX, dV_dT_degree);

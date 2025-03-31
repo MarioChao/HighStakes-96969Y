@@ -58,8 +58,7 @@ public:
 		std::function<double(double)> distanceToCurvature_function
 	);
 
-	// alpha should change with distanceResolution
-	TrajectoryPlanner &smoothenCurvature(double alpha = 0.7);
+	TrajectoryPlanner &maxSmoothCurvature(double epsilon = 100000);
 	double getCurvatureAtDistance(double distance);
 
 	TrajectoryPlanner &addCenterConstraintSequence(ConstraintSequence constraints);

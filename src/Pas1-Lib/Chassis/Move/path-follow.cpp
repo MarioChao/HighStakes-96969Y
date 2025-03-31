@@ -15,7 +15,7 @@ using namespace pas1_lib::chassis::move::follow;
 
 void runFollowPath();
 
-const double pathFollowDelay_seconds = 0.010;
+const double pathFollowDelay_seconds = 0.20;
 
 // Controller
 pas1_lib::auton::pose_controllers::RamseteController ramseteController;
@@ -82,6 +82,10 @@ void runFollowPath() {
 	autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.resetErrorToZero();
 	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
 
+	// Reset slew
+	autonSettings.linearAcceleration_pctPerSec_slew.reset();
+	autonSettings.angularAcceleration_pctPerSec_slew.reset();
+
 	// Reset patience
 	autonSettings.distanceError_tiles_patience.reset();
 
@@ -103,7 +107,7 @@ void runFollowPath() {
 		double traj_time = _pathTimer.time(seconds);
 
 		// Check profile ended
-		if (traj_time >= totalTime_seconds + 0.2) {
+		if (traj_time >= totalTime_seconds + pathFollowDelay_seconds) {
 			printf("Profile ended\n");
 			break;
 		}
@@ -118,7 +122,10 @@ void runFollowPath() {
 		}
 
 		// Check exhausted
-		if (autonSettings.distanceError_tiles_patience.isExhausted()) {
+		if (
+			autonSettings.distanceError_tiles_patience.isExhausted()
+			&& autonSettings.angleError_degrees_to_velocity_pct_pid.isSettled()
+		) {
 			printf("Exhausted\n");
 			break;
 		}
@@ -144,6 +151,7 @@ void runFollowPath() {
 		// Update distance remaining
 		double total_distanceError = totalDistance_tiles - traj_distance;
 		double pose_distanceError = (targetLg - robotLg).getXYMagnitude();
+		printf("TDE: %.3f PDE: %.3f AE: %.3f\n", total_distanceError, pose_distanceError, (targetLg - robotLg).getThetaPolarAngle_degrees());
 		_pathFollowDistanceRemaining_tiles = std::fabs(total_distanceError + pose_distanceError);
 		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(total_distanceError + pose_distanceError);
 
@@ -183,6 +191,21 @@ void runFollowPath() {
 
 		/* ---------- Combined ---------- */
 
+		// Scale velocity overshoot
+		double leftVelocity_pct = linearVelocity_pct - angularVelocity_pct;
+		double rightVelocity_pct = linearVelocity_pct + angularVelocity_pct;
+		double scaleFactor = aespa_lib::genutil::getScaleFactor(100.0, { leftVelocity_pct, rightVelocity_pct });
+		leftVelocity_pct *= scaleFactor;
+		rightVelocity_pct *= scaleFactor;
+		linearVelocity_pct = (leftVelocity_pct + rightVelocity_pct) / 2.0;
+		angularVelocity_pct = (rightVelocity_pct - leftVelocity_pct) / 2.0;
+
+		// Slew
+		autonSettings.linearAcceleration_pctPerSec_slew.computeFromTarget(linearVelocity_pct);
+		autonSettings.angularAcceleration_pctPerSec_slew.computeFromTarget(angularVelocity_pct);
+		linearVelocity_pct = autonSettings.linearAcceleration_pctPerSec_slew.getValue();
+		angularVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
+
 		// Drive
 		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct);
 		// printf("ACT XY: %.3f, %.3f TAR XY: %.3f, %.3f\n", robotLg.getX(), robotLg.getY(), targetLg.getX(), targetLg.getY());
@@ -190,6 +213,8 @@ void runFollowPath() {
 		// Wait
 		wait(10, msec);
 	}
+	Linegular lg = chassis->getLookPose();
+	printf("X: %.3f, Y: %.3f\n", lg.getX(), lg.getY());
 
 	// Stop
 	chassis->stopMotors(coast);

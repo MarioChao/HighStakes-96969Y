@@ -35,6 +35,7 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 		.setCurvatureFunction([&](double d) -> double {
 		return spline.getCurvatureAt(curveSampler.distanceToParam(d));
 	})
+		.maxSmoothCurvature()
 		.addCenterConstraint_maxMotion({ maxVel, maxAccel })
 		.addTrackConstraint_maxMotion({ maxVel, maxAccel })
 		.calculateMotionProfile();
