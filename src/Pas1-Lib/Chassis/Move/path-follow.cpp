@@ -73,12 +73,20 @@ void runFollowPath() {
 	AutonSettings &autonSettings = chassis->autonSettings;
 	ramseteController.setDirection(splineProfile->willReverse);
 
-	// Reset timer
-	_pathTimer.reset();
-
 	// Trajectory graph
 	testTrajectoryPlan = splineProfile->trajectoryPlan;
 	trajectoryTestTimer.reset();
+
+	// Reset PID
+	autonSettings.distanceError_tiles_to_velocity_pct_pid.resetErrorToZero();
+	autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.resetErrorToZero();
+	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
+
+	// Reset patience
+	autonSettings.distanceError_tiles_patience.reset();
+
+	// Reset timer
+	_pathTimer.reset();
 
 	// Get spline info
 	double totalDistance_tiles = splineProfile->curveSampler.getDistanceRange().second;
@@ -89,43 +97,69 @@ void runFollowPath() {
 
 	// Follow path
 	while (true) {
+		/* ---------- End conditions ---------- */
+
 		// Get time
 		double traj_time = _pathTimer.time(seconds);
 
-		// Exit when path completed
-		if (traj_time > totalTime_seconds + pathFollowDelay_seconds) {
+		// Check profile ended
+		if (traj_time >= totalTime_seconds + 0.2) {
+			printf("Profile ended\n");
 			break;
 		}
 
+		// Check settled
+		if (
+			autonSettings.distanceError_tiles_to_velocity_pct_pid.isSettled()
+			&& autonSettings.angleError_degrees_to_velocity_pct_pid.isSettled()
+		) {
+			printf("Settled\n");
+			break;
+		}
+
+		// Check exhausted
+		if (autonSettings.distanceError_tiles_patience.isExhausted()) {
+			printf("Exhausted\n");
+			break;
+		}
+
+
+		/* ---------- Trajectory ---------- */
+
 		// Get trajectory motion
-		// std::pair<double, std::vector<double>> motion = _trajectoryPlan.getMotionAtTime(traj_time);
 		std::pair<double, std::vector<double>> motion = splineProfile->trajectoryPlan.getMotionAtTime(traj_time);
 		double traj_distance = motion.first;
 		double traj_velocity = motion.second[0];
-		// double traj_tvalue = _curveSampler.distanceToParam(traj_distance);
 		double traj_tvalue = splineProfile->curveSampler.distanceToParam(traj_distance);
-		// double traj_curvature = _splinePath.getCurvatureAt(traj_tvalue);
-		// double traj_curvature = _trajectoryPlan.getCurvatureAtDistance(traj_distance);
 		// double traj_curvature = splineProfile->spline.getCurvatureAt(traj_tvalue);
 		double traj_curvature = splineProfile->trajectoryPlan.getCurvatureAtDistance(traj_distance);
 		double traj_angularVelocity = traj_velocity * traj_curvature;
-		
-		// Update distance remaining
-		_pathFollowDistanceRemaining_tiles = std::fabs(totalDistance_tiles - traj_distance);
 
 		// Get robot and target linegular
-		// Linegular robotLg = mainOdometry.getLookPose_scaled();
-		// Linegular targetLg = _splinePath.getLinegularAt(traj_tvalue, _reverseHeading);
 		Linegular robotLg = chassis->getLookPose();
 		Linegular targetLg = splineProfile->spline.getLinegularAt(traj_tvalue, splineProfile->willReverse);
 
+		/* Overall error */
+
+		// Update distance remaining
+		double total_distanceError = totalDistance_tiles - traj_distance;
+		double pose_distanceError = (targetLg - robotLg).getXYMagnitude();
+		_pathFollowDistanceRemaining_tiles = std::fabs(total_distanceError + pose_distanceError);
+		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(total_distanceError + pose_distanceError);
+
+		// Update angle error
+		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError((targetLg - robotLg).getThetaPolarAngle_degrees());
+
+		// Update error patience
+		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(total_distanceError + pose_distanceError));
+
+		/* Pose control */
 
 		// Get desired robot motion (linear and angular)
-		// std::pair<double, double> linegularVelocity = robotController.getLinegularVelocity(robotLg, targetLg, traj_velocity, traj_angularVelocity);
 		std::pair<double, double> linegularVelocity = ramseteController.getLinegularVelocity(robotLg, targetLg, traj_velocity, traj_angularVelocity);
 
 		// Convert velocity units
-		// double linearVelocity_pct = linegularVelocity.first * botInfo.tilesPerSecond_to_pct;
+		double linearVelocity_tilesPerSec = linegularVelocity.first;
 		double angularVelocity_pct = linegularVelocity.second * botInfo.trackWidth_tiles / 2 * botInfo.tilesPerSecond_to_pct;
 
 
@@ -133,9 +167,16 @@ void runFollowPath() {
 
 		/* Feedforward + feedback */
 
-		autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.computeFromMotion(linegularVelocity.first, 0);
-		autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.computeFromError(linegularVelocity.first - robotChassis.getLookVelocity());
-		double forwardVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(false);
+		// Motion feedforward
+		autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.computeFromMotion(linearVelocity_tilesPerSec, 0);
+
+		// Velocity feedback
+		double currentVelocity_tilesPerSec = chassis->getLookVelocity();
+		autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.computeFromError(linearVelocity_tilesPerSec - currentVelocity_tilesPerSec);
+
+		// Combined
+		bool useS = currentVelocity_tilesPerSec < 0.02;
+		double forwardVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(useS);
 		double feedbackVelocity_volt = autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.getValue();
 		double linearVelocity_pct = aespa_lib::genutil::voltToPct(forwardVelocity_volt + feedbackVelocity_volt);
 
@@ -143,7 +184,6 @@ void runFollowPath() {
 		/* ---------- Combined ---------- */
 
 		// Drive
-		// botdrive::driveLinegularVelocity(linegularVelocity.first, linegularVelocity.second);
 		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct);
 		// printf("ACT XY: %.3f, %.3f TAR XY: %.3f, %.3f\n", robotLg.getX(), robotLg.getY(), targetLg.getX(), targetLg.getY());
 
@@ -151,12 +191,8 @@ void runFollowPath() {
 		wait(10, msec);
 	}
 
-	// Stop if needed
-	if (std::fabs(splineProfile->trajectoryPlan.getMotionAtTime(
-		splineProfile->trajectoryPlan.getTotalTime()
-	).second[0]) <= 1e-2) {
-		chassis->stopMotors(coast);
-	}
+	// Stop
+	chassis->stopMotors(coast);
 
 	// Settled
 	_pathFollowDistanceRemaining_tiles = -1;

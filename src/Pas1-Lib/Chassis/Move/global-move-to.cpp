@@ -104,11 +104,11 @@ void runDriveToPoint() {
 	while (true) {
 		// Check timeout
 		if (runTimeout.isExpired()) {
+			printf("Expired\n");
 			break;
 		}
 
 		// Check settled
-		// if (driveTurn_driveTargetDistance_voltPid.isSettled() && driveTurn_rotateTargetAngle_voltPid.isSettled()) {
 		if (
 			autonSettings.distanceError_tiles_to_velocity_pct_pid.isSettled()
 			&& autonSettings.angleError_degrees_to_velocity_pct_pid.isSettled()
@@ -118,7 +118,6 @@ void runDriveToPoint() {
 		}
 
 		// Check exhausted
-		// if (driveError_tilesPatience.isExhausted()) {
 		if (autonSettings.distanceError_tiles_patience.isExhausted()) {
 			printf("Exhausted\n");
 			break;
@@ -138,8 +137,6 @@ void runDriveToPoint() {
 		_linearPathDistanceError = distanceError;
 
 		// Compute motor velocity pid-value from error
-		// driveTurn_driveTargetDistance_voltPid.computeFromError(distanceError);
-		// driveTurn_driveTargetDistance_velocityPid.computeFromError(distanceError);
 		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(distanceError);
 		double velocity_pct;
 		velocity_pct = autonSettings.distanceError_tiles_to_velocity_pct_pid.getValue();
@@ -147,7 +144,6 @@ void runDriveToPoint() {
 		velocity_pct *= velocityFactor;
 
 		// Update error patience
-		// driveError_tilesPatience.computePatience(std::fabs(distanceError));
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(distanceError));
 
 
@@ -166,8 +162,6 @@ void runDriveToPoint() {
 		}
 
 		// Compute heading pid-value from error
-		// driveTurn_rotateTargetAngle_voltPid.computeFromError(rotateError);
-		// driveTurn_rotateTargetAngle_velocityPid.computeFromError(rotateError);
 		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError(rotateError);
 		double rotateVelocity_pct;
 		rotateVelocity_pct = autonSettings.angleError_degrees_to_velocity_pct_pid.getValue();
@@ -179,7 +173,7 @@ void runDriveToPoint() {
 		// printf("ANG CUR: %.3f, TGT: %.3f, DE: %.3f\n", currentLg.getThetaPolarAngle_degrees(), targetRotation_degrees, rotateError);
 
 
-		/* ---------- Combined---------- */
+		/* ---------- Combined ---------- */
 
 		// Scale velocity overshoot
 		double leftVelocity_pct = velocity_pct - rotateVelocity_pct;

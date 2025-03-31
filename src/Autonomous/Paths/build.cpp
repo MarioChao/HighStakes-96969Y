@@ -41,17 +41,23 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 	splineProfile_storage.store(profileName, SplineProfile(spline, curveSampler, splineTrajectoryPlan, reverse));
 }
 
-void runFollowSpline(std::string profileName) {
-	SplineProfile *profile = splineProfile_storage.getStored(profileName).get();
-	SplineCurve spline = profile->spline;
-	CurveSampler curveSampler = profile->curveSampler;
-	TrajectoryPlanner &motionProfile = profile->trajectoryPlan;
-	bool isReversed = profile->willReverse;
-	aespa_lib::datas::Linegular lg = spline.getLinegularAt(0, isReversed);
+void runFollowSpline(Differential &chassis, std::string profileName) {
+	SplineProfile *splineProfile = splineProfile_storage.getStored(profileName).get();
+	aespa_lib::datas::Linegular startPose = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse);
+	// SplineCurve spline = profile->spline;
+	// CurveSampler curveSampler = profile->curveSampler;
+	// TrajectoryPlanner &motionProfile = profile->trajectoryPlan;
+	// bool isReversed = profile->willReverse;
 	
-	autonfunctions::pid_diff::turnToAngle(aespa_lib::angle::swapFieldPolar_degrees(lg.getThetaPolarAngle_degrees()));
-	autonfunctions::setSplinePath(spline, motionProfile, curveSampler);
-	autonfunctions::followSplinePath(isReversed);
+	// autonfunctions::pid_diff::turnToAngle(aespa_lib::angle::swapFieldPolar_degrees(lg.getThetaPolarAngle_degrees()));
+	// autonfunctions::setSplinePath(spline, motionProfile, curveSampler);
+	// autonfunctions::followSplinePath(isReversed);
+	local::turnToAngle(chassis, local::turnToAngle_params(startPose.getThetaPolarAngle_degrees()), false);
+	follow::followPath(chassis, follow::followPath_params(splineProfile), true);
+}
+
+void runFollowSpline(std::string profileName) {
+	runFollowSpline(robotChassis, profileName);
 }
 
 

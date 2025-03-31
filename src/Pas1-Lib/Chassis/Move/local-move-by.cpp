@@ -123,8 +123,6 @@ void runTurnToAngle() {
 	// R_vel = R_dist / time = L_vel * (R_dist / L_dist)
 
 	// Reset PID
-	// turnToAngle_rotateTargetAngleVoltPid.resetErrorToZero();
-	// turnToAngle_rotateTargetAngleVelocityPctPid.resetErrorToZero();
 	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
 
 	// Reset slew
@@ -132,7 +130,6 @@ void runTurnToAngle() {
 	autonSettings.angularAcceleration_pctPerSec_slew.reset();
 
 	// Reset patience
-	// angleError_degreesPatience.reset();
 	autonSettings.angleError_degrees_patience.reset();
 
 	// Create timeout
@@ -142,6 +139,7 @@ void runTurnToAngle() {
 	while (true) {
 		// Check timeout
 		if (runTimeout.isExpired()) {
+			printf("Expired\n");
 			break;
 		}
 
@@ -260,18 +258,17 @@ void runDriveAndTurn() {
 	trajectoryTestTimer.reset();
 
 	// Reset PID
-	// driveAndTurn_reachedTargetPid.resetErrorToZero();
-	// driveAndTurn_drivePositionPid.resetErrorToZero();
-	// driveAndTurn_driveVelocityPid.resetErrorToZero();
-	// driveAndTurn_rotateTargetAnglePid.resetErrorToZero();
 	// driveAndTurn_synchronizeVelocityPid.resetErrorToZero();
 	autonSettings.distanceError_tiles_to_velocity_pct_pid.resetErrorToZero();
 	autonSettings.fb_distanceError_tiles_to_deltaVelocity_tilesPerSec_pid.resetErrorToZero();
 	autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.resetErrorToZero();
 	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
 
+	// Reset slew
+	autonSettings.linearAcceleration_pctPerSec_slew.reset();
+	autonSettings.angularAcceleration_pctPerSec_slew.reset();
+
 	// Reset patience
-	// driveError_inchesPatience.reset();
 	autonSettings.distanceError_tiles_patience.reset();
 
 	// Reset timer
@@ -284,18 +281,23 @@ void runDriveAndTurn() {
 	printf("Drive pid with trajectory of %.3f seconds\n", motionProfile.getTotalTime());
 
 	while (true) {
+		/* ---------- End conditions ---------- */
+
 		// Check timeout
 		if (runTimeout.isExpired()) {
+			printf("Expired\n");
 			break;
 		}
 
 		// Check profile ended
 		if (runningTimer.time(seconds) >= motionProfile.getTotalTime() + 0.2) {
+			printf("Profile ended\n");
 			break;
 		}
 
 		// Check settled
 		if (autonSettings.distanceError_tiles_to_velocity_pct_pid.isSettled()) {
+			printf("Settled\n");
 			break;
 		}
 
@@ -308,7 +310,7 @@ void runDriveAndTurn() {
 
 		/* ---------- Linear ---------- */
 
-		// Compute current travel distance
+		// Compute current values
 		double targetDistance_tiles = distance_tiles;
 		Linegular currentPose = chassis->getLookPose();
 		double currentTravelDistance_tiles = (currentPose - initialPose).getXYMagnitude() * aespa_lib::genutil::signum(targetDistance_tiles);
@@ -320,70 +322,38 @@ void runDriveAndTurn() {
 		double trajVelocity_tilesPerSec = motion.second[0];
 		double trajPosition_tiles = motion.first;
 
-		/* Position feedback */
-
-		// Compute trajectory distance error
-		double trajectoryDistanceError_tiles = trajPosition_tiles - currentTravelDistance_tiles;
+		/* Overall error */
 
 		// Compute travel distance error
 		double targetDistanceError = targetDistance_tiles - currentTravelDistance_tiles;
-		// autonfunctions::pid_diff::_driveDistanceError_inches = fabs(targetDistanceError);
-		// driveAndTurn_reachedTargetPid.computeFromError(targetDistanceError);
 		_driveDistanceError_tiles = std::fabs(targetDistanceError);
 		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(targetDistanceError);
 
-		// Compute pid-value from error
-		// driveAndTurn_drivePositionPid.computeFromError(trajectoryDistanceError_inches);
-		// double positionPidVelocity_pct = driveAndTurn_drivePositionPid.getValue();
-		autonSettings.fb_distanceError_tiles_to_deltaVelocity_tilesPerSec_pid.computeFromError(trajectoryDistanceError_tiles);
-		double positionPidVelocity_tilesPerSec = autonSettings.fb_distanceError_tiles_to_deltaVelocity_tilesPerSec_pid.getValue();
-		positionPidVelocity_tilesPerSec = aespa_lib::genutil::clamp(
-			positionPidVelocity_tilesPerSec, -botInfo.maxVel_tilesPerSec, botInfo.maxVel_tilesPerSec
-		);
-		// printf("t: %.3f, trajd: %.3f, cntd; %.3f,\n", runningTimer.time(seconds), trajPosition_tiles, currentTravelDistance_inches / field::tileLengthIn);
-		// printf("t: %.3f, err: %.3f, pid: %.3f\n", runningTimer.time(seconds), trajectoryDistanceError_inches, positionPidVelocity_pct);
-
 		// Update error patience
-		// driveError_inchesPatience.computePatience(std::fabs(targetDistanceError));
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(targetDistanceError));
 		// printf("DERR: %.3f\n", targetDistanceError);
 
-		/* Feedforward */
+		/* Feedforward + feedback */
 
-		double desiredVelocity_tilesPerSec = trajVelocity_tilesPerSec;
-		// desiredVelocity_tilesPerSec += positionPidVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
-		desiredVelocity_tilesPerSec += positionPidVelocity_tilesPerSec;
+		// Position feedback
+		autonSettings.fb_distanceError_tiles_to_deltaVelocity_tilesPerSec_pid.computeFromError(trajPosition_tiles - currentTravelDistance_tiles);
+		double positionPidVelocity_tilesPerSec = autonSettings.fb_distanceError_tiles_to_deltaVelocity_tilesPerSec_pid.getValue();
 
-		// driveAndTurn_driveMotionForward.computeFromMotion(desiredVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
-		// bool useS = currentTravelVelocity_inchesPerSec < 0.5;
-		// double forwardVelocity_pct = aespa_lib::genutil::voltToPct(driveAndTurn_driveMotionForward.getValue(useS));
+		// Motion feedforward
+		double desiredVelocity_tilesPerSec = trajVelocity_tilesPerSec + positionPidVelocity_tilesPerSec;
 		autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.computeFromMotion(desiredVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
+
+		// Velocity feedback
+		autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.computeFromError(trajVelocity_tilesPerSec - currentTravelVelocity_tilesPerSec);
+
+		// Combined
 		bool useS = currentTravelVelocity_tilesPerSec < 0.02;
 		double forwardVelocity_pct = aespa_lib::genutil::voltToPct(autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(useS));
+		double feedbackVelocity_pct = aespa_lib::genutil::voltToPct(autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.getValue());
+		double linearVelocity_pct = forwardVelocity_pct + feedbackVelocity_pct;
 
-		/* Velocity feedback */
-
-		// Compute trajectory velocity error
-		// double trajectoryVelocityError_inchesPerSec = trajVelocity_tilesPerSec * field::tileLengthIn - currentTravelVelocity_inchesPerSec;
-		double trajectoryVelocityError_tilesPerSec = trajVelocity_tilesPerSec - currentTravelVelocity_tilesPerSec;
-
-		// Compute pid-value from error
-		// driveAndTurn_driveVelocityPid.computeFromError(trajectoryVelocityError_inchesPerSec);
-		// double velocityPidVelocity_pct = driveAndTurn_driveVelocityPid.getValue();
-		autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.computeFromError(trajectoryVelocityError_tilesPerSec);
-		double velocityPidVelocity_pct = aespa_lib::genutil::voltToPct(autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.getValue());
-
-		/* Combined */
-
-		// Compute linear velocity
-		double linearVelocity_pct = forwardVelocity_pct + velocityPidVelocity_pct;
-		// linearVelocity_pct = positionPidVelocity_pct;
-
-		// double desiredPct = desiredVelocity_tilesPerSec / botinfo::maxV_tilesPerSec * 100.0;
-		// double veloError = desiredPct - currentTravelVelocity_inchesPerSec / field::tileLengthIn / botinfo::maxV_tilesPerSec * 100.0;
 		// double desiredPct = desiredVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct;
 		// double veloError = desiredPct - currentTravelVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct;
-		// printf("velErr: %.3f tiles/sec, desired: %.3f t/s\n", veloError, desiredVelocity_tilesPerSec);
 		// printf("dv: %+3.3f%, vf: %+3.3f\%, vp: %+3.3f\%, ver: %+3.3f%\n", desiredPct, forwardVelocity_pct, velocityPidVelocity_pct, veloError);
 
 
@@ -399,8 +369,6 @@ void runDriveAndTurn() {
 		}
 
 		// Compute heading pid-value from error
-		// driveAndTurn_rotateTargetAnglePid.computeFromError(rotateError_degrees);
-		// double rotateVelocity_pct = aespa_lib::genutil::clamp(driveAndTurn_rotateTargetAnglePid.getValue(), -maxTurnVelocity_pct, maxTurnVelocity_pct);
 		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError(rotateError_degrees);
 		double rotateVelocity_pct = aespa_lib::genutil::clamp(
 			autonSettings.angleError_degrees_to_velocity_pct_pid.getValue(), -maxTurnVelocity_pct, maxTurnVelocity_pct
@@ -408,6 +376,21 @@ void runDriveAndTurn() {
 
 
 		/* ---------- Combined ---------- */
+
+		// Scale velocity overshoot
+		double leftVelocity_pct = linearVelocity_pct - rotateVelocity_pct;
+		double rightVelocity_pct = linearVelocity_pct + rotateVelocity_pct;
+		double scaleFactor = aespa_lib::genutil::getScaleFactor(100.0, { leftVelocity_pct, rightVelocity_pct });
+		leftVelocity_pct *= scaleFactor;
+		rightVelocity_pct *= scaleFactor;
+		linearVelocity_pct = (leftVelocity_pct + rightVelocity_pct) / 2.0;
+		rotateVelocity_pct = (rightVelocity_pct - leftVelocity_pct) / 2.0;
+
+		// Slew
+		autonSettings.linearAcceleration_pctPerSec_slew.computeFromTarget(linearVelocity_pct);
+		autonSettings.angularAcceleration_pctPerSec_slew.computeFromTarget(rotateVelocity_pct);
+		linearVelocity_pct = autonSettings.linearAcceleration_pctPerSec_slew.getValue();
+		rotateVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
 
 		// Drive with velocities
 		chassis->control_local2d(0, linearVelocity_pct, rotateVelocity_pct);

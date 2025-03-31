@@ -17,154 +17,163 @@
 #include "Autonomous/autonFunctions.h"
 #include "Autonomous/auton.h"
 
+#include "Pas1-Lib/Chassis/Move/local-move-by.h"
+
 #include "global-vars.h"
 #include "main.h"
 
+
+namespace {
+using namespace pas1_lib::chassis::move;
+}
+
+
 namespace controls {
-	void startThreads() {
-		if (intakePartType == 1) {
-			task intakeTask([]() -> int {
-				botintake::runThread();
-				return 1;
-			});
-		} else {
-			task intakeTask([]() -> int {
-				botintake2::runThread();
-				return 1;
-			});
-		}
-		task armTask([]() -> int {
-			botarm::runThread();
+void startThreads() {
+	if (intakePartType == 1) {
+		task intakeTask([]() -> int {
+			botintake::runThread();
 			return 1;
 		});
-
-		task rumbleTask([]() -> int {
-			rumble::runThread();
+	} else {
+		task intakeTask([]() -> int {
+			botintake2::runThread();
 			return 1;
 		});
-		// rumble::setString(".");
 	}
+	task armTask([]() -> int {
+		botarm::runThread();
+		return 1;
+	});
 
-	void setUpKeybinds() {
-		Controller2.ButtonX.pressed([]() -> void { botdrive::switchDriveMode(); });
-		Controller2.ButtonY.pressed([]() -> void { botarm::resetArmEncoder(); });
-		Controller2.ButtonA.pressed([]() -> void {
-			botdrive::setControlState(false);
+	task rumbleTask([]() -> int {
+		rumble::runThread();
+		return 1;
+	});
+	// rumble::setString(".");
+}
 
-			auton::runAutonomous();
+void setUpKeybinds() {
+	Controller2.ButtonX.pressed([]() -> void { botdrive::switchDriveMode(); });
+	Controller2.ButtonY.pressed([]() -> void { botarm::resetArmEncoder(); });
+	Controller2.ButtonA.pressed([]() -> void {
+		botdrive::setControlState(false);
 
-			botdrive::setControlState(true);
-			botdrive::preauton();
-		});
+		auton::runAutonomous();
 
-		// Controller 1
-
-		/* Arm stages */
-		// Stage 0
-		Controller1.ButtonUp.pressed([]() -> void {
-			if (!botarm::isArmResetted()) return;
-
-			botarm::setArmStage(0);
-			botintake::setColorFiltering(true);
-		});
-		// Stage 1
-		Controller1.ButtonB.pressed([]() -> void {
-			if (!botarm::isArmResetted()) return;
-
-			botarm::setArmStage(1);
-			botintake::setColorFiltering(false);
-		});
-		// Stage 2
-		Controller1.ButtonX.pressed([]() -> void {
-			if (!botarm::isArmResetted()) return;
-
-			botarm::setArmStage(3);
-			botintake::setColorFiltering(true);
-		});
-		// Stage 0 or 4
-		Controller1.ButtonL1.pressed([]() -> void {
-			if (!botarm::isArmResetted()) return;
-
-			if (botarm::getArmStage() == 4) botarm::setArmStage(0);
-			else botarm::setArmStage(4);
-			botintake::setColorFiltering(true);
-		});
-
-		/* Ring color filter */
-		Controller2.ButtonB.pressed([]() -> void {
-			rumble::setConstantRumbling(false);
-			rumble::setString(".");
-			if (intakePartType == 1) botintake::switchFilterColor();
-			else botintake2::switchFilterColor();
-		});
-
-		/* Macro */
-		Controller2.ButtonB.pressed([]() -> void {
-			botdrive::setControlState(false);
-			autonfunctions::pid_diff::driveDistanceTiles(0.1);
-			botdrive::setControlState(true);
-			botdrive::preauton();
-		});
-
-		/* Pneumatics */
-		// Swing
-		Controller2.ButtonB.pressed([]() -> void {
-			swing::switchState();
-		});
-		// Clamp
-		Controller1.ButtonL2.pressed([]() -> void {
-			printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
-			goalclamp::switchState();
-		});
-		// Intake lift
-		Controller2.ButtonB.pressed([]() -> void {
-			botintakelift::switchState();
-		});
-		// Climbing PTO
-		Controller1.ButtonRight.pressed([]() -> void {
-			climb_pto::switchState();
-		});
-		// Moving hook
-		Controller1.ButtonY.pressed([]() -> void {
-			climb_hook::switchState();
-		});
-	}
-
-	void preauton() {
+		botdrive::setControlState(true);
 		botdrive::preauton();
-		botarm::preauton();
-		goalclamp::preauton();
-	}
+	});
 
-	void resetStates() {
-		LeftRightMotors.setStopping(brake);
+	// Controller 1
 
-		// Reset arm encoder
-		if (!botarm::isArmResetted()) {
-			task resetArm([]() -> int {
-				botarm::resetArmEncoder();
-				return 1;
-			});
-		}
-		botintake::setIntakeStoreRing(0);
-		swing::setState(0);
-		swing::set2ndState(0);
-	}
+	/* Arm stages */
+	// Stage 0
+	Controller1.ButtonUp.pressed([]() -> void {
+		if (!botarm::isArmResetted()) return;
 
-	void doControls() {
-		botdrive::control();
-		if (intakePartType == 1) {
-			botintake::control(
-				(int) Controller1.ButtonR2.pressing() -
-				(int) Controller1.ButtonR1.pressing(),
-				/*This is not used =>*/ (int) Controller1.ButtonX.pressing());
-		} else {
-			botintake2::control(
-				(int) Controller1.ButtonR1.pressing() -
-				(int) Controller1.ButtonR2.pressing(),
-				/*This is not used =>*/ (int) Controller1.ButtonX.pressing());
-		}
-		// botarm::control((int)Controller1.ButtonL1.pressing() -
-		// 				(int)Controller1.ButtonDown.pressing());
+		botarm::setArmStage(0);
+		botintake::setColorFiltering(true);
+	});
+	// Stage 1
+	Controller1.ButtonB.pressed([]() -> void {
+		if (!botarm::isArmResetted()) return;
+
+		botarm::setArmStage(1);
+		botintake::setColorFiltering(false);
+	});
+	// Stage 2
+	Controller1.ButtonX.pressed([]() -> void {
+		if (!botarm::isArmResetted()) return;
+
+		botarm::setArmStage(3);
+		botintake::setColorFiltering(true);
+	});
+	// Stage 0 or 4
+	Controller1.ButtonL1.pressed([]() -> void {
+		if (!botarm::isArmResetted()) return;
+
+		if (botarm::getArmStage() == 4) botarm::setArmStage(0);
+		else botarm::setArmStage(4);
+		botintake::setColorFiltering(true);
+	});
+
+	/* Ring color filter */
+	Controller2.ButtonB.pressed([]() -> void {
+		rumble::setConstantRumbling(false);
+		rumble::setString(".");
+		if (intakePartType == 1) botintake::switchFilterColor();
+		else botintake2::switchFilterColor();
+	});
+
+	/* Macro */
+	Controller2.ButtonB.pressed([]() -> void {
+		botdrive::setControlState(false);
+		// autonfunctions::pid_diff::driveDistanceTiles(0.1);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1, robotChassis.getLookPose().getThetaPolarAngle_degrees()), false);
+		botdrive::setControlState(true);
+		botdrive::preauton();
+	});
+
+	/* Pneumatics */
+	// Swing
+	Controller2.ButtonB.pressed([]() -> void {
+		swing::switchState();
+	});
+	// Clamp
+	Controller1.ButtonL2.pressed([]() -> void {
+		printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
+		goalclamp::switchState();
+	});
+	// Intake lift
+	Controller2.ButtonB.pressed([]() -> void {
+		botintakelift::switchState();
+	});
+	// Climbing PTO
+	Controller1.ButtonRight.pressed([]() -> void {
+		climb_pto::switchState();
+	});
+	// Moving hook
+	Controller1.ButtonY.pressed([]() -> void {
+		climb_hook::switchState();
+	});
+}
+
+void preauton() {
+	botdrive::preauton();
+	botarm::preauton();
+	goalclamp::preauton();
+}
+
+void resetStates() {
+	LeftRightMotors.setStopping(brake);
+
+	// Reset arm encoder
+	if (!botarm::isArmResetted()) {
+		task resetArm([]() -> int {
+			botarm::resetArmEncoder();
+			return 1;
+		});
 	}
+	botintake::setIntakeStoreRing(0);
+	swing::setState(0);
+	swing::set2ndState(0);
+}
+
+void doControls() {
+	botdrive::control();
+	if (intakePartType == 1) {
+		botintake::control(
+			(int) Controller1.ButtonR2.pressing() -
+			(int) Controller1.ButtonR1.pressing(),
+			/*This is not used =>*/ (int) Controller1.ButtonX.pressing());
+	} else {
+		botintake2::control(
+			(int) Controller1.ButtonR1.pressing() -
+			(int) Controller1.ButtonR2.pressing(),
+			/*This is not used =>*/ (int) Controller1.ButtonX.pressing());
+	}
+	// botarm::control((int)Controller1.ButtonL1.pressing() -
+	// 				(int)Controller1.ButtonDown.pressing());
+}
 }  // namespace controls

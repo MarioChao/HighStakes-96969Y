@@ -28,6 +28,7 @@ using namespace autonfunctions;
 using namespace autonfunctions::pid_diff;
 using namespace autonfunctions::driveturn;
 using namespace botinfo;
+using pas1_lib::chassis::base::Differential;
 using namespace pas1_lib::chassis::move;
 
 // Build paths
@@ -42,6 +43,7 @@ void storeNewSplineProfile(
 	std::string profileName,
 	pas1_lib::planning::splines::SplineCurve spline, bool reverse = false, double maxVel = pathbuild::maxVel_tilesPerSec
 );
+void runFollowSpline(Differential &chassis, std::string profileName);
 void runFollowSpline(std::string profileName);
 
 extern std::vector<std::vector<std::vector<double>>> linearPaths;
