@@ -126,7 +126,7 @@ namespace {
 	void drive(double left_pct, double right_pct, double angular_pct) {
 		// Limit scale
 		left_pct -= angular_pct;
-		right_pct -= angular_pct;
+		right_pct += angular_pct;
 		double scaleFactor = aespa_lib::genutil::getScaleFactor(maxDriveVelocityPct, {left_pct, right_pct});
 		left_pct *= scaleFactor;
 		right_pct *= scaleFactor;

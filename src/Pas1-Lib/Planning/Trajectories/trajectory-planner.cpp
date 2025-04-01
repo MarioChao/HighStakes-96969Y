@@ -671,7 +671,7 @@ std::pair<double, std::vector<double>> TrajectoryPlanner::getMotionAtTime(double
 
 	// Out of range case
 	if (time_seconds < 0) return { 0, {0, 0} };
-	if (getTotalTime() < time_seconds) return { distance, {0, 0} };
+	if (getTotalTime() < time_seconds) return { distance * distance_sign, {0, 0} };
 
 	// Sanitize time
 	time_seconds = aespa_lib::genutil::clamp(time_seconds, 0, getTotalTime());
