@@ -1,12 +1,12 @@
 #include "Autonomous/autonPaths.h"
 
 namespace {
-	using namespace autonpaths;
-	using namespace autonpaths::pathbuild;
+using namespace autonpaths;
+using namespace autonpaths::pathbuild;
 
-	void loadPaths(int section);
+void loadPaths(int section);
 
-	void doAuton();
+void doAuton();
 }
 
 /// @brief Run the template.
@@ -35,18 +35,18 @@ void autonpaths::runTemplate() {
 }
 
 namespace {
-	void loadPaths(int section) {
-		// Clear
-		clearLinear();
-		clearSplines();
+void loadPaths(int section) {
+	// Clear
+	clearLinear();
+	clearSplines();
 
-		if (section == 1) {
-			// Grab goal
-			
-		}
-	}
+	if (section == 1) {
+		// Grab goal
 
-	void doAuton() {
-		
 	}
+}
+
+void doAuton() {
+
+}
 }

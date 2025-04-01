@@ -58,7 +58,7 @@ public:
 		std::function<double(double)> distanceToCurvature_function
 	);
 
-	TrajectoryPlanner &maxSmoothCurvature(double epsilon = 100000);
+	TrajectoryPlanner &maxSmoothCurvature(double epsilon = 1e6);
 	double getCurvatureAtDistance(double distance);
 
 	TrajectoryPlanner &addCenterConstraintSequence(ConstraintSequence constraints);

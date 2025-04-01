@@ -1,7 +1,6 @@
 #include "Autonomous/autonValues.h"
 
 #include "Utilities/fieldInfo.h"
-#include "Utilities/robotInfo.h"
 
 namespace autonvals {
 	const double defaultMoveTilesErrorRange = 0.04;

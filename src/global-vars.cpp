@@ -1,5 +1,4 @@
 #include "global-vars.h"
-#include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
 
 
@@ -35,6 +34,16 @@ bool isArmPneumatic = false;
 timer drivingTimer;
 
 
+/* Bot Info */
+
+BotInfo botInfo(
+	24, // track width (holes)
+	3.25, // wheel diameter (inches)
+	36.0 / 36.0, // wheel to motor gear ratio
+	600 // motor rpm
+);
+
+
 /* Odometry */
 
 namespace {
@@ -48,10 +57,10 @@ Motor lookRight_motorBeats(RightMotorA);
 
 // Tracking wheels
 TrackingWheel lookLeft_trackingWheel(
-	lookLeft_motorBeats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, -botinfo::halfRobotLengthIn
+	lookLeft_motorBeats, 90, botInfo.motorToWheel_gearRatio, 2.75, -botInfo.trackWidth_inches / 2
 );
 TrackingWheel lookRight_trackingWheel(
-	lookRight_motorBeats, 90, botinfo::driveMotorToWheel_gearRatio, 2.75, botinfo::halfRobotLengthIn
+	lookRight_motorBeats, 90, botInfo.motorToWheel_gearRatio, 2.75, botInfo.trackWidth_inches / 2
 );
 TrackingWheel look1_trackingWheel(look_rotationBeats, -90, 1, 2.0, 0);
 TrackingWheel right1_trackingWheel(right_rotationBeats, 180, 1, 2.0, 0);
@@ -73,13 +82,6 @@ Odometry mainOdometry = Odometry()
 /* Chassis */
 
 namespace {
-BotInfo botInfo(
-	24, // track width (holes)
-	3.25, // wheel diameter (inches)
-	36.0 / 36.0, // wheel to motor gear ratio
-	600 // motor rpm
-);
-
 AutonSettings autonSettings(
 	ForwardController(1.0, 12.0 / botInfo.maxVel_tilesPerSec, 0.4), // feedforward (tiles/sec to volt)
 	PIDController(15.06, 0, 0, 0.04), // position feedback (tiles to tiles/sec)

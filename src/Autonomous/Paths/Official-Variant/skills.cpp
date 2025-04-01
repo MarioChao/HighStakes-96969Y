@@ -1,13 +1,13 @@
 #include "Autonomous/autonPaths.h"
 
 namespace {
-	using namespace autonpaths;
-	using namespace autonpaths::pathbuild;
-	using namespace autonpaths::combination;
+using namespace autonpaths;
+using namespace autonpaths::pathbuild;
+using namespace autonpaths::combination;
 
-	void loadPaths(int section);
+void loadPaths(int section);
 
-	void firstCorner();
+void doAuton();
 }
 
 /// @brief Run the autonomous skills.
@@ -33,14 +33,17 @@ void autonpaths::runAutonSkills() {
 }
 
 namespace {
-	void loadPaths(int section) {
-		// Clear
-		clearLinear();
-		clearSplines();
+void loadPaths(int section) {
+	// Clear
+	clearLinear();
+	clearSplines();
 
-		if (section == 1) {
-		}
+	if (section == 1) {
+
 	}
+}
 
-	
+void doAuton() {
+
+}
 }

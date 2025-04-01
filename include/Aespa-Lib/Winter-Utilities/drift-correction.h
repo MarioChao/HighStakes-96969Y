@@ -1,13 +1,16 @@
 #pragma once
 
-#include "main.h"
+#include "vex.h"
+
+
+namespace aespa_lib {
+namespace util {
+
 
 class DriftCorrection {
 public:
-	// Reolution drift in degrees
+	// Revolution drift in degrees
 	DriftCorrection(inertial &sensor, double perClockwiseRevolutionDrift, double perCCWRevolutionDrift);
-
-	void _onInit();
 
 	void setInitial();
 	void correct();
@@ -18,3 +21,7 @@ private:
 	double perClockwiseRevolutionDrift, perCCWRevolutionDrift;
 	double storedInitialRotation;
 };
+
+
+}
+}

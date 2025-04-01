@@ -171,7 +171,6 @@ void runAutonomous() {
 	userRunningAutonomous = false;
 	botintake::setFilterOutColor(autonFilterOutColor);
 	botintake2::setFilterOutColor(autonFilterOutColor);
-	botdrive::setMaxDeltaVolt(2.0);
 	
 	// Run auton
 	switch (auton_runType) {

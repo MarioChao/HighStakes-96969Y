@@ -8,11 +8,11 @@ void autonpaths::runAllianceWallStake() {
 
 
 	// Go back 1 tile
-	driveAndTurnDistanceTiles(-1.0, -180.0);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1.0, -180.0), false);
 
 
 	// Score
-	turnToAngle(-90.0);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(-90.0), false);
 	setIntakeState(1);
 
 	while (autontimer.value() < 12.0) {
@@ -23,5 +23,5 @@ void autonpaths::runAllianceWallStake() {
 	setIntakeState(0);
 
 
-	driveAndTurnDistanceTiles(2.0, -90.0, 30.0, 100.0);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(2.0, -90.0, 30.0, 100.0), false);
 }

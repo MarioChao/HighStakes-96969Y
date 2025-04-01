@@ -3,14 +3,12 @@
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
-#include "AutonUtilities/driftCorrection.h"
-#include "Utilities/fieldInfo.h"
-
 
 namespace {
 
 using aespa_lib::datas::Linegular;
 using aespa_lib::sensor_beats::TrackingWheel;
+using aespa_lib::util::DriftCorrection;
 
 const double cosAngleWithinRange = 1e-2;
 const double integralSmallAngle_degrees = 8;

@@ -15,7 +15,6 @@
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
 #include "Utilities/fieldInfo.h"
-#include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "global-vars.h"
 #include "main.h"
@@ -25,24 +24,27 @@
 
 namespace autonpaths {
 using namespace autonfunctions;
-using namespace autonfunctions::pid_diff;
-using namespace autonfunctions::driveturn;
-using namespace botinfo;
+using namespace aespa_lib::units::literals;
 using pas1_lib::chassis::base::Differential;
 using namespace pas1_lib::chassis::move;
 
 // Build paths
 
 namespace pathbuild {
-extern const double maxVel_tilesPerSec;
 extern const double maxAccel;
 extern const double maxDecel;
 
 void clearSplines();
+
 void storeNewSplineProfile(
 	std::string profileName,
-	pas1_lib::planning::splines::SplineCurve spline, bool reverse = false, double maxVel = pathbuild::maxVel_tilesPerSec
+	pas1_lib::planning::splines::SplineCurve spline, bool reverse, double maxVel
 );
+void storeNewSplineProfile(
+	std::string profileName,
+	pas1_lib::planning::splines::SplineCurve spline, bool reverse = false
+);
+
 void runFollowSpline(Differential &chassis, std::string profileName);
 void runFollowSpline(std::string profileName);
 

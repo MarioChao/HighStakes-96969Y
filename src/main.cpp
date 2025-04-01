@@ -23,7 +23,6 @@
 #include "Sensors/inertial-s.h"
 
 #include "Utilities/fieldInfo.h"
-#include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 
 #include "Videos/video-main.h"
@@ -56,8 +55,8 @@ void pre_auton(void) {
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...
 
-	printf("maxV: %.3f\n", botinfo::maxV_tilesPerSec);
-	// printf("tps2%%: %.3f\n", botinfo::tilesPerSecond_to_pct);
+	printf("maxV: %.3f\n", botInfo.maxVel_tilesPerSec);
+	// printf("tps2%%: %.3f\n", botInfo.tilesPerSecond_to_pct);
 
 	// Tasks
 	controls::startThreads();
@@ -106,7 +105,7 @@ void pre_auton(void) {
 		robotSimulator.angularPosition = aespa_lib::genutil::toRadians(90);
 		task simulatorTask([]() -> int {
 			while (true) {
-				robotSimulator.constrainMotion(botinfo::maxV_tilesPerSec, botinfo::robotLengthIn / field::tileLengthIn);
+				robotSimulator.constrainMotion(botInfo.maxVel_tilesPerSec, botInfo.trackWidth_tiles);
 				robotSimulator.updatePhysics();
 				robotSimulator.updateDistance();
 				wait(10, msec);
@@ -200,7 +199,7 @@ void usercontrol(void) {
 		if (false) {
 			LeftRightMotors.spin(forward, v, volt);
 
-			double velocity = LeftRightMotors.velocity(pct) / 100.0 * botinfo::maxV_tilesPerSec;
+			double velocity = LeftRightMotors.velocity(pct) / botInfo.tilesPerSecond_to_pct;
 			if (velocities.size() > 10) velocities = { velocity };
 			else velocities.push_back(velocity);
 			double avgV = aespa_lib::genutil::getAverage(velocities);

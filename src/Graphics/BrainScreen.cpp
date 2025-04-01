@@ -281,23 +281,22 @@ namespace {
 		Brain.Screen.drawPixel(fw_drawX, y + height / 2.0);
 		Brain.Screen.setPenColor(color::orange);
 		double gph_x, gph_y;
-		double trajectoryValue;
-		if (mainUseSimulator && !autonfunctions::_pathFollowStarted) {
-			trajectoryValue = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value()).second[0];
-		} else {
-			std::pair<double, std::vector<double>> motion = autonfunctions::_trajectoryPlan.getMotionAtTime(autonfunctions::_splinePathTimer.value());
-			double traj_distance = motion.first;
-			double traj_velocity = motion.second[0];
-			// printf("V: %.3f\n", traj_velocity);
-			// double traj_tvalue = autonfunctions::_curveSampler.distanceToParam(traj_distance);
-			// double traj_angularVelocity = traj_velocity * autonfunctions::_splinePath.getCurvatureAt(traj_tvalue);
-			trajectoryValue = traj_velocity;
 
-			double linearVelocity = robotSimulator.velocity.getMagnitude();
-			trajectoryValue = linearVelocity + fabs(robotSimulator.angularVelocity) * (botinfo::robotLengthIn / field::tileLengthIn / 2);
-		}
+		double trajectoryValue;
+		std::pair<double, std::vector<double>> motion = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value());
+		double traj_distance = motion.first;
+		double traj_velocity = motion.second[0];
+		double traj_k = testTrajectoryPlan.getCurvatureAtDistance(traj_distance);
+		double traj_trackFactor = traj_k * botInfo.trackWidth_tiles / 2;
+		// printf("V: %.3f\n", traj_velocity);
+		// double traj_tvalue = autonfunctions::_curveSampler.distanceToParam(traj_distance);
+		// double traj_angularVelocity = traj_velocity * autonfunctions::_splinePath.getCurvatureAt(traj_tvalue);
+		trajectoryValue = traj_velocity * (1 + std::fabs(traj_trackFactor));
+		// double linearVelocity = robotSimulator.velocity.getMagnitude();
+		// trajectoryValue = linearVelocity + fabs(robotSimulator.angularVelocity) * (botInfo.trackWidth_tiles / 2);
+
 		gph_x = fw_drawX;
-		gph_y = y + height / 2.0 - (trajectoryValue / botinfo::maxV_tilesPerSec * height / 2);
+		gph_y = y + height / 2.0 - (trajectoryValue / botInfo.maxVel_tilesPerSec * height / 2);
 		// printf("Vel: %.3f\n", trajectoryValue);
 		Brain.Screen.drawPixel(gph_x, gph_y);
 

@@ -1,13 +1,14 @@
-#include "AutonUtilities/driftCorrection.h"
+#include "Aespa-Lib/Winter-Utilities/drift-correction.h"
 
-DriftCorrection::DriftCorrection(inertial &sensor, double perClockwiseRevolutionDrift, double perCCWRevolutionDrift) {
-	this->sensor = &sensor;
-	this->perClockwiseRevolutionDrift = perClockwiseRevolutionDrift;
-	this->perCCWRevolutionDrift = perCCWRevolutionDrift;
-	_onInit();
-}
 
-void DriftCorrection::_onInit() {
+namespace aespa_lib {
+namespace util {
+
+
+DriftCorrection::DriftCorrection(inertial &sensor, double perClockwiseRevolutionDrift, double perCCWRevolutionDrift)
+	: sensor(&sensor),
+	perClockwiseRevolutionDrift(perClockwiseRevolutionDrift),
+	perCCWRevolutionDrift(perCCWRevolutionDrift) {
 	storedInitialRotation = 0;
 }
 
@@ -31,4 +32,8 @@ void DriftCorrection::correct() {
 
 double DriftCorrection::getRotation() {
 	return sensor->rotation(deg);
+}
+
+
+}
 }

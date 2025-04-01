@@ -2,9 +2,10 @@
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Ningning-Sensors/tracking-wheel.h"
-#include "AutonUtilities/driftCorrection.h"
+#include "Aespa-Lib/Winter-Utilities/drift-correction.h"
 
 #include <functional>
+#include <vector>
 
 
 namespace pas1_lib {
@@ -92,7 +93,7 @@ private:
 
 	// Inertial gyro sensors
 	std::vector<std::reference_wrapper<inertial>> inertialSensors;
-	std::vector<DriftCorrection> inertialSensor_driftCorrections;
+	std::vector<aespa_lib::util::DriftCorrection> inertialSensor_driftCorrections;
 
 	std::vector<double> inertialSensor_oldMeasurements, inertialSensor_newMeasurements;
 

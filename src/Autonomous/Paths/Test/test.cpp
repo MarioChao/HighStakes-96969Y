@@ -47,49 +47,37 @@ void autonpaths::runAutonTest() {
 	}
 
 	if (false) {
-		// async_driveAndTurnDistance_qtInches(400, 0.0, {{0, 50}});
-		// waitUntil(_isDriveAndTurnSettled);
-		async_driveAndTurnDistance_qtInches(200, 0.0, {{0, 100}, {100, 40}});
-		waitUntil(_isDriveAndTurnSettled);
-		async_driveAndTurnDistance_qtInches(-200, 0.0, {{0, 40}, {100, 100}});
-		waitUntil(_isDriveAndTurnSettled);
-		// async_driveAndTurnDistance_qtInches(100, 0.0, 100);
-		// waitUntil(_isDriveAndTurnSettled);
-		// async_driveAndTurnDistance_qtInches(100, 0.0, 40);
-		// waitUntil(_isDriveAndTurnSettled);
-		// async_driveAndTurnDistance_qtInches(-100, 0.0, 40);
-		// waitUntil(_isDriveAndTurnSettled);
-		// async_driveAndTurnDistance_qtInches(-100, 0.0, 100);
-		// waitUntil(_isDriveAndTurnSettled);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(200_qtIn, 0, {{0, 100}, {(100_qtIn).tiles(), 40}}), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-200_qtIn, 0, {{0, 40}, {(100_qtIn).tiles(), 100}}), false);
 	}
 
 	if (false) {
-		driveAndTurnDistanceTiles(1.0, 0.0, 50.0, 100.0, 6.0);
-		driveAndTurnDistanceTiles(1.0, 0.0, 100.0, 100.0, 3.0);
-		driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, 3.0);
-		driveAndTurnDistanceTiles(-1.0, 0.0, 100.0, 100.0, 3.0);
-		driveAndTurnDistanceTiles(2.0, 0.0, 100.0, 100.0, 3.0);
-		driveAndTurnDistanceTiles(-2.0, 0.0, 100.0, 100.0, 3.0);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(1, 0, 50), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(1, 0, 100), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 0, 100), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 0, 100), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(2, 0, 100), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-2, 0, 100), false);
 	}
 
 	if (false) {
-		turnToAngle(45);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(45), false);
 		task::sleep(200);
-		turnToAngleVelocity(-45, 15);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(-45, 15), false);
 		task::sleep(200);
-		turnToAngleVelocity(90, 30);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 30), false);
 		task::sleep(200);
-		turnToAngleVelocity(-90, 60);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(-90, 60), false);
 		task::sleep(200);
-		turnToAngle(180);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(180), false);
 		task::sleep(200);
-		turnToAngle(-180);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(-180), false);
 		task::sleep(200);
-		turnToAngle(450);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(450), false);
 		task::sleep(200);
-		turnToAngle(-450, 0.0, 3.5);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(-450), false);
 		task::sleep(200);
-		turnToAngle(0);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(0), false);
 	}
 
 	setDifferentialUseRelativeRotation(true);
@@ -110,7 +98,6 @@ void autonpaths::runAutonTest() {
 		runLinearPIDPath({{0, 0}}, 100, true);
 		runLinearPIDPath({{0, 2}}, 100);
 		runLinearPIDPath({{0, 0}}, 100, true);
-		// turnToAngle(0);
 	}
 
 	if (true) {
@@ -126,7 +113,7 @@ void autonpaths::odometryRadiusTest() {
 	printf("Clockwise\n");
 
 	mainOdometry.printDebug();
-	turnToAngleVelocity(360.0 * 10.0, 30.0, 0.0, 40.0);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(3600, 30, 0, 40.0), false);
 	mainOdometry.printDebug();
 
 	wait(1, sec);
@@ -138,6 +125,6 @@ void autonpaths::odometryRadiusTest() {
 	printf("Counter clockwise\n");
 
 	mainOdometry.printDebug();
-	turnToAngleVelocity(-360.0 * 10.0, 30.0, 0.0, 40.0);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(-3600, 30, 0, 40.0), false);
 	mainOdometry.printDebug();
 }

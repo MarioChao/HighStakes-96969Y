@@ -23,6 +23,9 @@ extern bool isArmPneumatic;
 // Timer
 extern timer drivingTimer;
 
+// Bot info
+extern pas1_lib::chassis::settings::BotInfo botInfo;
+
 // Odometry
 extern pas1_lib::chassis::settings::Odometry mainOdometry;
 

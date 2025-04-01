@@ -12,7 +12,9 @@
 			- [x] tracking wheel
 		- [x] Winter Utilities
 			- [x] angle
+			- [x] drift correction
 			- [x] general
+			- [x] units
 	- [ ] Pas1 Library
 		- [ ] Auton
 			- [x] Control Loops
@@ -32,10 +34,10 @@
 				- [x] chassis base
 				- [x] differential
 				- [ ] x drive?
-			- [ ] Move
+			- [x] Move
 				- [x] global move to (need actual tests)
 				- [x] local move by
-				- [ ] path follow
+				- [x] path follow
 			- [ ] Settings
 				- [x] auton settings
 				- [x] bot info

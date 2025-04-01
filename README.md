@@ -4,27 +4,28 @@ The repository for team 96969Y's newest robot program in 2024-25 VEX Robotics - 
 
 ## Configuration
 
-Modify robot configurations in [`robot-config.cpp`](./src/robot-config.cpp).
+Modify robot configurations in [robot-config.cpp](./src/robot-config.cpp).
 
-Modify robot specifications in [`robotInfo.cpp`](./src/Utilities/robotInfo.cpp).
+Modify robot specifications in [global-vars.cpp](./src/global-vars.cpp) (modify `botInfo`).
 
 ## Chassis Configuration
 
-Modify chassis sensors & odometry in [`global-vars.cpp`](./src/global-vars.cpp).
+Modify chassis sensors, odometry, and auton settings in [global-vars.cpp](./src/global-vars.cpp).
 
 Notes:
 
-- Some dummy sensors create an error if you read its value immediately after starting the program!
+- Some dummy sensors create an error if you read its value immediately after starting the program<br>
+	Examples:
 	- Optical shaft encoder
 	- Inertial sensor
 
 ## About
 
-Our main control program is organized into the categories [`Autonomous`](./include/Autonomous/), [`Controller`](./include/Controller/), and [`Mechanics`](./include/Mechanics/).
+Our main control program is organized into the categories [`Autonomous`](./include/Autonomous/), [`Controller`](./include/Controller/), [`Mechanics`](./include/Mechanics/), and [`MatchSequence`](./include/MatchSequence/).
 
-Our utility functions are organized into [`AutonUtilities`](./include/AutonUtilities/), [`GraphUtilities`](./include/GraphUtilities/), and [`Utilities`](./include/Utilities/).
+Our utility functions are organized into [`Aespa-Lib`](./include/Aespa-Lib/), [`Sensors`](./include/Sensors/), and [`Utilities`](./include/Utilities/).
 
-Our cosmetic program is organized into the categories [`Graphics`](./include/Graphics/), [`Simulation`](./include/Simulation/), and [`Videos`](./include/Videos/).
+Our cosmetic program is organized into the categories [`Graphics`](./include/Graphics/), [`Simulation`](./include/Simulation/), [`Videos`](./include/Videos/), and [`LedLight`](./include/LedLight/).
 
 Our team id is [96969Y](https://www.robotevents.com/teams/VRC/96969Y), and our website is [here](https://mariochao.github.io/vex-pas1/).
 

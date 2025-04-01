@@ -176,7 +176,14 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 	int stepSplit = 5;
 
 	// Store function
-	for (double x = 0; x <= distance;) {
+	double x = 0;
+	bool lastIteration = false;
+	while (true) {
+		if (x >= distance) {
+			x = distance;
+			lastIteration = true;
+		}
+
 		// Estimate segment curvature
 		double avgK = 0;
 		double maxK = 0;
@@ -216,6 +223,8 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 
 		// Increment distance
 		x += deltaX;
+
+		if (lastIteration) break;
 	}
 
 	return *this;
@@ -289,6 +298,12 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	// Minimum constrain
 	node.constrain(center_minConstraint0);
 
+	std::vector<Constraint> center_constraints0_1 = getConstraintsAtDistance(
+		center_constraintSequences, oldDistance + distanceStep
+	);
+	Constraint center_minConstraint0_1 = getMinimumConstraint(center_constraints0_1);
+	node.constrain(center_minConstraint0_1);
+
 	// Get target raw constraint
 	Constraint planRaw_constraint0 = planPoint_rawSequence.getConstraintAtDistance(oldDistance);
 
@@ -312,11 +327,6 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 
 	// Binary search for time step
 	PlanPoint nodeToIntegrate = node;
-	// printf("%.3f ", node.distance);
-	// for (double f : node.motion_dV_dT) {
-	// 	printf("%.3f ", f);
-	// }
-	// printf("\n");
 	double timeStep_seconds = getTimeStepFromDistanceStep(nodeToIntegrate, fabs(distanceStep));
 	if (timeStep_seconds <= 1e-5) {
 		printf("SKIPPED\n");
@@ -347,12 +357,14 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	Constraint center_minConstraint1 = getMinimumConstraint(center_constraints1);
 	Constraint track_minConstraint1 = getMinimumConstraint(track_constraints1);
 	newNode.constrain(center_minConstraint1);
+	// printf("T dis: %.3f, dis: %.3f, vel: %.3f\n", distance, newNode.distance, newNode.motion_dV_dT[0]);
 
 	// Derivative constrain
 	for (int i = dV_dT_degree + 1; i < (int) newNode.motion_dV_dT.size(); i++) {
-		double deriv = (newNode.motion_dV_dT[i - 1] - node.motion_dV_dT[i - 1]) / timeStep_seconds;
+		double deriv = (newNode.motion_dV_dT[i - 1] - originalNode.motion_dV_dT[i - 1]) / timeStep_seconds;
 		// newNode.motion_dV_dT[i] = fmin(newNode.motion_dV_dT[i], deriv);
 		newNode.motion_dV_dT[i] = deriv;
+		// printf("dis: %.3f, ts: %.3f, deriv: %.3f\n", newNode.distance, timeStep_seconds, deriv);
 	}
 
 	// Constrain left & right
@@ -367,7 +379,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 		newNode.motion_dV_dT = aespa_lib::genutil::multiplyVector(newNode.motion_dV_dT, 1 / factor);
 	}
 
-	// Constrain left & right integral
+	// Constrain left & right integral (wheel acceleration)
 	if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 		// Get curvature & track factors
 		double curvature0 = getCurvatureAtDistance(originalNode.distance);
@@ -383,10 +395,11 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 		for (int index = 0; index < (int) factor0s.size(); index++) {
 			double factor0 = factor0s[index];
 			double factor1 = factor1s[index];
-			if (factor0 < 0 || factor1 < 0) continue;
 
-			// Scale to track
-			newNode.motion_dV_dT = aespa_lib::genutil::multiplyVector(newNode.motion_dV_dT, factor1);
+			// Equations:
+			// vwheel_old = v_old * factor0
+			// vwheel_new = v_new * factor1
+			// vwheel_new - vwheel_old < maxaccel * dt
 
 			// Scale target raw constraint to track
 			Constraint planRaw_track_constraint0 = planRaw_constraint0;
@@ -403,18 +416,18 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 				track_minConstraint0, dV_dT_degree + 1,
 				planRaw_track_constraint0
 			);
+			if (factor0 < 0) trackNode.motion_dV_dT[dV_dT_degree] *= -1;
 
 			// Integrate track motion
 			auto trackIntegral = aespa_lib::genutil::integratePolynomial(
 				trackNode.motion_dV_dT, timeStep_seconds
 			);
-			// trackIntegral.second = { trackIntegral.second[0] };
 
-			// Constrain track integral
+			// Scale track integral to center
+			trackIntegral.second = aespa_lib::genutil::multiplyVector(trackIntegral.second, 1 / factor1);
+
+			// Constrain
 			newNode.constrain(Constraint(0, aespa_lib::genutil::getAbsolute(trackIntegral.second)));
-
-			// Scale back
-			newNode.motion_dV_dT = aespa_lib::genutil::multiplyVector(newNode.motion_dV_dT, 1 / factor1);
 		}
 	}
 
@@ -539,6 +552,7 @@ TrajectoryPlanner &TrajectoryPlanner::calculateMotionProfile() {
 
 	// Generate plan point distances
 	double distanceStep = distance / (double) distanceResolution;
+	planPoint_distances.clear();
 	for (double x = 0; x <= distance; x += distanceStep) {
 		planPoint_distances.push_back(x);
 	}
@@ -567,59 +581,70 @@ TrajectoryPlanner &TrajectoryPlanner::calculateMotionProfile() {
 	printf("SZ: %d\n", (int) planPoint_distances.size());
 
 	// Initialize plan raw sequence
+	planPoint_rawSequence.constraints.clear();
 	planPoint_rawSequence.addConstraints({ {0, {1e9}} });
+
+	// Double pass config
+	int desiredPasses = 1;
+	bool skipFirst = false;
 
 	// Forward-backward passes
 	int passesCount = 0;
 	std::vector<PlanPoint> backward_planningPoints;
 	std::vector<PlanPoint> forward_planningPoints;
+	std::pair<ConstraintSequence, ConstraintSequence> pass_constraintSequences;
 	for (int degree = 0; degree < maxdV_dT_degree - 1; degree++) {
-		// Forward pass
-		forward_planningPoints = _forwardPass(degree);
+		for (int pass = 0; pass < desiredPasses; pass++) {
+			if (!skipFirst) {
+				// Forward pass
+				forward_planningPoints = _forwardPass(degree);
 
-		// Clear pass constraints
-		for (int i = 0; i < passesCount; i++) {
-			center_constraintSequences.pop_back();
-			track_constraintSequences.pop_back();
-		}
-		passesCount = 0;
-		// break;
+				// Clear pass constraints
+				for (int i = 0; i < passesCount; i++) {
+					center_constraintSequences.pop_back();
+					track_constraintSequences.pop_back();
+				}
+				passesCount = 0;
+				// break;
 
-		if (degree == 0 && false) { break; }
+				if (degree == 0 && false) { break; }
 
-		// Constrain
-		passesCount++;
-		auto pass_constraintSequences = constraintSequencesFromPlanPoints(forward_planningPoints);
-		center_constraintSequences.push_back(pass_constraintSequences.first);
-		track_constraintSequences.push_back(pass_constraintSequences.second);
-		planPoint_rawSequence = planPoints_to_rawConstraintSequence(forward_planningPoints);
-
-		// Backward pass
-		backward_planningPoints = _backwardPass(degree);
-
-		// Clear pass constraints
-		for (int i = 0; i < passesCount; i++) {
-			center_constraintSequences.pop_back();
-			track_constraintSequences.pop_back();
-		}
-		passesCount = 0;
-
-		if (degree == 0 && false) {
-			double maxTime = backward_planningPoints[0].time_seconds;
-			for (PlanPoint &point : backward_planningPoints) {
-				// Fix time
-				point.time_seconds = maxTime - point.time_seconds;
+				// Constrain
+				passesCount++;
+				pass_constraintSequences = constraintSequencesFromPlanPoints(forward_planningPoints);
+				center_constraintSequences.push_back(pass_constraintSequences.first);
+				track_constraintSequences.push_back(pass_constraintSequences.second);
+				planPoint_rawSequence = planPoints_to_rawConstraintSequence(forward_planningPoints);
 			}
-			profilePoints = backward_planningPoints;
-			return *this;
-		}
+			skipFirst = false;
 
-		// Constrain
-		passesCount++;
-		pass_constraintSequences = constraintSequencesFromPlanPoints(backward_planningPoints);
-		center_constraintSequences.push_back(pass_constraintSequences.first);
-		track_constraintSequences.push_back(pass_constraintSequences.second);
-		planPoint_rawSequence = planPoints_to_rawConstraintSequence(backward_planningPoints);
+			// Backward pass
+			backward_planningPoints = _backwardPass(degree);
+
+			// Clear pass constraints
+			for (int i = 0; i < passesCount; i++) {
+				center_constraintSequences.pop_back();
+				track_constraintSequences.pop_back();
+			}
+			passesCount = 0;
+
+			if (degree == 0 && false) {
+				double maxTime = backward_planningPoints[0].time_seconds;
+				for (PlanPoint &point : backward_planningPoints) {
+					// Fix time
+					point.time_seconds = maxTime - point.time_seconds;
+				}
+				profilePoints = backward_planningPoints;
+				return *this;
+			}
+
+			// Constrain
+			passesCount++;
+			pass_constraintSequences = constraintSequencesFromPlanPoints(backward_planningPoints);
+			center_constraintSequences.push_back(pass_constraintSequences.first);
+			track_constraintSequences.push_back(pass_constraintSequences.second);
+			planPoint_rawSequence = planPoints_to_rawConstraintSequence(backward_planningPoints);
+		}
 	}
 
 	// Forward pass
@@ -642,9 +667,11 @@ double TrajectoryPlanner::getTotalTime() {
 
 std::pair<double, std::vector<double>> TrajectoryPlanner::getMotionAtTime(double time_seconds) {
 	// Empty case
-	if ((int) profilePoints.size() < 2) {
-		return { 0, {0, 0} };
-	}
+	if ((int) profilePoints.size() < 2) return { 0, {0, 0} };
+
+	// Out of range case
+	if (time_seconds < 0) return { 0, {0, 0} };
+	if (getTotalTime() < time_seconds) return { distance, {0, 0} };
 
 	// Sanitize time
 	time_seconds = aespa_lib::genutil::clamp(time_seconds, 0, getTotalTime());

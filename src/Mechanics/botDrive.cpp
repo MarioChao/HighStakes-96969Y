@@ -6,14 +6,13 @@
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
-#include "Utilities/robotInfo.h"
 #include "Utilities/debugFunctions.h"
 #include "Utilities/fieldInfo.h"
 
+#include "global-vars.h"
 #include "main.h"
 
 namespace {
-	using namespace botinfo;
 	using botdrive::controlType;
 	using pas1_lib::auton::control_loops::ForwardController;
 	using pas1_lib::auton::control_loops::PIDController;
@@ -21,12 +20,7 @@ namespace {
 	// Controls
 	void controlArcadeTwoStick();
 	void controlArcadeSingleStick();
-	void drive(double initLeftPct, double initRightPct, double initPolarRotatePct, double rotateCenterOffsetIn = 0);
-
-	// Resolve
-	void resolveDriveVelocity();
-	void _differentialDriveAtVelocity(double leftVelocity_pct, double rightVelocity_pct);
-	void _differentialDriveAtVolt(double leftVelocity_volt, double rightVelocity_volt);
+	void drive(double left_pct, double right_pct, double angular_pct);
 
 	// Drive mode
 	controlType driveMode = controlType::ArcadeTwoStick;
@@ -34,18 +28,6 @@ namespace {
 
 	// Drive config
 	double maxDriveVelocityPct = 100.0;
-	bool driveUseThread = false;
-
-	double maxDeltaVolt = 2.0;
-
-	// Driving velocity
-	double _linearVelocity_pct, _angularVelocity_radPerSecond;
-
-	// Velocity controller
-	PIDController left_driveVelocityPid(1.8, 0, 0); // in/s to pct
-	ForwardController left_driveMotionForward(1.0, 3.1875, 0.4); // t/s to volt
-	PIDController right_driveVelocityPid(1.8, 0, 0); // in/s to pct
-	ForwardController right_driveMotionForward(1.0, 3.1875, 0.4); // t/s to volt
 
 	// Control state
 	bool controlState = true;
@@ -53,13 +35,6 @@ namespace {
 
 namespace botdrive {
 	void runThread() {
-		while (true) {
-			if (driveUseThread) {
-				resolveDriveVelocity();
-			}
-
-			wait(20, msec);
-		}
 	}
 
 	void preauton() {
@@ -96,7 +71,6 @@ namespace botdrive {
 		if (!canControl()) {
 			return;
 		}
-		setMaxDeltaVolt(24);
 		switch (driveMode) {
 			case controlType::ArcadeTwoStick:
 				controlArcadeTwoStick();
@@ -124,41 +98,6 @@ namespace botdrive {
 	double getMaxDriveVelocity() {
 		return maxDriveVelocityPct;
 	}
-
-	void setMaxDeltaVolt(double deltaVolt) {
-		maxDeltaVolt = deltaVolt;
-	}
-
-	void driveLinegularVelocity(double linearVelocity_pct, double angularVelocity_radPerSecond) {
-		_linearVelocity_pct = linearVelocity_pct;
-		_angularVelocity_radPerSecond = angularVelocity_radPerSecond;
-		resolveDriveVelocity();
-	}
-
-	void driveVelocity(double leftVelocityPct, double rightVelocityPct) {
-		_linearVelocity_pct = (leftVelocityPct + rightVelocityPct) / 2.0;
-		double angularVelocity_tilesPerSecond = (rightVelocityPct - leftVelocityPct) / 2.0 / botinfo::tilesPerSecond_to_pct;
-		_angularVelocity_radPerSecond = angularVelocity_tilesPerSecond / (botinfo::halfRobotLengthIn * (1.0 / field::tileLengthIn));
-		resolveDriveVelocity();
-	}
-
-	void driveVoltage(double leftVoltageVolt, double rightVoltageVolt, double clampMaxVoltage) {
-		// Preprocess config
-		double maxVoltage = 12.0;
-		clampMaxVoltage = fabs(clampMaxVoltage);
-
-		// Scale voltages if overshoot
-		double scaleFactor = aespa_lib::genutil::getScaleFactor(maxVoltage, {leftVoltageVolt, rightVoltageVolt});
-		leftVoltageVolt *= scaleFactor;
-		rightVoltageVolt *= scaleFactor;
-
-		// Clamp
-		leftVoltageVolt = aespa_lib::genutil::clamp(leftVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
-		rightVoltageVolt = aespa_lib::genutil::clamp(rightVoltageVolt, -clampMaxVoltage, clampMaxVoltage);
-
-		// Drive
-		_differentialDriveAtVolt(leftVoltageVolt, rightVoltageVolt);
-	}
 }
 
 namespace {
@@ -184,120 +123,19 @@ namespace {
 		drive(axis3, axis3, -axis4);
 	}
 
-	void drive(double initLeftPct, double initRightPct, double initPolarRotatePct, double rotateCenterOffsetIn) {
-		// Compute scaled rotations
-		double leftRotateRadiusIn = halfRobotLengthIn + rotateCenterOffsetIn;
-		double rightRotateRadiusIn = halfRobotLengthIn - rotateCenterOffsetIn;
-		double leftPolarRotatePct = initPolarRotatePct * (leftRotateRadiusIn / halfRobotLengthIn);
-		double rightPolarRotatePct = initPolarRotatePct * (rightRotateRadiusIn / halfRobotLengthIn);
+	void drive(double left_pct, double right_pct, double angular_pct) {
+		// Limit scale
+		left_pct -= angular_pct;
+		right_pct -= angular_pct;
+		double scaleFactor = aespa_lib::genutil::getScaleFactor(maxDriveVelocityPct, {left_pct, right_pct});
+		left_pct *= scaleFactor;
+		right_pct *= scaleFactor;
 
-		// Compute final percentages
-		double leftPct = initLeftPct - leftPolarRotatePct;
-		double rightPct = initRightPct + rightPolarRotatePct;
+		// Get linear and angular
+		double linear_pct = (left_pct + right_pct) / 2;
+		angular_pct = (right_pct - left_pct) / 2;
 
-		if (true) {
-			// Drive
-			// botdrive::driveVelocity(leftPct, rightPct);
-			botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftPct), aespa_lib::genutil::pctToVolt(rightPct), 12);
-		} else {
-			// Scale percentages if overshoot
-			double scaleFactor = aespa_lib::genutil::getScaleFactor(maxDriveVelocityPct, {leftPct, rightPct});
-			leftPct *= scaleFactor;
-			rightPct *= scaleFactor;
-
-			// Spin motors at volt
-			// LeftMotors.spin(fwd, leftPct, pct);
-			// RightMotors.spin(fwd, rightPct, pct);
-			if (fabs(leftPct) < 5) {
-				LeftMotors.stop();
-			} else {
-				LeftMotors.spin(fwd, aespa_lib::genutil::pctToVolt(leftPct), volt);
-			}
-			if (fabs(rightPct) < 5) {
-				RightMotors.stop();
-			} else {
-				RightMotors.spin(fwd, aespa_lib::genutil::pctToVolt(rightPct), volt);
-			}
-		}
-	}
-
-	void resolveDriveVelocity() {
-		// Differential drive
-
-		// Convert angular velocity to wheel's linear velocity
-		double rotationLinearVelocity_tilesPerSecond = _angularVelocity_radPerSecond * botinfo::halfRobotLengthIn * (1.0 / field::tileLengthIn);
-		double rotationLinearVelocity_pct = rotationLinearVelocity_tilesPerSecond * botinfo::tilesPerSecond_to_pct;
-
-		// Compute differential velocity
-		double leftVelocity_pct = _linearVelocity_pct - rotationLinearVelocity_pct;
-		double rightVelocity_pct = _linearVelocity_pct + rotationLinearVelocity_pct;
-		// printf("Lin: %.3f, ang: %.3f\n", _linearVelocity_pct, rotationLinearVelocity_pct);
-		printf("LV: %.3f, RV: %.3f\n", leftVelocity_pct, rightVelocity_pct);
-
-		// Drive at velocity
-		_differentialDriveAtVelocity(leftVelocity_pct, rightVelocity_pct);
-	}
-
-	void _differentialDriveAtVelocity(double leftVelocity_pct, double rightVelocity_pct) {
-		// Scale percentages if overshoot
-		double scaleFactor = aespa_lib::genutil::getScaleFactor(100.0, {leftVelocity_pct, rightVelocity_pct});
-		leftVelocity_pct *= scaleFactor;
-		rightVelocity_pct *= scaleFactor;
-
-		// Compute current motion
-		double currentLeftVelocity_inchesPerSec = LeftMotors.velocity(rpm) * (1 / 60.0) * (botinfo::driveWheelCircumIn  / botinfo::driveWheelMotorGearRatio);
-		double currentRightVelocity_inchesPerSec = RightMotors.velocity(rpm) * (1 / 60.0) * (botinfo::driveWheelCircumIn  / botinfo::driveWheelMotorGearRatio);
-
-		/* Feedforward */
-
-		double desiredLeftVelocity_tilesPerSec = leftVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
-		double desiredRightVelocity_tilesPerSec = rightVelocity_pct / 100.0 * botinfo::maxV_tilesPerSec;
-
-		left_driveMotionForward.computeFromMotion(desiredLeftVelocity_tilesPerSec, 0);
-		right_driveMotionForward.computeFromMotion(desiredRightVelocity_tilesPerSec, 0);
-		double forwardLeftVelocity_pct = aespa_lib::genutil::voltToPct(left_driveMotionForward.getValue(0));
-		double forwardRightVelocity_pct = aespa_lib::genutil::voltToPct(right_driveMotionForward.getValue(0));
-		
-		/* Velocity feedback */
-		
-		// Compute trajectory velocity error
-		double leftVelocityError_inchesPerSec = desiredLeftVelocity_tilesPerSec * field::tileLengthIn - currentLeftVelocity_inchesPerSec;
-		double rightVelocityError_inchesPerSec = desiredRightVelocity_tilesPerSec * field::tileLengthIn - currentRightVelocity_inchesPerSec;
-		
-		// Compute pid-value from error
-		left_driveVelocityPid.computeFromError(leftVelocityError_inchesPerSec);
-		right_driveVelocityPid.computeFromError(rightVelocityError_inchesPerSec);
-		double leftVelocityPidVelocity_pct = left_driveVelocityPid.getValue();
-		double rightVelocityPidVelocity_pct = right_driveVelocityPid.getValue();
-		
-		/* Combined */
-
-		// Compute final motor velocities
-		leftVelocity_pct = forwardLeftVelocity_pct + leftVelocityPidVelocity_pct;
-		rightVelocity_pct = forwardRightVelocity_pct + rightVelocityPidVelocity_pct;
-
-		// Drive at volt
-		botdrive::driveVoltage(aespa_lib::genutil::pctToVolt(leftVelocity_pct), aespa_lib::genutil::pctToVolt(rightVelocity_pct), 12);
-	}
-
-	void _differentialDriveAtVolt(double leftVelocity_volt, double rightVelocity_volt) {
-		// Scale voltages if overshoot
-		double scaleFactor = aespa_lib::genutil::getScaleFactor(12, {leftVelocity_volt, rightVelocity_volt});
-		leftVelocity_volt *= scaleFactor;
-		rightVelocity_volt *= scaleFactor;
-
-		// Smoothen voltages
-		// double leftInitialVelocity_volt = LeftMotors.voltage(volt);
-		// double rightInitialVelocity_volt = RightMotors.voltage(volt);
-		// leftVelocity_volt = aespa_lib::genutil::clamp(
-		// 	leftVelocity_volt, leftInitialVelocity_volt - maxDeltaVolt, leftInitialVelocity_volt + maxDeltaVolt
-		// );
-		// rightVelocity_volt = aespa_lib::genutil::clamp(
-		// 	rightVelocity_volt, rightInitialVelocity_volt - maxDeltaVolt, rightInitialVelocity_volt + maxDeltaVolt
-		// );
-
-		// Spin
-		LeftMotors.spin(fwd, leftVelocity_volt, volt);
-		RightMotors.spin(fwd, rightVelocity_volt, volt);
+		// Drive
+		robotChassis.control_local2d(0, linear_pct, angular_pct);
 	}
 }

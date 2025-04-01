@@ -1,13 +1,13 @@
 #include "Autonomous/autonPaths.h"
 
 namespace {
-	using namespace autonpaths;
-	using namespace autonpaths::pathbuild;
-	using namespace autonpaths::combination;
+using namespace autonpaths;
+using namespace autonpaths::pathbuild;
+using namespace autonpaths::combination;
 
-	void loadPaths(int section);
+void loadPaths(int section);
 
-	void doAuton();
+void doAuton();
 }
 
 /// @brief Run the 15-seconds new red-down autonomous.
@@ -35,93 +35,87 @@ void autonpaths::runAutonRedDown() {
 }
 
 namespace {
-	void loadPaths(int section) {
-		// Clear
-		clearLinear();
-		clearSplines();
+void loadPaths(int section) {
+	// Clear
+	clearLinear();
+	clearSplines();
 
-		if (section == 1) {
-		}
+	if (section == 1) {
 	}
+}
 
-	void doAuton() {
-		// Store ring + rush goal
-		setArmResetDefaultStage(0);
-		setIntakeState(1);
-		setSwingState(1);
-		async_driveAndTurnDistance_qtInches(130.5, 112.25);
-		
-		// Rush goal
-		waitUntil(_driveDistanceError_inches < 2.0);
-		setIntakeState(0, 0.15);
-		setSwingState(0);
-		waitUntil(_isDriveAndTurnSettled);
+void doAuton() {
+	// Store ring + rush goal
+	setArmResetDefaultStage(0);
+	setIntakeState(1);
+	setSwingState(1);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(130.5_qtIn, 112.25), true);
 
-		// Go back & un-deploy
-		async_driveAndTurnDistance_qtInches(-80, 112.25);
-		waitUntil(_driveDistanceError_inches < 5.0);
-		setSwingState(1);
-		waitUntil(_isDriveAndTurnSettled);
+	// Rush goal
+	waitUntil(local::_driveDistanceError_tiles < (2.0_in).tiles());
+	setIntakeState(0, 0.15);
+	setSwingState(0);
+	waitUntil(local::_isDriveAndTurnSettled);
 
-		// Grab 4th goal
-		turnToAngle(220);
-		setSwingState(0);
-		async_driveAndTurnDistance_qtInches(-56, 220, 40.0);
-		waitUntil(_driveDistanceError_inches < 1.0);
-		setGoalClampState(1);
-		
-		// Score on goal
-		setIntakeState(1);
-		wait(700, msec);
-		waitUntil(_isDriveAndTurnSettled);
-		setGoalClampState(0);
-		setIntakeState(0);
+	// Go back & un-deploy
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-80_qtIn, 112.25), true);
+	waitUntil(local::_driveDistanceError_tiles < (5.0_in).tiles());
+	setSwingState(1);
+	waitUntil(local::_isDriveAndTurnSettled);
 
-		// Grab rushed goal
-		async_driveAndTurnDistance_qtInches(46, 220);
-		waitUntil(_isDriveAndTurnSettled);
-		turnToAngle(290);
-		async_driveAndTurnDistance_qtInches(-66, 290, 40.0);
-		waitUntil(_driveDistanceError_inches < 1.0);
-		setGoalClampState(1);
-		waitUntil(_isDriveAndTurnSettled);
+	// Grab 4th goal
+	local::turnToAngle(robotChassis, local::turnToAngle_params(220), false);
+	setSwingState(0);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-56_qtIn, 220, 40.0), true);
+	waitUntil(local::_driveDistanceError_tiles < (1.0_in).tiles());
+	setGoalClampState(1);
 
-		// Take in preload and score
-		async_driveAndTurnDistance_qtInches(118, 290);
-		waitUntil(_isDriveAndTurnSettled);
-		turnToAngle(255);
-		setIntakeState(1);
-		async_driveAndTurnDistance_qtInches(52, 255);
-		waitUntil(_isDriveAndTurnSettled);
+	// Score on goal
+	setIntakeState(1);
+	wait(700, msec);
+	waitUntil(local::_isDriveAndTurnSettled);
+	setGoalClampState(0);
+	setIntakeState(0);
 
-		// Take in corner ring to lady brown
-		turnToAngle(192);
-		async_driveAndTurnDistance_qtInches(110, 192, 80.0);
-		waitUntil(_driveDistanceError_inches < 5.0);
-		setArmStage(1);
-		waitUntil(_isDriveAndTurnSettled);
-		wait(200, msec);
+	// Grab rushed goal
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(46_qtIn, 220), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(290), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-66_qtIn, 290, 40.0), true);
+	waitUntil(local::_driveDistanceError_tiles < (1.0_in).tiles());
+	setGoalClampState(1);
+	waitUntil(local::_isDriveAndTurnSettled);
 
-		// Release goal
-		async_driveAndTurnDistance_qtInches(-40, 192);
-		waitUntil(_isDriveAndTurnSettled);
-		setGoalClampState(0);
-		async_driveAndTurnDistance_qtInches(20, 192);
-		waitUntil(_isDriveAndTurnSettled);
+	// Take in preload and score
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(118_qtIn, 290), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(255), false);
+	setIntakeState(1);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(52_qtIn, 255), false);
 
-		// Prepare to score wall stake
-		turnToAngle(270);
-		async_driveAndTurnDistance_qtInches(-171, 270);
-		waitUntil(_isDriveAndTurnSettled);
-		setIntakeState(0);
+	// Take in corner ring to lady brown
+	local::turnToAngle(robotChassis, local::turnToAngle_params(192), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(110_qtIn, 192, 80.0), true);
+	waitUntil(local::_driveDistanceError_tiles < (5.0_in).tiles());
+	setArmStage(1);
+	waitUntil(local::_isDriveAndTurnSettled);
+	wait(200, msec);
 
-		// Score on wall stake
-		turnToAngle(130);
-		async_driveAndTurnDistance_qtInches(33, 130, 60.0);
-		waitUntil(_driveDistanceError_inches < 2.0);
-		setArmStage(4);
-		waitUntil(_isDriveAndTurnSettled);
+	// Release goal
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-40_qtIn, 192), false);
+	setGoalClampState(0);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(20_qtIn, 192), false);
 
-		return;
-	}
+	// Prepare to score wall stake
+	local::turnToAngle(robotChassis, local::turnToAngle_params(270), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-171_qtIn, 270), false);
+	setIntakeState(0);
+
+	// Score on wall stake
+	local::turnToAngle(robotChassis, local::turnToAngle_params(130), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(33_qtIn, 130, 60.0), true);
+	waitUntil(local::_driveDistanceError_tiles < (2.0_in).tiles());
+	setArmStage(4);
+	waitUntil(local::_isDriveAndTurnSettled);
+
+	return;
+}
 }

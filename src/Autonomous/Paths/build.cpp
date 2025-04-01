@@ -14,9 +14,8 @@ namespace pathbuild {
 // Build paths
 
 // Default constants / constraints
-const double maxVel_tilesPerSec = botinfo::maxV_tilesPerSec;
-const double maxAccel = maxVel_tilesPerSec * 1.0;
-const double maxDecel = maxVel_tilesPerSec * 1.0;
+const double maxAccel = botInfo.maxVel_tilesPerSec * 1.0;
+const double maxDecel = botInfo.maxVel_tilesPerSec * 1.0;
 
 void clearSplines() {}
 
@@ -29,7 +28,7 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 	CurveSampler curveSampler = CurveSampler(spline)
 		.calculateByResolution(spline.getTRange().second * 10);
 	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(
-		curveSampler.getDistanceRange().second, botinfo::robotLengthIn / field::tileLengthIn,
+		curveSampler.getDistanceRange().second, botInfo.trackWidth_tiles,
 		64
 	)
 		.setCurvatureFunction([&](double d) -> double {
@@ -40,6 +39,10 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 		.addTrackConstraint_maxMotion({ maxVel, maxAccel })
 		.calculateMotionProfile();
 	splineProfile_storage.store(profileName, SplineProfile(spline, curveSampler, splineTrajectoryPlan, reverse));
+}
+
+void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines::SplineCurve spline, bool reverse) {
+	storeNewSplineProfile(profileName, spline, reverse, botInfo.maxVel_tilesPerSec);
 }
 
 void runFollowSpline(Differential &chassis, std::string profileName) {

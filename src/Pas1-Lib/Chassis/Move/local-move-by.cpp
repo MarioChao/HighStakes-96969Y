@@ -69,7 +69,7 @@ bool _isTurnToAngleSettled;
 
 
 void driveAndTurn(Differential &chassis, driveAndTurn_params params, bool async) {
-	drive_and_turn::_distance_tiles = params.distance_tiles;
+	drive_and_turn::_distance_tiles = params.distance.tiles();
 	drive_and_turn::_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
 	drive_and_turn::_velocityConstraint_tiles_pct = params.velocityConstraint_tiles_pct;
 	drive_and_turn::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
@@ -135,7 +135,6 @@ void runTurnToAngle() {
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
-	// while (!turnToAngle_rotateTargetAngleVoltPid.isSettled()) {
 	while (true) {
 		// Check timeout
 		if (runTimeout.isExpired()) {
@@ -160,11 +159,9 @@ void runTurnToAngle() {
 		// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
 
 		// Get current robot heading
-		// double currentRotation_degrees = InertialSensor.rotation(degrees);
 		double currentRotation_degrees = chassis->getLookPose().getThetaPolarAngle_degrees();
 
 		// Compute heading error
-		// double rotateError = fieldAngle_degrees - currentRotation_degrees;
 		double rotateError_degrees = targetAngle_polarDegrees - currentRotation_degrees;
 		if (autonSettings.useRelativeRotation) {
 			rotateError_degrees = aespa_lib::genutil::modRange(rotateError_degrees, 360, -180);
@@ -174,12 +171,9 @@ void runTurnToAngle() {
 		/* PID */
 
 		// Compute heading pid-value from error
-		// turnToAngle_rotateTargetAngleVoltPid.computeFromError(rotateError);
-		// turnToAngle_rotateTargetAngleVelocityPctPid.computeFromError(rotateError);
 		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError(rotateError_degrees);
 
 		// Update error patience
-		// angleError_degreesPatience.computePatience(std::fabs(rotateError));
 		autonSettings.angleError_degrees_patience.computePatience(std::fabs(rotateError_degrees));
 
 		// Compute motor rotate velocities

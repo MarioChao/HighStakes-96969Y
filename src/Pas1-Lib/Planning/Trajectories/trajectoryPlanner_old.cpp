@@ -3,8 +3,8 @@
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
-#include "Utilities/robotInfo.h"
 #include "Utilities/fieldInfo.h"
+#include "global-vars.h"
 
 #include <stdio.h>
 
@@ -36,7 +36,7 @@ TrajectoryPlanner_Old &TrajectoryPlanner_Old::autoSetMotionConstraints(
 
 	// Preprocess config
 	if (leftRightWheelDistance < 0) {
-		leftRightWheelDistance = botinfo::robotLengthIn * (1.0 / field::tileLengthIn);
+		leftRightWheelDistance = botInfo.trackWidth_tiles;
 	}
 
 	// Get sampler info

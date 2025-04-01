@@ -60,7 +60,7 @@ void doAuton() {
 	printf("done\n");
 
 	// Turn to 0
-	turnToAngle(0);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(0), false);
 }
 
 
