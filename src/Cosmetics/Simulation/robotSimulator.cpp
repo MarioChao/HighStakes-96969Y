@@ -77,3 +77,7 @@ void RobotSimulator::setForwardVelocity(double velocity_value) {
 	double theta = angularPosition;
 	velocity = Vector3(velocity_value * cos(theta), velocity_value * sin(theta));
 }
+
+aespa_lib::datas::Linegular RobotSimulator::getLookPose() {
+	return aespa_lib::datas::Linegular(position.x, position.y, aespa_lib::genutil::toDegrees(angularPosition));
+}

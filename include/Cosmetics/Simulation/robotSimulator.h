@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Cosmetics/Simulation/vector3.h"
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "vex.h"
 
 class RobotSimulator {
@@ -16,6 +17,8 @@ public:
 	void updateDistance();
 
 	void setForwardVelocity(double velocity_value);
+
+	aespa_lib::datas::Linegular getLookPose();
 
 	Vector3 position, velocity, acceleration, jerk;
 

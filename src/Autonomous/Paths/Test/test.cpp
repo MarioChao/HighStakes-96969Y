@@ -100,7 +100,7 @@ void autonpaths::runAutonTest() {
 		runLinearPIDPath({{0, 0}}, 100, true);
 	}
 
-	if (true) {
+	if (false) {
 		setArmResetDefaultStage(2);
 	}
 }

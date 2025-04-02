@@ -22,6 +22,8 @@ public:
 
 	double getLookVelocity() override;
 
+	double leftMotor_volt, rightMotor_volt;
+
 private:
 	motor_group &left_motors, &right_motors;
 };

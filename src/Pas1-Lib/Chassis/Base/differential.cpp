@@ -28,8 +28,8 @@ void Differential::control_local2d(
 	rightMotor_pct *= pctScaleFactor;
 
 	// Convert to volt
-	double leftMotor_volt = aespa_lib::genutil::pctToVolt(leftMotor_pct);
-	double rightMotor_volt = aespa_lib::genutil::pctToVolt(rightMotor_pct);
+	leftMotor_volt = aespa_lib::genutil::pctToVolt(leftMotor_pct);
+	rightMotor_volt = aespa_lib::genutil::pctToVolt(rightMotor_pct);
 
 	// Command
 	left_motors.spin(fwd, leftMotor_volt, volt);
@@ -37,6 +37,8 @@ void Differential::control_local2d(
 }
 
 void Differential::stopMotors(brakeType mode) {
+	leftMotor_volt = 0;
+	rightMotor_volt = 0;
 	left_motors.stop(mode);
 	right_motors.stop(mode);
 }

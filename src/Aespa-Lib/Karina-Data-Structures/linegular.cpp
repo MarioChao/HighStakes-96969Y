@@ -74,6 +74,10 @@ void Linegular::setPosition(double x, double y) {
 	setPosition(Vector2D(x, y));
 }
 
+void Linegular::setAngle(double theta_degrees) {
+	this->theta_degrees = theta_degrees;
+}
+
 void Linegular::rotateXYBy(double polarRotate_radians) {
 	position.rotateBy(polarRotate_radians);
 }

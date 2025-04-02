@@ -39,6 +39,8 @@ public:
 	void setPosition(Vector2D newPosition);
 	void setPosition(double x, double y);
 
+	void setAngle(double theta_degrees);
+
 	void rotateXYBy(double polarRotate_radians);
 	void rotateExponentialBy(double polarRotate_radians);
 
