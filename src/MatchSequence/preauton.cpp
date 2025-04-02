@@ -1,7 +1,7 @@
 #include "MatchSequence/preauton.h"
-#include "Graphics/BrainScreen.h"
+#include "Cosmetics/Graphics/BrainScreen.h"
 #include "Utilities/debugFunctions.h"
-#include "Videos/video-main.h"
+#include "Cosmetics/Videos/video-main.h"
 #include "global-vars.h"
 #include "main.h"
 

@@ -6,7 +6,7 @@
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 #include "Pas1-Lib/Planning/Profiles/spline-profile.h"
 #include "Aespa-Lib/Karina-Data-Structures/named-storage.h"
-#include "Simulation/robotSimulator.h"
+#include "Cosmetics/Simulation/robotSimulator.h"
 
 
 // ---------- Global variables ----------

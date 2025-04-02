@@ -1,6 +1,6 @@
-#include "Videos/video-main.h"
-#include "Videos/video-info.h"
-#include "Videos/video-objects.h"
+#include "Cosmetics/Videos/video-main.h"
+#include "Cosmetics/Videos/video-info.h"
+#include "Cosmetics/Videos/video-objects.h"
 #include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
 #include "main.h"
 

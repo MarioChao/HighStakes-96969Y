@@ -1,8 +1,8 @@
-#include "LedLight/led-main.h"
+#include "Cosmetics/LedLight/led-main.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
 #include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
-#include "Graphics/BrainScreen.h"
+#include "Cosmetics/Graphics/BrainScreen.h"
 
 #include "global-vars.h"
 #include "main.h"

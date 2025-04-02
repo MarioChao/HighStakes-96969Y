@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Videos/video-info.h"
+#include "Cosmetics/Videos/video-info.h"
 #include <vector>
 
 extern VideoInfo _exampleVideo;

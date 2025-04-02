@@ -1,6 +1,8 @@
 // Brain Screen Painter
 
-#include "Graphics/BrainScreen.h"
+#include "Cosmetics/Graphics/BrainScreen.h"
+#include "Cosmetics/Simulation/robotSimulator.h"
+#include "Cosmetics/Videos/video-main.h"
 
 #include "Autonomous/auton.h"
 #include "Autonomous/autonFunctions.h"
@@ -22,12 +24,8 @@
 
 #include "Sensors/inertial-s.h"
 
-#include "Simulation/robotSimulator.h"
-
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
-
-#include "Videos/video-main.h"
 
 #include "global-vars.h"
 #include "main.h"

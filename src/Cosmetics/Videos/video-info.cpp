@@ -1,4 +1,4 @@
-#include "Videos/video-info.h"
+#include "Cosmetics/Videos/video-info.h"
 #include "main.h"
 
 /* Video Info */

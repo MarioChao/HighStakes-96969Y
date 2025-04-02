@@ -14,7 +14,7 @@ Modify chassis sensors, odometry, and auton settings in [global-vars.cpp](./src/
 
 Notes:
 
-- Some dummy sensors create an error if you read its value immediately after starting the program<br>
+- Some dummy sensors will error if you read its value immediately after starting the program<br>
 	Examples:
 	- Optical shaft encoder
 	- Inertial sensor
@@ -23,9 +23,9 @@ Notes:
 
 Our main control program is organized into the categories [`Autonomous`](./include/Autonomous/), [`Controller`](./include/Controller/), [`Mechanics`](./include/Mechanics/), and [`MatchSequence`](./include/MatchSequence/).
 
-Our utility functions are organized into [`Aespa-Lib`](./include/Aespa-Lib/), [`Sensors`](./include/Sensors/), and [`Utilities`](./include/Utilities/).
+Our utility functions are organized into [`Aespa-Lib`](./include/Aespa-Lib/), [`Pas1-Lib`](./include/Pas1-Lib/), [`Sensors`](./include/Sensors/), and [`Utilities`](./include/Utilities/).
 
-Our cosmetic program is organized into the categories [`Graphics`](./include/Graphics/), [`Simulation`](./include/Simulation/), [`Videos`](./include/Videos/), and [`LedLight`](./include/LedLight/).
+Our [cosmetics](./include/Cosmetics/) is organized into the categories [`Graphics`](./include/Cosmetics/Graphics/), [`LedLight`](./include/Cosmetics/LedLight/), [`Simulation`](./include/Cosmetics/Simulation/), and [`Videos`](./include/Cosmetics/Videos/).
 
 Our team id is [96969Y](https://www.robotevents.com/teams/VRC/96969Y), and our website is [here](https://mariochao.github.io/vex-pas1/).
 

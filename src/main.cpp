@@ -25,11 +25,11 @@
 #include "Utilities/fieldInfo.h"
 #include "Utilities/debugFunctions.h"
 
-#include "Videos/video-main.h"
-#include "LedLight/led-main.h"
+#include "Cosmetics/Videos/video-main.h"
+#include "Cosmetics/LedLight/led-main.h"
+#include "Cosmetics/Simulation/robotSimulator.h"
 
 #include "Autonomous/autonValues.h"
-#include "Simulation/robotSimulator.h"
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"

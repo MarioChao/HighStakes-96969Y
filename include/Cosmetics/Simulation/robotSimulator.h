@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Simulation/vector3.h"
+#include "Cosmetics/Simulation/vector3.h"
 #include "vex.h"
 
 class RobotSimulator {
