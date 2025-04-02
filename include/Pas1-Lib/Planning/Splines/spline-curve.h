@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
+#include "Aespa-Lib/Winter-Utilities/units.h"
 #include "Pas1-Lib/Planning/Segments/segment-base.h"
 #include "Pas1-Lib/Planning/Segments/cubic-spline.h"
 
@@ -44,7 +45,7 @@ public:
 	std::vector<double> getFirstPrimeAtT(double t);
 	std::vector<double> getSecondPrimeAtT(double t);
 
-	double getPolarAngleRadiansAt(double t);
+	aespa_lib::units::PolarAngle getPolarAngleAt(double t);
 	double getCurvatureAt(double t);
 
 	std::pair<double, double> getTRange();

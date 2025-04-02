@@ -8,6 +8,7 @@
 
 namespace {
 
+using namespace aespa_lib::units::literals::angle;
 using aespa_lib::datas::Linegular;
 
 // const double defaultB = 0.743; // 2.0 rad^2/m^2 * (1 m / 1.64041995 tiles)^2 = 0.7432
@@ -49,9 +50,9 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 ) {
 	// Get local error
 	Linegular error = desired - actual;
-	error.rotateXYBy(aespa_lib::genutil::toRadians(90 - actual.getThetaPolarAngle_degrees()));
+	error.rotateXYBy(90_polarDeg - actual.getRotation());
 
-	return getLinegularVelocity(actual, desired, smallScalar * error.getY(), smallScalar * error.getThetaPolarAngle_radians());
+	return getLinegularVelocity(actual, desired, smallScalar * error.getY(), smallScalar * error.getRotation().polarRad());
 }
 
 std::pair<double, double> RamseteController::getLinegularVelocity(
@@ -60,9 +61,9 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 ) {
 	// Get local error
 	Linegular error = desired - actual;
-	error.rotateXYBy(aespa_lib::genutil::toRadians(90 - actual.getThetaPolarAngle_degrees()));
+	error.rotateXYBy(90_polarDeg - actual.getRotation());
 
-	return getLinegularVelocity(actual, desired, desiredLinearVelocity, smallScalar * error.getThetaPolarAngle_radians());
+	return getLinegularVelocity(actual, desired, desiredLinearVelocity, smallScalar * error.getRotation().polarRad());
 }
 
 std::pair<double, double> RamseteController::getLinegularVelocity(
@@ -71,14 +72,14 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 ) {
 	// Get local error
 	Linegular error = desired - actual;
-	error.rotateXYBy(aespa_lib::genutil::toRadians(90 - actual.getThetaPolarAngle_degrees()));
+	error.rotateXYBy(90_polarDeg - actual.getRotation());
 
 	// Get value alias
 	double v_desired = fabs(desiredLinearVelocity) * directionFactor;
 	auto &w_desired = desiredAngularVelocity_radiansPerSecond;
 	auto e_right = error.getX();
 	auto e_look = error.getY();
-	auto e_theta = aespa_lib::genutil::toRadians(aespa_lib::genutil::modRange(error.getThetaPolarAngle_degrees(), 360, -180));
+	auto e_theta = aespa_lib::genutil::toRadians(aespa_lib::genutil::modRange(error.getRotation().polarDeg(), 360, -180));
 	// printf("ANG ERR: %.f\n", genutil::toDegrees(e_theta));
 
 	// Compute gain value

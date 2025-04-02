@@ -18,7 +18,7 @@ void autonpaths::runAutonSkills() {
 	_autonTimer.reset();
 
 	// Set position and rotation
-	mainOdometry.setPosition_scaled(0.792, 3);
+	setRobotPosition(0.792, 3);
 	setRobotRotation(-90.0);
 
 	// Set config

@@ -13,17 +13,17 @@ namespace local {
 
 struct turnToAngle_params {
 	turnToAngle_params(
-		double targetAngle_polarDegrees,
+		aespa_lib::units::PolarAngle targetAngle,
 		double maxTurnVelocity_pct = 100,
 		double centerOffset_tiles = 0,
 		double runTimeout_sec = 3
 	)
-		: targetAngle_polarDegrees(targetAngle_polarDegrees),
+		: targetAngle(targetAngle),
 		maxTurnVelocity_pct(maxTurnVelocity_pct),
 		centerOffset_tiles(centerOffset_tiles),
 		runTimeout_sec(runTimeout_sec) {}
 
-	double targetAngle_polarDegrees;
+	aespa_lib::units::PolarAngle targetAngle;
 	double maxTurnVelocity_pct = 100;
 	double centerOffset_tiles = 0;
 	double runTimeout_sec = 3;
@@ -38,25 +38,26 @@ extern bool _isTurnToAngleSettled;
 struct driveAndTurn_params {
 	driveAndTurn_params(
 		aespa_lib::units::Length distance,
-		double targetAngle_polarDegrees,
+		aespa_lib::units::PolarAngle targetAngle,
 		std::vector<std::pair<double, double>> velocityConstraint_tiles_pct,
 		double maxTurnVelocity_pct = 100,
 		double runTimeout_sec = 3
 	)
 		: distance(distance),
-		targetAngle_polarDegrees(targetAngle_polarDegrees),
+		targetAngle(targetAngle),
 		velocityConstraint_tiles_pct(velocityConstraint_tiles_pct),
 		maxTurnVelocity_pct(maxTurnVelocity_pct),
 		runTimeout_sec(runTimeout_sec) {}
 
 	driveAndTurn_params(
-		aespa_lib::units::Length distance, double targetAngle_polarDegrees,
+		aespa_lib::units::Length distance,
+		aespa_lib::units::PolarAngle targetAngle,
 		double maxVelocity_pct = 100, double maxTurnVelocity_pct = 100
 	)
-		: driveAndTurn_params(distance, targetAngle_polarDegrees, { {0, maxVelocity_pct} }, maxTurnVelocity_pct) {}
+		: driveAndTurn_params(distance, targetAngle, { {0, maxVelocity_pct} }, maxTurnVelocity_pct) {}
 
 	aespa_lib::units::Length distance;
-	double targetAngle_polarDegrees;
+	aespa_lib::units::PolarAngle targetAngle;
 	std::vector<std::pair<double, double>> velocityConstraint_tiles_pct;
 	double maxTurnVelocity_pct = 100;
 	double runTimeout_sec = 3;

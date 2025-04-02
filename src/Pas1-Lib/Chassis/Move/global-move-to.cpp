@@ -44,8 +44,8 @@ namespace global {
 
 
 void turnToFace(Differential &chassis, turnToFace_params params, bool async) {
-	turn_to_face::_targetX = params.x_tiles;
-	turn_to_face::_targetY = params.y_tiles;
+	turn_to_face::_targetX = params.x.tiles();
+	turn_to_face::_targetY = params.y.tiles();
 	turn_to_face::_isReverse = params.isReverse;
 	turn_to_face::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
 	turn_to_face::_centerOffset_tiles = params.centerOffset_tiles;
@@ -69,8 +69,8 @@ bool _isTurnToFaceSettled;
 
 
 void driveToPoint(Differential &chassis, driveToPoint_params params, bool async) {
-	drive_to_point::_targetX = params.x_tiles;
-	drive_to_point::_targetY = params.y_tiles;
+	drive_to_point::_targetX = params.x.tiles();
+	drive_to_point::_targetY = params.y.tiles();
 	drive_to_point::_isReverseHeading = params.isReverse;
 	drive_to_point::_maxVelocity_pct = params.maxVelocity_pct;
 	drive_to_point::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
@@ -166,7 +166,7 @@ void runTurnToFace() {
 		Linegular robotLg = chassis->getLookPose();
 
 		// Get current robot heading
-		double currentRotation_degrees = robotLg.getThetaPolarAngle_degrees();
+		double currentRotation_degrees = robotLg.getRotation().polarDeg();
 
 		// Compute target heading
 		double targetAngle_polarDegrees = aespa_lib::genutil::toDegrees(atan2(y_tiles - robotLg.getY(), x_tiles - robotLg.getX())) + rotationOffset_degrees;
@@ -314,7 +314,7 @@ void runDriveToPoint() {
 		}
 
 		// Compute polar heading error
-		double rotateError = targetRotation_degrees - currentLg.getThetaPolarAngle_degrees();
+		double rotateError = targetRotation_degrees - currentLg.getRotation().polarDeg();
 		rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
 
 		// Compute heading pid-value from error
@@ -326,7 +326,7 @@ void runDriveToPoint() {
 
 		/* Debug print */
 		// printf("DIS TR: %.3f, TGT: %.3f, DE: %.3f, VLin: %.3f, VRot: %.3f\n", travelDistance, targetDistance, distanceError, velocity_pct, rotateVelocity_pct);
-		// printf("ANG CUR: %.3f, TGT: %.3f, DE: %.3f\n", currentLg.getThetaPolarAngle_degrees(), targetRotation_degrees, rotateError);
+		// printf("ANG CUR: %.3f, TGT: %.3f, DE: %.3f\n", currentLg.getRotation().polarDeg(), targetRotation_degrees, rotateError);
 
 
 		/* ---------- Combined ---------- */

@@ -10,12 +10,14 @@ namespace global {
 
 
 struct turnToFace_params {
-	turnToFace_params(double x_tiles, double y_tiles, bool isReverse = false, double maxTurnVelocity_pct = 100, double centerOffset_tiles = 0)
-		: x_tiles(x_tiles), y_tiles(y_tiles), isReverse(isReverse),
+	turnToFace_params(
+		aespa_lib::units::Length x, aespa_lib::units::Length y,
+		bool isReverse = false, double maxTurnVelocity_pct = 100, double centerOffset_tiles = 0
+	)
+		: x(x), y(y), isReverse(isReverse),
 		maxTurnVelocity_pct(maxTurnVelocity_pct), centerOffset_tiles(centerOffset_tiles) {}
 
-	double x_tiles;
-	double y_tiles;
+	aespa_lib::units::Length x, y;
 	bool isReverse = false;
 	double maxTurnVelocity_pct = 100;
 	double centerOffset_tiles = 0;
@@ -29,11 +31,13 @@ extern bool _isTurnToFaceSettled;
 
 
 struct driveToPoint_params {
-	driveToPoint_params(double x_tiles, double y_tiles, bool isReverse = false, double maxVelocity_pct = 100)
-		: x_tiles(x_tiles), y_tiles(y_tiles), isReverse(isReverse), maxVelocity_pct(maxVelocity_pct) {}
+	driveToPoint_params(
+		aespa_lib::units::Length x, aespa_lib::units::Length y,
+		bool isReverse = false, double maxVelocity_pct = 100
+	)
+		: x(x), y(y), isReverse(isReverse), maxVelocity_pct(maxVelocity_pct) {}
 
-	double x_tiles;
-	double y_tiles;
+	aespa_lib::units::Length x, y;
 	bool isReverse = false;
 	double maxVelocity_pct = 100, maxTurnVelocity_pct = 100;
 	double runTimeout_sec = 3;

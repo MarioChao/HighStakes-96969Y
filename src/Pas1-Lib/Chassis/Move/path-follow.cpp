@@ -151,12 +151,12 @@ void runFollowPath() {
 		// Update distance remaining
 		double total_distanceError = totalDistance_tiles - traj_distance;
 		double pose_distanceError = (targetLg - robotLg).getXYMagnitude();
-		printf("TDE: %.3f PDE: %.3f AE: %.3f\n", total_distanceError, pose_distanceError, (targetLg - robotLg).getThetaPolarAngle_degrees());
+		// printf("TDE: %.3f PDE: %.3f AE: %.3f\n", total_distanceError, pose_distanceError, (targetLg - robotLg).getRotation().polarDeg());
 		_pathFollowDistanceRemaining_tiles = std::fabs(total_distanceError + pose_distanceError);
 		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(total_distanceError + pose_distanceError);
 
 		// Update angle error
-		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError((targetLg - robotLg).getThetaPolarAngle_degrees());
+		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError((targetLg - robotLg).getRotation().polarDeg());
 
 		// Update error patience
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(total_distanceError + pose_distanceError));

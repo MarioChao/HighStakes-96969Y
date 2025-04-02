@@ -46,7 +46,7 @@ namespace local {
 
 
 void turnToAngle(Differential &chassis, turnToAngle_params params, bool async) {
-	turn_to_angle::_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
+	turn_to_angle::_targetAngle_polarDegrees = params.targetAngle.polarDeg();
 	turn_to_angle::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
 	turn_to_angle::_centerOffset_tiles = params.centerOffset_tiles;
 	turn_to_angle::_runTimeout_sec = params.runTimeout_sec;
@@ -70,7 +70,7 @@ bool _isTurnToAngleSettled;
 
 void driveAndTurn(Differential &chassis, driveAndTurn_params params, bool async) {
 	drive_and_turn::_distance_tiles = params.distance.tiles();
-	drive_and_turn::_targetAngle_polarDegrees = params.targetAngle_polarDegrees;
+	drive_and_turn::_targetAngle_polarDegrees = params.targetAngle.polarDeg();
 	drive_and_turn::_velocityConstraint_tiles_pct = params.velocityConstraint_tiles_pct;
 	drive_and_turn::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
 	drive_and_turn::_runTimeout_sec = params.runTimeout_sec;
@@ -159,15 +159,15 @@ void runTurnToAngle() {
 		// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
 
 		// Get current robot heading
-		double currentRotation_degrees = chassis->getLookPose().getThetaPolarAngle_degrees();
+		double currentRotation_polarDegrees = chassis->getLookPose().getRotation().polarDeg();
 
 		// Compute heading error
-		double rotateError_degrees = targetAngle_polarDegrees - currentRotation_degrees;
+		double rotateError_degrees = targetAngle_polarDegrees - currentRotation_polarDegrees;
 		if (autonSettings.useRelativeRotation) {
 			rotateError_degrees = aespa_lib::genutil::modRange(rotateError_degrees, 360, -180);
 		}
 		_turnAngleError_degrees = std::fabs(rotateError_degrees);
-		
+
 		/* PID */
 
 		// Compute heading pid-value from error
@@ -180,7 +180,7 @@ void runTurnToAngle() {
 		double averageMotorVelocity_pct = autonSettings.angleError_degrees_to_velocity_pct_pid.getValue();
 		double leftMotorVelocity_pct = leftVelocityFactor * averageMotorVelocity_pct;
 		double rightMotorVelocity_pct = rightVelocityFactor * averageMotorVelocity_pct;
-		// printf("CUR: %.3f, TAR: %.3f, RotERR: %.3f, PID: %.3f\n", currentRotation_degrees, targetAngle_polarDegrees, rotateError_degrees, averageMotorVelocity_pct);
+		// printf("CUR: %.3f, TAR: %.3f, RotERR: %.3f, PID: %.3f\n", currentRotation_polarDegrees, targetAngle_polarDegrees, rotateError_degrees, averageMotorVelocity_pct);
 
 		// Scale velocity overshoot
 		double scaleFactor = aespa_lib::genutil::getScaleFactor(maxTurnVelocity_pct, { leftMotorVelocity_pct, rightMotorVelocity_pct });
@@ -353,7 +353,7 @@ void runDriveAndTurn() {
 		/* ---------- Angular ---------- */
 
 		// Get current robot heading
-		double currentRotation_polarDegrees = currentPose.getThetaPolarAngle_degrees();
+		double currentRotation_polarDegrees = currentPose.getRotation().polarDeg();
 
 		// Compute heading error
 		double rotateError_degrees = targetAngle_polarDegrees - currentRotation_polarDegrees;

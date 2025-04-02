@@ -19,7 +19,7 @@ void autonpaths::runAutonBlueUp() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition_scaled(5.2, 3.73);
+	setRobotPosition(5.2, 3.73);
 	setRobotRotation(180);
 	mainOdometry.printDebug();
 

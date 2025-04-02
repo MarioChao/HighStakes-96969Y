@@ -9,6 +9,8 @@
 
 namespace {
 using aespa_lib::datas::Linegular;
+using aespa_lib::units::PolarAngle;
+using namespace aespa_lib::units::literals;
 using namespace pas1_lib::planning::segments;
 }
 
@@ -123,9 +125,9 @@ std::vector<double> SplineCurve::getSecondPrimeAtT(double t) {
 	return segments[segmentIndex.first]->getSecondPrimeAtT(segmentIndex.second);
 }
 
-double SplineCurve::getPolarAngleRadiansAt(double t) {
+PolarAngle SplineCurve::getPolarAngleAt(double t) {
 	std::vector<double> velocity = getFirstPrimeAtT(t);
-	return atan2(velocity[1], velocity[0]);
+	return operator ""_polarRad((long double) atan2(velocity[1], velocity[0]));
 }
 
 double SplineCurve::getCurvatureAt(double t) {
@@ -168,13 +170,13 @@ Linegular SplineCurve::getLinegularAt(double t, bool reverseHeading) {
 	// Get position
 	std::vector<double> position = getPositionAtT(t);
 
-	// Get angle
-	double angle_radians = getPolarAngleRadiansAt(t);
-	double finalAngle_degrees = aespa_lib::genutil::toDegrees(angle_radians) + reverseHeading * 180.0;
-	finalAngle_degrees = aespa_lib::genutil::modRange(finalAngle_degrees, 360, -180);
+	// Get rotation
+	PolarAngle rotation = getPolarAngleAt(t);
+	rotation += reverseHeading * 180.0;
+	rotation = aespa_lib::genutil::modRange(rotation.polarDeg(), 360, -180);
 
 	// Create and return linegular
-	Linegular lg(position[0], position[1], finalAngle_degrees);
+	Linegular lg(position[0], position[1], rotation);
 	return lg;
 }
 

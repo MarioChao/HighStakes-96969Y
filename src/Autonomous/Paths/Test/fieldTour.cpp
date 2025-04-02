@@ -23,7 +23,7 @@ void autonpaths::runFieldTour() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition_scaled(1.5, 0.5);
+	setRobotPosition(1.5, 0.5);
 	setRobotRotation(0);
 	mainOdometry.printDebug();
 

@@ -1,5 +1,6 @@
 #include "Autonomous/autonFunctions.h"
 
+#include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botIntake2.h"
 #include "Mechanics/botArm.h"
@@ -14,12 +15,18 @@
 
 namespace autonfunctions {
 
+void setRobotPosition(double x_tiles, double y_tiles) {
+	mainOdometry.setPosition_scaled(x_tiles, y_tiles);
+	if (mainUseSimulator) robotSimulator.position = Vector3(x_tiles, y_tiles);
+}
+
 /// @brief Set the look field absolute angle reading to a specified value. Doesn't turn the robot.
-/// @param rotation The angle (in degrees) to be set for the current orientation.
-void setRobotRotation(double rotation) {
-	InertialSensor.setRotation(rotation, deg);
+/// @param fieldAngle_degrees The angle (in degrees) to be set for the current orientation.
+void setRobotRotation(double fieldAngle_degrees) {
+	InertialSensor.setRotation(fieldAngle_degrees, deg);
 	mainOdometry.restart();
-	mainOdometry.setLookAngle(rotation);
+	mainOdometry.setLookAngle_field(fieldAngle_degrees);
+	if (mainUseSimulator) robotSimulator.angularPosition = aespa_lib::genutil::toRadians(aespa_lib::angle::swapFieldPolar_degrees(fieldAngle_degrees));
 }
 
 timer _autonTimer;

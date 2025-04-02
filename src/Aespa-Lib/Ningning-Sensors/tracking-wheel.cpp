@@ -1,15 +1,16 @@
 #include "Aespa-Lib/Ningning-Sensors/tracking-wheel.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
+
 namespace aespa_lib {
 namespace sensor_beats {
 
 TrackingWheel::TrackingWheel(
-	Encoder &sensor_encoder, double directionAngle_polarDegrees,
+	Encoder &sensor_encoder, units::PolarAngle directionAngle,
 	double sensorToWheel_gearRatio, double wheelDiameter_inches, double offset_inches
 )
 	: sensor_encoder(sensor_encoder),
-	directionAngle_polarDegrees(directionAngle_polarDegrees),
+	directionAngle(directionAngle),
 	sensorToWheel_gearRatio(sensorToWheel_gearRatio),
 	wheelDiameter_inches(wheelDiameter_inches),
 	offset_inches(offset_inches) {
@@ -48,8 +49,8 @@ double TrackingWheel::getCenterDeltaDistance_inches(double deltaDistance_inches,
 	return centerChordLength_inches;
 }
 
-double TrackingWheel::getDirection_polarDegrees() {
-	return directionAngle_polarDegrees;
+units::PolarAngle TrackingWheel::getDirection() {
+	return directionAngle;
 }
 
 }

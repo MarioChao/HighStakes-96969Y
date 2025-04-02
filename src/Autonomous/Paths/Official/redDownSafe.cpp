@@ -19,7 +19,7 @@ void autonpaths::runAutonRedDownSafe() {
 
 	// Set position and rotation
 	mainOdometry.printDebug();
-	mainOdometry.setPosition_scaled(0.8, 1.9);
+	setRobotPosition(1.0, 1.5);
 	setRobotRotation(112.25);
 	mainOdometry.printDebug();
 
@@ -49,7 +49,7 @@ void doAuton() {
 	setArmResetDefaultStage(0);
 	setIntakeState(1);
 	setSwingState(1);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(140.5_qtIn, 112.25), true);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(140.5_qtIn, 90-112.25), true);
 
 	// Rush goal
 	waitUntil(local::_driveDistanceError_tiles < (2.0_in).tiles());
@@ -58,15 +58,15 @@ void doAuton() {
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// Go back & un-deploy
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-94_qtIn, 112.25), true);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-94_qtIn, 90-112.25), true);
 	waitUntil(local::_driveDistanceError_tiles < (9.0_in).tiles());
 	setSwingState(1);
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// Grab 4th goal
-	local::turnToAngle(robotChassis, local::turnToAngle_params(220), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(90-220), false);
 	setSwingState(0);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-70_qtIn, 220, { {0, 100}, {(40_qtIn).tiles(), 20.0} }), true);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-70_qtIn, 90-220, { {0, 100}, {(40_qtIn).tiles(), 20.0} }), true);
 	waitUntil(local::_driveDistanceError_tiles < (2.0_in).tiles());
 	setGoalClampState(1);
 
@@ -79,29 +79,29 @@ void doAuton() {
 	setIntakeState(0, 0.5);
 
 	// Grab rushed goal
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(66_qtIn, 220), false);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(288), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-82, 288, { {0, 100}, {(50_qtIn).tiles(), 20.0} }), true);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(66_qtIn, 90-220), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(90-288), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-82_qtIn, 90-288, { {0, 100}, {(50_qtIn).tiles(), 20.0} }), true);
 	waitUntil(local::_driveDistanceError_tiles < (2.0_in).tiles());
 	setGoalClampState(1);
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// Take in preload and score
 	setIntakeState(1);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(126_qtIn, 288), false);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(255), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(68_qtIn, 255), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(126_qtIn, 90-288), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(90-255), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(68_qtIn, 90-255), false);
 
 	// Take in corner ring(s) and score
-	local::turnToAngle(robotChassis, local::turnToAngle_params(200), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(130_qtIn, 200, { {0, 100}, {(80_qtIn).tiles(), 30.0} }), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(90-200), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(130_qtIn, 90-200, { {0, 100}, {(80_qtIn).tiles(), 30.0} }), false);
 	wait(400, msec);
 
 	// Take in again (not implemented)
 
 	// Go near middle
-	local::turnToAngle(robotChassis, local::turnToAngle_params(260), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-110_qtIn, 260), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(90-260), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-110_qtIn, 90-260), false);
 
 	return;
 }

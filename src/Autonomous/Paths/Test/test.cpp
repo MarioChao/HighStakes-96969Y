@@ -1,17 +1,16 @@
 #include "Autonomous/autonPaths.h"
 
 void autonpaths::runAutonTest() {
+	setRobotPosition(1.5, 0.5);
 	setRobotRotation(0.0);
 
 	setDifferentialUseRelativeRotation(false);
 
 	if (true) {
 		robotChassis.setLookPose(aespa_lib::datas::Linegular(1.5, 0.5, 90));
-		
-		pas1_lib::planning::profiles::SplineProfile *splineProfile = splineProfile_storage.getStored("test").get();
-		double startAngle_degrees = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse).getThetaPolarAngle_degrees();
-		local::turnToAngle(robotChassis, local::turnToAngle_params(startAngle_degrees), false);
-		follow::followPath(robotChassis, follow::followPath_params(splineProfile), false);
+
+		pathbuild::runFollowSpline(robotChassis, "test");
+		waitUntil(follow::_isPathFollowCompleted);
 
 		global::turnToFace(robotChassis, global::turnToFace_params(1.5, 0.5), false);
 		global::driveToPoint(robotChassis, global::driveToPoint_params(1.5, 0.5), false);
@@ -25,7 +24,7 @@ void autonpaths::runAutonTest() {
 		global::driveToPoint(robotChassis, global::driveToPoint_params(0, 0, true), false);
 
 		local::driveAndTurn(robotChassis, local::driveAndTurn_params(1, 90, 75), false);
-		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 90, {{0, 20}, {0.5, 60}}), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 90, { {0, 20}, {0.5, 60} }), false);
 
 		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
 		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, robotChassis.botInfo.trackWidth_tiles / 2.0), false);
@@ -47,8 +46,8 @@ void autonpaths::runAutonTest() {
 	}
 
 	if (false) {
-		local::driveAndTurn(robotChassis, local::driveAndTurn_params(200_qtIn, 0, {{0, 100}, {(100_qtIn).tiles(), 40}}), false);
-		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-200_qtIn, 0, {{0, 40}, {(100_qtIn).tiles(), 100}}), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(200_qtIn, 0, { {0, 100}, {(100_qtIn).tiles(), 40} }), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-200_qtIn, 0, { {0, 40}, {(100_qtIn).tiles(), 100} }), false);
 	}
 
 	if (false) {
@@ -82,7 +81,6 @@ void autonpaths::runAutonTest() {
 
 	setDifferentialUseRelativeRotation(true);
 
-	mainOdometry.setPosition_scaled(0, 0);
 	setRobotRotation(0);
 
 	if (false) {
@@ -92,12 +90,12 @@ void autonpaths::runAutonTest() {
 	}
 
 	if (false) {
-		runLinearPIDPath({{0, 1}}, 100);
-		runLinearPIDPath({{0, 2}}, 100);
-		runLinearPIDPath({{0, 1}}, 100, true);
-		runLinearPIDPath({{0, 0}}, 100, true);
-		runLinearPIDPath({{0, 2}}, 100);
-		runLinearPIDPath({{0, 0}}, 100, true);
+		runLinearPIDPath({ {0, 1} }, 100);
+		runLinearPIDPath({ {0, 2} }, 100);
+		runLinearPIDPath({ {0, 1} }, 100, true);
+		runLinearPIDPath({ {0, 0} }, 100, true);
+		runLinearPIDPath({ {0, 2} }, 100);
+		runLinearPIDPath({ {0, 0} }, 100, true);
 	}
 
 	if (false) {

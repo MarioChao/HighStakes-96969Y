@@ -194,8 +194,7 @@ void drawCoordinate(int x, int y, int width, int height, Linegular robotPose, co
 
 	/* Heading path */
 	// Get heading angle
-	double botAngle_degrees = robotPose.getThetaPolarAngle_degrees();
-	double botAngle_radians = aespa_lib::genutil::toRadians(botAngle_degrees);
+	double botAngle_radians = robotPose.getRotation().polarRad();
 
 	// Calculate x and y components
 	double deltaX, deltaY;
@@ -712,7 +711,7 @@ void drawInfo(Linegular robotPose) {
 
 	Brain.Screen.setPenColor(color::green);
 	Brain.Screen.setFillColor(color::transparent);
-	Brain.Screen.printAt(240, 35, 1, "BotAng Polar: %07.3f", robotPose.getThetaPolarAngle_degrees());
+	Brain.Screen.printAt(240, 35, 1, "BotAng Polar: %07.3f", robotPose.getRotation().polarDeg());
 
 	// Brain.Screen.setPenColor(color(255, 190, 0));
 	// Brain.Screen.setFillColor(color::transparent);
@@ -790,7 +789,7 @@ void drawMotorPower() {
 void drawInertial(Linegular robotPose) {
 	Brain.Screen.setPenColor(color::green);
 	Brain.Screen.setFillColor(color::transparent);
-	Brain.Screen.printAt(10, 35, 1, "%07.3f", robotPose.getThetaPolarAngle_degrees());
+	Brain.Screen.printAt(10, 35, 1, "%07.3f", robotPose.getRotation().polarDeg());
 	bool inertialIsStable = inertial_s::isStable();
 	color stableColor = inertialIsStable ? green : red;
 	Brain.Screen.drawCircle(15, 80, 10, stableColor);

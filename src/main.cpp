@@ -77,7 +77,7 @@ void pre_auton(void) {
 	task odometryTask([]() -> int {
 		wait(500, msec);
 		mainOdometry.setPosition_scaled(1, 1);
-		mainOdometry.setLookAngle(0);
+		mainOdometry.setLookAngle_field(0);
 		mainOdometry.start();
 		while (true) {
 			mainOdometry.odometryFrame();
@@ -126,7 +126,7 @@ void pre_auton(void) {
 					// Update actual chassis position
 					aespa_lib::datas::Linegular robotPose = robotChassis.getLookPose();
 					robotPose.setPosition(robotSimulator.position.x, robotSimulator.position.y);
-					robotPose.setAngle(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
+					robotPose.setRotation(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 					robotChassis.setLookPose(robotPose);
 				}
 

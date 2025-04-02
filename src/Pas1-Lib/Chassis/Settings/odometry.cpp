@@ -8,6 +8,8 @@ namespace {
 
 using aespa_lib::datas::Linegular;
 using aespa_lib::sensor_beats::TrackingWheel;
+using aespa_lib::units::PolarAngle;
+using namespace aespa_lib::units::literals::angle;
 using aespa_lib::util::DriftCorrection;
 
 const double cosAngleWithinRange = 1e-2;
@@ -27,7 +29,8 @@ namespace settings {
 Odometry::Odometry(
 	std::vector<std::reference_wrapper<TrackingWheel>> trackingWheels,
 	std::vector<std::reference_wrapper<inertial>> inertialSensors
-) {
+)
+	: trackedPose(0, 0, 0) {
 	this->trackingWheels.clear();
 	positionSensor_count = 0;
 
@@ -46,9 +49,6 @@ Odometry::Odometry(
 
 	positionFactor = 1;
 	isStarted = false;
-
-	x = y = 0;
-	right_fieldAngle_degrees = 0;
 }
 
 Odometry::Odometry()
@@ -162,17 +162,16 @@ void Odometry::odometryFrame() {
 	if (useForwardEuler) {
 		// Rotate by half angle (euler integration)
 		// see https://docs.ftclib.org/ftclib/master/kinematics/odometry
-		deltaDistances.rotateXYBy(aespa_lib::genutil::toRadians(deltaPolarAngle_degrees / 2));
+		deltaDistances.rotateXYBy(deltaPolarAngle_degrees / 2);
 	} else {
 		// Rotate with pose exponential
-		deltaDistances.rotateExponentialBy(aespa_lib::genutil::toRadians(deltaPolarAngle_degrees));
+		deltaDistances.rotateExponentialBy(deltaPolarAngle_degrees);
 	}
 
 
 	// Rotate to absolute difference
-	double rightPolarAngle_degrees = aespa_lib::angle::swapFieldPolar_degrees(getRightFieldAngle_degrees());
-	double localToGlobalRotateAngle = aespa_lib::genutil::toRadians(rightPolarAngle_degrees);
-	deltaDistances.rotateXYBy(localToGlobalRotateAngle);
+	PolarAngle rightPolarAngle = trackedPose.getRotation() - 90_polarDeg;
+	deltaDistances.rotateXYBy(rightPolarAngle);
 
 
 	/* Update */
@@ -181,56 +180,48 @@ void Odometry::odometryFrame() {
 	inertialSensor_oldMeasurements = inertialSensor_newMeasurements;
 
 	// Update odometry values
-	x += deltaDistances.getX();
-	y += deltaDistances.getY();
-	right_fieldAngle_degrees -= deltaPolarAngle_degrees;
+	Linegular deltaPose(deltaDistances.getX(), deltaDistances.getY(), deltaPolarAngle_degrees);
+	trackedPose += deltaPose;
 }
 
 void Odometry::setPosition_raw(double x, double y) {
-	this->x = x;
-	this->y = y;
+	trackedPose.setPosition(x, y);
 }
 
 void Odometry::setPosition_scaled(double x, double y) {
 	setPosition_raw(x / positionFactor, y / positionFactor);
 }
 
-void Odometry::setLookAngle(double fieldAngles_degrees) {
-	this->right_fieldAngle_degrees = fieldAngles_degrees + 90.0;
+void Odometry::setLookAngle(aespa_lib::units::PolarAngle polarAngle) {
+	trackedPose.setRotation(polarAngle);
 }
 
-void Odometry::setRightAngle(double fieldAngles_degrees) {
-	this->right_fieldAngle_degrees = fieldAngles_degrees;
+void Odometry::setLookAngle_field(double fieldAngles_degrees) {
+	trackedPose.setRotation(aespa_lib::angle::swapFieldPolar_degrees(fieldAngles_degrees));
 }
 
 void Odometry::setLookPose_raw(Linegular pose) {
 	setPosition_raw(pose.getX(), pose.getY());
-	setLookAngle(aespa_lib::angle::swapFieldPolar_degrees(pose.getThetaPolarAngle_degrees()));
+	setLookAngle(pose.getRotation());
 }
 
 void Odometry::setLookPose_scaled(Linegular pose) {
 	setLookPose_raw(pose / positionFactor);
 }
 
-double Odometry::getX_scaled() { return x * positionFactor; }
+double Odometry::getX_scaled() { return trackedPose.getX() * positionFactor; }
 
-double Odometry::getY_scaled() { return y * positionFactor; }
+double Odometry::getY_scaled() { return trackedPose.getY() * positionFactor; }
 
-double Odometry::getLookFieldAngle_degrees() {
-	return right_fieldAngle_degrees - 90.0;
-}
-
-double Odometry::getRightFieldAngle_degrees() {
-	return right_fieldAngle_degrees;
-}
+PolarAngle Odometry::getLookRotation() { return trackedPose.getRotation(); }
 
 Linegular Odometry::getLookPose_scaled() {
-	return Linegular(getX_scaled(), getY_scaled(), aespa_lib::angle::swapFieldPolar_degrees(getLookFieldAngle_degrees()));
+	return Linegular(getX_scaled(), getY_scaled(), getLookRotation());
 }
 
 void Odometry::printDebug() {
 	// Print tracked values
-	printf("Track X: %07.3f, Y: %07.3f, Ang: %07.3f\n", getX_scaled(), getY_scaled(), getLookFieldAngle_degrees());
+	printf("Track X: %07.3f, Y: %07.3f, Ang: %07.3f\n", getX_scaled(), getY_scaled(), getLookRotation().polarDeg());
 
 	// Print position sensor readings
 	for (int i = 0; i < positionSensor_count; i++) {
@@ -289,7 +280,7 @@ std::pair<double, double> Odometry::getLocalDeltaXY_inches(double deltaPolarAngl
 		// Get tracking wheel data
 		TrackingWheel &trackingWheel = trackingWheels[i].get();
 		double wheelDeltaDistance_inches = trackingWheel.getRawDeltaDistance_inches(true);
-		double wheelDirection_polarDegrees = trackingWheel.getDirection_polarDegrees();
+		PolarAngle wheelDirection = trackingWheel.getDirection();
 
 		// Get tracking center delta distance
 		double centerDeltaDistance_inches = trackingWheel.getCenterDeltaDistance_inches(wheelDeltaDistance_inches, deltaPolarAngle_degrees);
@@ -305,7 +296,7 @@ std::pair<double, double> Odometry::getLocalDeltaXY_inches(double deltaPolarAngl
 		// condition: cos(angle) ≠ 0
 
 		// Check condition
-		cosAngle = cos(aespa_lib::genutil::toRadians(wheelDirection_polarDegrees));
+		cosAngle = cos(wheelDirection.polarDeg());
 		isMeetCondition = !aespa_lib::genutil::isWithin(cosAngle, 0, cosAngleWithinRange);
 		if (isMeetCondition) {
 			// Add to total
@@ -321,7 +312,7 @@ std::pair<double, double> Odometry::getLocalDeltaXY_inches(double deltaPolarAngl
 		// note: cos(a) = cos(-a)
 
 		// Check condition
-		cosAngle = cos(aespa_lib::genutil::toRadians(90 - wheelDirection_polarDegrees));
+		cosAngle = cos(aespa_lib::genutil::toRadians(90 - wheelDirection.polarDeg()));
 		isMeetCondition = !aespa_lib::genutil::isWithin(cosAngle, 0, cosAngleWithinRange);
 		if (isMeetCondition) {
 			// Add to total

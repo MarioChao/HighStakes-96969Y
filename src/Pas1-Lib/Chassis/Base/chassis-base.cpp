@@ -4,6 +4,7 @@
 namespace {
 using aespa_lib::datas::Vector2D;
 using aespa_lib::datas::Linegular;
+using namespace aespa_lib::units::literals::angle;
 }
 
 
@@ -24,7 +25,7 @@ void ChassisBase::control_global2d(
 	double angular_pct
 ) {
 	Vector2D localMove(right_pct, look_pct);
-	localMove.rotateBy(-getLookPose().getThetaPolarAngle_radians());
+	localMove.rotateBy(90_polarDeg - getLookPose().getRotation());
 	control_local2d(localMove.x, localMove.y, angular_pct);
 }
 

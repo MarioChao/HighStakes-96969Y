@@ -110,7 +110,7 @@ void setUpKeybinds() {
 	Controller2.ButtonB.pressed([]() -> void {
 		botdrive::setControlState(false);
 		// autonfunctions::pid_diff::driveDistanceTiles(0.1);
-		local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1, robotChassis.getLookPose().getThetaPolarAngle_degrees()), false);
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1, robotChassis.getLookPose().getRotation()), false);
 		botdrive::setControlState(true);
 		botdrive::preauton();
 	});

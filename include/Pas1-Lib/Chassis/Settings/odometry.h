@@ -70,16 +70,16 @@ public:
 	void setPosition_raw(double x, double y);
 	void setPosition_scaled(double x, double y);
 
-	void setLookAngle(double fieldAngles_degrees);
-	void setRightAngle(double fieldAngle_degrees);
+	void setLookAngle(aespa_lib::units::PolarAngle polarAngle);
+	void setLookAngle_field(double fieldAngles_degrees);
 
 	void setLookPose_raw(aespa_lib::datas::Linegular pose);
 	void setLookPose_scaled(aespa_lib::datas::Linegular pose);
 
 	double getX_scaled();
 	double getY_scaled();
-	double getLookFieldAngle_degrees();
-	double getRightFieldAngle_degrees();
+
+	aespa_lib::units::PolarAngle getLookRotation();
 
 	aespa_lib::datas::Linegular getLookPose_scaled();
 
@@ -106,8 +106,7 @@ private:
 	bool isStarted = false;
 
 	// Tracked values
-	double x, y;
-	double right_fieldAngle_degrees;
+	aespa_lib::datas::Linegular trackedPose;
 
 	// Functions
 	void odometryThread();

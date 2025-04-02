@@ -4,6 +4,7 @@
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
+
 namespace aespa_lib {
 namespace datas {
 
@@ -13,17 +14,19 @@ namespace datas {
 Vector2D::Vector2D(double x, double y)
 	: x(x), y(y) {}
 
-void Vector2D::rotateBy(double polarRotate_radians) {
-	double newX = x * cos(polarRotate_radians) - y * sin(polarRotate_radians);
-	double newY = x * sin(polarRotate_radians) + y * cos(polarRotate_radians);
+void Vector2D::rotateBy(units::PolarAngle rotation) {
+	double radians = rotation.polarRad();
+	double newX = x * cos(radians) - y * sin(radians);
+	double newY = x * sin(radians) + y * cos(radians);
 	x = newX;
 	y = newY;
 }
 
-void Vector2D::rotateExponentialBy(double polarRotate_radians) {
+void Vector2D::rotateExponentialBy(units::PolarAngle rotation) {
 	// Check pose exponential in https://file.tavsys.net/control/controls-engineering-in-frc.pdf
-	double newX = x * aespa_lib::angle::sinc(polarRotate_radians) + y * aespa_lib::angle::cosm1_x(polarRotate_radians);
-	double newY = x * -aespa_lib::angle::cosm1_x(polarRotate_radians) + y * aespa_lib::angle::sinc(polarRotate_radians);
+	double radians = rotation.polarRad();
+	double newX = x * aespa_lib::angle::sinc(radians) + y * aespa_lib::angle::cosm1_x(radians);
+	double newY = x * -aespa_lib::angle::cosm1_x(radians) + y * aespa_lib::angle::sinc(radians);
 	x = newX;
 	y = newY;
 }
@@ -35,12 +38,12 @@ double Vector2D::getMagnitude() {
 
 // ---------- Linegular ----------
 
-Linegular::Linegular(Vector2D position, double polarTheta_degrees)
+Linegular::Linegular(Vector2D position, units::PolarAngle rotation)
 	: position(position),
-	theta_degrees(polarTheta_degrees) {}
+	rotation(rotation) {}
 
-Linegular::Linegular(double x, double y, double polarTheta_degrees)
-	: Linegular(Vector2D(x, y), polarTheta_degrees) {}
+Linegular::Linegular(double x, double y, units::PolarAngle rotation)
+	: Linegular(Vector2D(x, y), rotation) {}
 
 Vector2D Linegular::getPosition() {
 	return position;
@@ -54,12 +57,8 @@ double Linegular::getY() {
 	return position.y;
 }
 
-double Linegular::getThetaPolarAngle_degrees() {
-	return theta_degrees;
-}
-
-double Linegular::getThetaPolarAngle_radians() {
-	return aespa_lib::genutil::toRadians(theta_degrees);
+units::PolarAngle Linegular::getRotation() {
+	return rotation;
 }
 
 double Linegular::getXYMagnitude() {
@@ -74,28 +73,42 @@ void Linegular::setPosition(double x, double y) {
 	setPosition(Vector2D(x, y));
 }
 
-void Linegular::setAngle(double theta_degrees) {
-	this->theta_degrees = theta_degrees;
+void Linegular::setRotation(units::PolarAngle newRotation) {
+	rotation = newRotation;
 }
 
-void Linegular::rotateXYBy(double polarRotate_radians) {
-	position.rotateBy(polarRotate_radians);
+void Linegular::rotateXYBy(units::PolarAngle rotation) {
+	position.rotateBy(rotation);
 }
 
-void Linegular::rotateExponentialBy(double polarRotate_radians) {
-	position.rotateExponentialBy(polarRotate_radians);
+void Linegular::rotateExponentialBy(units::PolarAngle rotation) {
+	position.rotateExponentialBy(rotation);
 }
 
-Linegular Linegular::operator+(Linegular &other) {
-	return Linegular(getX() + other.getX(), getY() + other.getY(), theta_degrees + other.theta_degrees);
+Linegular Linegular::operator+(Linegular other) {
+	return Linegular(getX() + other.getX(), getY() + other.getY(), rotation + other.rotation);
 }
 
-Linegular Linegular::operator-(Linegular &other) {
-	return Linegular(getX() - other.getX(), getY() - other.getY(), theta_degrees - other.theta_degrees);
+Linegular Linegular::operator-(Linegular other) {
+	return Linegular(getX() - other.getX(), getY() - other.getY(), rotation - other.rotation);
+}
+
+Linegular &Linegular::operator+=(Linegular other) {
+	position.x += other.getX();
+	position.y += other.getY();
+	rotation += other.rotation;
+	return *this;
+}
+
+Linegular &Linegular::operator-=(Linegular other) {
+	position.x -= other.getX();
+	position.y -= other.getY();
+	rotation -= other.rotation;
+	return *this;
 }
 
 Linegular Linegular::operator*(double value) {
-	return Linegular(getX() * value, getY() * value, theta_degrees);
+	return Linegular(getX() * value, getY() * value, rotation);
 }
 
 Linegular Linegular::operator/(double value) {

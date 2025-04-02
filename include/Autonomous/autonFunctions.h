@@ -27,6 +27,7 @@ namespace autonfunctions {
 
 /* General */
 
+void setRobotPosition(double x_tiles, double y_tiles);
 void setRobotRotation(double fieldAngle_degrees);
 
 extern timer _autonTimer;

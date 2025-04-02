@@ -1,13 +1,16 @@
 #pragma once
 
+#include "Aespa-Lib/Winter-Utilities/units.h"
+
+
 namespace aespa_lib {
 namespace datas {
 
 struct Vector2D {
 	Vector2D(double x, double y);
 
-	void rotateBy(double polarRotate_radians);
-	void rotateExponentialBy(double polarRotate_radians);
+	void rotateBy(units::PolarAngle rotation);
+	void rotateExponentialBy(units::PolarAngle rotation);
 
 	double getMagnitude();
 
@@ -15,44 +18,43 @@ struct Vector2D {
 };
 
 // Class containing 2D position & rotation data
-class Linegular {
-public:
-	Linegular(Vector2D position, double polarTheta_degrees);
+struct Linegular {
+	Linegular(Vector2D position, units::PolarAngle rotation);
 
 	/**
 	 * @brief Construct a new Linegular object.
 	 *
 	 * @param x The right-left position on the plane.
 	 * @param y The forward-backward position on the plane.
-	 * @param polarTheta_degrees The polar rotation in degrees.
+	 * @param rotation The heading angle.
 	 */
-	Linegular(double x, double y, double polarTheta_degrees);
+	Linegular(double x, double y, units::PolarAngle rotation);
 
 	Vector2D getPosition();
 	double getX();
 	double getY();
-	double getThetaPolarAngle_degrees();
-	double getThetaPolarAngle_radians();
+	units::PolarAngle getRotation();
 
 	double getXYMagnitude();
 
 	void setPosition(Vector2D newPosition);
 	void setPosition(double x, double y);
+	void setRotation(units::PolarAngle newRotation);
 
-	void setAngle(double theta_degrees);
+	void rotateXYBy(units::PolarAngle rotation);
+	void rotateExponentialBy(units::PolarAngle rotation);
 
-	void rotateXYBy(double polarRotate_radians);
-	void rotateExponentialBy(double polarRotate_radians);
-
-	Linegular operator+(Linegular &other);
-	Linegular operator-(Linegular &other);
+	Linegular operator+(Linegular other);
+	Linegular operator-(Linegular other);
+	Linegular &operator+=(Linegular other);
+	Linegular &operator-=(Linegular other);
 
 	Linegular operator*(double value);
 	Linegular operator/(double value);
 
-private:
+
 	Vector2D position;
-	double theta_degrees;
+	units::PolarAngle rotation;
 };
 
 }

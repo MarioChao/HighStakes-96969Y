@@ -44,15 +44,7 @@ void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines:
 void runFollowSpline(Differential &chassis, std::string profileName) {
 	SplineProfile *splineProfile = splineProfile_storage.getStored(profileName).get();
 	aespa_lib::datas::Linegular startPose = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse);
-	// SplineCurve spline = profile->spline;
-	// CurveSampler curveSampler = profile->curveSampler;
-	// TrajectoryPlanner &motionProfile = profile->trajectoryPlan;
-	// bool isReversed = profile->willReverse;
-	
-	// autonfunctions::pid_diff::turnToAngle(aespa_lib::angle::swapFieldPolar_degrees(lg.getThetaPolarAngle_degrees()));
-	// autonfunctions::setSplinePath(spline, motionProfile, curveSampler);
-	// autonfunctions::followSplinePath(isReversed);
-	local::turnToAngle(chassis, local::turnToAngle_params(startPose.getThetaPolarAngle_degrees()), false);
+	local::turnToAngle(chassis, local::turnToAngle_params(startPose.getRotation()), false);
 	follow::followPath(chassis, follow::followPath_params(splineProfile), true);
 }
 
