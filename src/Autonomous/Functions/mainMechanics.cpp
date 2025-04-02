@@ -11,113 +11,113 @@
 #include "global-vars.h"
 #include "main.h"
 
+
 namespace autonfunctions {
-	/// @brief Set the look field absolute angle reading to a specified value. Doesn't turn the robot.
-	/// @param rotation The angle (in degrees) to be set for the current orientation.
-	void setRobotRotation(double rotation) {
-		InertialSensor.setRotation(rotation, deg);
-		mainOdometry.restart();
-		mainOdometry.setLookAngle(rotation);
-	}
 
-	timer _autonTimer;
+/// @brief Set the look field absolute angle reading to a specified value. Doesn't turn the robot.
+/// @param rotation The angle (in degrees) to be set for the current orientation.
+void setRobotRotation(double rotation) {
+	InertialSensor.setRotation(rotation, deg);
+	mainOdometry.restart();
+	mainOdometry.setLookAngle(rotation);
+}
 
-	void setDifferentialUseRelativeRotation(bool useRelativeRotation) {
-		_useRelativeRotation = useRelativeRotation;
-		robotChassis.autonSettings.useRelativeRotation = useRelativeRotation;
-	}
+timer _autonTimer;
 
-	bool _useRelativeRotation = false;
+void setDifferentialUseRelativeRotation(bool useRelativeRotation) {
+	robotChassis.autonSettings.useRelativeRotation = useRelativeRotation;
+}
 
-	/// @brief Set the state of the intake.
-	/// @param state Forward: 1, released: 0, reversed: -1
-	/// @param delaySec Number of seconds to wait before setting the state (in a task).
-	void setIntakeState(int state, double delaySec) {
-		if (intakePartType == 1) botintake::setState(state, delaySec);
-		else botintake2::setState(state, delaySec);
-	}
+/// @brief Set the state of the intake.
+/// @param state Forward: 1, released: 0, reversed: -1
+/// @param delaySec Number of seconds to wait before setting the state (in a task).
+void setIntakeState(int state, double delaySec) {
+	if (intakePartType == 1) botintake::setState(state, delaySec);
+	else botintake2::setState(state, delaySec);
+}
 
 
-	/// @brief Set the state of the top intake.
-	/// @param state Forward: 1, released: 0, reversed: -1
-	/// @param delaySec Number of seconds to wait before setting the state (in a task).
-	void setIntakeTopState(int state, double delaySec) {
-		if (intakePartType == 1) return;
-		else botintake2::setState2(state, delaySec);
-	}
+/// @brief Set the state of the top intake.
+/// @param state Forward: 1, released: 0, reversed: -1
+/// @param delaySec Number of seconds to wait before setting the state (in a task).
+void setIntakeTopState(int state, double delaySec) {
+	if (intakePartType == 1) return;
+	else botintake2::setState2(state, delaySec);
+}
 
 
-	/// @brief Set the state of the bottom intake.
-	/// @param state Forward: 1, released: 0, reversed: -1
-	/// @param delaySec Number of seconds to wait before setting the state (in a task).
-	void setIntakeBottomState(int state, double delaySec) {
-		if (intakePartType == 1) return;
-		else botintake2::setState3(state, delaySec);
-	}
+/// @brief Set the state of the bottom intake.
+/// @param state Forward: 1, released: 0, reversed: -1
+/// @param delaySec Number of seconds to wait before setting the state (in a task).
+void setIntakeBottomState(int state, double delaySec) {
+	if (intakePartType == 1) return;
+	else botintake2::setState3(state, delaySec);
+}
 
-	/// @brief Set the hook mode of the intake.
-	/// @param state Normal: 0, to arm: 1
-	void setIntakeToArm(int state, double delaySec) {
-		if (intakePartType == 1) {
-			if (state) {
-				botintake::setColorFiltering(false, delaySec);
-				redirect::setState(1, delaySec);
-				botarm::setArmStage(1, delaySec);
-			} else {
-				botintake::setColorFiltering(true, delaySec);
-			}
-		} else botintake2::setHookMode(state);
-	}
-
-	void setIntakeStoreRing(int state, double delaySec) {
-		if (intakePartType == 1) {
-			botintake::setIntakeStoreRing(state, delaySec);
+/// @brief Set the hook mode of the intake.
+/// @param state Normal: 0, to arm: 1
+void setIntakeToArm(int state, double delaySec) {
+	if (intakePartType == 1) {
+		if (state) {
+			botintake::setColorFiltering(false, delaySec);
+			redirect::setState(1, delaySec);
+			botarm::setArmStage(1, delaySec);
+		} else {
+			botintake::setColorFiltering(true, delaySec);
 		}
-	}
+	} else botintake2::setHookMode(state);
+}
 
-	void setIntakeFilterOutColor(std::string colorText) {
-		if (intakePartType == 1) botintake::setFilterOutColor(colorText);
-		else botintake2::setFilterOutColor(colorText);
+void setIntakeStoreRing(int state, double delaySec) {
+	if (intakePartType == 1) {
+		botintake::setIntakeStoreRing(state, delaySec);
 	}
+}
 
-	void setIntakeFilterEnabled(bool state, double delaySec) {
-		if (intakePartType == 1) botintake::setColorFiltering(state, delaySec);
-	}
+void setIntakeFilterOutColor(std::string colorText) {
+	if (intakePartType == 1) botintake::setFilterOutColor(colorText);
+	else botintake2::setFilterOutColor(colorText);
+}
 
-	/// @brief Set the state of Left Wing's pneumatic.
-	/// @param state Expanded: true, retracted: false.
-	/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
-	void setGoalClampState(bool state, double delaySec) {
-		goalclamp::setState(state, delaySec);
-	}
+void setIntakeFilterEnabled(bool state, double delaySec) {
+	if (intakePartType == 1) botintake::setColorFiltering(state, delaySec);
+}
 
-	/// @brief Set the state of the lift's pneumatic.
-	/// @param state Lifted: true, lowered: false
-	void setIntakeLiftState(bool state) {
-		IntakeLiftPneumatic.set(state);
-	}
+/// @brief Set the state of Left Wing's pneumatic.
+/// @param state Expanded: true, retracted: false.
+/// @param delaySec Number of seconds to wait before setting the pneumatic state (in a task).
+void setGoalClampState(bool state, double delaySec) {
+	goalclamp::setState(state, delaySec);
+}
 
-	void setArmHangState(int state, double delaySec) {
-		botarmpneu::setState(state, delaySec);
-	}
+/// @brief Set the state of the lift's pneumatic.
+/// @param state Lifted: true, lowered: false
+void setIntakeLiftState(bool state) {
+	IntakeLiftPneumatic.set(state);
+}
 
-	void setArmStage(int stage, double delaySec) {
-		botarm::setArmStage(stage, delaySec);
-	}
+void setArmHangState(int state, double delaySec) {
+	botarmpneu::setState(state, delaySec);
+}
 
-	bool isArmResetted() {
-		return botarm::isArmResetted();
-	}
+void setArmStage(int stage, double delaySec) {
+	botarm::setArmStage(stage, delaySec);
+}
 
-	void setArmResetDefaultStage(int stageId) {
-		botarm::setResetDefaultStage(stageId);
-	}
+bool isArmResetted() {
+	return botarm::isArmResetted();
+}
 
-	void setSwingState(int state, double delaySec) {
-		swing::setState(state, delaySec);
-	}
+void setArmResetDefaultStage(int stageId) {
+	botarm::setResetDefaultStage(stageId);
+}
 
-	void setSwing2State(int state, double delaySec) {
-		swing::set2ndState(state, delaySec);
-	}
+void setSwingState(int state, double delaySec) {
+	swing::setState(state, delaySec);
+}
+
+void setSwing2State(int state, double delaySec) {
+	swing::set2ndState(state, delaySec);
+}
+
 }

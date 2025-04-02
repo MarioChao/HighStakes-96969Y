@@ -31,9 +31,6 @@ using namespace pas1_lib::chassis::move;
 // Build paths
 
 namespace pathbuild {
-extern const double maxAccel;
-extern const double maxDecel;
-
 void clearSplines();
 
 void storeNewSplineProfile(

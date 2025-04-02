@@ -15,7 +15,8 @@ using aespa_lib::datas::Linegular;
 // const double defaultB = 15;
 // const double defaultB = 25;
 // const double defaultB = 40;
-const double defaultB = 35;
+// const double defaultB = 35;
+const double defaultB = 30;
 const double defaultDamp = 0.7;
 
 double smallScalar = 0.0001;

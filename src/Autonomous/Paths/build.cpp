@@ -13,10 +13,6 @@ namespace autonpaths {
 namespace pathbuild {
 // Build paths
 
-// Default constants / constraints
-const double maxAccel = botInfo.maxVel_tilesPerSec * 1.0;
-const double maxDecel = botInfo.maxVel_tilesPerSec * 1.0;
-
 void clearSplines() {}
 
 void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool reverse, double maxVel) {
@@ -35,8 +31,8 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 		return spline.getCurvatureAt(curveSampler.distanceToParam(d));
 	})
 		.maxSmoothCurvature()
-		.addCenterConstraint_maxMotion({ maxVel, maxAccel })
-		.addTrackConstraint_maxMotion({ maxVel, maxAccel })
+		.addCenterConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 })
+		.addTrackConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 })
 		.calculateMotionProfile();
 	splineProfile_storage.store(profileName, SplineProfile(spline, curveSampler, splineTrajectoryPlan, reverse));
 }

@@ -242,9 +242,8 @@ void runDriveAndTurn() {
 		});
 	}
 	motionProfile.addCenterConstraintSequence(constraintSequence);
-	double maxAccel = botInfo.maxVel_tilesPerSec * 1.0;
-	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, maxAccel });
-	motionProfile.addTrackConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, maxAccel });
+	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 });
+	motionProfile.addTrackConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 });
 	motionProfile.calculateMotionProfile();
 
 	// Trajectory graph

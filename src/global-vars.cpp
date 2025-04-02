@@ -40,7 +40,8 @@ BotInfo botInfo(
 	24, // track width (holes)
 	3.25, // wheel diameter (inches)
 	36.0 / 36.0, // wheel to motor gear ratio
-	600 // motor rpm
+	600, // motor rpm
+	600 // motor rpm/s
 );
 
 

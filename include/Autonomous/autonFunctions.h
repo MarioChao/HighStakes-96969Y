@@ -33,8 +33,6 @@ extern timer _autonTimer;
 
 void setDifferentialUseRelativeRotation(bool useRelativeRotation);
 
-extern bool _useRelativeRotation;
-
 void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse = false);
 
 
