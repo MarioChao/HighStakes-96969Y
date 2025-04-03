@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Autonomous/autonValues.h"
+#include "Aespa-Lib/Winter-Utilities/units.h"
 
 #include "main.h"
 
@@ -34,7 +35,7 @@ extern timer _autonTimer;
 
 void setDifferentialUseRelativeRotation(bool useRelativeRotation);
 
-void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse = false);
+void runLinearPIDPath(std::vector<std::vector<aespa_lib::units::Length>> waypoints, double maxVelocity, bool isReverse = false);
 
 
 /* Main mechanics */

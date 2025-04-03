@@ -25,9 +25,9 @@ using namespace pas1_lib::chassis::move;
 
 namespace autonfunctions {
 
-void runLinearPIDPath(std::vector<std::vector<double>> waypoints, double maxVelocity, bool isReverse) {
+void runLinearPIDPath(std::vector<std::vector<aespa_lib::units::Length>> waypoints, double maxVelocity, bool isReverse) {
 	Linegular lg(0, 0, 0);
-	for (std::vector<double> point : waypoints) {
+	for (std::vector<aespa_lib::units::Length> point : waypoints) {
 		// Rotation
 		global::turnToFace(robotChassis, global::turnToFace_params(point[0], point[1], isReverse), false);
 

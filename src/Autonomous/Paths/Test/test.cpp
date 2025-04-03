@@ -90,12 +90,12 @@ void autonpaths::runAutonTest() {
 	}
 
 	if (false) {
-		runLinearPIDPath({ {0, 1} }, 100);
-		runLinearPIDPath({ {0, 2} }, 100);
-		runLinearPIDPath({ {0, 1} }, 100, true);
-		runLinearPIDPath({ {0, 0} }, 100, true);
-		runLinearPIDPath({ {0, 2} }, 100);
-		runLinearPIDPath({ {0, 0} }, 100, true);
+		runLinearPIDPath({ {1_tiles, 1_tiles} }, 100);
+		runLinearPIDPath({ {1_tiles, 2_tiles} }, 100);
+		runLinearPIDPath({ {1_tiles, 1_tiles} }, 100, true);
+		runLinearPIDPath({ {1_tiles, 0_tiles} }, 100, true);
+		runLinearPIDPath({ {1_tiles, 2_tiles} }, 100);
+		runLinearPIDPath({ {1_tiles, 0_tiles} }, 100, true);
 	}
 
 	if (false) {

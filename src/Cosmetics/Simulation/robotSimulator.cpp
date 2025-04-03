@@ -78,6 +78,12 @@ void RobotSimulator::setForwardVelocity(double velocity_value) {
 	velocity = Vector3(velocity_value * cos(theta), velocity_value * sin(theta));
 }
 
+double RobotSimulator::getForwardVelocity() {
+	double forwardAngle = atan2(velocity.y, velocity.x);
+	double forwardVelocity = velocity.getMagnitude() * cos(forwardAngle - angularPosition);
+	return forwardVelocity;
+}
+
 aespa_lib::datas::Linegular RobotSimulator::getLookPose() {
 	return aespa_lib::datas::Linegular(position.x, position.y, aespa_lib::genutil::toDegrees(angularPosition));
 }

@@ -17,6 +17,7 @@ public:
 	void updateDistance();
 
 	void setForwardVelocity(double velocity_value);
+	double getForwardVelocity();
 
 	aespa_lib::datas::Linegular getLookPose();
 

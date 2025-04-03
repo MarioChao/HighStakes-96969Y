@@ -293,7 +293,7 @@ void runDriveToPoint() {
 		// Compute linear distance error
 		double travelDistance = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { currentX, currentY });
 		double distanceError = targetDistance - travelDistance;
-		_linearPathDistanceError = distanceError;
+		_linearPathDistanceError = std::fabs(distanceError);
 
 		// Compute motor velocity pid-value from error
 		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(distanceError);

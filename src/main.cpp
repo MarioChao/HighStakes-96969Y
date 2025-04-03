@@ -114,7 +114,7 @@ void pre_auton(void) {
 				// Set simulation physics
 				// ToDo: use maximum acceleration instead of a smoothing filter
 				double alpha = 0.5;
-				robotSimulator.setForwardVelocity((1 - alpha) * robotSimulator.velocity.getMagnitude() + alpha * forwardVelocity_tilesPerSec);
+				robotSimulator.setForwardVelocity((1 - alpha) * robotSimulator.getForwardVelocity() + alpha * forwardVelocity_tilesPerSec);
 				robotSimulator.angularVelocity = (1 - alpha) * robotSimulator.angularVelocity + alpha * angularVelocity_radiansPerSec;
 
 				// Update simulation physics
