@@ -56,7 +56,8 @@
 				- [x] curvature
 				- [x] trajectory planner
 	- [ ] Others
-- [ ] Units system for consistency
+- [x] Units system for consistency
 - [x] Revamp trajectory planner
 	- [x] Numerical integration method (may be slower than switching times method)
 	- [ ] Higher-order derivative constraints on position
+- [ ] More splines (non-uniform, interpolation, etc.)

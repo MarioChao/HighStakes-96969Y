@@ -28,7 +28,8 @@ SplineCurve::SplineCurve() {
 }
 
 SplineCurve SplineCurve::fromAutoTangent_cubicSpline(
-	SplineType splineType, std::vector<std::vector<double>> points
+	SplineType splineType, std::vector<std::vector<double>> points,
+	double knot_parameter_alpha
 ) {
 	// Validate input
 	if ((int) points.size() < 4) {
@@ -41,7 +42,7 @@ SplineCurve SplineCurve::fromAutoTangent_cubicSpline(
 	auto extendedPoints = std::vector<std::vector<double>>(points.begin() + 4, points.end());
 	SplineCurve spline = SplineCurve()
 		.attachSegment(std::shared_ptr<SegmentBase>(
-			new CubicSplineSegment(splineType, { points[0], points[1], points[2], points[3] })
+			new CubicSplineSegment(splineType, { points[0], points[1], points[2], points[3] }, knot_parameter_alpha)
 		))
 		.extendPoints_cubicSpline(extendedPoints);
 
@@ -53,7 +54,7 @@ SplineCurve &SplineCurve::extendPoint_cubicSpline(std::vector<double> &newPoint)
 	SegmentBase &lastSegment = getSegment((int) segments.size() - 1);
 	std::vector<std::vector<double>> points = lastSegment.getControlPoints();
 	attachSegment(std::shared_ptr<SegmentBase>(
-		new CubicSplineSegment(lastSegment.getSplineType(), { points[1], points[2], points[3], newPoint })
+		new CubicSplineSegment(lastSegment.getSplineType(), { points[1], points[2], points[3], newPoint }, lastSegment.knot_parameter_alpha)
 	));
 
 	// Method chaining

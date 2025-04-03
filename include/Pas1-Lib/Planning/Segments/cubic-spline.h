@@ -16,10 +16,7 @@ namespace segments {
 // ---------- Constants ----------
 
 namespace characteristic_matrix {
-extern aespa_lib::datas::Matrix Cubic_Bezier;
 extern aespa_lib::datas::Matrix Cubic_Hermite;
-extern aespa_lib::datas::Matrix CatmullRom;
-extern aespa_lib::datas::Matrix Cubic_B_Spline;
 }
 
 namespace storing_matrix {
@@ -36,7 +33,14 @@ void setMatrices();
 
 class CubicSplineSegment : public SegmentBase {
 public:
-	CubicSplineSegment(SplineType splineType, std::vector<std::vector<double>> points);
+	/// @brief Constructs a CubicSplineSegment.
+	/// @param splineType The type of cubic spline.
+	/// @param points The control points for the spline type.
+	/// @param knot_parameter_alpha (Not done) Slightly modifies the tangent of Catmull Rom splines.
+	CubicSplineSegment(
+		SplineType splineType, std::vector<std::vector<double>> points,
+		double knot_parameter_alpha = 0
+	);
 	CubicSplineSegment();
 
 	void setSplineType(SplineType splineType);
@@ -47,6 +51,8 @@ public:
 
 	aespa_lib::datas::Matrix &getCharacteristicMatrix();
 	aespa_lib::datas::Matrix &getStoringMatrix();
+
+	void setScalingMatrix(double knot_parameter_alpha = 0);
 
 	std::vector<double> getPositionAtT(double t) override;
 	std::vector<double> getFirstPrimeAtT(double t) override;
@@ -59,6 +65,8 @@ private:
 
 	std::vector<std::vector<double>> control_points;
 	std::vector<std::vector<double>> stored_points;
+
+	aespa_lib::datas::Matrix scalingMatrix;
 };
 
 

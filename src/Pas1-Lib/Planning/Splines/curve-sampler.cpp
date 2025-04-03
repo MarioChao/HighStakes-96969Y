@@ -2,8 +2,6 @@
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
-#include <stdio.h>
-
 
 namespace pas1_lib {
 namespace planning {

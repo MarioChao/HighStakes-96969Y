@@ -24,7 +24,8 @@ public:
 
 	/// @brief Creates a spline with the given points. Only use B-Spline or Catmull-Rom.
 	static SplineCurve fromAutoTangent_cubicSpline(
-		segments::SplineType splineType, std::vector<std::vector<double>> points
+		segments::SplineType splineType, std::vector<std::vector<double>> points,
+		double knot_parameter_alpha = 0
 	);
 
 	/// @brief Extends the spline by adding a new segment. Only use for B-Spline or Catmull-Rom.

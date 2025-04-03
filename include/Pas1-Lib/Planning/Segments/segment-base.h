@@ -33,6 +33,9 @@ public:
 	virtual SplineType getSplineType();
 
 	virtual std::shared_ptr<SegmentBase> getReversed();
+
+
+	double knot_parameter_alpha;
 };
 
 
