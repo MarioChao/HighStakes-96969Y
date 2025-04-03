@@ -156,8 +156,6 @@ void runTurnToAngle() {
 
 		/* ---------- Angular ---------- */
 
-		// printf("Inertial value: %.3f\n", InertialSensor.rotation(degrees));
-
 		// Get current robot heading
 		double currentRotation_polarDegrees = chassis->getLookPose().getRotation().polarDeg();
 

@@ -23,8 +23,6 @@ void setRobotPosition(double x_tiles, double y_tiles) {
 /// @brief Set the look field absolute angle reading to a specified value. Doesn't turn the robot.
 /// @param fieldAngle_degrees The angle (in degrees) to be set for the current orientation.
 void setRobotRotation(double fieldAngle_degrees) {
-	InertialSensor.setRotation(fieldAngle_degrees, deg);
-	mainOdometry.restart();
 	mainOdometry.setLookAngle_field(fieldAngle_degrees);
 	if (mainUseSimulator) robotSimulator.angularPosition = aespa_lib::genutil::toRadians(aespa_lib::angle::swapFieldPolar_degrees(fieldAngle_degrees));
 }

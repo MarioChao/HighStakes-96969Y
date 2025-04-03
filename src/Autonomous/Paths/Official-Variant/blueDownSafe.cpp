@@ -17,17 +17,13 @@ void autonpaths::runAutonBlueDownSafe() {
 	// Timer
 	_autonTimer.reset();
 
-	// Set position and rotation
-	mainOdometry.printDebug();
+	// Set config
 	setRobotPosition(5.43, 1.53);
 	setRobotRotation(-111.7);
-	mainOdometry.printDebug();
-
-	// Set config
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
-	// waitUntil(isArmResetted());
+	waitUntil(isArmResetted());
 
 
 	/* Auton */
@@ -39,7 +35,6 @@ namespace {
 void loadPaths(int section) {
 	// Clear
 	clearLinear();
-	clearSplines();
 
 	if (section == 1) {
 

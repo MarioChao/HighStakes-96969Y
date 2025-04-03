@@ -10,25 +10,20 @@ void loadPaths(int section);
 void doAuton();
 }
 
-/// @brief Run the 15-seconds new red-up autonomous.
-void autonpaths::runAutonRedUp() {
+/// @brief Run the 15-seconds new blue-up autonomous.
+void autonpaths::runAutonBlueUp() {
 	/* Pre skills */
 
 	// Timer
 	_autonTimer.reset();
 
-	// Set position and rotation
-	mainOdometry.printDebug();
-	setRobotPosition(0.77, 3.78);
-	setRobotRotation(-180);
-	mainOdometry.printDebug();
-
 	// Set config
+	setRobotPosition(5.2, 3.73);
+	setRobotRotation(180);
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
-	// waitUntil(isArmResetted());
-	setArmResetDefaultStage(2);
+	waitUntil(isArmResetted());
 
 
 	/* Auton */
@@ -40,7 +35,6 @@ namespace {
 void loadPaths(int section) {
 	// Clear
 	clearLinear();
-	clearSplines();
 
 	if (section == 1) {
 

@@ -13,8 +13,6 @@ namespace autonpaths {
 namespace pathbuild {
 // Build paths
 
-void clearSplines() {}
-
 void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool reverse, double maxVel) {
 	if (splineProfile_storage.hasKey(profileName)) {
 		// printf("Profile '%s' already exists!\n", profileName.c_str());
@@ -53,7 +51,7 @@ void runFollowSpline(std::string profileName) {
 }
 
 
-std::vector<std::vector<std::vector<double>>> linearPaths;
+std::vector<std::vector<std::vector<aespa_lib::units::Length>>> linearPaths;
 std::vector<double> linearMaxVelocity_pct;
 std::vector<bool> linearWillReverse;
 
@@ -66,7 +64,7 @@ void clearLinear() {
 	linearIndex = 0;
 }
 
-void pushNewLinear(std::vector<std::vector<double>> path, bool reverse, double maxVelocity_pct) {
+void pushNewLinear(std::vector<std::vector<aespa_lib::units::Length>> path, bool reverse, double maxVelocity_pct) {
 	linearPaths.push_back(path);
 	linearMaxVelocity_pct.push_back(maxVelocity_pct);
 	linearWillReverse.push_back(reverse);

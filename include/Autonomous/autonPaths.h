@@ -31,7 +31,6 @@ using namespace pas1_lib::chassis::move;
 // Build paths
 
 namespace pathbuild {
-void clearSplines();
 
 void storeNewSplineProfile(
 	std::string profileName,

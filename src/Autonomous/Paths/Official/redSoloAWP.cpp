@@ -7,47 +7,41 @@ using namespace autonpaths::combination;
 
 void loadPaths(int section);
 
-void doAuton();
+void doAuton1();
 }
 
-/// @brief Run the 15-seconds new blue-up autonomous.
-void autonpaths::runAutonBlueUp() {
-	/* Pre skills */
+/// @brief Run the red solo AWP.
+void autonpaths::runRedSoloAWP() {
+	/* Pre auton */
 
 	// Timer
 	_autonTimer.reset();
 
-	// Set position and rotation
-	mainOdometry.printDebug();
-	setRobotPosition(5.2, 3.73);
-	setRobotRotation(180);
-	mainOdometry.printDebug();
-
 	// Set config
+	setRobotPosition(0.8, 3.73);
+	setRobotRotation(-180);
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
-	// waitUntil(isArmResetted());
-	setArmResetDefaultStage(2);
+	waitUntil(isArmResetted());
 
 
 	/* Auton */
 	loadPaths(1);
-	doAuton();
+	doAuton1();
 }
 
 namespace {
 void loadPaths(int section) {
 	// Clear
 	clearLinear();
-	clearSplines();
 
 	if (section == 1) {
 
 	}
 }
 
-void doAuton() {
+void doAuton1() {
 
 }
 }

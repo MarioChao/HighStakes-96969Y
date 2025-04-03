@@ -11,7 +11,7 @@ void doAuton();
 }
 
 /// @brief Run the 15-seconds new red-down autonomous.
-void autonpaths::runAutonRedDown() {
+void autonpaths::runAutonRedDownSafe() {
 	/* Pre skills */
 
 	// Timer

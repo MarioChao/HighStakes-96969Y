@@ -17,11 +17,9 @@ void autonpaths::runAutonSkills() {
 	// Timer
 	_autonTimer.reset();
 
-	// Set position and rotation
+	// Set config
 	setRobotPosition(0.792, 3);
 	setRobotRotation(-90.0);
-
-	// Set config
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
@@ -36,7 +34,6 @@ namespace {
 void loadPaths(int section) {
 	// Clear
 	clearLinear();
-	clearSplines();
 
 	if (section == 1) {
 

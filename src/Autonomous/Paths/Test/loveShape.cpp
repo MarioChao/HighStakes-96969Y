@@ -19,13 +19,9 @@ void autonpaths::runLoveShape() {
 	// Timer
 	_autonTimer.reset();
 
-	// Set position and rotation
-	mainOdometry.printDebug();
+	// Set config
 	setRobotPosition(1.5, 0.5);
 	setRobotRotation(0);
-	mainOdometry.printDebug();
-
-	// Set config
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
@@ -43,7 +39,6 @@ namespace {
 void loadPaths(int section) {
 	// Clear
 	clearLinear();
-	clearSplines();
 
 	if (section == 1) {
 	}

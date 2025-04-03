@@ -3,51 +3,45 @@
 namespace {
 using namespace autonpaths;
 using namespace autonpaths::pathbuild;
-using namespace autonpaths::combination;
 
 void loadPaths(int section);
 
-void doAuton1();
+void doAuton();
 }
 
-/// @brief Run the blue solo AWP.
-void autonpaths::runBlueSoloAWP() {
+/// @brief Run the template.
+void autonpaths::runTemplate() {
 	/* Pre auton */
 
 	// Timer
 	_autonTimer.reset();
 
-	// Set position and rotation
-	mainOdometry.printDebug();
-	setRobotPosition(5.2, 3.73);
-	setRobotRotation(180);
-	mainOdometry.printDebug();
-
 	// Set config
+	setRobotPosition(-0.00, -0.00);
+	setRobotRotation(-0.00);
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
-	// waitUntil(isArmResetted());
-	setArmResetDefaultStage(2);
+	waitUntil(isArmResetted());
 
 
 	/* Auton */
 	loadPaths(1);
-	doAuton1();
+	doAuton();
 }
 
 namespace {
 void loadPaths(int section) {
 	// Clear
 	clearLinear();
-	clearSplines();
 
 	if (section == 1) {
+		// Grab goal
 
 	}
 }
 
-void doAuton1() {
+void doAuton() {
 
 }
 }
