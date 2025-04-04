@@ -44,14 +44,14 @@ void storeNewSplineProfile(
 void runFollowSpline(Differential &chassis, std::string profileName);
 void runFollowSpline(std::string profileName);
 
-extern std::vector<std::vector<std::vector<double>>> linearPaths;
+extern std::vector<std::vector<std::vector<aespa_lib::units::Length>>> linearPaths;
 extern std::vector<double> linearMaxVelocity_pct;
 extern std::vector<bool> linearWillReverse;
 
 extern int linearIndex;
 
 void clearLinear();
-void pushNewLinear(std::vector<std::vector<double>> path, bool reverse = false, double maxVelocity_pct = 100);
+void pushNewLinear(std::vector<std::vector<aespa_lib::units::Length>> path, bool reverse = false, double maxVelocity_pct = 100);
 void runFollowLinearYield();
 }
 
