@@ -1,24 +1,10 @@
 #pragma once
 
 #include "Autonomous/autonValues.h"
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/units.h"
 
 #include "main.h"
-
-
-// Forward declaration
-
-namespace pas1_lib {
-namespace planning {
-namespace splines {
-class SplineCurve;
-class CurveSampler;
-}
-namespace trajectories {
-class TrajectoryPlanner;
-}
-}
-}
 
 
 // Namespace
@@ -28,6 +14,7 @@ namespace autonfunctions {
 
 /* General */
 
+void setRobotLookPose(aespa_lib::datas::Linegular pose);
 void setRobotPosition(double x_tiles, double y_tiles);
 void setRobotRotation(double fieldAngle_degrees);
 

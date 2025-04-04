@@ -16,7 +16,7 @@ public:
 	void setDistance(double distance);
 	void updateDistance();
 
-	void setForwardVelocity(double velocity_value);
+	void setForwardDifferentialMotion(double linearVelocity, double angularVelocity, double maxVelocity, double maxAcceleration, double trackWidth);
 	double getForwardVelocity();
 
 	aespa_lib::datas::Linegular getLookPose();

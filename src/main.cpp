@@ -108,14 +108,18 @@ void pre_auton(void) {
 				// Get actual chassis motion
 				double average_volt = (robotChassis.leftMotor_volt + robotChassis.rightMotor_volt) / 2;
 				double ang_volt = (robotChassis.rightMotor_volt - robotChassis.leftMotor_volt) / 2;
-				double forwardVelocity_tilesPerSec = average_volt / 12.0 * robotChassis.botInfo.maxVel_tilesPerSec;
-				double angularVelocity_radiansPerSec = ang_volt / 12.0 * robotChassis.botInfo.maxVel_tilesPerSec / (robotChassis.botInfo.trackWidth_tiles / 2);
+				double forwardVelocity_tilesPerSec = average_volt / 12.0 * botInfo.maxVel_tilesPerSec;
+				double angularVelocity_radiansPerSec = ang_volt / 12.0 * botInfo.maxVel_tilesPerSec / (botInfo.trackWidth_tiles / 2);
 
 				// Set simulation physics
-				// ToDo: use maximum acceleration instead of a smoothing filter
-				double alpha = 0.5;
-				robotSimulator.setForwardVelocity((1 - alpha) * robotSimulator.getForwardVelocity() + alpha * forwardVelocity_tilesPerSec);
-				robotSimulator.angularVelocity = (1 - alpha) * robotSimulator.angularVelocity + alpha * angularVelocity_radiansPerSec;
+				// double alpha = 0.5;
+				// double newForwardVelocity = (1 - alpha) * robotSimulator.getForwardVelocity() + alpha * forwardVelocity_tilesPerSec;
+				// double newAngularVelocity = (1 - alpha) * robotSimulator.angularVelocity + alpha * angularVelocity_radiansPerSec;
+				robotSimulator.setForwardDifferentialMotion(
+					forwardVelocity_tilesPerSec, angularVelocity_radiansPerSec,
+					// newForwardVelocity, newAngularVelocity,
+					botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 5, botInfo.trackWidth_tiles
+				);
 
 				// Update simulation physics
 				robotSimulator.constrainMotion(botInfo.maxVel_tilesPerSec, botInfo.trackWidth_tiles);

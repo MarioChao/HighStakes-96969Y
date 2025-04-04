@@ -15,6 +15,14 @@
 
 namespace autonfunctions {
 
+void setRobotLookPose(aespa_lib::datas::Linegular pose) {
+	robotChassis.setLookPose(pose);
+	if (mainUseSimulator) {
+		robotSimulator.position = Vector3(pose.getX(), pose.getY());
+		robotSimulator.angularPosition = pose.getRotation().polarRad();
+	}
+}
+
 void setRobotPosition(double x_tiles, double y_tiles) {
 	mainOdometry.setPosition_scaled(x_tiles, y_tiles);
 	if (mainUseSimulator) robotSimulator.position = Vector3(x_tiles, y_tiles);

@@ -73,9 +73,31 @@ void RobotSimulator::updateDistance() {
 	previousPosition = position;
 }
 
-void RobotSimulator::setForwardVelocity(double velocity_value) {
+void RobotSimulator::setForwardDifferentialMotion(double linearVelocity, double angularVelocity, double maxVelocity, double maxAcceleration, double trackWidth) {
+	double leftVelocity = linearVelocity - angularVelocity * trackWidth / 2;
+	double rightVelocity = linearVelocity + angularVelocity * trackWidth / 2;
+	double scaleFactor = aespa_lib::genutil::getScaleFactor(maxVelocity, {leftVelocity, rightVelocity});
+	leftVelocity *= scaleFactor;
+	rightVelocity *= scaleFactor;
+
+	double prevLinearVelocity = getForwardVelocity();
+	double prevAngularVelocity = this->angularVelocity;
+	double prevLeftVelocity = prevLinearVelocity - prevAngularVelocity * trackWidth / 2;
+	double prevRightVelocity = prevLinearVelocity + prevAngularVelocity * trackWidth / 2;
+
+	double deltaTime = physicsTimer.time(sec) - lastUpdateTime;
+	double maxDeltaVelocity = maxAcceleration * deltaTime;
+	if (maxAcceleration < 0) maxDeltaVelocity = 1e6;
+
+	leftVelocity = prevLeftVelocity + aespa_lib::genutil::clamp(leftVelocity - prevLeftVelocity, -maxDeltaVelocity, maxDeltaVelocity);
+	rightVelocity = prevRightVelocity + aespa_lib::genutil::clamp(rightVelocity - prevRightVelocity, -maxDeltaVelocity, maxDeltaVelocity);
+
+	double newLinearVelocity = (leftVelocity + rightVelocity) / 2;
+	double newAngularVelocity = (rightVelocity - leftVelocity) / 2 / (trackWidth / 2);
+
 	double theta = angularPosition;
-	velocity = Vector3(velocity_value * cos(theta), velocity_value * sin(theta));
+	this->velocity = Vector3(newLinearVelocity * cos(theta), newLinearVelocity * sin(theta));
+	this->angularVelocity = newAngularVelocity;
 }
 
 double RobotSimulator::getForwardVelocity() {

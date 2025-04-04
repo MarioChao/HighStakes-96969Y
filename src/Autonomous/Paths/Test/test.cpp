@@ -6,8 +6,8 @@ void autonpaths::runAutonTest() {
 
 	setDifferentialUseRelativeRotation(false);
 
-	if (true) {
-		robotChassis.setLookPose(aespa_lib::datas::Linegular(1.5, 0.5, 90));
+	if (false) {
+		setRobotLookPose(aespa_lib::datas::Linegular(1.5, 0.5, 90));
 
 		pathbuild::runFollowSpline(robotChassis, "test");
 		waitUntil(follow::_isPathFollowCompleted);
@@ -17,23 +17,23 @@ void autonpaths::runAutonTest() {
 		local::turnToAngle(robotChassis, local::turnToAngle_params(90), false);
 	}
 
-	if (false) {
-		robotChassis.setLookPose(aespa_lib::datas::Linegular(0, 0, 90));
+	if (true) {
+		setRobotLookPose(aespa_lib::datas::Linegular(1, 0, 90));
 
-		global::driveToPoint(robotChassis, global::driveToPoint_params(0, 1, false), false);
-		global::driveToPoint(robotChassis, global::driveToPoint_params(0, 0, true), false);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(1, 1, false), false);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(1, 0, true), false);
 
 		local::driveAndTurn(robotChassis, local::driveAndTurn_params(1, 90, 75), false);
 		local::driveAndTurn(robotChassis, local::driveAndTurn_params(-1, 90, { {0, 20}, {0.5, 60} }), false);
 
 		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
-		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, robotChassis.botInfo.trackWidth_tiles / 2.0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, botInfo.trackWidth_tiles / 2.0), false);
 		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
-		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, -robotChassis.botInfo.trackWidth_tiles / 2.0), false);
+		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, -botInfo.trackWidth_tiles / 2.0), false);
 	}
 
 	if (false) {
-		robotChassis.setLookPose(aespa_lib::datas::Linegular(0, 0, 90));
+		setRobotLookPose(aespa_lib::datas::Linegular(0, 0, 90));
 
 		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
 		local::turnToAngle(robotChassis, local::turnToAngle_params(270, 100, 0), false);
