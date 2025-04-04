@@ -48,8 +48,8 @@ void setMatrices() {
 		storing_matrix::CatmullRom = Matrix({
 			{0, 1, 0, 0},
 			{0, 0, 1, 0},
-			{-1, 0, 1, 0},
-			{0, -1, 0, 1},
+			{-0.5, 0, 0.5, 0},
+			{0, -0.5, 0, 0.5},
 		});
 		storing_matrix::Cubic_B_Spline = Matrix({
 			{1, 4, 1, 0,},
@@ -66,15 +66,14 @@ void setMatrices() {
 CubicSplineSegment::CubicSplineSegment(
 	SplineType splineType, std::vector<std::vector<double>> points,
 	double knot_parameter_alpha
-)
-	: scalingMatrix(Matrix::identity(4)) {
+) {
 	// Initializes matrices (prevents accessing them when uninitialized)
 	setMatrices();
 
 	setSplineType(splineType);
 	setPoints(points);
 
-	setScalingMatrix(knot_parameter_alpha);
+	this->knot_parameter_alpha = knot_parameter_alpha;
 }
 
 CubicSplineSegment::CubicSplineSegment()
@@ -122,6 +121,7 @@ Matrix &CubicSplineSegment::getStoringMatrix() {
 	return storing_matrix::Cubic_Bezier;
 }
 
+/*
 void CubicSplineSegment::setScalingMatrix(double knot_parameter_alpha) {
 	this->knot_parameter_alpha = knot_parameter_alpha;
 
@@ -144,25 +144,26 @@ void CubicSplineSegment::setScalingMatrix(double knot_parameter_alpha) {
 		{0, 0, 0, 1.0 / (t_arr[3] - t_arr[1])}
 	});
 }
+	*/
 
 std::vector<double> CubicSplineSegment::getPositionAtT(double t) {
 	Matrix t_matrix({ {1, t, t*t, t*t*t} });
 	Matrix point_matrix = Matrix(stored_points);
-	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(scalingMatrix).multiply(point_matrix).data[0];
+	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
 	return point;
 }
 
 std::vector<double> CubicSplineSegment::getFirstPrimeAtT(double t) {
 	Matrix t_matrix({ {0, 1, 2*t, 3*t*t} });
 	Matrix point_matrix = Matrix(stored_points);
-	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(scalingMatrix).multiply(point_matrix).data[0];
+	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
 	return point;
 }
 
 std::vector<double> CubicSplineSegment::getSecondPrimeAtT(double t) {
 	Matrix t_matrix({ {0, 0, 2, 6*t} });
 	Matrix point_matrix = Matrix(stored_points);
-	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(scalingMatrix).multiply(point_matrix).data[0];
+	std::vector<double> point = t_matrix.multiply(getCharacteristicMatrix()).multiply(point_matrix).data[0];
 	return point;
 }
 

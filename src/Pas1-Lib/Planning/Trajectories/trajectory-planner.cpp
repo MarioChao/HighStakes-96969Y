@@ -138,27 +138,27 @@ ConstraintSequence planPoints_to_rawConstraintSequence(std::vector<PlanPoint> no
 TrajectoryPlanner::TrajectoryPlanner(
 	double distance_inches,
 	double trackWidth_inches,
-	int distanceResolution,
+	double planPoint_distanceStep,
 	std::vector<double> startMotion_dInches_dSec,
 	std::vector<double> endMotion_dInches_dSec
 )
 	: trackWidth(trackWidth_inches),
-	distanceResolution(distanceResolution),
+	planPoint_distanceStep(planPoint_distanceStep),
 	startMotion(startMotion_dInches_dSec),
 	endMotion(endMotion_dInches_dSec) {
-	distance = fabs(distance_inches);
+	totalDistance = fabs(distance_inches);
 	distance_sign = aespa_lib::genutil::signum(distance_inches);
 
 	curvatureSequence = CurvatureSequence();
 };
 
 TrajectoryPlanner::TrajectoryPlanner(
-	double distance_inches, double trackWidth_inches, int distanceResolution
+	double distance_inches, double trackWidth_inches, double planPoint_distanceStep
 )
-	: TrajectoryPlanner(distance_inches, trackWidth_inches, distanceResolution, { 0 }, { 0 }) {}
+	: TrajectoryPlanner(distance_inches, trackWidth_inches, planPoint_distanceStep, { 0 }, { 0 }) {}
 
 TrajectoryPlanner::TrajectoryPlanner(double distance_inches, double trackWidth_inches)
-	: TrajectoryPlanner(distance_inches, trackWidth_inches, 32) {}
+	: TrajectoryPlanner(distance_inches, trackWidth_inches, 0.1) {}
 
 TrajectoryPlanner::TrajectoryPlanner(double distance_inches)
 	: TrajectoryPlanner(distance_inches, 0) {}
@@ -167,26 +167,23 @@ TrajectoryPlanner::TrajectoryPlanner()
 	: TrajectoryPlanner(0) {};
 
 TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
-	std::function<double(double)> distanceToCurvature_function
+	std::function<double(double)> distanceToCurvature_function,
+	std::vector<double> specificDistances
 ) {
 	// Init & configs
 	curvatureSequence.points.clear();
-	double distanceStep = distance / distanceResolution;
+	double distanceStep = planPoint_distanceStep;
 	double deltaX = distanceStep;
 	int stepSplit = 5;
 
-	// Store function
-	double x = 0;
-	bool lastIteration = false;
-	while (true) {
-		if (x >= distance) {
-			x = distance;
-			lastIteration = true;
-		}
+	// Sort specific distances
+	for (double x : specificDistances) {
+		double deltaX = 1e-3;
 
-		// Estimate segment curvature
+		// Calculate segment curvature
 		double avgK = 0;
 		double maxK = 0;
+		double segmentK = 0;
 		for (int stepI = 0; stepI <= stepSplit; stepI++) {
 			double dStep = aespa_lib::genutil::rangeMap(
 				stepI, 0, stepSplit, 0, deltaX
@@ -197,12 +194,43 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 		}
 		avgK /= (stepSplit + 1);
 
-		// Modify segment size
-		double segmentK;
-		// segmentK = avgK;
+		// Store curvature
 		segmentK = maxK;
-		deltaX = distanceStep / (1 + fabs(segmentK));
-		deltaX = aespa_lib::genutil::clamp(deltaX, distanceStep / 7.0, distanceStep);
+		curvatureSequence.addPoint(x, segmentK);
+	}
+
+	// Store function
+	double x = 0;
+	bool lastIteration = false;
+	while (true) {
+		if (x >= totalDistance) {
+			x = totalDistance;
+			lastIteration = true;
+		}
+
+		// Estimate segment curvature
+		double avgK = 0;
+		double maxK = 0;
+		double segmentK = 0;
+
+		// Shrink segment size
+		if (true) {
+			for (int stepI = 0; stepI <= stepSplit; stepI++) {
+				double dStep = aespa_lib::genutil::rangeMap(
+					stepI, 0, stepSplit, 0, deltaX
+				) - (deltaX / 2);
+				double k = distanceToCurvature_function(x + dStep);
+				avgK += k;
+				if (fabs(k) > fabs(maxK)) maxK = k;
+			}
+			avgK /= (stepSplit + 1);
+	
+			// Modify segment size
+			// segmentK = avgK;
+			segmentK = maxK;
+			deltaX = distanceStep / (1 + fabs(segmentK));
+			deltaX = aespa_lib::genutil::clamp(deltaX, distanceStep / 7.0, distanceStep);
+		}
 
 		// Calculate segment curvature
 		avgK = 0;
@@ -469,15 +497,15 @@ std::vector<PlanPoint> TrajectoryPlanner::_forwardPass(int dV_dT_degree) {
 
 std::vector<PlanPoint> TrajectoryPlanner::_backwardPass(int dV_dT_degree) {
 	Constraint minConstraint = getMinimumConstraint(
-		getConstraintsAtDistance(center_constraintSequences, distance)
+		getConstraintsAtDistance(center_constraintSequences, totalDistance)
 	);
 	std::vector<PlanPoint> planningPoints;
 	planningPoints.push_back(
-		PlanPoint(0, distance, endMotion)
+		PlanPoint(0, totalDistance, endMotion)
 		.constrain(minConstraint)
 		.maximizeNthDegree(
 			minConstraint, dV_dT_degree + 1,
-			planPoint_rawSequence.getConstraintAtDistance(distance)
+			planPoint_rawSequence.getConstraintAtDistance(totalDistance)
 		)
 	);
 
@@ -551,12 +579,12 @@ TrajectoryPlanner &TrajectoryPlanner::calculateMotionProfile() {
 	}
 
 	// Generate plan point distances
-	double distanceStep = distance / (double) distanceResolution;
+	double distanceStep = planPoint_distanceStep;
 	planPoint_distances.clear();
-	for (double x = 0; x <= distance; x += distanceStep) {
+	for (double x = 0; x <= totalDistance; x += distanceStep) {
 		planPoint_distances.push_back(x);
 	}
-	planPoint_distances.push_back(distance);
+	planPoint_distances.push_back(totalDistance);
 	if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 		std::vector<double> newPlanPoint_distances = {};
 		int p1 = 0;
@@ -671,7 +699,7 @@ std::pair<double, std::vector<double>> TrajectoryPlanner::getMotionAtTime(double
 
 	// Out of range case
 	if (time_seconds < 0) return { 0, {0, 0} };
-	if (getTotalTime() < time_seconds) return { distance * distance_sign, {0, 0} };
+	if (getTotalTime() < time_seconds) return { totalDistance * distance_sign, {0, 0} };
 
 	// Sanitize time
 	time_seconds = aespa_lib::genutil::clamp(time_seconds, 0, getTotalTime());

@@ -226,7 +226,7 @@ void runDriveAndTurn() {
 	Linegular initialPose = chassis->getLookPose();
 
 	// Motion planner
-	TrajectoryPlanner motionProfile(distance_tiles, botInfo.trackWidth_tiles, 64);
+	TrajectoryPlanner motionProfile(distance_tiles, botInfo.trackWidth_tiles, 0.05);
 	ConstraintSequence constraintSequence;
 	for (int i = 0; i < (int) velocityConstraint_tiles_pct.size(); i++) {
 		auto constraint = velocityConstraint_tiles_pct[i];

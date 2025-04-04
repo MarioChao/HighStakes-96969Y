@@ -50,6 +50,7 @@ public:
 	double getCurvatureAt(double t);
 
 	std::pair<double, double> getTRange();
+	int getSegmentCount();
 
 	SplineCurve getReversed();
 

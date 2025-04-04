@@ -43,22 +43,23 @@ public:
 	TrajectoryPlanner(
 		double distance_inches,
 		double trackWidth_inches,
-		int distanceResolution,
+		double planPoint_distanceStep,
 		std::vector<double> startMotion_dInches_dSec,
 		std::vector<double> endMotion_dInches_dSec
 	);
 	TrajectoryPlanner(
-		double distance_inches, double trackWidth_inches, int distanceResolution
+		double distance_inches, double trackWidth_inches, double planPoint_distanceStep
 	);
 	TrajectoryPlanner(double distance_inches, double trackWidth_inches);
 	TrajectoryPlanner(double distance_inches);
 	TrajectoryPlanner();
 
 	TrajectoryPlanner &setCurvatureFunction(
-		std::function<double(double)> distanceToCurvature_function
+		std::function<double(double)> distanceToCurvature_function,
+		std::vector<double> specificDistances = {}
 	);
 
-	TrajectoryPlanner &maxSmoothCurvature(double epsilon = 1e6);
+	TrajectoryPlanner &maxSmoothCurvature(double epsilon = 1e10);
 	double getCurvatureAtDistance(double distance);
 
 	TrajectoryPlanner &addCenterConstraintSequence(ConstraintSequence constraints);
@@ -90,11 +91,11 @@ public:
 	std::pair<double, std::vector<double>> getMotionAtTime(double time_seconds);
 
 private:
-	double distance;
+	double totalDistance;
 	double trackWidth;
 	int distance_sign;
 
-	int distanceResolution;
+	double planPoint_distanceStep;
 
 	std::vector<double> startMotion;
 	std::vector<double> endMotion;

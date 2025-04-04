@@ -19,15 +19,16 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 		return;
 	}
 
-	CurveSampler curveSampler = CurveSampler(spline)
-		.calculateByResolution(spline.getTRange().second * 10);
-	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(
-		curveSampler.getDistanceRange().second, botInfo.trackWidth_tiles,
-		64
-	)
-		.setCurvatureFunction([&](double d) -> double {
-		return spline.getCurvatureAt(curveSampler.distanceToParam(d));
-	})
+	CurveSampler curveSampler = CurveSampler(spline).calculateByResolution(spline.getTRange().second * 10);
+	double totalDistance = curveSampler.getDistanceRange().second;
+	double distanceStep = aespa_lib::genutil::clamp(totalDistance / 64, 0.077, 0.5);
+	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(curveSampler.getDistanceRange().second, botInfo.trackWidth_tiles, distanceStep)
+		.setCurvatureFunction(
+			[&](double d) -> double {
+				return spline.getCurvatureAt(curveSampler.distanceToParam(d));
+			},
+			curveSampler.integerParamsToDistances()
+		)
 		.maxSmoothCurvature()
 		.addCenterConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 })
 		.addTrackConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 })

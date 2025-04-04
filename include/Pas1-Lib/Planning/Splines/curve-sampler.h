@@ -48,6 +48,8 @@ public:
 	double paramToDistance(double t);
 	double distanceToParam(double distance);
 
+	std::vector<double> integerParamsToDistances();
+
 private:
 	std::vector<CurveParam> t_cumulativeDistances;
 	std::shared_ptr<SplineCurve> spline;

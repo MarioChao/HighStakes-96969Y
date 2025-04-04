@@ -52,8 +52,6 @@ public:
 	aespa_lib::datas::Matrix &getCharacteristicMatrix();
 	aespa_lib::datas::Matrix &getStoringMatrix();
 
-	void setScalingMatrix(double knot_parameter_alpha = 0);
-
 	std::vector<double> getPositionAtT(double t) override;
 	std::vector<double> getFirstPrimeAtT(double t) override;
 	std::vector<double> getSecondPrimeAtT(double t) override;
@@ -65,8 +63,6 @@ private:
 
 	std::vector<std::vector<double>> control_points;
 	std::vector<std::vector<double>> stored_points;
-
-	aespa_lib::datas::Matrix scalingMatrix;
 };
 
 

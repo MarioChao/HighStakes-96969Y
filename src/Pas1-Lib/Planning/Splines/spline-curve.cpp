@@ -148,7 +148,11 @@ double SplineCurve::getCurvatureAt(double t) {
 }
 
 std::pair<double, double> SplineCurve::getTRange() {
-	return std::make_pair(0, (int) segments.size());
+	return std::make_pair(0, getSegmentCount());
+}
+
+int SplineCurve::getSegmentCount(){
+	return (int) segments.size();
 }
 
 SplineCurve SplineCurve::getReversed() {
