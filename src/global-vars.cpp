@@ -41,7 +41,7 @@ BotInfo botInfo(
 	3.25, // wheel diameter (inches)
 	36.0 / 36.0, // wheel to motor gear ratio
 	600, // motor rpm
-	600 // motor rpm/s
+	600 * 2.0 // motor rpm/s
 );
 
 
@@ -84,7 +84,8 @@ Odometry mainOdometry = Odometry()
 
 namespace {
 AutonSettings autonSettings(
-	ForwardController(1.0, 12.0 / botInfo.maxVel_tilesPerSec, 0.4), // feedforward (tiles/sec to volt)
+	ForwardController(1.0, 12.0 / botInfo.maxVel_tilesPerSec, 1.0 / botInfo.maxAccel_tilesPerSec2), // feedforward (tiles/sec to volt)
+	// ForwardController(1.0, 12.0 / botInfo.maxVel_tilesPerSec, 0.4), // feedforward (tiles/sec to volt)
 	PIDController(15.06, 0, 0, 0.04), // position feedback (tiles to tiles/sec)
 	PIDController(5.184, 0, 0), // velocity feedback (tiles/sec to volt)
 	PIDController(70, 0, 0, 0.04), // linear pid (tiles to pct)

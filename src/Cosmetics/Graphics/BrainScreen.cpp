@@ -67,8 +67,6 @@ void drawInertial(Linegular robotPose);
 // Variables
 // Flywheel
 double fw_drawX = 20;
-double fw_prevRealY = -1, fw_newRealY;
-double fw_prevAimY = -1, fw_newAimY;
 
 // Guis
 vector<ButtonGui *> mainDockButtons;
@@ -249,56 +247,41 @@ void drawFlywheel(int x, int y, int width, int height) {
 	Brain.Screen.drawLine(fw_drawX, y, fw_drawX, y + height);
 
 	// Variables
-	double scale = height / 1200.0;
-	double actualSpeed = aespa_lib::genutil::clamp(0, -600, 600);
-	double aimSpeed = aespa_lib::genutil::clamp(0, -600, 600);
 	fw_drawX = aespa_lib::genutil::clamp(fw_drawX, x, x + width);
 
-	// Real velocity
-	Brain.Screen.setPenWidth(1);
-	Brain.Screen.setPenColor(color::yellow);
-	fw_newRealY = y + height / 2.0 - actualSpeed * scale;
-	// if (fw_prevRealY >= 0 && fw_drawX > 0) {
-	// 	Brain.Screen.drawLine(fw_drawX - 1, fw_prevRealY, fw_drawX, fw_newRealY);
-	// } else Brain.Screen.drawPixel(fw_drawX, fw_newRealY);
-
-	// Target velocity
-	Brain.Screen.setPenColor(color::green);
-	fw_newAimY = y + height / 2.0 - aimSpeed * scale;
-	// if (fw_prevAimY >= 0 && fw_drawX > x) {
-	// 	Brain.Screen.drawLine(fw_drawX - 1, fw_prevAimY, fw_drawX, fw_newAimY);
-	// } else Brain.Screen.drawPixel(fw_drawX, fw_newAimY);
-
-	// Normal graph
+	// Zero graph
 	Brain.Screen.setPenColor(color::red);
 	Brain.Screen.drawPixel(fw_drawX, y + height / 2.0);
-	Brain.Screen.setPenColor(color::orange);
 	double gph_x, gph_y;
+	gph_x = fw_drawX;
 
+	// Other graph
+
+	// Trajectory velocity
 	double trajectoryValue;
 	std::pair<double, std::vector<double>> motion = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value());
 	double traj_distance = motion.first;
 	double traj_velocity = motion.second[0];
 	double traj_k = testTrajectoryPlan.getCurvatureAtDistance(traj_distance);
 	double traj_trackFactor = traj_k * botInfo.trackWidth_tiles / 2;
-	// printf("V: %.3f\n", traj_velocity);
-	// double traj_tvalue = autonfunctions::_curveSampler.distanceToParam(traj_distance);
-	// double traj_angularVelocity = traj_velocity * autonfunctions::_splinePath.getCurvatureAt(traj_tvalue);
-	// trajectoryValue = traj_velocity * (1 + std::fabs(traj_trackFactor));
-	double linearVelocity = robotSimulator.getForwardVelocity();
-	trajectoryValue = linearVelocity;
-	// trajectoryValue += robotSimulator.angularVelocity * (botInfo.trackWidth_tiles / 2);
+	trajectoryValue = traj_velocity * (1 + traj_trackFactor);
 
-	gph_x = fw_drawX;
+	// Simulator velocity
+	double simu_velocity = robotSimulator.getForwardVelocity();
+	simu_velocity += robotSimulator.angularVelocity * (botInfo.trackWidth_tiles / 2);
+
+	// Draw
+	Brain.Screen.setPenColor(color::green);
 	gph_y = y + height / 2.0 - (trajectoryValue / botInfo.maxVel_tilesPerSec * height / 2);
-	// printf("Vel: %.3f\n", trajectoryValue);
+	Brain.Screen.drawPixel(gph_x, gph_y);
+
+	Brain.Screen.setPenColor(color::orange);
+	gph_y = y + height / 2.0 - (simu_velocity / botInfo.maxVel_tilesPerSec * height / 2);
 	Brain.Screen.drawPixel(gph_x, gph_y);
 
 	// Update
 	fw_drawX++;
 	if (fw_drawX > x + width) fw_drawX = x;
-	fw_prevRealY = fw_newRealY;
-	fw_prevAimY = fw_newAimY;
 }
 
 // Graphic User Interfaces

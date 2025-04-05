@@ -138,8 +138,7 @@ void runFollowPath() {
 		double traj_distance = motion.first;
 		double traj_velocity = motion.second[0];
 		double traj_tvalue = splineProfile->curveSampler.distanceToParam(traj_distance);
-		// double traj_curvature = splineProfile->spline.getCurvatureAt(traj_tvalue);
-		double traj_curvature = splineProfile->trajectoryPlan.getCurvatureAtDistance(traj_distance);
+		double traj_curvature = splineProfile->spline.getCurvatureAt(traj_tvalue);
 		double traj_angularVelocity = traj_velocity * traj_curvature;
 
 		// Get robot and target linegular

@@ -23,7 +23,7 @@ double ForwardController::getValue(bool useS, bool useV, bool useA) {
 	if (useS) {
 		bool isSpeedingUp = aespa_lib::genutil::signum(velocity) == aespa_lib::genutil::signum(acceleration);
 		if (1e-5 < fabs(velocity) && fabs(velocity) < 0.05 && isSpeedingUp) {
-			valS = kStat;
+			valS = kStat * aespa_lib::genutil::signum(velocity);
 		}
 	}
 

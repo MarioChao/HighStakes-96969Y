@@ -13,7 +13,9 @@ namespace chassis {
 namespace base {
 
 ChassisBase::ChassisBase(settings::Odometry &odometry, settings::BotInfo &botInfo, settings::AutonSettings &autonSettings)
-	: botInfo(botInfo), autonSettings(autonSettings), odometry(odometry) {}
+	: botInfo(botInfo), autonSettings(autonSettings), odometry(odometry) {
+	overwriteLookVelocity = { false, 0 };
+}
 
 void ChassisBase::control_local2d(
 	double right_pct, double look_pct,

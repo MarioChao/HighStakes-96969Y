@@ -240,8 +240,8 @@ void runDriveAndTurn() {
 		});
 	}
 	motionProfile.addCenterConstraintSequence(constraintSequence);
-	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 });
-	motionProfile.addTrackConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 });
+	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 0.85 });
+	motionProfile.addTrackConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 0.85 });
 	motionProfile.calculateMotionProfile();
 
 	// Trajectory graph
@@ -322,7 +322,7 @@ void runDriveAndTurn() {
 
 		// Update error patience
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(targetDistanceError));
-		// printf("DERR: %.3f\n", targetDistanceError);
+		// printf("DERR: %.3f %.3f %.3f\n", targetDistanceError, currentTravelDistance_tiles, targetDistance_tiles);
 
 		/* Feedforward + feedback */
 
@@ -335,13 +335,14 @@ void runDriveAndTurn() {
 		autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.computeFromMotion(desiredVelocity_tilesPerSec, trajAcceleration_tilesPerSec2);
 
 		// Velocity feedback
-		autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.computeFromError(trajVelocity_tilesPerSec - currentTravelVelocity_tilesPerSec);
+		autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.computeFromError(desiredVelocity_tilesPerSec - currentTravelVelocity_tilesPerSec);
 
 		// Combined
-		bool useS = currentTravelVelocity_tilesPerSec < 0.02;
+		bool useS = std::fabs(currentTravelVelocity_tilesPerSec) < 0.02;
 		double forwardVelocity_pct = aespa_lib::genutil::voltToPct(autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(useS));
 		double feedbackVelocity_pct = aespa_lib::genutil::voltToPct(autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.getValue());
 		double linearVelocity_pct = forwardVelocity_pct + feedbackVelocity_pct;
+		// printf("DV %.3f %.3f %.3f %.3f %.3f\n", targetDistanceError, currentTravelVelocity_tilesPerSec, desiredVelocity_tilesPerSec, forwardVelocity_pct, feedbackVelocity_pct);
 
 		// double desiredPct = desiredVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct;
 		// double veloError = desiredPct - currentTravelVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct;

@@ -36,6 +36,8 @@ public:
 	settings::BotInfo &botInfo;
 	settings::AutonSettings &autonSettings;
 
+	std::pair<bool, double> overwriteLookVelocity;
+
 private:
 	settings::Odometry &odometry;
 };

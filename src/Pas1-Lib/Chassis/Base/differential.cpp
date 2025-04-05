@@ -44,6 +44,8 @@ void Differential::stopMotors(brakeType mode) {
 }
 
 double Differential::getLookVelocity() {
+	if (overwriteLookVelocity.first) return overwriteLookVelocity.second;
+
 	double averageVelocity_rpm = (left_motors.velocity(rpm) + right_motors.velocity(rpm)) / 2.0;
 	return averageVelocity_rpm * (1.0 / 60.0) * botInfo.wheelCircum_tiles * botInfo.motorToWheel_gearRatio;
 }

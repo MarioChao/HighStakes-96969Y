@@ -118,7 +118,9 @@ void pre_auton(void) {
 				robotSimulator.setForwardDifferentialMotion(
 					forwardVelocity_tilesPerSec, angularVelocity_radiansPerSec,
 					// newForwardVelocity, newAngularVelocity,
-					botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 5, botInfo.trackWidth_tiles
+					botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2, botInfo.trackWidth_tiles
+					// botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 5, botInfo.trackWidth_tiles
+					// botInfo.maxVel_tilesPerSec, -1, botInfo.trackWidth_tiles
 				);
 
 				// Update simulation physics
@@ -127,14 +129,17 @@ void pre_auton(void) {
 				robotSimulator.updateDistance();
 
 				if (mainUseSimulator) {
-					// Update actual chassis position
+					// Update actual chassis position & velocity
 					aespa_lib::datas::Linegular robotPose = robotChassis.getLookPose();
 					robotPose.setPosition(robotSimulator.position.x, robotSimulator.position.y);
 					robotPose.setRotation(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 					robotChassis.setLookPose(robotPose);
+					robotChassis.overwriteLookVelocity = { true, robotSimulator.getForwardVelocity() };
+				} else {
+					robotChassis.overwriteLookVelocity = { false, 0 };
 				}
 
-				wait(10, msec);
+				wait(5, msec);
 			}
 		});
 	}
