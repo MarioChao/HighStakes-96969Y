@@ -146,7 +146,7 @@ TrajectoryPlanner::TrajectoryPlanner(
 	planPoint_distanceStep(planPoint_distanceStep),
 	startMotion(startMotion_dInches_dSec),
 	endMotion(endMotion_dInches_dSec) {
-	totalDistance = fabs(distance_inches);
+	totalDistance = std::fabs(distance_inches);
 	distance_sign = aespa_lib::genutil::signum(distance_inches);
 
 	curvatureSequence = CurvatureSequence();
@@ -190,7 +190,7 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 			) - (deltaX / 2);
 			double k = distanceToCurvature_function(x + dStep);
 			avgK += k;
-			if (fabs(k) > fabs(maxK)) maxK = k;
+			if (std::fabs(k) > std::fabs(maxK)) maxK = k;
 		}
 		avgK /= (stepSplit + 1);
 
@@ -221,14 +221,14 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 				) - (deltaX / 2);
 				double k = distanceToCurvature_function(x + dStep);
 				avgK += k;
-				if (fabs(k) > fabs(maxK)) maxK = k;
+				if (std::fabs(k) > std::fabs(maxK)) maxK = k;
 			}
 			avgK /= (stepSplit + 1);
 	
 			// Modify segment size
 			// segmentK = avgK;
 			segmentK = maxK;
-			deltaX = distanceStep / (1 + fabs(segmentK));
+			deltaX = distanceStep / (1 + std::fabs(segmentK));
 			deltaX = aespa_lib::genutil::clamp(deltaX, distanceStep / 7.0, distanceStep);
 		}
 
@@ -241,7 +241,7 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 			) - (deltaX / 2);
 			double k = distanceToCurvature_function(x + dStep);
 			avgK += k;
-			if (fabs(k) > fabs(maxK)) maxK = k;
+			if (std::fabs(k) > std::fabs(maxK)) maxK = k;
 		}
 		avgK /= (stepSplit + 1);
 
@@ -345,7 +345,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 		// Get curvature & linear + angular factor
 		double curvature = getCurvatureAtDistance(node.distance);
-		double factor = (1 + fabs(curvature) * trackWidth / 2);
+		double factor = (1 + std::fabs(curvature) * trackWidth / 2);
 
 		// Constrain
 		node.motion_dV_dT = aespa_lib::genutil::multiplyVector(node.motion_dV_dT, factor);
@@ -355,7 +355,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 
 	// Binary search for time step
 	PlanPoint nodeToIntegrate = node;
-	double timeStep_seconds = getTimeStepFromDistanceStep(nodeToIntegrate, fabs(distanceStep));
+	double timeStep_seconds = getTimeStepFromDistanceStep(nodeToIntegrate, std::fabs(distanceStep));
 	if (timeStep_seconds <= 1e-5) {
 		printf("SKIPPED\n");
 		node.distance += distanceStep;
@@ -399,7 +399,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 		// Get curvature & linear + angular factor
 		double curvature = getCurvatureAtDistance(newNode.distance);
-		double factor = (1 + fabs(curvature) * trackWidth / 2);
+		double factor = (1 + std::fabs(curvature) * trackWidth / 2);
 
 		// Scale to track & constrain
 		newNode.motion_dV_dT = aespa_lib::genutil::multiplyVector(newNode.motion_dV_dT, factor);
@@ -543,18 +543,18 @@ std::pair<ConstraintSequence, ConstraintSequence> TrajectoryPlanner::constraintS
 	for (PlanPoint &point : nodes) {
 		// Center
 		constraintSequence.addConstraints({
-			{point.distance, {fabs(point.motion_dV_dT[0])}}
+			{point.distance, {std::fabs(point.motion_dV_dT[0])}}
 			// {point.distance, aespa_lib::genutil::getAbsolute(point.motion_dV_dT)}
 		});
 
 		// Track
 		if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 			double curvature = getCurvatureAtDistance(point.distance);
-			double factor = (1 + fabs(curvature) * trackWidth / 2);
+			double factor = (1 + std::fabs(curvature) * trackWidth / 2);
 			// track_constraintSequence.addConstraints({
 			// 	{
 			// 		point.distance,
-			// 		{fabs(point.motion_dV_dT[0]) * factor}
+			// 		{std::fabs(point.motion_dV_dT[0]) * factor}
 			// 	}
 			// });
 		}
@@ -593,7 +593,7 @@ TrajectoryPlanner &TrajectoryPlanner::calculateMotionProfile() {
 				newPlanPoint_distances.push_back(planPoint_distances[p1]);
 				p1++;
 			}
-			if (newPlanPoint_distances.empty() || fabs(point.distance - newPlanPoint_distances.back()) > 1e-5) {
+			if (newPlanPoint_distances.empty() || std::fabs(point.distance - newPlanPoint_distances.back()) > 1e-5) {
 				newPlanPoint_distances.push_back(point.distance);
 			}
 		}

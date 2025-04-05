@@ -75,7 +75,7 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 	error.rotateXYBy(90_polarDeg - actual.getRotation());
 
 	// Get value alias
-	double v_desired = fabs(desiredLinearVelocity) * directionFactor;
+	double v_desired = std::fabs(desiredLinearVelocity) * directionFactor;
 	auto &w_desired = desiredAngularVelocity_radiansPerSecond;
 	auto e_right = error.getX();
 	auto e_look = error.getY();
@@ -85,7 +85,7 @@ std::pair<double, double> RamseteController::getLinegularVelocity(
 	// Compute gain value
 	// refer to https://wiki.purduesigbots.com/software/control-algorithms/ramsete
 	// Note: ey = -e_right
-	// Note: "the positive θ direction is turning the robot to the right"?
+	// Note: "the positive θ direction is turning the robot to the right"
 	double k = 2 * zeta * sqrt(pow(w_desired, 2) + b * pow(v_desired, 2));
 
 	// Compute output velocities

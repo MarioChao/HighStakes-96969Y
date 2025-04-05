@@ -156,9 +156,6 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-	// Start autonomous
-	timer benchmark;
-
 	// Switch to a random video
 	task switchVideo([]() -> int {
 		// video::switchVideoState(1);
@@ -172,8 +169,6 @@ void autonomous(void) {
 
 
 	// ..........................................................................
-
-	printf("Time spent: %.3f s\n", benchmark.value());
 }
 
 /// @brief A function for testing autonomous directly in usercontrol.

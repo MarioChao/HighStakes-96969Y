@@ -163,6 +163,9 @@ bool isRunningAutonUponStart() {
 
 
 void runAutonomous() {
+	// Start autonomous
+	timer benchmark;
+
 	printf("Auton time!\n");
 	runningState = true;
 
@@ -226,6 +229,8 @@ void runAutonomous() {
 	}
 
 	runningState = false;
+
+	printf("Time spent: %.3f s\n", benchmark.value());
 }
 
 bool isRunning() {

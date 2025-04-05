@@ -135,11 +135,12 @@ void runFollowPath() {
 
 		// Get trajectory motion
 		std::pair<double, std::vector<double>> motion = splineProfile->trajectoryPlan.getMotionAtTime(traj_time);
-		double traj_distance = motion.first;
+		double traj_motion_distance = motion.first;
+		double traj_abs_distance = std::fabs(traj_motion_distance);
 		double traj_velocity = motion.second[0];
-		double traj_tvalue = splineProfile->curveSampler.distanceToParam(traj_distance);
+		double traj_tvalue = splineProfile->curveSampler.distanceToParam(traj_abs_distance);
 		double traj_curvature = splineProfile->spline.getCurvatureAt(traj_tvalue);
-		double traj_angularVelocity = traj_velocity * traj_curvature;
+		double traj_angularVelocity = std::fabs(traj_velocity) * traj_curvature;
 
 		// Get robot and target linegular
 		Linegular robotLg = chassis->getLookPose();
@@ -148,7 +149,7 @@ void runFollowPath() {
 		/* Overall error */
 
 		// Update distance remaining
-		double total_distanceError = totalDistance_tiles - traj_distance;
+		double total_distanceError = totalDistance_tiles - traj_abs_distance;
 		double pose_distanceError = (targetLg - robotLg).getXYMagnitude();
 		// printf("TDE: %.3f PDE: %.3f AE: %.3f\n", total_distanceError, pose_distanceError, (targetLg - robotLg).getRotation().polarDeg());
 		_pathFollowDistanceRemaining_tiles = std::fabs(total_distanceError + pose_distanceError);

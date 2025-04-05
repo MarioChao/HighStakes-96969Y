@@ -258,13 +258,14 @@ void drawFlywheel(int x, int y, int width, int height) {
 	// Other graph
 
 	// Trajectory velocity
-	double trajectoryValue;
 	std::pair<double, std::vector<double>> motion = testTrajectoryPlan.getMotionAtTime(trajectoryTestTimer.value());
-	double traj_distance = motion.first;
+	double traj_motion_distance = motion.first;
+	double traj_abs_distance = std::fabs(traj_motion_distance);
 	double traj_velocity = motion.second[0];
-	double traj_k = testTrajectoryPlan.getCurvatureAtDistance(traj_distance);
+	double traj_k = testTrajectoryPlan.getCurvatureAtDistance(traj_abs_distance);
 	double traj_trackFactor = traj_k * botInfo.trackWidth_tiles / 2;
-	trajectoryValue = traj_velocity * (1 + traj_trackFactor);
+	double trajectory_value = traj_velocity;
+	trajectory_value += std::fabs(traj_velocity) * traj_trackFactor;
 
 	// Simulator velocity
 	double simu_velocity = robotSimulator.getForwardVelocity();
@@ -272,7 +273,7 @@ void drawFlywheel(int x, int y, int width, int height) {
 
 	// Draw
 	Brain.Screen.setPenColor(color::green);
-	gph_y = y + height / 2.0 - (trajectoryValue / botInfo.maxVel_tilesPerSec * height / 2);
+	gph_y = y + height / 2.0 - (trajectory_value / botInfo.maxVel_tilesPerSec * height / 2);
 	Brain.Screen.drawPixel(gph_x, gph_y);
 
 	Brain.Screen.setPenColor(color::orange);

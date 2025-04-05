@@ -22,7 +22,7 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 	CurveSampler curveSampler = CurveSampler(spline).calculateByResolution(spline.getTRange().second * 10);
 	double totalDistance = curveSampler.getDistanceRange().second;
 	double distanceStep = aespa_lib::genutil::clamp(totalDistance / 64, 0.077, 0.5);
-	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(curveSampler.getDistanceRange().second, botInfo.trackWidth_tiles, distanceStep)
+	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(totalDistance * (reverse ? -1 : 1), botInfo.trackWidth_tiles, distanceStep)
 		.setCurvatureFunction(
 			[&](double d) -> double {
 				return spline.getCurvatureAt(curveSampler.distanceToParam(d));
@@ -41,6 +41,10 @@ void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines:
 }
 
 void runFollowSpline(Differential &chassis, std::string profileName) {
+	if (!splineProfile_storage.hasKey(profileName)) {
+		follow::_isPathFollowCompleted = true;
+		return;
+	}
 	SplineProfile *splineProfile = splineProfile_storage.getStored(profileName).get();
 	aespa_lib::datas::Linegular startPose = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse);
 	local::turnToAngle(chassis, local::turnToAngle_params(startPose.getRotation()), false);
