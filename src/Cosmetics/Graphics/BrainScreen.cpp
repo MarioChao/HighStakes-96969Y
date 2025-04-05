@@ -264,20 +264,31 @@ void drawFlywheel(int x, int y, int width, int height) {
 	double traj_velocity = motion.second[0];
 	double traj_k = testTrajectoryPlan.getCurvatureAtDistance(traj_abs_distance);
 	double traj_trackFactor = traj_k * botInfo.trackWidth_tiles / 2;
-	double trajectory_value = traj_velocity;
-	trajectory_value += std::fabs(traj_velocity) * traj_trackFactor;
+	double traj_left_velocity = traj_velocity;
+	double traj_right_velocity = traj_velocity;
+	traj_left_velocity -= std::fabs(traj_velocity) * traj_trackFactor;
+	traj_right_velocity += std::fabs(traj_velocity) * traj_trackFactor;
 
-	// Simulator velocity
-	double simu_velocity = robotSimulator.getForwardVelocity();
-	simu_velocity += robotSimulator.angularVelocity * (botInfo.trackWidth_tiles / 2);
+	// Actual / simulator velocity
+	double actual_linearVelocity = robotChassis.getLookVelocity();
+	double actual_angularVelocity = robotChassis.getAngularVelocity();
+	if (mainUseSimulator) actual_angularVelocity = robotSimulator.angularVelocity;
+	double simu_left_velocity = actual_linearVelocity;
+	double simu_right_velocity = actual_linearVelocity;
+	simu_left_velocity -= actual_angularVelocity * (botInfo.trackWidth_tiles / 2);
+	simu_right_velocity += actual_angularVelocity * (botInfo.trackWidth_tiles / 2);
 
 	// Draw
 	Brain.Screen.setPenColor(color::green);
-	gph_y = y + height / 2.0 - (trajectory_value / botInfo.maxVel_tilesPerSec * height / 2);
+	gph_y = y + height / 2.0 - (traj_left_velocity / botInfo.maxVel_tilesPerSec * height / 2);
+	Brain.Screen.drawPixel(gph_x, gph_y);
+	gph_y = y + height / 2.0 - (traj_right_velocity / botInfo.maxVel_tilesPerSec * height / 2);
 	Brain.Screen.drawPixel(gph_x, gph_y);
 
 	Brain.Screen.setPenColor(color::orange);
-	gph_y = y + height / 2.0 - (simu_velocity / botInfo.maxVel_tilesPerSec * height / 2);
+	gph_y = y + height / 2.0 - (simu_left_velocity / botInfo.maxVel_tilesPerSec * height / 2);
+	Brain.Screen.drawPixel(gph_x, gph_y);
+	gph_y = y + height / 2.0 - (simu_right_velocity / botInfo.maxVel_tilesPerSec * height / 2);
 	Brain.Screen.drawPixel(gph_x, gph_y);
 
 	// Update

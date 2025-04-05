@@ -296,7 +296,7 @@ std::pair<double, double> Odometry::getLocalDeltaXY_inches(double deltaPolarAngl
 		// condition: cos(angle) ≠ 0
 
 		// Check condition
-		cosAngle = cos(wheelDirection.polarDeg());
+		cosAngle = cos(wheelDirection.polarRad());
 		isMeetCondition = !aespa_lib::genutil::isWithin(cosAngle, 0, cosAngleWithinRange);
 		if (isMeetCondition) {
 			// Add to total

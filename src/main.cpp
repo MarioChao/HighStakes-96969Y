@@ -81,9 +81,7 @@ void pre_auton(void) {
 		mainOdometry.start();
 		while (true) {
 			mainOdometry.odometryFrame();
-			Controller1.Screen.setCursor(3, 0);
-			// Controller1.Screen.print("Enc val: %.3f\n", RightEncoder.position(rev));
-			// printf("test: %.3f %.3f\n", mainOdometry.getX_scaled(), mainOdometry.getY_scaled());
+			// printf("test, %.3f, %.3f\n", mainOdometry.getX_scaled(), mainOdometry.getY_scaled());
 			wait(5, msec);
 		}
 	});//*/
@@ -97,6 +95,8 @@ void pre_auton(void) {
 	if (LeftMotors.temperature(celsius) == 21 && RightMotors.temperature(celsius) == 21) {
 		mainUseSimulator = true;
 		printf("Using simulator\n");
+	} else {
+		printf("Not using simulator\n");
 	}
 
 	// Simulator
@@ -106,22 +106,26 @@ void pre_auton(void) {
 		task simulatorTask([]() -> int {
 			while (true) {
 				// Get actual chassis motion
-				double average_volt = (robotChassis.leftMotor_volt + robotChassis.rightMotor_volt) / 2;
-				double ang_volt = (robotChassis.rightMotor_volt - robotChassis.leftMotor_volt) / 2;
-				double forwardVelocity_tilesPerSec = average_volt / 12.0 * botInfo.maxVel_tilesPerSec;
-				double angularVelocity_radiansPerSec = ang_volt / 12.0 * botInfo.maxVel_tilesPerSec / (botInfo.trackWidth_tiles / 2);
+				double left_volt = robotChassis.commanded_leftMotor_volt;
+				double right_volt = robotChassis.commanded_rightMotor_volt;
+				// double linear_volt = (robotChassis.commanded_leftMotor_volt + robotChassis.commanded_rightMotor_volt) / 2;
+				// double angular_volt = (robotChassis.commanded_rightMotor_volt - robotChassis.commanded_leftMotor_volt) / 2;
+				// double forwardVelocity_tilesPerSec = linear_volt / 12 * botInfo.maxVel_tilesPerSec;
+				// double angularVelocity_radiansPerSec = angular_volt / 12 * botInfo.maxVel_tilesPerSec / (botInfo.trackWidth_tiles / 2);
 
 				// Set simulation physics
 				// double alpha = 0.5;
 				// double newForwardVelocity = (1 - alpha) * robotSimulator.getForwardVelocity() + alpha * forwardVelocity_tilesPerSec;
 				// double newAngularVelocity = (1 - alpha) * robotSimulator.angularVelocity + alpha * angularVelocity_radiansPerSec;
-				robotSimulator.setForwardDifferentialMotion(
-					forwardVelocity_tilesPerSec, angularVelocity_radiansPerSec,
-					// newForwardVelocity, newAngularVelocity,
-					botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2, botInfo.trackWidth_tiles
-					// botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 5, botInfo.trackWidth_tiles
-					// botInfo.maxVel_tilesPerSec, -1, botInfo.trackWidth_tiles
+				robotSimulator.setForwardDifferentialVoltage(
+					left_volt, right_volt,
+					botInfo.maxVel_tilesPerSec / 12.0, 0.13,
+					botInfo.trackWidth_tiles
 				);
+				// robotSimulator.setForwardDifferentialMotion(
+				// 	forwardVelocity_tilesPerSec, angularVelocity_radiansPerSec,
+				// 	botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2, botInfo.trackWidth_tiles
+				// );
 
 				// Update simulation physics
 				robotSimulator.constrainMotion(botInfo.maxVel_tilesPerSec, botInfo.trackWidth_tiles);

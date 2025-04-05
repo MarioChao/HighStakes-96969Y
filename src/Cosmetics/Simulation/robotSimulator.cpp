@@ -73,6 +73,19 @@ void RobotSimulator::updateDistance() {
 	previousPosition = position;
 }
 
+void RobotSimulator::setForwardDifferentialVoltage(double left_volt, double right_volt, double kv, double tau, double trackWidth) {
+	double deltaTime = physicsTimer.time(sec) - lastUpdateTime;
+	leftVelocity += (kv * left_volt - leftVelocity) / tau * deltaTime;
+	rightVelocity += (kv * right_volt - rightVelocity) / tau * deltaTime;
+
+	double newLinearVelocity = (leftVelocity + rightVelocity) / 2;
+	double newAngularVelocity = (rightVelocity - leftVelocity) / 2 / (trackWidth / 2);
+
+	double theta = angularPosition;
+	this->velocity = Vector3(newLinearVelocity * cos(theta), newLinearVelocity * sin(theta));
+	this->angularVelocity = newAngularVelocity;
+}
+
 void RobotSimulator::setForwardDifferentialMotion(double linearVelocity, double angularVelocity, double maxVelocity, double maxAcceleration, double trackWidth) {
 	double leftVelocity = linearVelocity - angularVelocity * trackWidth / 2;
 	double rightVelocity = linearVelocity + angularVelocity * trackWidth / 2;

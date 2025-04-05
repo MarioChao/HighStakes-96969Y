@@ -47,6 +47,10 @@ double ChassisBase::getLookVelocity() {
 	return 0;
 }
 
+double ChassisBase::getAngularVelocity() {
+	return 0;
+}
+
 }
 }
 }

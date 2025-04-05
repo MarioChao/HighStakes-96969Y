@@ -31,6 +31,7 @@ public:
 	aespa_lib::datas::Linegular getLookPose();
 
 	virtual double getLookVelocity();
+	virtual double getAngularVelocity();
 
 
 	settings::BotInfo &botInfo;
