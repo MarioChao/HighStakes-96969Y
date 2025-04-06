@@ -10,6 +10,10 @@
 
 #include "robot-config.h"
 
+
+using namespace vex;
+
+
 #define waitUntil(condition)                                                   \
 	do {                                                                         \
 		wait(5, msec);                                                             \

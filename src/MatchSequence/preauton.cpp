@@ -1,9 +1,11 @@
 #include "MatchSequence/preauton.h"
+
 #include "Cosmetics/Graphics/BrainScreen.h"
 #include "Utilities/debugFunctions.h"
 #include "Cosmetics/Videos/video-main.h"
 #include "global-vars.h"
 #include "main.h"
+
 
 namespace {
 	void initComponents();
@@ -12,6 +14,7 @@ namespace {
 	bool initComponentFinished = false;
 	bool bufferFinished = false;
 }
+
 
 namespace preauton {
 	void controllerThread() {
@@ -36,6 +39,7 @@ namespace preauton {
 		return bufferFinished;
 	}
 }
+
 
 namespace {
 	void initComponents() {

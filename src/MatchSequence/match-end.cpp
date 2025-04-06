@@ -1,4 +1,5 @@
 #include "MatchSequence/match-end.h"
+
 #include "Mechanics/botArm.h"
 #include "Mechanics/goalClamp.h"
 #include "Mechanics/swing.h"
@@ -6,9 +7,11 @@
 #include "global-vars.h"
 #include "main.h"
 
+
 namespace {
 	void drivingEndedThread();
 }
+
 
 namespace match_end {
 	void startThread() {
@@ -18,6 +21,7 @@ namespace match_end {
 		});
 	}
 }
+
 
 namespace {
 	void drivingEndedThread() {

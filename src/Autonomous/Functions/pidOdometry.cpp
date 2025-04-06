@@ -13,7 +13,7 @@
 
 #include "Utilities/fieldInfo.h"
 
-#include "global-vars.h"
+#include "chassis-config.h"
 
 namespace {
 

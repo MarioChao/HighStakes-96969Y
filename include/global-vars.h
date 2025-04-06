@@ -1,8 +1,6 @@
 #pragma once
 
 #include "main.h"
-#include "Pas1-Lib/Chassis/Settings/odometry.h"
-#include "Pas1-Lib/Chassis/Base/differential.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
 #include "Pas1-Lib/Planning/Profiles/spline-profile.h"
 #include "Aespa-Lib/Karina-Data-Structures/named-storage.h"
@@ -22,15 +20,6 @@ extern bool isArmPneumatic;
 
 // Timer
 extern timer drivingTimer;
-
-// Bot info
-extern pas1_lib::chassis::settings::BotInfo botInfo;
-
-// Odometry
-extern pas1_lib::chassis::settings::Odometry mainOdometry;
-
-// Chassis
-extern pas1_lib::chassis::base::Differential robotChassis;
 
 // Simulator
 extern RobotSimulator robotSimulator;

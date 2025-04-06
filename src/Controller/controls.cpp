@@ -19,6 +19,7 @@
 
 #include "Pas1-Lib/Chassis/Move/local-move-by.h"
 
+#include "chassis-config.h"
 #include "global-vars.h"
 #include "main.h"
 

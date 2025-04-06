@@ -1,56 +1,65 @@
-using namespace vex;
+#pragma once
 
-extern brain Brain;
+
+// Brain & Controller
+
+extern vex::brain Brain;
+
+extern vex::controller Controller1;
+extern vex::controller Controller2;
+
+
+// Dummy
+
+extern const int emptyPort;
+extern vex::triport EmptyExpander;
+
 
 // Devices
-extern controller Controller1;
-extern controller Controller2;
 
-extern motor LeftMotorA;
-extern motor LeftMotorB;
-extern motor LeftMotorC;
-extern motor RightMotorA;
-extern motor RightMotorB;
-extern motor RightMotorC;
-extern motor_group LeftMotors;
-extern motor_group RightMotors;
-extern motor_group LeftRightMotors;
+extern vex::motor LeftMotorA;
+extern vex::motor LeftMotorB;
+extern vex::motor LeftMotorC;
+extern vex::motor RightMotorA;
+extern vex::motor RightMotorB;
+extern vex::motor RightMotorC;
+extern vex::motor_group LeftMotors;
+extern vex::motor_group RightMotors;
+extern vex::motor_group LeftRightMotors;
 
-extern motor IntakeMotor1;
-extern motor IntakeMotor2;
-extern motor_group IntakeMotors;
+extern vex::motor IntakeMotor1;
+extern vex::motor IntakeMotor2;
+extern vex::motor_group IntakeMotors;
 
-extern motor ArmMotor;
+extern vex::motor ArmMotor;
 
-extern triport Expander1;
+extern vex::pneumatics FrontWingsPneumatic;
+extern vex::pneumatics LeftWingPneumatic;
+extern vex::pneumatics RightWingPneumatic;
 
-extern pneumatics FrontWingsPneumatic;
-extern pneumatics LeftWingPneumatic;
-extern pneumatics RightWingPneumatic;
+extern vex::pneumatics IntakeLiftPneumatic;
+extern vex::pneumatics HangPneumatic;
+extern vex::pneumatics GoalClampPneumatic;
+extern vex::pneumatics BotArmPneumatics;
+extern vex::pneumatics SwordPneumatics;
+extern vex::pneumatics Sword2Pneumatics;
+extern vex::pneumatics RedirectPneumatics;
 
-extern pneumatics IntakeLiftPneumatic;
-extern pneumatics HangPneumatic;
-extern pneumatics GoalClampPneumatic;
-extern pneumatics BotArmPneumatics;
-extern pneumatics SwordPneumatics;
-extern pneumatics Sword2Pneumatics;
-extern pneumatics RedirectPneumatics;
+extern vex::pneumatics ClimbPTO_pneumatics;
+extern vex::pneumatics ClimbHook_pneumatics;
 
-extern pneumatics ClimbPTO_pneumatics;
-extern pneumatics ClimbHook_pneumatics;
+extern vex::encoder LookEncoder;
+extern vex::encoder RightEncoder;
+extern vex::rotation LookRotation;
+extern vex::rotation RightRotation;
 
-extern encoder LookEncoder;
-extern encoder RightEncoder;
-extern rotation LookRotation;
-extern rotation RightRotation;
+extern vex::rotation ArmRotationSensor;
 
-extern rotation ArmRotationSensor;
+extern vex::inertial InertialSensor;
+extern vex::distance DistanceSensor;
 
-extern inertial InertialSensor;
-extern distance DistanceSensor;
-
-extern distance RingDistanceSensor;
-extern optical RingOpticalSensor;
+extern vex::distance RingDistanceSensor;
+extern vex::optical RingOpticalSensor;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

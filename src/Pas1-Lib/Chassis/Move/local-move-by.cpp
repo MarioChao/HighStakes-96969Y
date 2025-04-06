@@ -339,14 +339,10 @@ void runDriveAndTurn() {
 
 		// Combined
 		bool useS = std::fabs(currentTravelVelocity_tilesPerSec) < 0.02;
-		double forwardVelocity_pct = aespa_lib::genutil::voltToPct(autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(useS));
-		double feedbackVelocity_pct = aespa_lib::genutil::voltToPct(autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.getValue());
-		double linearVelocity_pct = forwardVelocity_pct + feedbackVelocity_pct;
-		// printf("DV %.3f %.3f %.3f %.3f %.3f\n", targetDistanceError, currentTravelVelocity_tilesPerSec, desiredVelocity_tilesPerSec, forwardVelocity_pct, feedbackVelocity_pct);
-
-		// double desiredPct = desiredVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct;
-		// double veloError = desiredPct - currentTravelVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct;
-		// printf("dv: %+3.3f%, vf: %+3.3f\%, vp: %+3.3f\%, ver: %+3.3f%\n", desiredPct, forwardVelocity_pct, velocityPidVelocity_pct, veloError);
+		double forwardVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(useS);
+		double feedbackVelocity_volt = autonSettings.fb_velocityError_tilesPerSec_to_volt_pid.getValue();
+		double linearVelocity_pct = aespa_lib::genutil::voltToPct(forwardVelocity_volt + feedbackVelocity_volt);
+		// printf("DV %.3f %.3f %.3f %.3f %.3f\n", targetDistanceError, currentTravelVelocity_tilesPerSec, desiredVelocity_tilesPerSec, forwardVelocity_volt, feedbackVelocity_volt);
 
 
 		/* ---------- Angular ---------- */

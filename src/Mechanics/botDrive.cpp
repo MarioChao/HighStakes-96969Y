@@ -9,7 +9,7 @@
 #include "Utilities/debugFunctions.h"
 #include "Utilities/fieldInfo.h"
 
-#include "global-vars.h"
+#include "chassis-config.h"
 #include "main.h"
 
 namespace {

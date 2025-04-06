@@ -28,6 +28,7 @@
 #include "Aespa-Lib/Winter-Utilities/angle.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
+#include "chassis-config.h"
 #include "global-vars.h"
 #include "main.h"
 

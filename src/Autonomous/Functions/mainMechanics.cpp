@@ -10,6 +10,7 @@
 #include "Mechanics/redirect.h"
 
 #include "global-vars.h"
+#include "chassis-config.h"
 #include "main.h"
 
 

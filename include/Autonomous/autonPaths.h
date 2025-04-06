@@ -16,6 +16,8 @@
 
 #include "Utilities/fieldInfo.h"
 #include "Utilities/debugFunctions.h"
+
+#include "chassis-config.h"
 #include "global-vars.h"
 #include "main.h"
 

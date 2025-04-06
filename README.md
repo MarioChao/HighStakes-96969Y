@@ -6,11 +6,11 @@ The repository for team 96969Y's newest robot program in 2024-25 VEX Robotics - 
 
 Modify robot configurations in [robot-config.cpp](./src/robot-config.cpp).
 
-Modify robot specifications in [global-vars.cpp](./src/global-vars.cpp) (modify `botInfo`).
+Modify robot specifications in [chassis-config.cpp](./src/chassis-config.cpp) (modify `botInfo`).
 
 ## Chassis Configuration
 
-Modify chassis sensors, odometry, and auton settings in [global-vars.cpp](./src/global-vars.cpp).
+Modify chassis sensors, odometry, and auton settings in [chassis-config.cpp](./src/chassis-config.cpp).
 
 Notes:
 

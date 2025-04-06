@@ -47,8 +47,8 @@ void Differential::control_local2d(
 	commanded_leftMotor_volt = aespa_lib::genutil::pctToVolt(desired_leftMotor_pct);
 	commanded_rightMotor_volt = aespa_lib::genutil::pctToVolt(desired_rightMotor_pct);
 
-	commanded_leftMotor_volt = aespa_lib::genutil::clamp(commanded_leftMotor_volt, -11, 11);
-	commanded_rightMotor_volt = aespa_lib::genutil::clamp(commanded_rightMotor_volt, -11, 11);
+	commanded_leftMotor_volt = aespa_lib::genutil::clamp(commanded_leftMotor_volt, -12, 12);
+	commanded_rightMotor_volt = aespa_lib::genutil::clamp(commanded_rightMotor_volt, -12, 12);
 	
 	// Command
 	// left_motors.spin(fwd, desired_leftMotor_pct, velocityUnits::pct);
