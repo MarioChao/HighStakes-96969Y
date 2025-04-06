@@ -386,6 +386,8 @@ void runDriveAndTurn() {
 		wait(10, msec);
 	}
 
+	printf("Err: %.3f\n", _driveDistanceError_tiles);
+
 	// Stop
 	chassis->stopMotors(coast);
 

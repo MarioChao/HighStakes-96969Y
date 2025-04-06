@@ -10,7 +10,25 @@ Differential::Differential(
 	motor_group &left_motors, motor_group &right_motors
 )
 	: ChassisBase(odometry, botInfo, autonSettings),
-	left_motors(left_motors), right_motors(right_motors) {}
+	left_motors(left_motors), right_motors(right_motors) {
+	overwriteLeftRightVelocity = { false, {0, 0} };
+}
+
+void Differential::control_differential(double left_pct, double right_pct) {
+	// Store velocity
+	desired_leftMotor_pct = left_pct;
+	desired_rightMotor_pct = right_pct;
+
+	commanded_leftMotor_volt = aespa_lib::genutil::pctToVolt(desired_leftMotor_pct);
+	commanded_rightMotor_volt = aespa_lib::genutil::pctToVolt(desired_rightMotor_pct);
+
+	commanded_leftMotor_volt = aespa_lib::genutil::clamp(commanded_leftMotor_volt, -12, 12);
+	commanded_rightMotor_volt = aespa_lib::genutil::clamp(commanded_rightMotor_volt, -12, 12);
+
+	// Command
+	left_motors.spin(fwd, commanded_leftMotor_volt, volt);
+	right_motors.spin(fwd, commanded_rightMotor_volt, volt);
+}
 
 void Differential::control_local2d(
 	double right_pct, double look_pct,
@@ -27,34 +45,10 @@ void Differential::control_local2d(
 	tempLeftMotor_pct *= pctScaleFactor;
 	tempRightMotor_pct *= pctScaleFactor;
 
-	// Store velocity pct
-	desired_leftMotor_pct = tempLeftMotor_pct;
-	desired_rightMotor_pct = tempRightMotor_pct;
+	// printf("%.3f %.3f %.3f %.3f\n", look_pct, angular_pct, tempLeftMotor_pct, tempRightMotor_pct);
 
-	// Get volt
-	// double currentLeft_pct = left_motors.velocity(pct);
-	// double currentRight_pct = right_motors.velocity(pct);
-	// double leftMotor_volt = left_motors.voltage(volt);
-	// double rightMotor_volt = right_motors.voltage(volt);
-	// autonSettings.velocityError_pct_to_volt_pid.computeFromError(desired_leftMotor_pct - currentLeft_pct);
-	// leftMotor_volt += autonSettings.velocityError_pct_to_volt_pid.getValue();
-	// autonSettings.velocityError_pct_to_volt_pid.computeFromError(desired_rightMotor_pct - currentRight_pct);
-	// rightMotor_volt += autonSettings.velocityError_pct_to_volt_pid.getValue();
-
-	// commanded_leftMotor_volt = leftMotor_volt;
-	// commanded_rightMotor_volt = rightMotor_volt;
-
-	commanded_leftMotor_volt = aespa_lib::genutil::pctToVolt(desired_leftMotor_pct);
-	commanded_rightMotor_volt = aespa_lib::genutil::pctToVolt(desired_rightMotor_pct);
-
-	commanded_leftMotor_volt = aespa_lib::genutil::clamp(commanded_leftMotor_volt, -12, 12);
-	commanded_rightMotor_volt = aespa_lib::genutil::clamp(commanded_rightMotor_volt, -12, 12);
-	
-	// Command
-	// left_motors.spin(fwd, desired_leftMotor_pct, velocityUnits::pct);
-	// right_motors.spin(fwd, desired_rightMotor_pct, velocityUnits::pct);
-	left_motors.spin(fwd, commanded_leftMotor_volt, volt);
-	right_motors.spin(fwd, commanded_rightMotor_volt, volt);
+	// Control
+	control_differential(tempLeftMotor_pct, tempRightMotor_pct);
 }
 
 void Differential::stopMotors(brakeType mode) {
@@ -74,6 +68,18 @@ double Differential::getLookVelocity() {
 double Differential::getAngularVelocity() {
 	double averageVelocity_rpm = (right_motors.velocity(rpm) - left_motors.velocity(rpm)) / 2.0;
 	return averageVelocity_rpm * (1.0 / 60.0) * botInfo.wheelCircum_tiles * botInfo.motorToWheel_gearRatio / (botInfo.trackWidth_tiles / 2);
+}
+
+double Differential::getLeftVelocity() {
+	if (overwriteLeftRightVelocity.first) return overwriteLeftRightVelocity.second.first;
+
+	return left_motors.velocity(rpm) * (1.0 / 60.0) * botInfo.wheelCircum_tiles * botInfo.motorToWheel_gearRatio;
+}
+
+double Differential::getRightVelocity() {
+	if (overwriteLeftRightVelocity.first) return overwriteLeftRightVelocity.second.second;
+
+	return right_motors.velocity(rpm) * (1.0 / 60.0) * botInfo.wheelCircum_tiles * botInfo.motorToWheel_gearRatio;
 }
 
 }

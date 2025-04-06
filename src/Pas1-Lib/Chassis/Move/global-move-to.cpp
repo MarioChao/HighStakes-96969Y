@@ -353,6 +353,8 @@ void runDriveToPoint() {
 		wait(10, msec);
 	}
 
+	printf("Err: %.3f\n", _linearPathDistanceError);
+
 	// Stop
 	chassis->stopMotors(coast);
 

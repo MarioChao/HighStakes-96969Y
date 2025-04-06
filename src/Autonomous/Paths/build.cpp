@@ -25,13 +25,13 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 	TrajectoryPlanner splineTrajectoryPlan = TrajectoryPlanner(totalDistance * (reverse ? -1 : 1), botInfo.trackWidth_tiles, distanceStep)
 		.setCurvatureFunction(
 			[&](double d) -> double {
-				return spline.getCurvatureAt(curveSampler.distanceToParam(d));
-			},
+		return spline.getCurvatureAt(curveSampler.distanceToParam(d));
+	},
 			curveSampler.integerParamsToDistances()
 		)
 		.maxSmoothCurvature()
-		.addCenterConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 * 0.85 })
-		.addTrackConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 * 0.85 })
+		.addCenterConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 })
+		.addTrackConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 * 0.5 })
 		.calculateMotionProfile();
 	splineProfile_storage.store(profileName, SplineProfile(spline, curveSampler, splineTrajectoryPlan, reverse));
 }

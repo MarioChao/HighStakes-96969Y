@@ -105,27 +105,30 @@ void pre_auton(void) {
 		robotSimulator.angularPosition = aespa_lib::genutil::toRadians(90);
 		task simulatorTask([]() -> int {
 			while (true) {
-				// Get actual chassis motion
-				double left_volt = robotChassis.commanded_leftMotor_volt;
-				double right_volt = robotChassis.commanded_rightMotor_volt;
-				// double linear_volt = (robotChassis.commanded_leftMotor_volt + robotChassis.commanded_rightMotor_volt) / 2;
-				// double angular_volt = (robotChassis.commanded_rightMotor_volt - robotChassis.commanded_leftMotor_volt) / 2;
-				// double forwardVelocity_tilesPerSec = linear_volt / 12 * botInfo.maxVel_tilesPerSec;
-				// double angularVelocity_radiansPerSec = angular_volt / 12 * botInfo.maxVel_tilesPerSec / (botInfo.trackWidth_tiles / 2);
-
 				// Set simulation physics
-				// double alpha = 0.5;
-				// double newForwardVelocity = (1 - alpha) * robotSimulator.getForwardVelocity() + alpha * forwardVelocity_tilesPerSec;
-				// double newAngularVelocity = (1 - alpha) * robotSimulator.angularVelocity + alpha * angularVelocity_radiansPerSec;
-				robotSimulator.setForwardDifferentialVoltage(
-					left_volt, right_volt,
-					botInfo.maxVel_tilesPerSec / 12.0, 0.13,
-					botInfo.trackWidth_tiles
-				);
-				// robotSimulator.setForwardDifferentialMotion(
-				// 	forwardVelocity_tilesPerSec, angularVelocity_radiansPerSec,
-				// 	botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2, botInfo.trackWidth_tiles
-				// );
+				bool useDifferentialVolt = true;
+				if (useDifferentialVolt) {
+					// Get actual chassis motion
+					double left_volt = robotChassis.commanded_leftMotor_volt;
+					double right_volt = robotChassis.commanded_rightMotor_volt;
+					robotSimulator.setForwardDifferentialVoltage(
+						left_volt, right_volt,
+						botInfo.maxVel_tilesPerSec / 12.0, 0.13,
+						botInfo.trackWidth_tiles
+					);
+				} else {
+					double linear_volt = (robotChassis.commanded_leftMotor_volt + robotChassis.commanded_rightMotor_volt) / 2;
+					double angular_volt = (robotChassis.commanded_rightMotor_volt - robotChassis.commanded_leftMotor_volt) / 2;
+					double forwardVelocity_tilesPerSec = linear_volt / 12 * botInfo.maxVel_tilesPerSec;
+					double angularVelocity_radiansPerSec = angular_volt / 12 * botInfo.maxVel_tilesPerSec / (botInfo.trackWidth_tiles / 2);
+					// double alpha = 0.5;
+					// double newForwardVelocity = (1 - alpha) * robotSimulator.getForwardVelocity() + alpha * forwardVelocity_tilesPerSec;
+					// double newAngularVelocity = (1 - alpha) * robotSimulator.angularVelocity + alpha * angularVelocity_radiansPerSec;
+					robotSimulator.setForwardDifferentialMotion(
+						forwardVelocity_tilesPerSec, angularVelocity_radiansPerSec,
+						botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2, botInfo.trackWidth_tiles
+					);
+				}
 
 				// Update simulation physics
 				robotSimulator.constrainMotion(botInfo.maxVel_tilesPerSec, botInfo.trackWidth_tiles);
@@ -138,9 +141,15 @@ void pre_auton(void) {
 					robotPose.setPosition(robotSimulator.position.x, robotSimulator.position.y);
 					robotPose.setRotation(aespa_lib::genutil::toDegrees(robotSimulator.angularPosition));
 					robotChassis.setLookPose(robotPose);
-					robotChassis.overwriteLookVelocity = { true, robotSimulator.getForwardVelocity() };
+					double linearVelocity = robotSimulator.getForwardVelocity();
+					double angularVelocity = robotSimulator.angularVelocity;
+					double leftVelocity = linearVelocity - angularVelocity * botInfo.trackWidth_tiles / 2;
+					double rightVelocity = linearVelocity + angularVelocity * botInfo.trackWidth_tiles / 2;
+					robotChassis.overwriteLookVelocity = { true, linearVelocity };
+					robotChassis.overwriteLeftRightVelocity = { true, {leftVelocity, rightVelocity} };
 				} else {
 					robotChassis.overwriteLookVelocity = { false, 0 };
+					robotChassis.overwriteLeftRightVelocity = { false, {0, 0} };
 				}
 
 				wait(5, msec);

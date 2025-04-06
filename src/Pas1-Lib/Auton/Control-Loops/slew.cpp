@@ -1,6 +1,7 @@
 #include "Pas1-Lib/Auton/Control-Loops/slew.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
+#include <cmath>
 
 
 namespace pas1_lib {
@@ -35,7 +36,7 @@ void SlewController::computeFromTarget(double targetValue) {
 
 	// Get max change
 	double deltaTime_sec = slewTimer.time(seconds);
-	double maxChange = fabs(maxChangeRate_valPerSec * deltaTime_sec);
+	double maxChange = std::fabs(maxChangeRate_valPerSec * deltaTime_sec);
 
 	// Constrain change
 	double oldChange = targetValue - storedValue;

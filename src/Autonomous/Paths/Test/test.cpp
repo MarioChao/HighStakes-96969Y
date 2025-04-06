@@ -33,7 +33,7 @@ void autonpaths::runAutonTest() {
 	}
 
 	if (false) {
-		setRobotLookPose(aespa_lib::datas::Linegular(0, 0, 90));
+		setRobotLookPose(aespa_lib::datas::Linegular(0.5, 0.5, 90));
 
 		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
 		local::turnToAngle(robotChassis, local::turnToAngle_params(270, 100, 0), false);

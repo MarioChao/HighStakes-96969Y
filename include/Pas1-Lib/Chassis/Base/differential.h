@@ -14,6 +14,7 @@ public:
 		motor_group &left_motors, motor_group &right_motors
 	);
 
+	void control_differential(double left_pct, double right_pct);
 	void control_local2d(
 		double right_pct, double look_pct,
 		double angular_pct
@@ -22,6 +23,12 @@ public:
 
 	double getLookVelocity() override;
 	double getAngularVelocity() override;
+
+	double getLeftVelocity();
+	double getRightVelocity();
+
+
+	std::pair<bool, std::pair<double, double>> overwriteLeftRightVelocity;
 
 	double desired_leftMotor_pct, desired_rightMotor_pct;
 	double commanded_leftMotor_volt, commanded_rightMotor_volt;
