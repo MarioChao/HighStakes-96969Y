@@ -13,7 +13,7 @@ namespace settings {
 
 struct AutonSettings {
 	AutonSettings(
-		auton::control_loops::ForwardController ff_velocity_tilesPerSec_to_volt_feedforward,
+		auton::control_loops::SimpleFeedforward ff_velocity_tilesPerSec_to_volt_feedforward,
 
 		auton::control_loops::PIDController fb_distanceError_tiles_to_deltaVelocity_tilesPerSec_pid,
 		auton::control_loops::PIDController fb_velocityError_tilesPerSec_to_volt_pid,
@@ -42,7 +42,7 @@ struct AutonSettings {
 		useRelativeRotation(useRelativeRotation) {}
 
 	// Feedforward
-	auton::control_loops::ForwardController ff_velocity_tilesPerSec_to_volt_feedforward;
+	auton::control_loops::SimpleFeedforward ff_velocity_tilesPerSec_to_volt_feedforward;
 
 	// Linear feedback
 	auton::control_loops::PIDController fb_distanceError_tiles_to_deltaVelocity_tilesPerSec_pid;

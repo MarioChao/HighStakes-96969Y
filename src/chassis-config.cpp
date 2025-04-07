@@ -13,7 +13,7 @@ using pas1_lib::chassis::settings::Odometry;
 using pas1_lib::chassis::settings::BotInfo;
 using pas1_lib::chassis::settings::AutonSettings;
 using pas1_lib::chassis::base::Differential;
-using pas1_lib::auton::control_loops::ForwardController;
+using pas1_lib::auton::control_loops::SimpleFeedforward;
 using pas1_lib::auton::control_loops::PIDController;
 using pas1_lib::auton::control_loops::SlewController;
 using pas1_lib::auton::end_conditions::PatienceController;
@@ -73,7 +73,7 @@ namespace {
 
 // Auton settings
 AutonSettings autonSettings(
-	ForwardController(1.0, 12.0 / botInfo.maxVel_tilesPerSec, 0.5), // feedforward (tiles/sec to volt)
+	SimpleFeedforward(1.0, 12.0 / botInfo.maxVel_tilesPerSec, 0.5), // feedforward (tiles/sec to volt)
 	PIDController(2.5), // position feedback (tiles to tiles/sec)
 	// PIDController(5.0), // velocity feedback (tiles/sec to volt)
 	PIDController(0), // velocity feedback (tiles/sec to volt)

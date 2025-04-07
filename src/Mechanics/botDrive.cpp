@@ -1,8 +1,6 @@
 #include "Mechanics/botDrive.h"
 
 #include "Autonomous/autonValues.h"
-#include "Pas1-Lib/Auton/Control-Loops/pid.h"
-#include "Pas1-Lib/Auton/Control-Loops/feedforward.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
@@ -14,8 +12,6 @@
 
 namespace {
 	using botdrive::controlType;
-	using pas1_lib::auton::control_loops::ForwardController;
-	using pas1_lib::auton::control_loops::PIDController;
 
 	// Controls
 	void controlArcadeTwoStick();

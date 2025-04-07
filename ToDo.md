@@ -18,7 +18,7 @@
 	- [ ] Pas1 Library
 		- [ ] Auton
 			- [x] Control Loops
-				- [x] feedforward
+				- [x] feedforward (simple feedforward, arm feedforward)
 				- [x] pid feedback
 				- [x] slew
 			- [ ] End Conditions

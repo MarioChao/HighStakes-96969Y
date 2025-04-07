@@ -180,6 +180,7 @@ void runFollowPath() {
 		// Update error patience
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(total_distanceError + pose_distanceError));
 
+		
 		/* ---------- Pose control ---------- */
 
 		// Get desired robot motion (linear and angular)

@@ -7,10 +7,13 @@ namespace pas1_lib {
 namespace auton {
 namespace control_loops {
 
-ForwardController::ForwardController(double kS, double kV, double kA, double period_sec)
-: kS(kS), kV(kV), kA(kA), period_sec(period_sec) {}
 
-double ForwardController::calculateDiscrete(double currentVelocity, double nextVelocity) {
+/* ---------- Simple Feedforward ----- */
+
+SimpleFeedforward::SimpleFeedforward(double kS, double kV, double kA, double period_sec)
+	: kS(kS), kV(kV), kA(kA), period_sec(period_sec) {}
+
+double SimpleFeedforward::calculateDiscrete(double currentVelocity, double nextVelocity) {
 	// Refer to https://github.com/wpilibsuite/allwpilib/blob/main/wpimath/algorithms.md
 	if (kA < 1e-9) {
 		return kS * aespa_lib::genutil::signum(nextVelocity) + kV * nextVelocity;
@@ -30,17 +33,17 @@ double ForwardController::calculateDiscrete(double currentVelocity, double nextV
 	}
 }
 
-void ForwardController::computeFromMotion(double velocity, double acceleration) {
+void SimpleFeedforward::computeFromMotion(double velocity, double acceleration) {
 	this->velocity = velocity;
 	this->acceleration = acceleration;
 }
 
-double ForwardController::getValue(bool useS, bool useV, bool useA) {
+double SimpleFeedforward::getValue(bool useS, bool useV, bool useA) {
 	// Deadband kS
 	double valS = 0;
 	if (useS) {
 		bool isSpeedingUp = aespa_lib::genutil::signum(velocity) == aespa_lib::genutil::signum(acceleration);
-		if (1e-5 < fabs(velocity) && fabs(velocity) < 0.05 && isSpeedingUp) {
+		if (1e-5 < std::fabs(velocity) && std::fabs(velocity) < 0.05 && isSpeedingUp) {
 			valS = kS * aespa_lib::genutil::signum(velocity);
 		}
 	}
@@ -51,6 +54,21 @@ double ForwardController::getValue(bool useS, bool useV, bool useA) {
 
 	return valV + valA + valS;
 }
+
+
+/* ---------- Arm Feedforward ----- */
+
+ArmFeedforward::ArmFeedforward(double kS, double kG, double kV, double kA, double period_sec)
+	: kS(kS), kG(kG), kV(kV), kA(kA), period_sec(period_sec) {}
+
+double ArmFeedforward::calculateFromMotion(double elevationAngle_rad, double angularVelocity, double angularAcceleration) {
+	double valS = kS * aespa_lib::genutil::signum(angularVelocity);
+	double valG = std::cos(elevationAngle_rad);
+	double valV = kV * angularVelocity;
+	double valA = kA * angularAcceleration;
+	return valS + valG + valV + valA;
+}
+
 
 }
 }
