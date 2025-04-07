@@ -26,12 +26,12 @@ triport EmptyExpander(emptyPort);
 
 // Wheel motors
 
-motor LeftMotorA(PORT8, ratio6_1, true);
-motor LeftMotorB(PORT9, ratio6_1, true);
-motor LeftMotorC(PORT10, ratio6_1, true);
-motor RightMotorA(PORT1, ratio6_1, false);
-motor RightMotorB(PORT2, ratio6_1, false);
-motor RightMotorC(PORT3, ratio6_1, false);
+motor LeftMotorA(emptyPort, ratio6_1, true);
+motor LeftMotorB(emptyPort, ratio6_1, true);
+motor LeftMotorC(emptyPort, ratio6_1, true);
+motor RightMotorA(emptyPort, ratio6_1, false);
+motor RightMotorB(emptyPort, ratio6_1, false);
+motor RightMotorC(emptyPort, ratio6_1, false);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
 motor_group LeftRightMotors(
@@ -42,11 +42,11 @@ motor_group LeftRightMotors(
 
 // Other motors
 
-motor IntakeMotor1(PORT4, ratio6_1);
+motor IntakeMotor1(emptyPort, ratio6_1);
 motor IntakeMotor2(emptyPort, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
-motor ArmMotor(emptyPort, ratio36_1);
+motor ArmMotor(PORT21, ratio36_1, true);
 
 
 // Pneumatics
@@ -72,11 +72,11 @@ pneumatics ClimbHook_pneumatics(EmptyExpander.B);
 encoder LookEncoder(EmptyExpander.A);
 encoder RightEncoder(EmptyExpander.A);
 rotation LookRotation(emptyPort);
-rotation RightRotation(PORT21);
+rotation RightRotation(emptyPort);
 
-rotation ArmRotationSensor(emptyPort, true);
+rotation ArmRotationSensor(PORT10, true);
 
-inertial InertialSensor(PORT7);
+inertial InertialSensor(emptyPort);
 distance DistanceSensor(emptyPort);
 
 distance RingDistanceSensor(emptyPort);

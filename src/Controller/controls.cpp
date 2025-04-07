@@ -76,14 +76,15 @@ void setUpKeybinds() {
 		botarm::setArmStage(0);
 		botintake::setColorFiltering(true);
 	});
-	// Stage 1
+	// Stage 1 or 2
 	Controller1.ButtonB.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
-		botarm::setArmStage(1);
+		if (botarm::getArmStage() == 1) botarm::setArmStage(2);
+		else botarm::setArmStage(1);
 		botintake::setColorFiltering(false);
 	});
-	// Stage 2
+	// Stage 3
 	Controller1.ButtonX.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 

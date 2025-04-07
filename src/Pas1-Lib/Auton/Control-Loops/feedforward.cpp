@@ -63,7 +63,7 @@ ArmFeedforward::ArmFeedforward(double kS, double kG, double kV, double kA, doubl
 
 double ArmFeedforward::calculateFromMotion(double elevationAngle_rad, double angularVelocity, double angularAcceleration) {
 	double valS = kS * aespa_lib::genutil::signum(angularVelocity);
-	double valG = std::cos(elevationAngle_rad);
+	double valG = kG * std::cos(elevationAngle_rad);
 	double valV = kV * angularVelocity;
 	double valA = kA * angularAcceleration;
 	return valS + valG + valV + valA;
