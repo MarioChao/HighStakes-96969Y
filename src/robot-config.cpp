@@ -63,8 +63,8 @@ pneumatics SwordPneumatics(EmptyExpander.B);
 pneumatics Sword2Pneumatics(EmptyExpander.B);
 pneumatics RedirectPneumatics(EmptyExpander.B);
 
-pneumatics ClimbPTO_pneumatics(Brain.ThreeWirePort.H);
-pneumatics ClimbHook_pneumatics(Brain.ThreeWirePort.G);
+pneumatics ClimbPTO_pneumatics(EmptyExpander.B);
+pneumatics ClimbHook_pneumatics(EmptyExpander.B);
 
 
 // Sensors

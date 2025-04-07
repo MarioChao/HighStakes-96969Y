@@ -208,24 +208,19 @@ void runFollowPath() {
 		/* Feedforward + feedback */
 
 		// Current wheel state
-		double currentLeftVelocity = chassis->getLeftVelocity();
-		double currentRightVelocity = chassis->getRightVelocity();
-		bool useS;
+		double currentLeftVelocity_tilesPerSec = chassis->getLeftVelocity();
+		double currentRightVelocity_tilesPerSec = chassis->getRightVelocity();
 
 		// Left wheel
 		double leftVelocity_volt = 0;
-		useS = std::fabs(currentLeftVelocity) < 0.02;
-		autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.computeFromMotion(desiredLeftVelocity_tilesPerSec, 0);
-		leftVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(useS);
-		fb_leftVelocity_tilesPerSec_to_volt_pid.computeFromError(desiredLeftVelocity_tilesPerSec - currentLeftVelocity);
+		leftVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.calculateDiscrete(currentLeftVelocity_tilesPerSec, desiredLeftVelocity_tilesPerSec);
+		fb_leftVelocity_tilesPerSec_to_volt_pid.computeFromError(desiredLeftVelocity_tilesPerSec - currentLeftVelocity_tilesPerSec);
 		leftVelocity_volt += fb_leftVelocity_tilesPerSec_to_volt_pid.getValue();
 
 		// Right wheel
 		double rightVelocity_volt = 0;
-		useS = std::fabs(currentRightVelocity) < 0.02;
-		autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.computeFromMotion(desiredRightVelocity_tilesPerSec, 0);
-		rightVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.getValue(useS);
-		fb_rightVelocity_tilesPerSec_to_volt_pid.computeFromError(desiredRightVelocity_tilesPerSec - currentRightVelocity);
+		rightVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.calculateDiscrete(currentRightVelocity_tilesPerSec, desiredRightVelocity_tilesPerSec);
+		fb_rightVelocity_tilesPerSec_to_volt_pid.computeFromError(desiredRightVelocity_tilesPerSec - currentRightVelocity_tilesPerSec);
 		rightVelocity_volt += fb_rightVelocity_tilesPerSec_to_volt_pid.getValue();
 		
 		/* Slew */
@@ -239,7 +234,7 @@ void runFollowPath() {
 		rightAcceleration_pctPerSec_slew.computeFromTarget(rightVelocity_pct);
 		leftVelocity_pct = leftAcceleration_pctPerSec_slew.getValue();
 		rightVelocity_pct = rightAcceleration_pctPerSec_slew.getValue();
-		printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
+		printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
 
 		// Drive
 		chassis->control_differential(leftVelocity_pct, rightVelocity_pct);

@@ -131,11 +131,11 @@ void setUpKeybinds() {
 		botintakelift::switchState();
 	});
 	// Climbing PTO
-	Controller1.ButtonRight.pressed([]() -> void {
+	Controller2.ButtonRight.pressed([]() -> void {
 		climb_pto::switchState();
 	});
 	// Moving hook
-	Controller1.ButtonY.pressed([]() -> void {
+	Controller2.ButtonY.pressed([]() -> void {
 		climb_hook::switchState();
 	});
 }

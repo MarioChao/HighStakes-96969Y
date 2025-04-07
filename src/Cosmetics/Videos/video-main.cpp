@@ -42,6 +42,10 @@ namespace video {
 		Controller1.ButtonRight.pressed([]() -> void {
 			switchVideoState(1);
 		});
+		Brain.Screen.pressed([]() -> void {
+			if (playingVideoId == 0) return;
+			switchVideoState(1);
+		});
 	}
 
 	void startThread() {
