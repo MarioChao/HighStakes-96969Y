@@ -61,6 +61,7 @@
 	- [x] Numerical integration method (may be slower than switching times method)
 	- [ ] Higher-order derivative constraints on position
 - [ ] More about splines (non-uniform, interpolation, etc.)
-- [ ] Tuned path following
+- [ ] Tune path following
 	- [x] Trajectory generation
-	- [ ] Velocity control
+	- [ ] Velocity control (feedforward, feedback)
+- [ ] Tune arm control (pid / feedforward)

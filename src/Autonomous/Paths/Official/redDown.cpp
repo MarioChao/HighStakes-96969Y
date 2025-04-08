@@ -58,6 +58,7 @@ void doAuton() {
 	setIntakeState(1);
 	runFollowSpline("rd ring 3-1");
 	waitUntil(follow::_isPathFollowCompleted);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(10_in, robotChassis.getLookPose().getRotation()), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-10_in, robotChassis.getLookPose().getRotation()), false);
 	setIntakeLiftState(1);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(20_in, robotChassis.getLookPose().getRotation()), false);

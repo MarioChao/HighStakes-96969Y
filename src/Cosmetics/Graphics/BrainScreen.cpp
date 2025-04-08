@@ -772,9 +772,10 @@ void drawTemperature() {
 	// Other temperatures
 	double intake1 = IntakeMotor1.temperature(celsius);
 	double intake2 = IntakeMotor2.temperature(celsius);
-	double arm1 = ArmMotor.temperature(celsius);
+	double arm1 = ArmMotor1.temperature(celsius);
+	double arm2 = ArmMotor2.temperature(celsius);
 	Brain.Screen.printAt(10, 115, 1, "Intk1: %07.3f°C, Intk2: %07.3f°C", intake1, intake2);
-	Brain.Screen.printAt(10, 140, 1, "Arm_1: %07.3f°C", arm1);
+	Brain.Screen.printAt(10, 140, 1, "Arm_1: %07.3f°C, Arm_2: %07.3f°C", arm1, arm2);
 }
 void drawMotorPower() {
 	// Get power info
@@ -813,7 +814,8 @@ void drawMotorTorque() {
 	double intake1_torque = IntakeMotor1.torque(Nm);
 	double intake2_torque = IntakeMotor2.torque(Nm);
 
-	double arm_torque = ArmMotor.torque(Nm);
+	double arm1_torque = ArmMotor1.torque(Nm);
+	double arm2_torque = ArmMotor2.torque(Nm);
 
 	// Draw info
 	Brain.Screen.setPenColor(color::white);
@@ -821,7 +823,7 @@ void drawMotorTorque() {
 	Brain.Screen.setFont(fontType::mono20);
 	Brain.Screen.printAt(10, 40, 1, "Lavg: %07.3f Nm, Ravg: %07.3f Nm", leftAvg_torque, rightAvg_torque);
 	Brain.Screen.printAt(10, 65, 1, "Intk1: %07.3f Nm, Intk2: %07.3f Nm", intake1_torque, intake2_torque);
-	Brain.Screen.printAt(10, 90, 1, "ARM : %07.3f Nm", arm_torque);
+	Brain.Screen.printAt(10, 90, 1, "ARM1: %07.3f Nm, ARM2: %07.3f Nm", arm1_torque, arm2_torque);
 }
 void drawInertial(Linegular robotPose) {
 	Brain.Screen.setPenColor(color::green);

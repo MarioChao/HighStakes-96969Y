@@ -31,7 +31,9 @@ extern vex::motor IntakeMotor1;
 extern vex::motor IntakeMotor2;
 extern vex::motor_group IntakeMotors;
 
-extern vex::motor ArmMotor;
+extern vex::motor ArmMotor1;
+extern vex::motor ArmMotor2;
+extern vex::motor_group ArmMotors;
 
 extern vex::pneumatics FrontWingsPneumatic;
 extern vex::pneumatics LeftWingPneumatic;

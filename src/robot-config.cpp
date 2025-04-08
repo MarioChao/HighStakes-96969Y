@@ -46,7 +46,9 @@ motor IntakeMotor1(emptyPort, ratio6_1);
 motor IntakeMotor2(emptyPort, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
-motor ArmMotor(PORT21, ratio36_1, true);
+motor ArmMotor1(PORT10, ratio18_1, false);
+motor ArmMotor2(PORT9, ratio18_1, true);
+motor_group ArmMotors(ArmMotor1, ArmMotor2);
 
 
 // Pneumatics
@@ -74,7 +76,7 @@ encoder RightEncoder(EmptyExpander.A);
 rotation LookRotation(emptyPort);
 rotation RightRotation(emptyPort);
 
-rotation ArmRotationSensor(PORT10, false);
+rotation ArmRotationSensor(PORT21, true);
 
 inertial InertialSensor(emptyPort);
 distance DistanceSensor(emptyPort);
