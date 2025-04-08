@@ -74,7 +74,7 @@ encoder RightEncoder(EmptyExpander.A);
 rotation LookRotation(emptyPort);
 rotation RightRotation(emptyPort);
 
-rotation ArmRotationSensor(PORT10, true);
+rotation ArmRotationSensor(PORT10, false);
 
 inertial InertialSensor(emptyPort);
 distance DistanceSensor(emptyPort);

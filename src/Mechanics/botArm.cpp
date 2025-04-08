@@ -30,8 +30,8 @@ double armMotorMaxVelocity_rpm = 100;
 double armMotorMaxVelocity_radiansPerSec = armMotorMaxVelocity_rpm * (1.0 / 60.0) * (2 * M_PI);
 
 // Stage controllers
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(1.0, 2.5, 12.0 / armMotorMaxVelocity_radiansPerSec);
-PIDController arm_positionError_radians_to_radiansPerSec_Pid(5.0, 0, 0);
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(1.0, 1.7, 12.0 / armMotorMaxVelocity_radiansPerSec);
+PIDController arm_positionError_radians_to_radiansPerSec_Pid(18.0, 0, 0);
 // PIDController arm_positionError_degrees_to_volt_pid(1.9, 0, 0);
 PatienceController armUpPatience(12, 1.0, true, 5);
 PatienceController armDownPatience(6, 1.0, false, 5);
@@ -276,7 +276,7 @@ void resolveArmDegrees() {
 
 	// printf("ARM: %.3f, Err: %.3f\n", currentAngle.polarDeg(), errorAngle.polarDeg());
 	double armVelocity_radiansPerSec = ArmMotor.velocity(rpm) * (1.0 / 60.0) * (2 * M_PI);
-	printf("VRS: %.3f %.3f, volt: %.3f\n", desiredVelocity_radiansPerSec, armVelocity_radiansPerSec, motorVelocityVolt);
+	// printf("VRS: %.3f %.3f, volt: %.3f\n", desiredVelocity_radiansPerSec, armVelocity_radiansPerSec, motorVelocityVolt);
 
 	/* Command */
 

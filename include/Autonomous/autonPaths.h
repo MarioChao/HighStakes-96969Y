@@ -43,8 +43,8 @@ void storeNewSplineProfile(
 	pas1_lib::planning::splines::SplineCurve spline, bool reverse = false
 );
 
-void runFollowSpline(Differential &chassis, std::string profileName);
-void runFollowSpline(std::string profileName);
+void runFollowSpline(Differential &chassis, std::string profileName, bool turnFirst = true);
+void runFollowSpline(std::string profileName, bool turnFirst = true);
 
 extern std::vector<std::vector<std::vector<aespa_lib::units::Length>>> linearPaths;
 extern std::vector<double> linearMaxVelocity_pct;

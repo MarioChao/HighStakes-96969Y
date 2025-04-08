@@ -25,7 +25,43 @@ void storeProfiles_redUp() {}
 void storeProfiles_redUpSafe() {}
 void storeProfiles_blueUp() {}
 void storeProfiles_blueUpSafe() {}
-void storeProfiles_redDown() {}
+void storeProfiles_redDown() {
+	storeNewSplineProfile("rd rush 1-1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {0.15, 2.2}, {0.87, 1.46}, {2.3, 0.88}, {4.0, 0.2} }
+		), false
+	);
+	storeNewSplineProfile("rd grab 2",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {2.01, 0.07}, {2.0, 1}, {2.01, 1.99}, {2.01, 3} }
+		), true
+	);
+	storeNewSplineProfile("rd ring 2-1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {3.23, 2.63}, {2.01, 2.01}, {0.97, 1.54}, {-0.25, 0.94} }
+		), false
+	);
+	storeNewSplineProfile("rd grab 3",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {-0.31, 1.5}, {1, 1.54}, {1.9, 1.2}, {2.01, 0.45}, {2.01, -0.48} }
+		), true
+	);
+	storeNewSplineProfile("rd ring 3-1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {3.18, 0.29}, {2.01, 0.51}, {0.57, 0.39}, {-0.48, -0.47} }
+		), false
+	);
+	storeNewSplineProfile("rd ladder 1a",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {-0.49, -0.05}, {0.54, 0.44}, {2.26, 0.71}, {4.25, 0.08} }
+		), true
+	);
+	storeNewSplineProfile("rd ladder 1b",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {2.61, -0.52}, {2.3, 0.58}, {2.41, 2.4}, {4.05, 3.75} }
+		), false
+	);
+}
 void storeProfiles_redDownSafe() {}
 void storeProfiles_blueDown() {}
 void storeProfiles_blueDownSafe() {}

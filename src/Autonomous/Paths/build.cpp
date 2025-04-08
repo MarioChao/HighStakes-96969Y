@@ -40,19 +40,21 @@ void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines:
 	storeNewSplineProfile(profileName, spline, reverse, botInfo.maxVel_tilesPerSec);
 }
 
-void runFollowSpline(Differential &chassis, std::string profileName) {
+void runFollowSpline(Differential &chassis, std::string profileName, bool turnFirst) {
 	if (!splineProfile_storage.hasKey(profileName)) {
 		follow::_isPathFollowCompleted = true;
 		return;
 	}
 	SplineProfile *splineProfile = splineProfile_storage.getStored(profileName).get();
-	aespa_lib::datas::Linegular startPose = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse);
-	local::turnToAngle(chassis, local::turnToAngle_params(startPose.getRotation()), false);
+	if (turnFirst) {
+		aespa_lib::datas::Linegular startPose = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse);
+		local::turnToAngle(chassis, local::turnToAngle_params(startPose.getRotation()), false);
+	}
 	follow::followPath(chassis, follow::followPath_params(splineProfile), true);
 }
 
-void runFollowSpline(std::string profileName) {
-	runFollowSpline(robotChassis, profileName);
+void runFollowSpline(std::string profileName, bool turnFirst) {
+	runFollowSpline(robotChassis, profileName, turnFirst);
 }
 
 

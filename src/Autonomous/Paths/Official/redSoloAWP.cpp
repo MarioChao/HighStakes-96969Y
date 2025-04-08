@@ -31,7 +31,7 @@ void autonpaths::runRedSoloAWP() {
 namespace {
 
 void doAuton() {
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.5_tiles, robotChassis.getLookPose().getRotation()), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.5_tiles, robotChassis.getLookPose().getRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.3);
 	setArmStage(4);
 	waitUntil(local::_isDriveAndTurnSettled);
@@ -41,7 +41,7 @@ void doAuton() {
 	setArmStage(0);
 	setGoalClampState(true);
 	waitUntil(follow::_isPathFollowCompleted);
-	setIntakeState(true);
+	setIntakeState(1);
 	runFollowSpline(robotChassis, "rsa ring 1-1a");
 	waitUntil(follow::_isPathFollowCompleted);
 	runFollowSpline(robotChassis, "rsa ring 1-1b");
@@ -57,13 +57,14 @@ void doAuton() {
 	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.15);
 	setGoalClampState(true);
 	waitUntil(follow::_isPathFollowCompleted);
-	setIntakeState(true);
+	setIntakeState(1);
 	runFollowSpline(robotChassis, "rsa ring 2-1");
 	waitUntil(follow::_isPathFollowCompleted);
 	runFollowSpline(robotChassis, "rsa ladder");
 	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.5);
-	setIntakeState(false);
+	setIntakeState(0);
 	setArmStage(4);
 	waitUntil(follow::_isPathFollowCompleted);
 }
+
 }

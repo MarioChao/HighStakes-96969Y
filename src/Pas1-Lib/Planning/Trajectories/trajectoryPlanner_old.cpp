@@ -64,11 +64,8 @@ TrajectoryPlanner_Old &TrajectoryPlanner_Old::autoSetMotionConstraints(
 		double rotationLinearVelocity = maxVelocity * curvature * (leftRightWheelDistance / 2.0);
 
 		// Calculate constraint values
-		// double nonChangingFactor = 0.3;
-		// double segmentMaxVelocity = maxVelocity * (nonChangingFactor / (nonChangingFactor + curvature));
 		double segmentMaxVelocity = maxVelocity - rotationLinearVelocity;
 		segmentMaxVelocity = aespa_lib::genutil::clamp(segmentMaxVelocity, minVelocity, maxVelocity);
-		// printf("d: %.3f, curva: %.3f, vel: %.3f, ang: %.3f\n", segmentDistance_start, curvature, segmentMaxVelocity, rotationLinearVelocity);
 
 		// Add constraint
 		addDesiredMotionConstraints(segmentDistance_start, segmentMaxVelocity, maxAccel, maxDecel);

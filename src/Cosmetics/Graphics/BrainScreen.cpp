@@ -63,6 +63,7 @@ void drawQRCodes();
 void drawQRCode(double x, double y, double width, vector<pair<int, int>> &QRCode, color bgCol, color qrCol);
 void drawTemperature();
 void drawMotorPower();
+void drawMotorTorque();
 void drawInertial(Linegular robotPose);
 
 // Variables
@@ -79,7 +80,7 @@ DockGui *mainDock, *mainDock_dockDock;
 DockGui *simulationDock;
 DockGui *autonDock, *autonDock_dockDock;
 DockGui *autonSubdock1, *autonSubdock2, *autonSubdock3, *autonSubdock4;
-DockGui *qrCodeDock, *motTempDock;
+DockGui *qrCodeDock, *motTempDock, *motTorqueDock;
 
 // Others
 vector<pair<int, int>> vexTeamQRCord, secondQRCord;
@@ -346,6 +347,12 @@ void createButtons() {
 		mainDock_dockDock->setEnabled(false);
 		motTempDock->setEnabled(true);
 	}));
+	mainDockButtons.push_back(new ButtonGui(new Rectangle(360, 10, 80, 20, color(200, 50, 100), color(50, 50, 50), 2), "Torque", white, [] {
+		mainDockDisable(4);
+		mainDockButtons[4]->enable();
+		mainDock_dockDock->setEnabled(false);
+		motTorqueDock->setEnabled(true);
+	}));
 
 	// Auton Dock buttons
 	autonDockButtons = {};
@@ -597,6 +604,12 @@ void createDocks() {
 		drawTemperature();
 		drawMotorPower();
 	});
+
+	// Torque Dock
+	motTorqueDock = new DockGui(0, 20, 480, 220, {}, {});
+	motTorqueDock->addFunction([] {
+		drawMotorTorque();
+	});
 }
 
 /// @brief Set the GUI variables corresponding to each dock.
@@ -606,7 +619,8 @@ void setDockGUIs() {
 		mainDock->addGui(gui);
 	}
 	mainDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock });
-	mainDock_dockDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock });
+	mainDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock, motTorqueDock });
+	mainDock_dockDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock, motTorqueDock });
 
 	// Auton Dock
 	for (GuiClass *gui : autonDockButtons) {
@@ -634,6 +648,7 @@ void initDocks() {
 	autonSubdock3->setEnabled(false);
 	qrCodeDock->setEnabled(false);
 	motTempDock->setEnabled(false);
+	motTorqueDock->setEnabled(false);
 }
 
 /// @brief Set the value of the qr codes
@@ -782,6 +797,31 @@ void drawMotorPower() {
 	Brain.Screen.setFont(fontType::mono20);
 	Brain.Screen.printAt(10, 190, 1, "Lavg: %07.3f W, Ravg: %07.3f W", leftAvg_watt, rightAvg_watt);
 	Brain.Screen.printAt(10, 215, 1, "Intk1: %07.3f W, Intk2: %07.3f W", intake1_watt, intake2_watt);
+}
+void drawMotorTorque() {
+	// Get power info
+	double leftA_torque = LeftMotorA.torque(Nm);
+	double leftB_torque = LeftMotorB.torque(Nm);
+	double leftC_torque = LeftMotorC.torque(Nm);
+	double rightA_torque = RightMotorA.torque(Nm);
+	double rightB_torque = RightMotorB.torque(Nm);
+	double rightC_torque = RightMotorC.torque(Nm);
+
+	double leftAvg_torque = (leftA_torque + leftB_torque + leftC_torque) / 3.0;
+	double rightAvg_torque = (rightA_torque + rightB_torque + rightC_torque) / 3.0;
+
+	double intake1_torque = IntakeMotor1.torque(Nm);
+	double intake2_torque = IntakeMotor2.torque(Nm);
+
+	double arm_torque = ArmMotor.torque(Nm);
+
+	// Draw info
+	Brain.Screen.setPenColor(color::white);
+	Brain.Screen.setFillColor(color::transparent);
+	Brain.Screen.setFont(fontType::mono20);
+	Brain.Screen.printAt(10, 40, 1, "Lavg: %07.3f Nm, Ravg: %07.3f Nm", leftAvg_torque, rightAvg_torque);
+	Brain.Screen.printAt(10, 65, 1, "Intk1: %07.3f Nm, Intk2: %07.3f Nm", intake1_torque, intake2_torque);
+	Brain.Screen.printAt(10, 90, 1, "ARM : %07.3f Nm", arm_torque);
 }
 void drawInertial(Linegular robotPose) {
 	Brain.Screen.setPenColor(color::green);
