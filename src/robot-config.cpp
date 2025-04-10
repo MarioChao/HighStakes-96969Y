@@ -26,12 +26,12 @@ triport EmptyExpander(emptyPort);
 
 // Wheel motors
 
-motor LeftMotorA(emptyPort, ratio6_1, true);
-motor LeftMotorB(emptyPort, ratio6_1, true);
-motor LeftMotorC(emptyPort, ratio6_1, true);
-motor RightMotorA(emptyPort, ratio6_1, false);
-motor RightMotorB(emptyPort, ratio6_1, false);
-motor RightMotorC(emptyPort, ratio6_1, false);
+motor LeftMotorA(PORT1, ratio6_1, true);
+motor LeftMotorB(PORT2, ratio6_1, true);
+motor LeftMotorC(PORT3, ratio6_1, true);
+motor RightMotorA(PORT5, ratio6_1, false);
+motor RightMotorB(PORT11, ratio6_1, false);
+motor RightMotorC(PORT14, ratio6_1, false);
 motor_group LeftMotors(LeftMotorA, LeftMotorB, LeftMotorC);
 motor_group RightMotors(RightMotorA, RightMotorB, RightMotorC);
 motor_group LeftRightMotors(
@@ -42,12 +42,12 @@ motor_group LeftRightMotors(
 
 // Other motors
 
-motor IntakeMotor1(emptyPort, ratio6_1);
+motor IntakeMotor1(PORT12, ratio6_1);
 motor IntakeMotor2(emptyPort, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
-motor ArmMotor1(PORT10, ratio18_1, false);
-motor ArmMotor2(PORT9, ratio18_1, true);
+motor ArmMotor1(PORT18, ratio18_1, false);
+motor ArmMotor2(PORT15, ratio18_1, true);
 motor_group ArmMotors(ArmMotor1, ArmMotor2);
 
 
@@ -74,15 +74,15 @@ pneumatics ClimbHook_pneumatics(EmptyExpander.B);
 encoder LookEncoder(EmptyExpander.A);
 encoder RightEncoder(EmptyExpander.A);
 rotation LookRotation(emptyPort);
-rotation RightRotation(emptyPort);
+rotation RightRotation(PORT10);
 
-rotation ArmRotationSensor(PORT21, true);
+rotation ArmRotationSensor(PORT19, false);
 
-inertial InertialSensor(emptyPort);
+inertial InertialSensor(PORT21);
 distance DistanceSensor(emptyPort);
 
 distance RingDistanceSensor(emptyPort);
-optical RingOpticalSensor(emptyPort);
+optical RingOpticalSensor(PORT4);
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

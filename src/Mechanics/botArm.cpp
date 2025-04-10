@@ -26,10 +26,10 @@ void setArmPosition(double armEncoderPosition_degrees);
 void spinArmMotor(double velocityPct);
 
 // Motor config
-double armMaxVelocity_rpm = 66;
+double armMaxVelocity_rpm = 100;
 double armMaxVelocity_radiansPerSec = armMaxVelocity_rpm * (1.0 / 60.0) * (2 * M_PI);
 
-double armEncoder_to_arm_ratio = 1.0 / 3.0;
+double armEncoder_to_arm_ratio = 1.0 / 1.0;
 
 // Stage controllers
 ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.1, 0.3, 12.0 / armMaxVelocity_radiansPerSec);
@@ -158,7 +158,7 @@ void resetArmEncoder() {
 	// Sanitize rotation sensor's initial value to between [-100, 260]
 	setArmPosition(aespa_lib::genutil::modRange(ArmRotationSensor.position(degrees), 360, -100));
 
-	// /*
+	/*
 	// Spin downward until exhausted
 	setArmStage(0);
 	waitUntil(armDownPatience.isExhausted());

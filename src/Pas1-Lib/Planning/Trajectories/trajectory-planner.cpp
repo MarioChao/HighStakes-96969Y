@@ -21,7 +21,7 @@ PlanPoint::PlanPoint(double time_seconds, double distance, std::vector<double> m
 	: time_seconds(time_seconds), distance(distance),
 	motion_dV_dT(motion_dV_dT) {}
 
-PlanPoint &PlanPoint::constrain(Constraint constraint) {
+PlanPoint &PlanPoint::constrain(DistanceConstraint constraint) {
 	for (int i = 0; i < (int) motion_dV_dT.size(); i++) {
 		// Validate constraint
 		if (i >= (int) constraint.maxMotion_dV_dT.size()) {
@@ -36,7 +36,7 @@ PlanPoint &PlanPoint::constrain(Constraint constraint) {
 	return *this;
 }
 
-PlanPoint &PlanPoint::maximizeLastDegree(Constraint constraint) {
+PlanPoint &PlanPoint::maximizeLastDegree(DistanceConstraint constraint) {
 	// Expand degree
 	int constraintSize = (int) constraint.maxMotion_dV_dT.size();
 	if ((int) motion_dV_dT.size() < constraintSize) {
@@ -52,8 +52,8 @@ PlanPoint &PlanPoint::maximizeLastDegree(Constraint constraint) {
 }
 
 PlanPoint &PlanPoint::maximizeNthDegree(
-	Constraint constraint, int dV_dT_degree,
-	Constraint target_rawConstraint, bool maximizeLowerDegrees
+	DistanceConstraint constraint, int dV_dT_degree,
+	DistanceConstraint target_rawConstraint, bool maximizeLowerDegrees
 ) {
 	// Validate constraint degree
 	if ((int) constraint.maxMotion_dV_dT.size() < dV_dT_degree + 1) {
@@ -313,27 +313,27 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 
 	// Get minimum constraints
 	double oldDistance = node.distance;
-	std::vector<Constraint> center_constraints0 = getConstraintsAtDistance(
+	std::vector<DistanceConstraint> center_constraints0 = getConstraintsAtDistance(
 		center_constraintSequences, oldDistance
 	);
-	std::vector<Constraint> track_constraints0 = getConstraintsAtDistance(
+	std::vector<DistanceConstraint> track_constraints0 = getConstraintsAtDistance(
 		track_constraintSequences, oldDistance
 	);
-	Constraint center_minConstraint0 = getMinimumConstraint(center_constraints0);
-	Constraint track_minConstraint0 = getMinimumConstraint(track_constraints0);
+	DistanceConstraint center_minConstraint0 = getMinimumConstraint(center_constraints0);
+	DistanceConstraint track_minConstraint0 = getMinimumConstraint(track_constraints0);
 
 
 	// Minimum constrain
 	node.constrain(center_minConstraint0);
 
-	std::vector<Constraint> center_constraints0_1 = getConstraintsAtDistance(
+	std::vector<DistanceConstraint> center_constraints0_1 = getConstraintsAtDistance(
 		center_constraintSequences, oldDistance + distanceStep
 	);
-	Constraint center_minConstraint0_1 = getMinimumConstraint(center_constraints0_1);
+	DistanceConstraint center_minConstraint0_1 = getMinimumConstraint(center_constraints0_1);
 	node.constrain(center_minConstraint0_1);
 
 	// Get target raw constraint
-	Constraint planRaw_constraint0 = planPoint_rawSequence.getConstraintAtDistance(oldDistance);
+	DistanceConstraint planRaw_constraint0 = planPoint_rawSequence.getConstraintAtDistance(oldDistance);
 
 	// Maximize next constrained degree
 	node.maximizeNthDegree(
@@ -374,16 +374,16 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	PlanPoint newNode(time_seconds, newDistance, integral.second);
 
 	// Get minimum constraints
-	std::vector<Constraint> center_constraints1 = getConstraintsAtDistance(
+	std::vector<DistanceConstraint> center_constraints1 = getConstraintsAtDistance(
 		center_constraintSequences, newDistance
 	);
-	std::vector<Constraint> track_constraints1 = getConstraintsAtDistance(
+	std::vector<DistanceConstraint> track_constraints1 = getConstraintsAtDistance(
 		track_constraintSequences, newDistance
 	);
 
 	// Minimum constrain
-	Constraint center_minConstraint1 = getMinimumConstraint(center_constraints1);
-	Constraint track_minConstraint1 = getMinimumConstraint(track_constraints1);
+	DistanceConstraint center_minConstraint1 = getMinimumConstraint(center_constraints1);
+	DistanceConstraint track_minConstraint1 = getMinimumConstraint(track_constraints1);
 	newNode.constrain(center_minConstraint1);
 	// printf("T dis: %.3f, dis: %.3f, vel: %.3f\n", distance, newNode.distance, newNode.motion_dV_dT[0]);
 
@@ -430,7 +430,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 			// vwheel_new - vwheel_old < maxaccel * dt
 
 			// Scale target raw constraint to track
-			Constraint planRaw_track_constraint0 = planRaw_constraint0;
+			DistanceConstraint planRaw_track_constraint0 = planRaw_constraint0;
 			planRaw_track_constraint0.maxMotion_dV_dT = aespa_lib::genutil::multiplyVector(
 				planRaw_track_constraint0.maxMotion_dV_dT, factor0
 			);
@@ -455,7 +455,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 			trackIntegral.second = aespa_lib::genutil::multiplyVector(trackIntegral.second, 1 / factor1);
 
 			// Constrain
-			newNode.constrain(Constraint(0, aespa_lib::genutil::getAbsolute(trackIntegral.second)));
+			newNode.constrain(DistanceConstraint(0, aespa_lib::genutil::getAbsolute(trackIntegral.second)));
 		}
 	}
 
@@ -466,7 +466,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 }
 
 std::vector<PlanPoint> TrajectoryPlanner::_forwardPass(int dV_dT_degree) {
-	Constraint minConstraint = getMinimumConstraint(
+	DistanceConstraint minConstraint = getMinimumConstraint(
 		getConstraintsAtDistance(center_constraintSequences, 0)
 	);
 	std::vector<PlanPoint> planningPoints;
@@ -496,7 +496,7 @@ std::vector<PlanPoint> TrajectoryPlanner::_forwardPass(int dV_dT_degree) {
 }
 
 std::vector<PlanPoint> TrajectoryPlanner::_backwardPass(int dV_dT_degree) {
-	Constraint minConstraint = getMinimumConstraint(
+	DistanceConstraint minConstraint = getMinimumConstraint(
 		getConstraintsAtDistance(center_constraintSequences, totalDistance)
 	);
 	std::vector<PlanPoint> planningPoints;

@@ -11,8 +11,8 @@ namespace trajectories {
 
 // ---------- Constraints ----------
 
-struct Constraint {
-	Constraint(double distance, std::vector<double> maxMotion_dV_dT);
+struct DistanceConstraint {
+	DistanceConstraint(double distance, std::vector<double> maxMotion_dV_dT);
 
 
 	double distance;
@@ -20,29 +20,29 @@ struct Constraint {
 };
 
 struct ConstraintSequence {
-	ConstraintSequence(std::vector<Constraint> constraints, bool lerped);
+	ConstraintSequence(std::vector<DistanceConstraint> constraints, bool lerped);
 	ConstraintSequence();
 
 	ConstraintSequence &addConstraints(std::vector<std::pair<double, std::vector<double>>> constraints);
 
 	void sort();
-	Constraint getConstraintAtDistance(double distance);
+	DistanceConstraint getConstraintAtDistance(double distance);
 
 
-	std::vector<Constraint> constraints;
+	std::vector<DistanceConstraint> constraints;
 	bool lerped;
 
 	bool isSorted;
 };
 
-double getMinimumMotionAtDegree(std::vector<Constraint> constraints, int dV_dT_degree);
-Constraint getMinimumConstraint(std::vector<Constraint> constraints);
+double getMinimumMotionAtDegree(std::vector<DistanceConstraint> constraints, int dV_dT_degree);
+DistanceConstraint getMinimumConstraint(std::vector<DistanceConstraint> constraints);
 
-std::vector<Constraint> getConstraintsAtDistance(
+std::vector<DistanceConstraint> getConstraintsAtDistance(
 	std::vector<ConstraintSequence> constraintSequences, double distance
 );
 
-std::vector<Constraint> getConstraintsAtIndex(
+std::vector<DistanceConstraint> getConstraintsAtIndex(
 	std::vector<ConstraintSequence> constraintSequences, int index
 );
 

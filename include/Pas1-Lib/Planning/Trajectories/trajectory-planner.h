@@ -18,11 +18,11 @@ namespace trajectories {
 struct PlanPoint {
 	PlanPoint(double time_seconds, double distance, std::vector<double> motion_dV_dT);
 
-	PlanPoint &constrain(Constraint constraint);
-	PlanPoint &maximizeLastDegree(Constraint constraint);
+	PlanPoint &constrain(DistanceConstraint constraint);
+	PlanPoint &maximizeLastDegree(DistanceConstraint constraint);
 	PlanPoint &maximizeNthDegree(
-		Constraint constraint, int dV_dT_degree,
-		Constraint target_rawConstraint, bool maximizeLowerDegrees = false
+		DistanceConstraint constraint, int dV_dT_degree,
+		DistanceConstraint target_rawConstraint, bool maximizeLowerDegrees = false
 	);
 
 

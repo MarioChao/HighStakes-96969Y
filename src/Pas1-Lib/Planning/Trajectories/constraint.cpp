@@ -11,10 +11,10 @@ namespace trajectories {
 
 // ---------- Constraints ----------
 
-Constraint::Constraint(double distance, std::vector<double> maxMotion_dV_dT)
+DistanceConstraint::DistanceConstraint(double distance, std::vector<double> maxMotion_dV_dT)
 	: distance(distance), maxMotion_dV_dT(maxMotion_dV_dT) {}
 
-ConstraintSequence::ConstraintSequence(std::vector<Constraint> constraints, bool lerped)
+ConstraintSequence::ConstraintSequence(std::vector<DistanceConstraint> constraints, bool lerped)
 	: constraints(constraints), lerped(lerped), isSorted(false) {}
 
 ConstraintSequence::ConstraintSequence()
@@ -24,7 +24,7 @@ ConstraintSequence &ConstraintSequence::addConstraints(
 	std::vector<std::pair<double, std::vector<double>>> constraints
 ) {
 	for (std::pair<double, std::vector<double>> &constraint_raw : constraints) {
-		Constraint constraint(constraint_raw.first, constraint_raw.second);
+		DistanceConstraint constraint(constraint_raw.first, constraint_raw.second);
 		this->constraints.push_back(constraint);
 	}
 	isSorted = false;
@@ -35,16 +35,16 @@ void ConstraintSequence::sort() {
 	if (!isSorted) {
 		std::sort(
 			constraints.begin(), constraints.end(),
-			[&](Constraint a, Constraint b) -> bool {return a.distance < b.distance;}
+			[&](DistanceConstraint a, DistanceConstraint b) -> bool {return a.distance < b.distance;}
 		);
 		isSorted = true;
 	}
 }
 
-Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
+DistanceConstraint ConstraintSequence::getConstraintAtDistance(double distance) {
 	// Binary search for segment
 	sort();
-	if (constraints.empty()) return Constraint({0, {}});
+	if (constraints.empty()) return DistanceConstraint({0, {}});
 
 	int bs_result = 0;
 	int bs_l, bs_r, bs_m;
@@ -52,7 +52,7 @@ Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
 	bs_r = (int) constraints.size() - 1;
 	while (bs_l <= bs_r) {
 		bs_m = bs_l + (bs_r - bs_l) / 2;
-		Constraint &constraint = constraints[bs_m];
+		DistanceConstraint &constraint = constraints[bs_m];
 		if (constraint.distance <= distance + 1e-4) {
 			bs_result = bs_m;
 			bs_l = bs_m + 1;
@@ -62,13 +62,13 @@ Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
 	}
 
 	// Get segment
-	Constraint result = constraints[bs_result];
+	DistanceConstraint result = constraints[bs_result];
 
 	// Lerped?
 	if (lerped && bs_result + 1 < (int) constraints.size()) {
 		// Get constraint bounds
-		Constraint &c1 = constraints[bs_result];
-		Constraint &c2 = constraints[bs_result + 1];
+		DistanceConstraint &c1 = constraints[bs_result];
+		DistanceConstraint &c2 = constraints[bs_result + 1];
 
 		// Linearly interpolate
 		double lerp_t = (distance - c1.distance) / (c2.distance - c1.distance);
@@ -84,9 +84,9 @@ Constraint ConstraintSequence::getConstraintAtDistance(double distance) {
 	return result;
 }
 
-double getMinimumMotionAtDegree(std::vector<Constraint> constraints, int dV_dT_degree) {
+double getMinimumMotionAtDegree(std::vector<DistanceConstraint> constraints, int dV_dT_degree) {
 	double result = -1;
-	for (Constraint &constraint : constraints) {
+	for (DistanceConstraint &constraint : constraints) {
 		// Get motion value
 		if (dV_dT_degree >= (int) constraint.maxMotion_dV_dT.size()) {
 			continue;
@@ -100,9 +100,9 @@ double getMinimumMotionAtDegree(std::vector<Constraint> constraints, int dV_dT_d
 	return result;
 }
 
-Constraint getMinimumConstraint(std::vector<Constraint> constraints) {
-	Constraint result = Constraint(0, {});
-	for (Constraint &constraint : constraints) {
+DistanceConstraint getMinimumConstraint(std::vector<DistanceConstraint> constraints) {
+	DistanceConstraint result = DistanceConstraint(0, {});
+	for (DistanceConstraint &constraint : constraints) {
 		for (int i = 0; i < (int) constraint.maxMotion_dV_dT.size(); i++) {
 			// Get info
 			double motionValue = constraint.maxMotion_dV_dT[i];
@@ -124,12 +124,12 @@ Constraint getMinimumConstraint(std::vector<Constraint> constraints) {
 	return result;
 }
 
-std::vector<Constraint> getConstraintsAtDistance(
+std::vector<DistanceConstraint> getConstraintsAtDistance(
 	std::vector<ConstraintSequence> constraintSequences, double distance
 ) {
-	std::vector<Constraint> result;
+	std::vector<DistanceConstraint> result;
 	for (ConstraintSequence &sequence : constraintSequences) {
-		Constraint constraint = sequence.getConstraintAtDistance(distance);
+		DistanceConstraint constraint = sequence.getConstraintAtDistance(distance);
 		result.push_back(constraint);
 	}
 
@@ -137,13 +137,13 @@ std::vector<Constraint> getConstraintsAtDistance(
 	return result;
 }
 
-std::vector<Constraint> getConstraintsAtIndex(
+std::vector<DistanceConstraint> getConstraintsAtIndex(
 	std::vector<ConstraintSequence> constraintSequences, int index
 ) {
-	std::vector<Constraint> result;
+	std::vector<DistanceConstraint> result;
 	for (ConstraintSequence &sequence : constraintSequences) {
 		if (index < (int) sequence.constraints.size()) {
-			Constraint constraint = sequence.constraints[index];
+			DistanceConstraint constraint = sequence.constraints[index];
 			result.push_back(constraint);
 		}
 	}
