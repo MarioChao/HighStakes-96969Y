@@ -230,7 +230,7 @@ void runAutonomous() {
 
 	runningState = false;
 
-	printf("Time spent: %.3f s\n", benchmark.value());
+	printf("----- Time spent: %.3f sec -----\n", benchmark.value());
 }
 
 bool isRunning() {

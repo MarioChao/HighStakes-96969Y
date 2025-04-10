@@ -12,6 +12,7 @@
 #include "Controller/controls.h"
 
 #include "Mechanics/botDrive.h"
+#include "Mechanics/botIntake.h"
 
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
@@ -397,11 +398,13 @@ void createButtons() {
 		simulationDockButtons[0]->setUsability(false);
 		task autonTask([]() -> int {
 			botdrive::setControlState(false);
+			botintake::setControlState(false);
 			controls::resetStates();
 
 			auton::runAutonomous();
 
 			botdrive::setControlState(true);
+			botintake::setControlState(true);
 			botdrive::preauton();
 			simulationDockButtons[0]->setUsability(true);
 

@@ -28,6 +28,7 @@ namespace botintake {
 	void control(int, int);
 
 	bool canControl();
+	void setControlState(bool canControl);
 
 	extern int _taskState;
 	extern double _taskDelay;

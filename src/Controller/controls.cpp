@@ -59,10 +59,12 @@ void setUpKeybinds() {
 	Controller2.ButtonY.pressed([]() -> void { botarm::resetArmEncoder(); });
 	Controller2.ButtonA.pressed([]() -> void {
 		botdrive::setControlState(false);
-
+		botintake::setControlState(false);
+		
 		auton::runAutonomous();
-
+		
 		botdrive::setControlState(true);
+		botintake::setControlState(true);
 		botdrive::preauton();
 	});
 
@@ -111,9 +113,11 @@ void setUpKeybinds() {
 	/* Macro */
 	Controller2.ButtonB.pressed([]() -> void {
 		botdrive::setControlState(false);
+		botintake::setControlState(false);
 		// autonfunctions::pid_diff::driveDistanceTiles(0.1);
 		local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1, robotChassis.getLookPose().getRotation()), false);
 		botdrive::setControlState(true);
+		botintake::setControlState(true);
 		botdrive::preauton();
 	});
 
@@ -158,6 +162,7 @@ void resetStates() {
 		});
 	}
 	botintake::setIntakeStoreRing(0);
+	botintake::setColorFiltering(true);
 	swing::setState(0);
 	swing::set2ndState(0);
 }

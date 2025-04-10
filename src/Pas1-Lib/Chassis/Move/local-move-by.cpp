@@ -135,6 +135,9 @@ void runTurnToAngle() {
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
+	// Print info
+	printf("----- Turn to %.3f deg -----\n", targetAngle_polarDegrees);
+
 	while (true) {
 		// Check timeout
 		if (runTimeout.isExpired()) {
@@ -200,6 +203,8 @@ void runTurnToAngle() {
 
 		wait(10, msec);
 	}
+
+	printf("Err: %.3f deg\n", _turnAngleError_degrees);
 
 	// Stop
 	chassis->stopMotors(coast);
@@ -269,7 +274,7 @@ void runDriveAndTurn() {
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
 	// Print info
-	printf("Drive pid with trajectory of %.3f seconds\n", motionProfile.getTotalTime());
+	printf("----- Drive pid trajectory %.3f sec -----\n", motionProfile.getTotalTime());
 
 	while (true) {
 		/* ---------- End conditions ---------- */
@@ -386,7 +391,7 @@ void runDriveAndTurn() {
 		wait(10, msec);
 	}
 
-	printf("Err: %.3f\n", _driveDistanceError_tiles);
+	printf("Err: %.3f tiles\n", _driveDistanceError_tiles);
 
 	// Stop
 	chassis->stopMotors(coast);

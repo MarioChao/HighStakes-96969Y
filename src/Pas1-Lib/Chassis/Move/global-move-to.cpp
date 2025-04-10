@@ -141,6 +141,9 @@ void runTurnToFace() {
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
+	// Print info
+	printf("----- Turn to face (%.3f, %.3f) tiles -----\n", x_tiles, y_tiles);
+
 	while (true) {
 		// Check timeout
 		if (runTimeout.isExpired()) {
@@ -175,7 +178,7 @@ void runTurnToFace() {
 		double rotateError_degrees = targetAngle_polarDegrees - currentRotation_degrees;
 		rotateError_degrees = aespa_lib::genutil::modRange(rotateError_degrees, 360, -180);
 		_turnToFaceError_degrees = std::fabs(rotateError_degrees);
-		
+
 		/* PID */
 
 		// Compute heading pid-value from error
@@ -209,6 +212,8 @@ void runTurnToFace() {
 
 		wait(10, msec);
 	}
+
+	printf("Err: %.3f deg\n", _turnToFaceError_degrees);
 
 	// Stop
 	chassis->stopMotors(coast);
@@ -259,6 +264,9 @@ void runDriveToPoint() {
 
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
+
+	// Print info
+	printf("----- Drive to (%.3f, %.3f) tiles -----\n", x_tiles, y_tiles);
 
 	while (true) {
 		// Check timeout
@@ -353,7 +361,7 @@ void runDriveToPoint() {
 		wait(10, msec);
 	}
 
-	printf("Err: %.3f\n", _linearPathDistanceError);
+	printf("Err: %.3f tiles\n", _linearPathDistanceError);
 
 	// Stop
 	chassis->stopMotors(coast);

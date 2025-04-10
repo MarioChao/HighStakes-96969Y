@@ -27,7 +27,7 @@ void DriftCorrection::correct() {
 
 	// Update 
 	sensor->setRotation(newRotation, degrees);
-	storedInitialRotation = nowInitialRotation;
+	storedInitialRotation = newRotation;
 }
 
 double DriftCorrection::getRotation() {

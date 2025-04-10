@@ -17,7 +17,7 @@ using namespace pas1_lib::chassis::move::follow;
 
 void runFollowPath();
 
-const double pathFollowDelay_seconds = 0.20;
+const double pathFollowDelay_seconds = 0.020;
 
 // Controller
 pas1_lib::auton::pose_controllers::RamseteController ramseteController;
@@ -108,7 +108,7 @@ void runFollowPath() {
 	double totalTime_seconds = splineProfile->trajectoryPlan.getTotalTime();
 
 	// Print info
-	printf("Spline %.3f tiles %.3f sec\n", totalDistance_tiles, totalTime_seconds);
+	printf("----- Spline %.3f tiles %.3f sec -----\n", totalDistance_tiles, totalTime_seconds);
 
 	// Debug info
 	double maxPoseError = 0;
@@ -180,7 +180,7 @@ void runFollowPath() {
 		// Update error patience
 		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(total_distanceError + pose_distanceError));
 
-		
+
 		/* ---------- Pose control ---------- */
 
 		// Get desired robot motion (linear and angular)
@@ -223,19 +223,19 @@ void runFollowPath() {
 		rightVelocity_volt = autonSettings.ff_velocity_tilesPerSec_to_volt_feedforward.calculateDiscrete(currentRightVelocity_tilesPerSec, desiredRightVelocity_tilesPerSec);
 		fb_rightVelocity_tilesPerSec_to_volt_pid.computeFromError(desiredRightVelocity_tilesPerSec - currentRightVelocity_tilesPerSec);
 		rightVelocity_volt += fb_rightVelocity_tilesPerSec_to_volt_pid.getValue();
-		
+
 		/* Slew */
-		
+
 		// To volt
 		double leftVelocity_pct = aespa_lib::genutil::voltToPct(leftVelocity_volt);
 		double rightVelocity_pct = aespa_lib::genutil::voltToPct(rightVelocity_volt);
-		
+
 		// Slew
 		leftAcceleration_pctPerSec_slew.computeFromTarget(leftVelocity_pct);
 		rightAcceleration_pctPerSec_slew.computeFromTarget(rightVelocity_pct);
 		leftVelocity_pct = leftAcceleration_pctPerSec_slew.getValue();
 		rightVelocity_pct = rightAcceleration_pctPerSec_slew.getValue();
-		printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
+		// printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
 
 		// Drive
 		chassis->control_differential(leftVelocity_pct, rightVelocity_pct);

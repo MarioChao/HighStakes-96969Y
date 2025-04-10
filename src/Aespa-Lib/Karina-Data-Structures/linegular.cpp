@@ -26,7 +26,7 @@ void Vector2D::rotateExponentialBy(units::PolarAngle rotation) {
 	// Check pose exponential in https://file.tavsys.net/control/controls-engineering-in-frc.pdf
 	double radians = rotation.polarRad();
 	double newX = x * aespa_lib::angle::sinc(radians) + y * aespa_lib::angle::cosm1_x(radians);
-	double newY = x * -aespa_lib::angle::cosm1_x(radians) + y * aespa_lib::angle::sinc(radians);
+	double newY = x * (-aespa_lib::angle::cosm1_x(radians)) + y * aespa_lib::angle::sinc(radians);
 	x = newX;
 	y = newY;
 }
