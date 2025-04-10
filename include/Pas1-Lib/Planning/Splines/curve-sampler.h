@@ -3,6 +3,7 @@
 // Name inspired from https://github.com/FreyaHolmer/Mathfs/blob/master/Runtime/Splines/UniformCurveSampler.cs
 
 #include "Pas1-Lib/Planning/Splines/spline-curve.h"
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include <vector>
 #include <memory>
 
@@ -43,6 +44,7 @@ public:
 	std::pair<double, double> getTRange();
 	std::pair<double, double> getDistanceRange();
 	SplineCurve &getSpline();
+	aespa_lib::datas::Linegular getLinegularAtDistance(double distance, bool reverseHeading = false);
 
 	// Sampling
 	double paramToDistance(double t);

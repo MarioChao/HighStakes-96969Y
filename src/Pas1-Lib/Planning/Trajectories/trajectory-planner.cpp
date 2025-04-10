@@ -10,6 +10,11 @@ List of problems
 #include <cmath>
 
 
+namespace {
+using aespa_lib::datas::Linegular;
+}
+
+
 namespace pas1_lib {
 namespace planning {
 namespace trajectories {
@@ -150,6 +155,7 @@ TrajectoryPlanner::TrajectoryPlanner(
 	distance_sign = aespa_lib::genutil::signum(distance_inches);
 
 	curvatureSequence = CurvatureSequence();
+	curveSampler = nullptr;
 };
 
 TrajectoryPlanner::TrajectoryPlanner(
@@ -224,7 +230,7 @@ TrajectoryPlanner &TrajectoryPlanner::setCurvatureFunction(
 				if (std::fabs(k) > std::fabs(maxK)) maxK = k;
 			}
 			avgK /= (stepSplit + 1);
-	
+
 			// Modify segment size
 			// segmentK = avgK;
 			segmentK = maxK;
@@ -267,6 +273,16 @@ double TrajectoryPlanner::getCurvatureAtDistance(double distance) {
 	return curvatureSequence.getCurvatureAtDistance(distance);
 }
 
+TrajectoryPlanner &TrajectoryPlanner::setSpline(splines::CurveSampler *curveSampler) {
+	this->curveSampler = curveSampler;
+	return *this;
+}
+
+Linegular TrajectoryPlanner::getLinegularAtDistance(double distance) {
+	if (curveSampler != nullptr) return curveSampler->getLinegularAtDistance(distance);
+	else return Linegular(0, 0, 0);
+}
+
 TrajectoryPlanner &TrajectoryPlanner::addCenterConstraintSequence(ConstraintSequence constraints) {
 	center_constraintSequences.push_back(constraints);
 	return *this;
@@ -303,6 +319,13 @@ TrajectoryPlanner &TrajectoryPlanner::addTrackConstraint_maxMotion(std::vector<d
 	return *this;
 }
 
+TrajectoryPlanner &TrajectoryPlanner::addCenterConstraint_maxCentripetalAcceleration(double maxCentripetalAceleration) {
+	center_trajectoryConstraints.push_back(std::shared_ptr<TrajectoryConstraint>(
+		new CentripetalAccelerationConstraint(maxCentripetalAceleration)
+	));
+	return *this;
+}
+
 PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	PlanPoint originalNode,
 	double distanceStep,
@@ -311,8 +334,13 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	// Copy node
 	PlanPoint node(originalNode);
 
-	// Get minimum constraints
+	// Get info
 	double oldDistance = node.distance;
+	double originalVelocity = node.motion_dV_dT[0];
+	double oldCurvature = getCurvatureAtDistance(oldDistance);
+	Linegular oldPose = getLinegularAtDistance(oldDistance);
+
+	// Get minimum constraints
 	std::vector<DistanceConstraint> center_constraints0 = getConstraintsAtDistance(
 		center_constraintSequences, oldDistance
 	);
@@ -332,6 +360,10 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	DistanceConstraint center_minConstraint0_1 = getMinimumConstraint(center_constraints0_1);
 	node.constrain(center_minConstraint0_1);
 
+	// Trajectory constraint
+	double trajectoryVelocity0 = getVelocity_trajectoryConstraints(center_trajectoryConstraints, oldPose, oldCurvature, originalVelocity);
+	node.motion_dV_dT[0] = std::min(node.motion_dV_dT[0], trajectoryVelocity0);
+
 	// Get target raw constraint
 	DistanceConstraint planRaw_constraint0 = planPoint_rawSequence.getConstraintAtDistance(oldDistance);
 
@@ -344,7 +376,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	// Constrain left & right
 	if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 		// Get curvature & linear + angular factor
-		double curvature = getCurvatureAtDistance(node.distance);
+		double curvature = oldCurvature;
 		double factor = (1 + std::fabs(curvature) * trackWidth / 2);
 
 		// Constrain
@@ -373,6 +405,11 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	double time_seconds = node.time_seconds + timeStep_seconds;
 	PlanPoint newNode(time_seconds, newDistance, integral.second);
 
+	// Get new info
+	double newOriginalVelocity = newNode.motion_dV_dT[0];
+	double newCurvature = getCurvatureAtDistance(newDistance);
+	Linegular newPose = getLinegularAtDistance(newDistance);
+
 	// Get minimum constraints
 	std::vector<DistanceConstraint> center_constraints1 = getConstraintsAtDistance(
 		center_constraintSequences, newDistance
@@ -387,6 +424,10 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	newNode.constrain(center_minConstraint1);
 	// printf("T dis: %.3f, dis: %.3f, vel: %.3f\n", distance, newNode.distance, newNode.motion_dV_dT[0]);
 
+	// Trajectory constraint
+	double trajectoryVelocity1 = getVelocity_trajectoryConstraints(center_trajectoryConstraints, newPose, newCurvature, newOriginalVelocity);
+	newNode.motion_dV_dT[0] = std::min(newNode.motion_dV_dT[0], trajectoryVelocity1);
+
 	// Derivative constrain
 	for (int i = dV_dT_degree + 1; i < (int) newNode.motion_dV_dT.size(); i++) {
 		double deriv = (newNode.motion_dV_dT[i - 1] - originalNode.motion_dV_dT[i - 1]) / timeStep_seconds;
@@ -398,7 +439,7 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	// Constrain left & right
 	if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 		// Get curvature & linear + angular factor
-		double curvature = getCurvatureAtDistance(newNode.distance);
+		double curvature = newCurvature;
 		double factor = (1 + std::fabs(curvature) * trackWidth / 2);
 
 		// Scale to track & constrain
@@ -410,10 +451,10 @@ PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	// Constrain left & right integral (wheel acceleration)
 	if (trackWidth > 0 && !curvatureSequence.points.empty()) {
 		// Get curvature & track factors
-		double curvature0 = getCurvatureAtDistance(originalNode.distance);
+		double curvature0 = oldCurvature;
 		double factor0_left = (1 - curvature0 * trackWidth / 2);
 		double factor0_right = (1 + curvature0 * trackWidth / 2);
-		double curvature1 = getCurvatureAtDistance(newNode.distance);
+		double curvature1 = newCurvature;
 		double factor1_left = (1 - curvature1 * trackWidth / 2);
 		double factor1_right = (1 + curvature1 * trackWidth / 2);
 

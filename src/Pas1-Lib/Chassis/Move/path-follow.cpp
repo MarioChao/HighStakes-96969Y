@@ -193,9 +193,9 @@ void runFollowPath() {
 		// Convert to left & right velocity
 		double desiredLeftVelocity_tilesPerSec = linearVelocity_tilesPerSec - angularVelocity_tilesPerSec;
 		double desiredRightVelocity_tilesPerSec = linearVelocity_tilesPerSec + angularVelocity_tilesPerSec;
-		double scaleFactor = aespa_lib::genutil::getScaleFactor(botInfo.maxVel_tilesPerSec, { desiredLeftVelocity_tilesPerSec, desiredRightVelocity_tilesPerSec });
-		desiredLeftVelocity_tilesPerSec *= scaleFactor;
-		desiredRightVelocity_tilesPerSec *= scaleFactor;
+		// double scaleFactor = aespa_lib::genutil::getScaleFactor(botInfo.maxVel_tilesPerSec, { desiredLeftVelocity_tilesPerSec, desiredRightVelocity_tilesPerSec });
+		// desiredLeftVelocity_tilesPerSec *= scaleFactor;
+		// desiredRightVelocity_tilesPerSec *= scaleFactor;
 
 		// Command
 		// chassis->control_local2d(0, traj_velocity * botInfo.tilesPerSecond_to_pct, traj_angularVelocity * botInfo.trackWidth_tiles / 2 * botInfo.tilesPerSecond_to_pct);
@@ -242,7 +242,7 @@ void runFollowPath() {
 		// printf("ACT XY: %.3f, %.3f TAR XY: %.3f, %.3f\n", robotLg.getX(), robotLg.getY(), targetLg.getX(), targetLg.getY());
 
 		// Wait
-		wait(10, msec);
+		wait(5, msec);
 	}
 
 	Linegular lg = chassis->getLookPose();

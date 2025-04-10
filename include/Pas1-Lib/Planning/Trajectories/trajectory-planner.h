@@ -2,10 +2,12 @@
 
 #include "Pas1-Lib/Planning/Trajectories/constraint.h"
 #include "Pas1-Lib/Planning/Trajectories/curvature.h"
+#include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 
 #include <algorithm>
 #include <vector>
 #include <functional>
+#include <memory>
 
 
 namespace pas1_lib {
@@ -54,6 +56,9 @@ public:
 	TrajectoryPlanner(double distance_inches);
 	TrajectoryPlanner();
 
+
+	// Curvature
+
 	TrajectoryPlanner &setCurvatureFunction(
 		std::function<double(double)> distanceToCurvature_function,
 		std::vector<double> specificDistances = {}
@@ -61,6 +66,15 @@ public:
 
 	TrajectoryPlanner &maxSmoothCurvature(double epsilon = 1e10);
 	double getCurvatureAtDistance(double distance);
+
+
+	// Spline
+
+	TrajectoryPlanner &setSpline(splines::CurveSampler *curveSampler);
+	aespa_lib::datas::Linegular getLinegularAtDistance(double distance);
+
+
+	// Constriants
 
 	TrajectoryPlanner &addCenterConstraintSequence(ConstraintSequence constraints);
 	TrajectoryPlanner &addTrackConstraintSequence(ConstraintSequence constraints);
@@ -71,6 +85,11 @@ public:
 	TrajectoryPlanner &addCenterConstraint_maxMotion(std::vector<double> maxMotion_dV_dT);
 	// For now, only use up to dA/dT
 	TrajectoryPlanner &addTrackConstraint_maxMotion(std::vector<double> maxMotion_dV_dT);
+
+	TrajectoryPlanner &addCenterConstraint_maxCentripetalAcceleration(double maxCentripetalAceleration);
+
+
+	// Calculation
 
 	PlanPoint _getNextPlanPoint(
 		PlanPoint originalNode,
@@ -101,9 +120,11 @@ private:
 	std::vector<double> endMotion;
 
 	CurvatureSequence curvatureSequence;
+	splines::CurveSampler *curveSampler;
 
 	std::vector<ConstraintSequence> center_constraintSequences;
 	std::vector<ConstraintSequence> track_constraintSequences;
+	std::vector<std::shared_ptr<TrajectoryConstraint>> center_trajectoryConstraints;
 
 	std::vector<double> planPoint_distances;
 	ConstraintSequence planPoint_rawSequence;

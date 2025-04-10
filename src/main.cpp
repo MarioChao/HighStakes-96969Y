@@ -56,6 +56,7 @@ void pre_auton(void) {
 	// Example: clearing encoders, setting servo positions, ...
 
 	printf("maxV: %.3f\n", botInfo.maxVel_tilesPerSec);
+	printf("???: %.3f\n", botInfo.maxAccel_tilesPerSec2 * 0.2);
 	// printf("tps2%%: %.3f\n", botInfo.tilesPerSecond_to_pct);
 
 	// Tasks
@@ -242,7 +243,7 @@ void usercontrol(void) {
 			if (velocities.size() > 10) velocities = { velocity };
 			else velocities.push_back(velocity);
 			double avgV = aespa_lib::genutil::getAverage(velocities);
-			if (fabs(v) > 1) printf("volt: %.3f, vel: %.3f\n", v, avgV);
+			if (fabs(v) > 0) printf("volt: %.3f, vel: %.3f\n", v, avgV);
 
 			if (Controller2.ButtonRight.pressing()) {
 				v += 0.1;

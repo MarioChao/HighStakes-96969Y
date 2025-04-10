@@ -158,7 +158,7 @@ void Odometry::odometryFrame() {
 	/* Local to Absolute */
 
 	// bool useForwardEuler = aespa_lib::genutil::isWithin(deltaPolarAngle_degrees, 0, integralSmallAngle_degrees);
-	bool useForwardEuler = false;
+	bool useForwardEuler = true;
 	if (useForwardEuler) {
 		// Rotate by half angle (euler integration)
 		// see https://docs.ftclib.org/ftclib/master/kinematics/odometry

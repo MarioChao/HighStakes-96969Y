@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <vector>
+#include <memory>
+#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 
 
 namespace pas1_lib {
@@ -9,7 +11,7 @@ namespace planning {
 namespace trajectories {
 
 
-// ---------- Constraints ----------
+// ---------- Constraint ----------
 
 struct DistanceConstraint {
 	DistanceConstraint(double distance, std::vector<double> maxMotion_dV_dT);
@@ -18,6 +20,9 @@ struct DistanceConstraint {
 	double distance;
 	std::vector<double> maxMotion_dV_dT;
 };
+
+
+// ---------- Constraint Sequence ----------
 
 struct ConstraintSequence {
 	ConstraintSequence(std::vector<DistanceConstraint> constraints, bool lerped);
@@ -45,6 +50,24 @@ std::vector<DistanceConstraint> getConstraintsAtDistance(
 std::vector<DistanceConstraint> getConstraintsAtIndex(
 	std::vector<ConstraintSequence> constraintSequences, int index
 );
+
+
+// ---------- Trajectory Constraint ----------
+
+struct TrajectoryConstraint {
+	virtual double calculateMaxVelocity(aespa_lib::datas::Linegular pose, double curvature, double velocity);
+};
+
+struct CentripetalAccelerationConstraint : public TrajectoryConstraint {
+	CentripetalAccelerationConstraint(double maxCentripetalAcceleration);
+
+	double calculateMaxVelocity(aespa_lib::datas::Linegular pose, double curvature, double velocity) override;
+
+
+	double maxCentripetalAcceleration;
+};
+
+double getVelocity_trajectoryConstraints(std::vector<std::shared_ptr<TrajectoryConstraint>> constraints, aespa_lib::datas::Linegular pose, double curvature, double velocity);
 
 
 }
