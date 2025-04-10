@@ -50,7 +50,7 @@ void doAuton() {
 	// waitUntil(follow::_isPathFollowCompleted);
 	global::turnToFace(robotChassis, global::turnToFace_params(2.86_tiles, 4.86_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.68_tiles, 4.68_tiles), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.2_tiles, robotChassis.getLookPose().getRotation()), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookPose().getRotation()), false);
 	// (2, 5) ring
 	global::turnToFace(robotChassis, global::turnToFace_params(2_tiles, 5_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 5_tiles), false);
@@ -72,9 +72,9 @@ void doAuton() {
 		-1_tiles, 180_polarDeg,
 		{ {0, 100}, {0.8, 30} }
 	), true);
-	waitUntil(global::_linearPathDistanceError < 0.15);
+	waitUntil(local::_driveDistanceError_tiles < 0.15);
 	setGoalClampState(true);
-	waitUntil(global::_isDriveToPointSettled);
+	waitUntil(local::_isDriveAndTurnSettled);
 	// (2, 1) ring
 	setIntakeState(1);
 	runFollowSpline(robotChassis, "rsa ring 2-1");
