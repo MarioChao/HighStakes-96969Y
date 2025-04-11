@@ -52,7 +52,7 @@ namespace botintake {
 				}
 
 				// Override stuck under certain conditions
-				if (botarm::getArmStage() == 1) {
+				if (false) {
 					isStuck = false;
 				}
 

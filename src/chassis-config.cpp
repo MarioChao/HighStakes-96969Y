@@ -74,14 +74,14 @@ namespace {
 // Auton settings
 AutonSettings autonSettings(
 	SimpleFeedforward(0.2, 12.0 / botInfo.maxVel_tilesPerSec, 0.12), // feedforward (tiles/sec to volt)
-	PIDController(3.0), // position feedback (tiles to tiles/sec)
+	PIDController(1.0), // position feedback (tiles to tiles/sec)
 	PIDController(1.0), // velocity feedback (tiles/sec to volt)
-	PIDController(70, 0, 0, 0.16, 0.03), // linear pid (tiles to pct)
-	PIDController(3.5, 0, 0.2, 3, 0.03), // angular pid (degrees to pct)
+	PIDController(70, 0, 0, 0.10), // linear pid (tiles to pct)
+	PIDController(3.5, 0, 0.2, 3), // angular pid (degrees to pct)
 	SlewController(200), // linear slew (pct/sec)
 	SlewController(200), // angular slew (pct/sec)
-	PatienceController(10, 0.001, false), // linear patience (tiles)
-	PatienceController(10, 0.5, false), // angular patience (degrees)
+	PatienceController(20, 0.001, false), // linear patience (tiles)
+	PatienceController(20, 0.5, false), // angular patience (degrees)
 	false // relative rotation
 );
 }

@@ -39,8 +39,8 @@ PatienceController armUpPatience(12, 1.0, true, 5);
 PatienceController armDownPatience(6, 1.0, false, 5);
 
 // Stage config
-std::vector<double> armStages_degrees = { 0, 4, 15, 40, 0 };
-std::vector<int> extremeStages_values = { -1, 0, 0, 0, 1 };
+std::vector<double> armStages_degrees = { 0, 5, 15, 40, 115, 180, 0 };
+std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = 0;
 bool releaseOnExhausted = true;
 

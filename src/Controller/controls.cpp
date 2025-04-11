@@ -101,6 +101,13 @@ void setUpKeybinds() {
 		else botarm::setArmStage(4);
 		botintake::setColorFiltering(true);
 	});
+	// Stage 5
+	Controller1.ButtonLeft.pressed([]() -> void {
+		if (!botarm::isArmResetted()) return;
+
+		botarm::setArmStage(5);
+		botintake::setColorFiltering(true);
+	});
 
 	/* Ring color filter */
 	Controller2.ButtonB.pressed([]() -> void {
