@@ -250,7 +250,7 @@ void runFollowPath() {
 	printf("Max PDE: %.3f\n", maxPoseError);
 
 	// Stop
-	chassis->stopMotors(coast);
+	chassis->stopMotors(brake);
 
 	// Settled
 	_pathFollowDistanceRemaining_tiles = -1;

@@ -216,7 +216,7 @@ void runTurnToFace() {
 	printf("Err: %.3f deg\n", _turnToFaceError_degrees);
 
 	// Stop
-	chassis->stopMotors(coast);
+	chassis->stopMotors(brake);
 
 	// Settled
 	_turnToFaceError_degrees = -1;
@@ -364,7 +364,7 @@ void runDriveToPoint() {
 	printf("Err: %.3f tiles\n", _linearPathDistanceError);
 
 	// Stop
-	chassis->stopMotors(coast);
+	chassis->stopMotors(brake);
 
 	// Settled
 	_linearPathDistanceError = -1;

@@ -207,7 +207,7 @@ void runTurnToAngle() {
 	printf("Err: %.3f deg\n", _turnAngleError_degrees);
 
 	// Stop
-	chassis->stopMotors(coast);
+	chassis->stopMotors(brake);
 
 	// Settled
 	_turnAngleError_degrees = -1;
@@ -394,7 +394,7 @@ void runDriveAndTurn() {
 	printf("Err: %.3f tiles\n", _driveDistanceError_tiles);
 
 	// Stop
-	chassis->stopMotors(coast);
+	chassis->stopMotors(brake);
 
 	// Settled
 	_driveDistanceError_tiles = -1;
