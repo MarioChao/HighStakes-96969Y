@@ -2,99 +2,139 @@
 #include "main.h"
 
 namespace {
-	bool controlState = true;
+bool controlState = true;
 }
 
 namespace swing {
-	void runThread() {
-		while (true) {
-			// Thread code here
+void runThread() {
+	while (true) {
+		// Thread code here
 
-			task::sleep(20);
-		}
+		task::sleep(20);
+	}
+}
+
+void preauton() {
+
+}
+
+void setState_left(int state, double delaySec) {
+	// Check for instant set
+	if (delaySec <= 1e-9) {
+		// Set state here
+		LeftSword_pneumatics.set(state);
+
+		return;
 	}
 
-	void preauton() {
+	// Set global variables
+	_taskState = state;
+	_taskDelay = delaySec;
 
+	task setState([]() -> int {
+		// Get global variables
+		int taskState = _taskState;
+		double taskDelay = _taskDelay;
+
+		// Delay setting state
+		task::sleep(taskDelay * 1000);
+
+		// Set state here
+		LeftSword_pneumatics.set(taskState);
+
+		return 1;
+	});
+}
+
+void set2ndState_left(int state, double delaySec) {
+	// Check for instant set
+	if (delaySec <= 1e-9) {
+		// Set state here
+		LeftSword2_pneumatics.set(state);
+
+		return;
 	}
 
-	void setState(int state, double delaySec) {
-		// Check for instant set
-		if (delaySec <= 1e-9) {
-			// Set state here
-			SwordPneumatics.set(state);
-			// printf("Sword 1 state: %d\n", SwordPneumatics.value());
+	// Set global variables
+	_taskState = state;
+	_taskDelay = delaySec;
 
-			return;
-		}
+	task setState([]() -> int {
+		// Get global variables
+		int taskState = _taskState;
+		double taskDelay = _taskDelay;
 
-		// Set global variables
-		_taskState = state;
-		_taskDelay = delaySec;
+		// Delay setting state
+		task::sleep(taskDelay * 1000);
 
-		task setState([]() -> int {
-			// Get global variables
-			int taskState = _taskState;
-			double taskDelay = _taskDelay;
+		// Set state here
+		LeftSword2_pneumatics.set(taskState);
 
-			// Delay setting state
-			task::sleep(taskDelay * 1000);
+		return 1;
+	});
+}
 
-			// Set state here
-			SwordPneumatics.set(taskState);
-
-			return 1;
-		});
+void setState_right(int state, double delaySec) {
+	// Check for instant set
+	if (delaySec <= 1e-9) {
+		// Set state here
+		RightSword_pneumatics.set(state);
+		return;
 	}
 
-	void set2ndState(int state, double delaySec) {
-		// Check for instant set
-		if (delaySec <= 1e-9) {
-			// Set state here
-			Sword2Pneumatics.set(state);
+	// Set global variables
+	_taskState = state;
+	_taskDelay = delaySec;
 
-			return;
-		}
+	task setState([]() -> int {
+		int taskState = _taskState;
+		double taskDelay = _taskDelay;
+		task::sleep(taskDelay * 1000);
+		// Set state here
+		RightSword_pneumatics.set(taskState);
+		return 1;
+	});
+}
 
-		// Set global variables
-		_taskState = state;
-		_taskDelay = delaySec;
-
-		task setState([]() -> int {
-			// Get global variables
-			int taskState = _taskState;
-			double taskDelay = _taskDelay;
-
-			// Delay setting state
-			task::sleep(taskDelay * 1000);
-
-			// Set state here
-			Sword2Pneumatics.set(taskState);
-
-			return 1;
-		});
+void set2ndState_right(int state, double delaySec) {
+	// Check for instant set
+	if (delaySec <= 1e-9) {
+		// Set state here
+		RightSword2_pneumatics.set(state);
+		return;
 	}
 
-	void switchState() {
-		setState(!SwordPneumatics.value());
-	}
+	// Set global variables
+	_taskState = state;
+	_taskDelay = delaySec;
 
-	void switch2ndState() {
-		set2ndState(!Sword2Pneumatics.value());
-	}
+	task setState([]() -> int {
+		int taskState = _taskState;
+		double taskDelay = _taskDelay;
+		task::sleep(taskDelay * 1000);
+		// Set state here
+		RightSword2_pneumatics.set(taskState);
+		return 1;
+	});
+}
 
-	void control(int state) {
-		if (canControl()) {
-			// Control code here
-		}
-	}
+void switchState_left() { setState_left(!LeftSword_pneumatics.value()); }
+void switch2ndState_left() { set2ndState_left(!LeftSword2_pneumatics.value()); }
+void switchState_right() { setState_right(!RightSword_pneumatics.value()); }
+void switch2ndState_right() { set2ndState_right(!RightSword2_pneumatics.value()); }
 
-	bool canControl() {
-		return controlState;
+void control(int state) {
+	if (canControl()) {
+		// Control code here
 	}
+}
 
-	int _taskState;
-	double _taskDelay;
+bool canControl() {
+	return controlState;
+}
+
+int _taskState;
+double _taskDelay;
 }
 
 namespace {

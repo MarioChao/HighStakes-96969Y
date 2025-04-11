@@ -36,13 +36,14 @@ namespace {
 			break;
 		}
 		
-		botarm::setArmStage(0); // motor doesn't spin after disable
+		// botarm::setArmStage(0); // motor doesn't spin after disable
 
 		printf("Ended\n");
 
 		/* Post match control */
 		wait(20, msec);
-		swing::setState(0);
+		swing::setState_left(0);
+		swing::setState_right(0);
 		goalclamp::setState(0);
 		// botintakelift::setState(1);
 	}

@@ -1,20 +1,24 @@
 #pragma once
 
 namespace swing {
-	void runThread();
+void runThread();
 
-	void preauton();
+void preauton();
 
-	void setState(int, double = 0);
-	void set2ndState(int, double = 0);
+void setState_left(int, double = 0);
+void set2ndState_left(int, double = 0);
+void setState_right(int, double = 0);
+void set2ndState_right(int, double = 0);
 
-	void switchState();
-	void switch2ndState();
+void switchState_left();
+void switch2ndState_left();
+void switchState_right();
+void switch2ndState_right();
 
-	void control(int);
+void control(int);
 
-	bool canControl();
+bool canControl();
 
-	extern int _taskState;
-	extern double _taskDelay;
+extern int _taskState;
+extern double _taskDelay;
 }

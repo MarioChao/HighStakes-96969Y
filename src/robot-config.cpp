@@ -18,8 +18,9 @@ controller Controller2(partner);
 /* ---------- Dummy ---------- */
 
 // PORT22 is used for the Brain's default ThreeWirePort
-const int emptyPort = PORT20;
+const int emptyPort = PORT16;
 triport EmptyExpander(emptyPort);
+triport::port emptyExpanderPort(EmptyExpander.B);
 
 
 /* ---------- Devices ---------- */
@@ -46,37 +47,40 @@ motor IntakeMotor1(PORT12, ratio6_1);
 motor IntakeMotor2(emptyPort, ratio18_1, true);
 motor_group IntakeMotors(IntakeMotor1, IntakeMotor2);
 
-motor ArmMotor1(PORT18, ratio18_1, false);
+motor ArmMotor1(PORT17, ratio18_1, false);
 motor ArmMotor2(PORT15, ratio18_1, true);
 motor_group ArmMotors(ArmMotor1, ArmMotor2);
 
 
 // Pneumatics
 
-pneumatics FrontWingsPneumatic(EmptyExpander.A);
-pneumatics LeftWingPneumatic(EmptyExpander.B);
-pneumatics RightWingPneumatic(EmptyExpander.C);
+pneumatics FrontWingsPneumatic(emptyExpanderPort);
+pneumatics LeftWingPneumatic(emptyExpanderPort);
+pneumatics RightWingPneumatic(emptyExpanderPort);
 
-pneumatics IntakeLiftPneumatic(EmptyExpander.B);
-pneumatics HangPneumatic(EmptyExpander.E);
-pneumatics GoalClampPneumatic(Brain.ThreeWirePort.F);
-pneumatics BotArmPneumatics(EmptyExpander.B);
-pneumatics SwordPneumatics(EmptyExpander.B);
-pneumatics Sword2Pneumatics(EmptyExpander.B);
-pneumatics RedirectPneumatics(EmptyExpander.B);
+pneumatics IntakeLiftPneumatic(Brain.ThreeWirePort.G);
+pneumatics HangPneumatic(emptyExpanderPort);
+pneumatics GoalClampPneumatic(Brain.ThreeWirePort.H);
+pneumatics BotArmPneumatics(emptyExpanderPort);
+pneumatics RedirectPneumatics(emptyExpanderPort);
 
-pneumatics ClimbPTO_pneumatics(EmptyExpander.B);
-pneumatics ClimbHook_pneumatics(EmptyExpander.B);
+pneumatics LeftSword_pneumatics(Brain.ThreeWirePort.E);
+pneumatics LeftSword2_pneumatics(emptyExpanderPort);
+pneumatics RightSword_pneumatics(Brain.ThreeWirePort.F);
+pneumatics RightSword2_pneumatics(emptyExpanderPort);
+
+pneumatics ClimbPTO_pneumatics(emptyExpanderPort);
+pneumatics ClimbHook_pneumatics(emptyExpanderPort);
 
 
 // Sensors
 
-encoder LookEncoder(EmptyExpander.A);
-encoder RightEncoder(EmptyExpander.A);
+encoder LookEncoder(emptyExpanderPort);
+encoder RightEncoder(emptyExpanderPort);
 rotation LookRotation(emptyPort);
 rotation RightRotation(PORT10);
 
-rotation ArmRotationSensor(PORT19, false);
+rotation ArmRotationSensor(PORT13, false);
 
 inertial InertialSensor(PORT21);
 distance DistanceSensor(emptyPort);

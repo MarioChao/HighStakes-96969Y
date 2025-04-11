@@ -50,8 +50,10 @@ bool isArmResetted();
 void setArmResetDefaultStage(int);
 
 // Swing
-void setSwingState(int, double = 0);
-void setSwing2State(int, double = 0);
+void setSwingState_left(int, double = 0);
+void setSwing2State_left(int, double = 0);
+void setSwingState_right(int, double = 0);
+void setSwing2State_right(int, double = 0);
 
 
 /* Legacy wings */

@@ -13,6 +13,7 @@ extern vex::controller Controller2;
 
 extern const int emptyPort;
 extern vex::triport EmptyExpander;
+extern vex::triport::port emptyExpanderPort;
 
 
 // Devices
@@ -43,9 +44,12 @@ extern vex::pneumatics IntakeLiftPneumatic;
 extern vex::pneumatics HangPneumatic;
 extern vex::pneumatics GoalClampPneumatic;
 extern vex::pneumatics BotArmPneumatics;
-extern vex::pneumatics SwordPneumatics;
-extern vex::pneumatics Sword2Pneumatics;
 extern vex::pneumatics RedirectPneumatics;
+
+extern vex::pneumatics LeftSword_pneumatics;
+extern vex::pneumatics LeftSword2_pneumatics;
+extern vex::pneumatics RightSword_pneumatics;
+extern vex::pneumatics RightSword2_pneumatics;
 
 extern vex::pneumatics ClimbPTO_pneumatics;
 extern vex::pneumatics ClimbHook_pneumatics;

@@ -166,6 +166,7 @@ void runAutonomous() {
 	// Start autonomous
 	timer benchmark;
 
+	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 	printf("Auton time!\n");
 	runningState = true;
 

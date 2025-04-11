@@ -124,7 +124,7 @@ void setUpKeybinds() {
 	/* Pneumatics */
 	// Swing
 	Controller2.ButtonB.pressed([]() -> void {
-		swing::switchState();
+		swing::switchState_left();
 	});
 	// Clamp
 	Controller1.ButtonL2.pressed([]() -> void {
@@ -163,8 +163,10 @@ void resetStates() {
 	}
 	botintake::setIntakeStoreRing(0);
 	botintake::setColorFiltering(true);
-	swing::setState(0);
-	swing::set2ndState(0);
+	swing::setState_left(0);
+	swing::set2ndState_left(0);
+	swing::setState_right(0);
+	swing::set2ndState_right(0);
 }
 
 void doControls() {

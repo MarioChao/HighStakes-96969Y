@@ -126,12 +126,10 @@ void setArmResetDefaultStage(int stageId) {
 	botarm::setResetDefaultStage(stageId);
 }
 
-void setSwingState(int state, double delaySec) {
-	swing::setState(state, delaySec);
-}
+void setSwingState_left(int state, double delaySec) { swing::setState_left(state, delaySec); }
+void setSwing2State_left(int state, double delaySec) { swing::set2ndState_left(state, delaySec); }
 
-void setSwing2State(int state, double delaySec) {
-	swing::set2ndState(state, delaySec);
-}
+void setSwingState_right(int state, double delaySec) { swing::setState_right(state, delaySec); }
+void setSwing2State_right(int state, double delaySec) { swing::set2ndState_right(state, delaySec); }
 
 }
