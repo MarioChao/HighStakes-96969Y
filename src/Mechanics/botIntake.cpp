@@ -10,260 +10,266 @@
 // This mechanic is for one-part intake with two motors
 
 namespace {
-	void resolveIntake();
+void resolveIntake();
 
-	double intakeVelocityPct = 100;
+double intakeVelocityPct = 100;
 
-	/* Factors */
+/* Factors */
 
-	bool colorFilterEnabled = true;
-	const bool disableColorFilter = false;
+bool colorFilterEnabled = true;
+const bool disableColorFilter = false;
 
-	int resolveState = 0;
+int resolveState = 0;
 
-	std::string filterOutColor = "none";
-	bool previousIsDetecting = false;
+std::string filterOutColor = "none";
+bool previousIsDetecting = false;
+std::string lastDetectedRingColor = "none";
 
-	bool isStoringRing = false;
+bool isStoringRing = false;
 
-	bool controlState = true;
+bool controlState = true;
 }
 
 
 namespace botintake {
-	void runThread() {
-		timer stuckTime;
-		bool isStuck = false;
-		while (true) {
-			/* Intake loop */
+void runThread() {
+	timer stuckTime;
+	bool isStuck = false;
+	while (true) {
+		/* Intake loop */
 
-			if (!isStoringRing) {
-				/* Normal intake */
+		if (!isStoringRing) {
+			/* Normal intake */
 
-				// Detect stuck
-				// printf("Int tq: %.3f\n ", IntakeMotor1.torque(Nm));
-				if (IntakeMotor1.torque() > 0.35) {
-					if (!isStuck) {
-						stuckTime.clear();
-						isStuck = true;
-					}
-				} else {
-					isStuck = false;
-				}
-
-				// Override stuck under certain conditions
-				if (false) {
-					isStuck = false;
-				}
-
-				if (isStuck && stuckTime.time(seconds) > 0.1) {
-					// Reverse a little on stuck
-					// IntakeMotor1.spin(fwd, -4, volt);
-					// wait(100, msec);
-					IntakeMotor1.spin(fwd, -4, volt);
-					wait(100, msec);
-				} else {
-					resolveIntake();
+			// Detect stuck
+			// printf("Int tq: %.3f\n ", IntakeMotor1.torque(Nm));
+			if (IntakeMotor1.torque() > 0.35) {
+				if (!isStuck) {
+					stuckTime.clear();
+					isStuck = true;
 				}
 			} else {
-				/* Store ring */
-
-				resolveState = 1;
-				resolveIntake();
-
-				bool isDetectingRing = ringoptical::isDetecting();
-				std::string detectedRingColor = ringoptical::getDetectedColor();
-
-				if (isDetectingRing && detectedRingColor != "none") {
-					if (detectedRingColor != filterOutColor) {
-						resolveState = 0;
-						isStoringRing = false;
-					}
-				}
+				isStuck = false;
 			}
 
-			wait(5, msec);
-		}
-	}
+			// Override stuck under certain conditions
+			if (false) {
+				isStuck = false;
+			}
 
-
-	void preauton() {
-
-	}
-
-	void setIntakeVelocity(double velocityPct) {
-		intakeVelocityPct = velocityPct;
-	}
-
-	double getIntakeVelocity() {
-		return intakeVelocityPct;
-	}
-
-	void setState(int state, double delaySec) {
-		// Check for instant set
-		if (delaySec <= 1e-9) {
-			// Set state here
-			resolveState = state;
-
-			return;
-		}
-
-		// Set global variables
-		_taskState = state;
-		_taskDelay = delaySec;
-
-		task setState([]() -> int {
-			// Get global variables
-			int taskState = _taskState;
-			double taskDelay = _taskDelay;
-
-			// Delay setting state
-			task::sleep(taskDelay * 1000);
-
-			// Set state here
-			resolveState = taskState;
-
-			return 1;
-		});
-	}
-
-	bool isColorFiltering() {
-		return colorFilterEnabled;
-	}
-
-	void setColorFiltering(bool state, double delaySec) {
-		// Check for instant set
-		if (delaySec <= 1e-9) {
-			// Set state here
-			colorFilterEnabled = state;
-
-			return;
-		}
-
-		// Set global variables
-		_colorFilterTaskState = state;
-		_colorFilterTaskDelay = delaySec;
-
-		task setState([]() -> int {
-			// Get global variables
-			int taskState = _colorFilterTaskState;
-			double taskDelay = _colorFilterTaskDelay;
-
-			// Delay setting state
-			task::sleep(taskDelay * 1000);
-
-			// Set state here
-			colorFilterEnabled = taskState;
-
-			return 1;
-		});
-	}
-
-	void switchFilterColor() {
-		if (filterOutColor == "red") {
-			filterOutColor = "blue";
-			debug::printOnController("filter out blue");
+			if (isStuck && stuckTime.time(seconds) > 0.1) {
+				// Reverse a little on stuck
+				// IntakeMotor1.spin(fwd, -4, volt);
+				// wait(100, msec);
+				IntakeMotor1.spin(fwd, -4, volt);
+				wait(100, msec);
+			} else {
+				resolveIntake();
+			}
 		} else {
-			filterOutColor = "red";
-			debug::printOnController("filter out red");
-		}
-	}
+			/* Store ring */
 
-	void setFilterOutColor(std::string colorText) {
-		filterOutColor = colorText;
-		// debug::printOnController(colorText);
-	}
+			resolveState = 1;
+			resolveIntake();
 
-	void setIntakeStoreRing(bool state, double delaySec) {
-		// Check for instant set
-		if (delaySec <= 1e-9) {
-			// Set state here
-			isStoringRing = state;
+			bool isDetectingRing = ringoptical::isDetecting();
+			std::string detectedRingColor = ringoptical::getDetectedColor();
 
-			return;
+			if (isDetectingRing && detectedRingColor != "none") {
+				if (detectedRingColor != filterOutColor) {
+					resolveState = 0;
+					isStoringRing = false;
+				}
+			}
 		}
 
-		// Set global variables
-		_storeRingTaskState = state;
-		_storeRingTaskDelay = delaySec;
+		wait(5, msec);
+	}
+}
 
-		task setState([]() -> int {
-			// Get global variables
-			int taskState = _storeRingTaskState;
-			double taskDelay = _storeRingTaskDelay;
 
-			// Delay setting state
-			task::sleep(taskDelay * 1000);
+void preauton() {
 
-			// Set state here
-			isStoringRing = taskState;
+}
 
-			return 1;
-		});
+void setIntakeVelocity(double velocityPct) {
+	intakeVelocityPct = velocityPct;
+}
+
+double getIntakeVelocity() {
+	return intakeVelocityPct;
+}
+
+void setState(int state, double delaySec) {
+	// Check for instant set
+	if (delaySec <= 1e-9) {
+		// Set state here
+		resolveState = state;
+
+		return;
 	}
 
-	void control(int state, int hookState) {
-		if (canControl()) {
-			setState(state);
-		}
+	// Set global variables
+	_taskState = state;
+	_taskDelay = delaySec;
+
+	task setState([]() -> int {
+		// Get global variables
+		int taskState = _taskState;
+		double taskDelay = _taskDelay;
+
+		// Delay setting state
+		task::sleep(taskDelay * 1000);
+
+		// Set state here
+		resolveState = taskState;
+
+		return 1;
+	});
+}
+
+bool isColorFiltering() {
+	return colorFilterEnabled;
+}
+
+void setColorFiltering(bool state, double delaySec) {
+	// Check for instant set
+	if (delaySec <= 1e-9) {
+		// Set state here
+		colorFilterEnabled = state;
+
+		return;
 	}
 
-	bool canControl() {
-		return controlState;
+	// Set global variables
+	_colorFilterTaskState = state;
+	_colorFilterTaskDelay = delaySec;
+
+	task setState([]() -> int {
+		// Get global variables
+		int taskState = _colorFilterTaskState;
+		double taskDelay = _colorFilterTaskDelay;
+
+		// Delay setting state
+		task::sleep(taskDelay * 1000);
+
+		// Set state here
+		colorFilterEnabled = taskState;
+
+		return 1;
+	});
+}
+
+void switchFilterColor() {
+	if (filterOutColor == "red") {
+		filterOutColor = "blue";
+		debug::printOnController("filter out blue");
+	} else {
+		filterOutColor = "red";
+		debug::printOnController("filter out red");
+	}
+}
+
+void setFilterOutColor(std::string colorText) {
+	filterOutColor = colorText;
+	// debug::printOnController(colorText);
+}
+
+void setIntakeStoreRing(bool state, double delaySec) {
+	// Check for instant set
+	if (delaySec <= 1e-9) {
+		// Set state here
+		isStoringRing = state;
+
+		return;
 	}
 
-	void setControlState(bool canControl) {
-		controlState = canControl;
+	// Set global variables
+	_storeRingTaskState = state;
+	_storeRingTaskDelay = delaySec;
+
+	task setState([]() -> int {
+		// Get global variables
+		int taskState = _storeRingTaskState;
+		double taskDelay = _storeRingTaskDelay;
+
+		// Delay setting state
+		task::sleep(taskDelay * 1000);
+
+		// Set state here
+		isStoringRing = taskState;
+
+		return 1;
+	});
+}
+
+void control(int state, int hookState) {
+	if (canControl()) {
+		setState(state);
 	}
+}
+
+bool canControl() {
+	return controlState;
+}
+
+void setControlState(bool canControl) {
+	controlState = canControl;
+}
 
 
-	int _taskState;
-	double _taskDelay;
+int _taskState;
+double _taskDelay;
 
-	bool _colorFilterTaskState;
-	double _colorFilterTaskDelay;
+bool _colorFilterTaskState;
+double _colorFilterTaskDelay;
 
-	bool _storeRingTaskState;
-	double _storeRingTaskDelay;
+bool _storeRingTaskState;
+double _storeRingTaskDelay;
 }
 
 
 namespace {
-	/// @brief Set the intake to Holding (0) or Released (1). Intake state is modified by setIntakeResolveState(int).
-	void resolveIntake() {
-		// Make sure intakeResolveState is within [-1, 1]
-		resolveState = (resolveState > 0) - (resolveState < 0);
+/// @brief Set the intake to Holding (0) or Released (1). Intake state is modified by setIntakeResolveState(int).
+void resolveIntake() {
+	// Make sure intakeResolveState is within [-1, 1]
+	resolveState = (resolveState > 0) - (resolveState < 0);
 
-		// Filter out on some detection
-		if (colorFilterEnabled) {
-			// Sensor data
-			ringoptical::updateDetection();
-			bool isDetectingRing = ringoptical::isDetecting();
-			std::string detectedRingColor = ringoptical::getDetectedColor();
+	// Filter out on some detection
+	if (colorFilterEnabled && !disableColorFilter) {
+		// Sensor data
+		ringoptical::updateDetection();
+		bool isDetectingRing = ringoptical::isDetecting();
+		std::string detectedRingColor = ringoptical::getDetectedColor();
+		double distanceSensor_detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
+		bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < 30;
 
-			// Newly detected ring
-			bool isNewDetected = (!previousIsDetecting && isDetectingRing);
-			previousIsDetecting = isDetectingRing;
-			
-			if (disableColorFilter) {
-				// if (redirect::getState() == 1) {
-					// 	redirect::setState(0);
-					// }
-			} else if (isNewDetected) {
+		// Newly detected ring
+		bool isNewDetected = (!previousIsDetecting && isDetectingRing);
+		previousIsDetecting = isDetectingRing;
+		if (detectedRingColor != "none") lastDetectedRingColor = detectedRingColor;
+
+		// Filter
+		if (true) {
+			/* Optical sensor + distance sensor*/
+			if (distanceSensor_isDetectingRing) {
+				if (lastDetectedRingColor == filterOutColor) {
+					printf("Distance sensor: filtering out\n");
+					wait(200, msec);
+					IntakeMotor1.spin(fwd, -5, volt);
+					wait(100, msec);
+				}
+			}
+		} else {
+			/* Only optical sensor */
+			if (isNewDetected) {
 				if (detectedRingColor == "none");
 				else if (detectedRingColor == filterOutColor) {
 					// Filter out
-					printf("Filtering out\n");
-					// wait(50, msec);
-					// IntakeMotor1.spin(fwd, 5, volt);
-					wait(30, msec);
-					IntakeMotor1.spin(fwd, -5, volt);
-					wait(200, msec);
-					IntakeMotor1.spin(fwd, 11, volt);
-					wait(180, msec);
-					IntakeMotor1.spin(fwd, -5, volt);
-					wait(200, msec);
-					return;
+					printf("Optical sensor: filtering out\n");
+					// wait(30, msec);
+					// IntakeMotor1.spin(fwd, -5, volt);
+					// wait(100, msec);
 					// if (redirect::getState() == 0) {
 					// 	redirect::setState(1);
 					// }
@@ -275,23 +281,24 @@ namespace {
 				}
 			}
 		}
-
-		// Resolve intake
-		switch (resolveState) {
-			case 1:
-				// Forward
-				IntakeMotor1.spin(fwd, aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
-				IntakeMotor2.spin(fwd, aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
-				break;
-			case -1:
-				// Reversed
-				IntakeMotor1.spin(fwd, -aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
-				IntakeMotor2.spin(fwd, -aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
-				break;
-			default:
-				IntakeMotor1.stop(brakeType::coast);
-				IntakeMotor2.stop(brakeType::coast);
-				break;
-		}
 	}
+
+	// Resolve intake
+	switch (resolveState) {
+		case 1:
+			// Forward
+			IntakeMotor1.spin(fwd, aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
+			IntakeMotor2.spin(fwd, aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
+			break;
+		case -1:
+			// Reversed
+			IntakeMotor1.spin(fwd, -aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
+			IntakeMotor2.spin(fwd, -aespa_lib::genutil::pctToVolt(intakeVelocityPct), volt);
+			break;
+		default:
+			IntakeMotor1.stop(brakeType::coast);
+			IntakeMotor2.stop(brakeType::coast);
+			break;
+	}
+}
 }

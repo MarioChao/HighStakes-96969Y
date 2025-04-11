@@ -85,7 +85,7 @@ rotation ArmRotationSensor(PORT13, false);
 inertial InertialSensor(PORT21);
 distance DistanceSensor(emptyPort);
 
-distance RingDistanceSensor(emptyPort);
+distance RingDistanceSensor(PORT7);
 optical RingOpticalSensor(PORT4);
 
 /**
