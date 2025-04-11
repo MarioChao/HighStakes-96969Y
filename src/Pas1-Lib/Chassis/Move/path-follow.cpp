@@ -44,6 +44,7 @@ void followPath(Differential &chassis, followPath_params params, bool async) {
 	}
 
 	_isPathFollowCompleted = false;
+	_pathFollowDistanceRemaining_tiles = 1e9;
 
 	if (async) {
 		task asyncDrive([]() -> int {
@@ -242,7 +243,7 @@ void runFollowPath() {
 		// printf("ACT XY: %.3f, %.3f TAR XY: %.3f, %.3f\n", robotLg.getX(), robotLg.getY(), targetLg.getX(), targetLg.getY());
 
 		// Wait
-		wait(5, msec);
+		wait(20, msec);
 	}
 
 	Linegular lg = chassis->getLookPose();

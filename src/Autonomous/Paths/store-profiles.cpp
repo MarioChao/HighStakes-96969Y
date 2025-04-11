@@ -89,7 +89,7 @@ void storeProfiles_redSoloAWP() {
 	);
 	storeNewSplineProfile("rsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {2.34, -0.36}, {2, 1}, {2.5, 2.4}, {4.6, 3.93} }
+			{ {2.34, -0.36}, {2, 1}, {2.2, 2.1}, {4.6, 3.93} }
 		), false
 	);
 }

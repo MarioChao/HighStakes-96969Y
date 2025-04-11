@@ -53,6 +53,7 @@ void turnToAngle(Differential &chassis, turnToAngle_params params, bool async) {
 	turn_to_angle::_diff_chassis = &chassis;
 
 	_isTurnToAngleSettled = false;
+	_turnAngleError_degrees = 1e9;
 
 	if (async) {
 		task asyncDrive([]() -> int {
@@ -77,6 +78,7 @@ void driveAndTurn(Differential &chassis, driveAndTurn_params params, bool async)
 	drive_and_turn::_diff_chassis = &chassis;
 
 	_isDriveAndTurnSettled = false;
+	_driveDistanceError_tiles = 1e9;
 
 	if (async) {
 		task asyncDrive([]() -> int {
@@ -245,7 +247,7 @@ void runDriveAndTurn() {
 		});
 	}
 	motionProfile.addCenterConstraintSequence(constraintSequence);
-	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 0.85 });
+	motionProfile.addCenterConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 });
 	motionProfile.addTrackConstraint_maxMotion({ botInfo.maxVel_tilesPerSec, botInfo.maxAccel_tilesPerSec2 * 0.85 });
 	motionProfile.calculateMotionProfile();
 

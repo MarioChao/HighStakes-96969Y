@@ -53,6 +53,7 @@ void turnToFace(Differential &chassis, turnToFace_params params, bool async) {
 	turn_to_face::_diff_chassis = &chassis;
 
 	_isTurnToFaceSettled = false;
+	_turnToFaceError_degrees = 1e9;
 
 	if (async) {
 		task asyncDrive([]() -> int {
@@ -78,6 +79,7 @@ void driveToPoint(Differential &chassis, driveToPoint_params params, bool async)
 	drive_to_point::_diff_chassis = &chassis;
 
 	_isDriveToPointSettled = false;
+	_linearPathDistanceError = 1e9;
 
 	if (async) {
 		task asyncDrive([]() -> int {

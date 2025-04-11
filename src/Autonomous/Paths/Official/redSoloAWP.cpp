@@ -31,7 +31,7 @@ void autonpaths::runRedSoloAWP() {
 namespace {
 
 void doAuton() {
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.4_tiles, robotChassis.getLookPose().getRotation()), true);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.35_tiles, robotChassis.getLookPose().getRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.25);
 	setArmStage(6);
 	waitUntil(local::_isDriveAndTurnSettled);
@@ -49,7 +49,7 @@ void doAuton() {
 	// runFollowSpline(robotChassis, "rsa ring 1-1b", false);
 	// waitUntil(follow::_isPathFollowCompleted);
 	global::turnToFace(robotChassis, global::turnToFace_params(2.86_tiles, 4.86_tiles), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.68_tiles, 4.68_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.65_tiles, 4.65_tiles), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookPose().getRotation()), false);
 	// (2, 5) ring
 	global::turnToFace(robotChassis, global::turnToFace_params(2_tiles, 5_tiles), false);
@@ -57,13 +57,13 @@ void doAuton() {
 	global::turnToFace(robotChassis, global::turnToFace_params(1_tiles, 4_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 4_tiles), false);
 	// Middle ring
-	setIntakeFilterEnabled(false);
-	setIntakeStoreRing(true);
 	global::turnToFace(robotChassis, global::turnToFace_params(1_tiles, 2_tiles), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(
 		2_tiles, 270_polarDeg, { {0, 100}, {0.7, 20}, {1.4, 100} }
 	), true);
 	waitUntil(local::_driveDistanceError_tiles < 1.5);
+	setIntakeFilterEnabled(false);
+	setIntakeStoreRing(true);
 	setGoalClampState(false);
 	waitUntil(local::_isDriveAndTurnSettled);
 	// (2, 2) goal
@@ -74,6 +74,7 @@ void doAuton() {
 	), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.15);
 	setGoalClampState(true);
+	setArmStage(4);
 	waitUntil(local::_isDriveAndTurnSettled);
 	// (2, 1) ring
 	setIntakeState(1);
@@ -82,7 +83,6 @@ void doAuton() {
 	// Ladder
 	runFollowSpline(robotChassis, "rsa ladder");
 	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.5);
-	setArmStage(6);
 	setIntakeState(0);
 	waitUntil(follow::_isPathFollowCompleted);
 }
