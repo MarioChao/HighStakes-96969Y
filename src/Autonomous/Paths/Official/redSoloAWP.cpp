@@ -31,7 +31,7 @@ void autonpaths::runRedSoloAWP() {
 namespace {
 
 void doAuton() {
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.35_tiles, robotChassis.getLookPose().getRotation()), true);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.35_tiles, robotChassis.getLookRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.25);
 	setArmStage(7);
 	waitUntil(local::_isDriveAndTurnSettled);
@@ -50,7 +50,7 @@ void doAuton() {
 	// waitUntil(follow::_isPathFollowCompleted);
 	global::turnToFace(robotChassis, global::turnToFace_params(2.86_tiles, 4.86_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.65_tiles, 4.65_tiles), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookPose().getRotation()), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookRotation()), false);
 	// (2, 5) ring
 	global::turnToFace(robotChassis, global::turnToFace_params(2_tiles, 5_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 5_tiles), false);

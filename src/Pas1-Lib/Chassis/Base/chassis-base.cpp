@@ -43,6 +43,10 @@ Linegular ChassisBase::getLookPose() {
 	return odometry.getLookPose_scaled();
 }
 
+aespa_lib::units::PolarAngle ChassisBase::getLookRotation() {
+	return odometry.getLookRotation();
+}
+
 double ChassisBase::getLookVelocity() {
 	return 0;
 }

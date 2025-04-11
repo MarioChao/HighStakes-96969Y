@@ -29,6 +29,7 @@ public:
 
 	void setLookPose(aespa_lib::datas::Linegular pose);
 	aespa_lib::datas::Linegular getLookPose();
+	aespa_lib::units::PolarAngle getLookRotation();
 
 	virtual double getLookVelocity();
 	virtual double getAngularVelocity();
