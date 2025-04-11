@@ -76,7 +76,8 @@ void setUpKeybinds() {
 		if (!botarm::isArmResetted()) return;
 
 		botarm::setArmStage(0);
-		botintake::setColorFiltering(true);
+		// botintake::setColorFiltering(true);
+		botintake::setColorFiltering(false);
 	});
 	// Stage 1 or 2
 	Controller1.ButtonB.pressed([]() -> void {
@@ -91,7 +92,8 @@ void setUpKeybinds() {
 		if (!botarm::isArmResetted()) return;
 
 		botarm::setArmStage(3);
-		botintake::setColorFiltering(true);
+		// botintake::setColorFiltering(true);
+		botintake::setColorFiltering(false);
 	});
 	// Stage 0 or 4
 	Controller1.ButtonL1.pressed([]() -> void {
@@ -99,14 +101,16 @@ void setUpKeybinds() {
 
 		if (botarm::getArmStage() == 4) botarm::setArmStage(0);
 		else botarm::setArmStage(4);
-		botintake::setColorFiltering(true);
+		// botintake::setColorFiltering(true);
+		botintake::setColorFiltering(false);
 	});
-	// Stage 5
+	// Stage 6 (horizon)
 	Controller1.ButtonLeft.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
-		botarm::setArmStage(5);
-		botintake::setColorFiltering(true);
+		botarm::setArmStage(6);
+		// botintake::setColorFiltering(true);
+		botintake::setColorFiltering(false);
 	});
 
 	/* Ring color filter */
@@ -169,7 +173,8 @@ void resetStates() {
 		});
 	}
 	botintake::setIntakeStoreRing(0);
-	botintake::setColorFiltering(true);
+	// botintake::setColorFiltering(true);
+	botintake::setColorFiltering(false);
 	swing::setState_left(0);
 	swing::set2ndState_left(0);
 	swing::setState_right(0);

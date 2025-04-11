@@ -82,18 +82,24 @@ void storeProfiles_redSoloAWP() {
 	// 		{ {2.52, 6.19}, {2.52, 5.2}, {2.25, 4.4}, {0.68, 2.37} }
 	// 	), true
 	// );
-	storeNewSplineProfile("rsa ring 2-1",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {2.0, 3.63}, {2, 2}, {2, 1}, {2.0, -0.27} }
-		), false
-	);
 	storeNewSplineProfile("rsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {2.34, -0.36}, {2, 1}, {2.2, 2.1}, {4.6, 3.93} }
+			{ {2.34, -0.36}, {2, 1}, {2.3, 2.2}, {4.6, 3.93} }
 		), false
 	);
 }
-void storeProfiles_blueSoloAWP() {}
+void storeProfiles_blueSoloAWP() {
+	storeNewSplineProfile("bsa grab 1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {6-(-0.64), 2.63}, {6-(0.53), 3.29}, {6-(2), 4}, {6-(3.55), 4.52} }
+		), true
+	);
+	storeNewSplineProfile("bsa ladder",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {6-(2.34), -0.36}, {6-(2), 1}, {6-(2.3), 2.2}, {6-(4.6), 3.93} }
+		), false
+	);
+}
 
 void storeProfiles_skills() {
 	// Skills

@@ -33,7 +33,7 @@ namespace {
 void doAuton() {
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.35_tiles, robotChassis.getLookPose().getRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.25);
-	setArmStage(6);
+	setArmStage(7);
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// (2, 4) goal
@@ -74,12 +74,12 @@ void doAuton() {
 	), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.15);
 	setGoalClampState(true);
-	setArmStage(4);
+	setArmStage(5);
 	waitUntil(local::_isDriveAndTurnSettled);
 	// (2, 1) ring
 	setIntakeState(1);
-	runFollowSpline(robotChassis, "rsa ring 2-1");
-	waitUntil(follow::_isPathFollowCompleted);
+	global::turnToFace(robotChassis, global::turnToFace_params(2_tiles, 1_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 1_tiles), false);
 	// Ladder
 	runFollowSpline(robotChassis, "rsa ladder");
 	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.5);
