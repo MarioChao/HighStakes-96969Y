@@ -2,7 +2,7 @@
 
 - [ ] Reorganize files
 	- [ ] Aespa Library
-		- [ ] Giselle Graphics
+		- [ ] Giselle Geometry
 		- [x] Karina Data Structures
 			- [x] linegular
 			- [x] matrix
@@ -55,6 +55,7 @@
 				- [x] constraint
 				- [x] curvature
 				- [x] trajectory planner
+	- [ ] Gfx Library
 	- [ ] Others
 - [x] Units system for consistency
 - [x] Revamp trajectory planner

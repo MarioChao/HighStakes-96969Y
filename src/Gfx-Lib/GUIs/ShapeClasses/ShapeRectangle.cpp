@@ -1,4 +1,4 @@
-#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
+#include "Gfx-Lib/GUIs/ShapesGui.h"
 
 Rectangle::Rectangle(double x, double y, double width, double height, color fillCol, color outlineCol, double outlineWeight)
 	: ShapeGui(ShapeType::RECTANGLE, x, y, fillCol, outlineCol, outlineWeight) {

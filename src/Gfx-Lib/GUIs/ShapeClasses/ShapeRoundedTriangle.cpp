@@ -1,5 +1,5 @@
-#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
-#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
+#include "Gfx-Lib/GUIs/ShapesGui.h"
+#include "Gfx-Lib/GraphicMain.h"
 
 RoundedTriangle::RoundedTriangle(double x, double y, double p1[], double p2[], double p3[], double radius, color fillCol, color outlineCol, double outlineWeight)
 	: ShapeGui(ShapeType::ROUNDED_TRIANGLE, x, y, fillCol, outlineCol, outlineWeight) {

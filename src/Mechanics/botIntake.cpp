@@ -254,7 +254,7 @@ void resolveIntake() {
 			/* Optical sensor + distance sensor*/
 			if (distanceSensor_isDetectingRing) {
 				if (lastDetectedRingColor == filterOutColor) {
-					printf("Distance sensor: filtering out\n");
+					// printf("Distance sensor: filtering out\n");
 					wait(200, msec);
 					IntakeMotor1.spin(fwd, -5, volt);
 					wait(100, msec);
@@ -266,7 +266,7 @@ void resolveIntake() {
 				if (detectedRingColor == "none");
 				else if (detectedRingColor == filterOutColor) {
 					// Filter out
-					printf("Optical sensor: filtering out\n");
+					// printf("Optical sensor: filtering out\n");
 					// wait(30, msec);
 					// IntakeMotor1.spin(fwd, -5, volt);
 					// wait(100, msec);

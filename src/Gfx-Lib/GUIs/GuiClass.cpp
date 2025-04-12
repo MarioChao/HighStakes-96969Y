@@ -1,4 +1,4 @@
-#include "Aespa-Lib/Giselle-Graphics/GUIs/GuiClass.h"
+#include "Gfx-Lib/GUIs/GuiClass.h"
 
 string GuiClass::getClassName() {
 	return "GuiClass";

@@ -17,11 +17,11 @@
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
-#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
-#include "Aespa-Lib/Giselle-Graphics/GUIs/ButtonsGui.h"
-#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
-#include "Aespa-Lib/Giselle-Graphics/GUIs/SlidersGui.h"
-#include "Aespa-Lib/Giselle-Graphics/GUIs/DocksGui.h"
+#include "Gfx-Lib/GraphicMain.h"
+#include "Gfx-Lib/GUIs/ButtonsGui.h"
+#include "Gfx-Lib/GUIs/ShapesGui.h"
+#include "Gfx-Lib/GUIs/SlidersGui.h"
+#include "Gfx-Lib/GUIs/DocksGui.h"
 
 #include "Sensors/inertial-s.h"
 

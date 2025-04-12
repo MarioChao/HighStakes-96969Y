@@ -1,6 +1,6 @@
-#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
-#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
-#include "Aespa-Lib/Giselle-Graphics/GUIs/SlidersGui.h"
+#include "Gfx-Lib/GraphicMain.h"
+#include "Gfx-Lib/GUIs/ShapesGui.h"
+#include "Gfx-Lib/GUIs/SlidersGui.h"
 #include <algorithm>
 
 using namespace gfxmain;

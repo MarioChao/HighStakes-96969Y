@@ -1,5 +1,5 @@
 #include "Utilities/fieldInfo.h"
-#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
+#include "Gfx-Lib/GraphicMain.h"
 
 namespace {
 	color clearColor(black);

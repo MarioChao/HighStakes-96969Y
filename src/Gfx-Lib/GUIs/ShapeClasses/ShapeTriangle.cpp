@@ -1,5 +1,5 @@
-#include "Aespa-Lib/Giselle-Graphics/GUIs/ShapesGui.h"
-#include "Aespa-Lib/Giselle-Graphics/GraphicMain.h"
+#include "Gfx-Lib/GUIs/ShapesGui.h"
+#include "Gfx-Lib/GraphicMain.h"
 
 Triangle::Triangle(double x, double y, double p1[], double p2[], double p3[], color fillCol, color outlineCol, double outlineWeight)
 	: ShapeGui(ShapeType::TRIANGLE, x, y, fillCol, outlineCol, outlineWeight) {
