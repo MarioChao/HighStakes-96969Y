@@ -70,7 +70,10 @@ void storeProfiles_redSoloAWP() {
 	storeNewSplineProfile("rsa grab 1",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
 			{ {-0.64, 2.63}, {0.53, 3.29}, {2, 4}, {3.55, 4.52} }
-		), true
+		), true,
+		{
+			new PolygonRegionConstraint(Polygon2D({ {1.5, 4}, {2, 3.5}, {2.5, 4}, {2, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
+		}
 	);
 	// storeNewSplineProfile("rsa ring 1-1a",
 	// 	SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
@@ -92,7 +95,10 @@ void storeProfiles_blueSoloAWP() {
 	storeNewSplineProfile("bsa grab 1",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
 			{ {6-(-0.64), 2.63}, {6-(0.53), 3.29}, {6-(2), 4}, {6-(3.55), 4.52} }
-		), true
+		), true,
+		{
+			new PolygonRegionConstraint(Polygon2D({ {3.5, 4}, {4, 3.5}, {4.5, 4}, {4, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
+		}
 	);
 	storeNewSplineProfile("bsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,

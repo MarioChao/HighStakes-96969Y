@@ -134,8 +134,11 @@ void setUpKeybinds() {
 
 	/* Pneumatics */
 	// Swing
-	Controller2.ButtonB.pressed([]() -> void {
+	Controller2.ButtonLeft.pressed([]() -> void {
 		swing::switchState_left();
+	});
+	Controller2.ButtonRight.pressed([]() -> void {
+		swing::switchState_right();
 	});
 	// Clamp
 	Controller1.ButtonL2.pressed([]() -> void {
@@ -147,7 +150,7 @@ void setUpKeybinds() {
 		botintakelift::switchState();
 	});
 	// Climbing PTO
-	Controller2.ButtonRight.pressed([]() -> void {
+	Controller2.ButtonB.pressed([]() -> void {
 		climb_pto::switchState();
 	});
 	// Moving hook

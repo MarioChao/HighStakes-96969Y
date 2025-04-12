@@ -5,6 +5,7 @@
 #include "Pas1-Lib/Planning/Segments/cubic-spline.h"
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectory-planner.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectory-constraint.h"
 
 #include "Pas1-Lib/Chassis/Move/global-move-to.h"
 #include "Pas1-Lib/Chassis/Move/local-move-by.h"
@@ -29,6 +30,9 @@ using namespace autonfunctions;
 using namespace aespa_lib::units::literals;
 using pas1_lib::chassis::base::Differential;
 using namespace pas1_lib::chassis::move;
+using pas1_lib::planning::trajectories::TrajectoryConstraint;
+using aespa_lib::geometry::Polygon2D;
+using pas1_lib::planning::trajectories::PolygonRegionConstraint;
 
 // Build paths
 
@@ -36,11 +40,11 @@ namespace pathbuild {
 
 void storeNewSplineProfile(
 	std::string profileName,
-	pas1_lib::planning::splines::SplineCurve spline, bool reverse, double maxVel
+	pas1_lib::planning::splines::SplineCurve spline, bool reverse, std::vector<TrajectoryConstraint *> constraints, double maxVel
 );
 void storeNewSplineProfile(
 	std::string profileName,
-	pas1_lib::planning::splines::SplineCurve spline, bool reverse = false
+	pas1_lib::planning::splines::SplineCurve spline, bool reverse = false, std::vector<TrajectoryConstraint *> constraints = {}
 );
 
 void runFollowSpline(Differential &chassis, std::string profileName, bool turnFirst = true);

@@ -326,6 +326,15 @@ TrajectoryPlanner &TrajectoryPlanner::addCenterConstraint_maxCentripetalAccelera
 	return *this;
 }
 
+TrajectoryPlanner &TrajectoryPlanner::addCenterTrajectoryConstraints(std::vector<TrajectoryConstraint *> constraints) {
+	for (TrajectoryConstraint *constraint : constraints) {
+		center_trajectoryConstraints.push_back(std::shared_ptr<TrajectoryConstraint>(
+			constraint
+		));
+	}
+	return *this;
+}
+
 PlanPoint TrajectoryPlanner::_getNextPlanPoint(
 	PlanPoint originalNode,
 	double distanceStep,

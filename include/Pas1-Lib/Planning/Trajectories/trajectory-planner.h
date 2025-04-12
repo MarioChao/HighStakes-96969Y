@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Pas1-Lib/Planning/Trajectories/constraint.h"
+#include "Pas1-Lib/Planning/Trajectories/trajectory-constraint.h"
 #include "Pas1-Lib/Planning/Trajectories/curvature.h"
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 
@@ -87,6 +88,7 @@ public:
 	TrajectoryPlanner &addTrackConstraint_maxMotion(std::vector<double> maxMotion_dV_dT);
 
 	TrajectoryPlanner &addCenterConstraint_maxCentripetalAcceleration(double maxCentripetalAceleration);
+	TrajectoryPlanner &addCenterTrajectoryConstraints(std::vector<TrajectoryConstraint *> constraints);
 
 
 	// Calculation

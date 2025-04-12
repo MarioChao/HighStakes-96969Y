@@ -2,7 +2,9 @@
 
 - [ ] Reorganize files
 	- [ ] Aespa Library
-		- [ ] Giselle Geometry
+		- [x] Giselle Geometry
+			- [x] polygon 2d
+			- [x] vector 2d
 		- [x] Karina Data Structures
 			- [x] linegular
 			- [x] matrix
@@ -65,4 +67,4 @@
 - [ ] Tune path following
 	- [x] Trajectory generation
 	- [ ] Velocity control (feedforward, feedback)
-- [ ] Tune arm control (pid / feedforward)
+- [x] Tune arm control (pid / feedforward)

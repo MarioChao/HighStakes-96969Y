@@ -2,8 +2,6 @@
 
 #include <algorithm>
 #include <vector>
-#include <memory>
-#include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 
 
 namespace pas1_lib {
@@ -50,24 +48,6 @@ std::vector<DistanceConstraint> getConstraintsAtDistance(
 std::vector<DistanceConstraint> getConstraintsAtIndex(
 	std::vector<ConstraintSequence> constraintSequences, int index
 );
-
-
-// ---------- Trajectory Constraint ----------
-
-struct TrajectoryConstraint {
-	virtual double calculateMaxVelocity(aespa_lib::datas::Linegular pose, double curvature, double velocity);
-};
-
-struct CentripetalAccelerationConstraint : public TrajectoryConstraint {
-	CentripetalAccelerationConstraint(double maxCentripetalAcceleration);
-
-	double calculateMaxVelocity(aespa_lib::datas::Linegular pose, double curvature, double velocity) override;
-
-
-	double maxCentripetalAcceleration;
-};
-
-double getVelocity_trajectoryConstraints(std::vector<std::shared_ptr<TrajectoryConstraint>> constraints, aespa_lib::datas::Linegular pose, double curvature, double velocity);
 
 
 }

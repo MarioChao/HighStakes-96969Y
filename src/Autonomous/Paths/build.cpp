@@ -13,7 +13,7 @@ namespace autonpaths {
 namespace pathbuild {
 // Build paths
 
-void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool reverse, double maxVel) {
+void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool reverse, std::vector<TrajectoryConstraint *> constraints, double maxVel) {
 	if (splineProfile_storage.hasKey(profileName)) {
 		// printf("Profile '%s' already exists!\n", profileName.c_str());
 		return;
@@ -34,12 +34,13 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 		.addCenterConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 })
 		.addTrackConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 * 0.85 })
 		.addCenterConstraint_maxCentripetalAcceleration(botInfo.maxAccel_tilesPerSec2 * 0.2)
+		.addCenterTrajectoryConstraints(constraints)
 		.calculateMotionProfile();
 	splineProfile_storage.store(profileName, SplineProfile(spline, curveSampler, splineTrajectoryPlan, reverse));
 }
 
-void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines::SplineCurve spline, bool reverse) {
-	storeNewSplineProfile(profileName, spline, reverse, botInfo.maxVel_tilesPerSec);
+void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines::SplineCurve spline, bool reverse, std::vector<TrajectoryConstraint *> constraints) {
+	storeNewSplineProfile(profileName, spline, reverse, constraints, botInfo.maxVel_tilesPerSec);
 }
 
 void runFollowSpline(Differential &chassis, std::string profileName, bool turnFirst) {

@@ -2,7 +2,7 @@
 
 
 namespace {
-using aespa_lib::datas::Vector2D;
+using aespa_lib::geometry::Vector2D;
 using aespa_lib::datas::Linegular;
 using namespace aespa_lib::units::literals::angle;
 }
