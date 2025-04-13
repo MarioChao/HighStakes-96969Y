@@ -8,14 +8,14 @@
 #include "main.h"
 
 namespace {
-	triport::port rPort = Brain.ThreeWirePort.B;
-	triport::port gPort = Brain.ThreeWirePort.A;
-	triport::port bPort = Brain.ThreeWirePort.C;
+	triport::port rPort = emptyExpanderPort;
+	triport::port gPort = emptyExpanderPort;
+	triport::port bPort = emptyExpanderPort;
 
 	digital_out ledR(rPort);
 	digital_out ledG(gPort);
 	digital_out ledB(bPort);
-	pwm_out ledLicense(Brain.ThreeWirePort.D);
+	pwm_out ledLicense(emptyExpanderPort);
 
 	double stageTime_seconds[3] = {75, 95, 105};
 	// double stageTime_seconds[3] = {5, 10, 15};

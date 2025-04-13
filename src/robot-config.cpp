@@ -60,11 +60,11 @@ pneumatics RightWingPneumatic(emptyExpanderPort);
 
 pneumatics IntakeLiftPneumatic(Brain.ThreeWirePort.G);
 pneumatics HangPneumatic(emptyExpanderPort);
-pneumatics GoalClampPneumatic(Brain.ThreeWirePort.H);
+pneumatics GoalClampPneumatic(Brain.ThreeWirePort.B);
 pneumatics BotArmPneumatics(emptyExpanderPort);
 pneumatics RedirectPneumatics(emptyExpanderPort);
 
-pneumatics LeftSword_pneumatics(Brain.ThreeWirePort.E);
+pneumatics LeftSword_pneumatics(Brain.ThreeWirePort.A);
 pneumatics LeftSword2_pneumatics(emptyExpanderPort);
 pneumatics RightSword_pneumatics(Brain.ThreeWirePort.F);
 pneumatics RightSword2_pneumatics(emptyExpanderPort);
