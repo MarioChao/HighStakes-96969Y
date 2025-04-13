@@ -8,7 +8,7 @@ using namespace autonpaths::combination;
 void doAuton();
 }
 
-/// @brief Run the 15-seconds new red-down autonomous.
+/// @brief Run the 15-seconds red-down autonomous.
 void autonpaths::runAutonRedDown() {
 	/* Pre auton */
 

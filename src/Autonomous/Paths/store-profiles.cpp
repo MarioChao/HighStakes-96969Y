@@ -14,15 +14,51 @@ namespace autonpaths {
 void storeProfiles_test() {
 	storeNewSplineProfile("test",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			// kite
 			{ {1.5, -0.94}, {1.5, 0.5}, {1.0, 1.15}, {1.5, 1.73}, {2.0, 1.15}, {1.5, 0.5}, {1.5, -0.94} }
+			// mirrored kite
 			// { {1.5, -0.94}, {1.5, 0.5}, {2.0, 1.15}, {1.5, 1.73}, {1.0, 1.15}, {1.5, 0.5}, {1.5, -0.94} }
+			// high curvature
 			// { {2.54, 0.49}, {1.54, 0.47}, {0.47, 0.94}, {1.32, 1.59}, {1.54, 0.47}, {1.5, -0.46} }
+			// "vex" word
 			// {{0.54, 2.81}, {0.47, 5.38}, {1.2, 4.35}, {1.87, 5.45}, {2.5, 4.91}, {3.52, 4.96}, {3.02, 5.47}, {2.57, 4.47}, {3.89, 4.47}, {5.01, 5.4}, {4.03, 4.94}, {4.13, 5.38}, {4.96, 4.46}, {5.48, 2.84}}
 		), false
 	);
 }
 
-void storeProfiles_redUp() {}
+void storeProfiles_redUp() {
+	storeNewSplineProfile("ru grab 1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {-0.64, 2.63}, {0.53, 3.29}, {2, 4}, {3.55, 4.52} }
+		), true,
+		{
+			new PolygonRegionConstraint(Polygon2D({ {1.5, 4}, {2, 3.5}, {2.5, 4}, {2, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
+		}
+	);
+	storeNewSplineProfile("ru ring 1-1a",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {0.38, 3.14}, {2, 4}, {2.47, 4.6}, {2.52, 5.2}, {2.54, 8.0} }
+		), false
+	);
+	storeNewSplineProfile("ru ring 1-1b",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {2.52, 6.19}, {2.52, 5.2}, {2.25, 4.4}, {0.68, 2.37} }
+		), true
+	);
+	storeNewSplineProfile("ru ring 2-1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {4.86, 5.49}, {2.01, 5}, {0.22, 5.74}, {-0.39, 6.51} }
+		), false
+	);
+	storeNewSplineProfile("ru ring 3-1",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {1.02, 6.15}, {1.02, 5}, {1, 3}, {1, 2.03} }
+		), false,
+		{
+			new PolygonRegionConstraint(Polygon2D({ {0.5, 3}, {1, 2.5}, {1.5, 3}, {1, 3.5} }), botInfo.maxVel_tilesPerSec * 0.3)
+		}
+	);
+}
 void storeProfiles_redUpSafe() {}
 void storeProfiles_blueUp() {}
 void storeProfiles_blueUpSafe() {}
@@ -70,16 +106,6 @@ void storeProfiles_redSoloAWP() {
 			new PolygonRegionConstraint(Polygon2D({ {1.5, 4}, {2, 3.5}, {2.5, 4}, {2, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
 		}
 	);
-	// storeNewSplineProfile("rsa ring 1-1a",
-	// 	SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-	// 		{ {0.38, 3.14}, {2, 4}, {2.5, 4.6}, {2.52, 5.2}, {2.52, 8.0} }
-	// 	), false
-	// );
-	// storeNewSplineProfile("rsa ring 1-1b",
-	// 	SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-	// 		{ {2.52, 6.19}, {2.52, 5.2}, {2.25, 4.4}, {0.68, 2.37} }
-	// 	), true
-	// );
 	storeNewSplineProfile("rsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
 			{ {2.34, -0.36}, {2, 1}, {2.3, 2.2}, {4.6, 3.93} }
