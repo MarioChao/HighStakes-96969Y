@@ -95,7 +95,7 @@ void setUpKeybinds() {
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
-	// Stage 0 or 4
+	// Stage 0 or 4 (score)
 	Controller1.ButtonL1.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
@@ -104,7 +104,7 @@ void setUpKeybinds() {
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
-	// Stage 6 (horizon)
+	// Stage 6 (tip goal)
 	Controller1.ButtonLeft.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 

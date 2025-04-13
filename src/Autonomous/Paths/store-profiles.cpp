@@ -27,11 +27,6 @@ void storeProfiles_redUpSafe() {}
 void storeProfiles_blueUp() {}
 void storeProfiles_blueUpSafe() {}
 void storeProfiles_redDown() {
-	storeNewSplineProfile("rd rush 1-1",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {0.15, 2.2}, {0.87, 1.46}, {2.3, 0.88}, {4.0, 0.2} }
-		), false
-	);
 	storeNewSplineProfile("rd grab 2",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
 			{ {2.01, 0.07}, {2.0, 1}, {2.01, 1.99}, {2.01, 3} }

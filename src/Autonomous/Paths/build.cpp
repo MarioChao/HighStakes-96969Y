@@ -46,6 +46,7 @@ void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines:
 void runFollowSpline(Differential &chassis, std::string profileName, bool turnFirst) {
 	if (!splineProfile_storage.hasKey(profileName)) {
 		follow::_isPathFollowCompleted = true;
+		printf("Profile %s not stored!\n", profileName.c_str());
 		return;
 	}
 	SplineProfile *splineProfile = splineProfile_storage.getStored(profileName).get();

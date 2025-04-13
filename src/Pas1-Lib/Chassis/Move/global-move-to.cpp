@@ -243,12 +243,15 @@ void runDriveToPoint() {
 
 	// Target state
 	const double targetDistance = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { x_tiles, y_tiles });
-	double targetRotation_degrees = aespa_lib::genutil::toDegrees(atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX()));
 	_linearPathDistanceError = targetDistance;
 
 	// Config
 	const double velocityFactor = (isReverse ? -1 : 1);
 	const double rotationOffset_degrees = (isReverse ? 180 : 0);
+
+	// Target rotation
+	double targetRotation_degrees = aespa_lib::genutil::toDegrees(atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX())) + rotationOffset_degrees;
+
 
 	// Reset PID
 	// driveTurn_driveTargetDistance_voltPid.resetErrorToZero();
@@ -340,6 +343,9 @@ void runDriveToPoint() {
 
 
 		/* ---------- Combined ---------- */
+
+		// Cosine trick https://www.ctrlaltftc.com/practical-examples/drivetrain-control#cosine-trick
+		// velocity_pct *= std::cos(aespa_lib::units::operator ""_polarDeg((long double) rotateError).polarRad());
 
 		// Scale velocity overshoot
 		double leftVelocity_pct = velocity_pct - rotateVelocity_pct;
