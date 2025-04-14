@@ -451,13 +451,13 @@ void createButtons() {
 	ButtonGui *blueUp = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Up", white, [] {
 		allianceDisable(2);
 		allianceButtons[2]->enable();
-		setAutonRunType(1, autonomousType::BlueUp);
+		setAutonRunType(2, autonomousType::BlueUp);
 	});
 	// Blue Down
 	ButtonGui *blueDown = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Down", white, [] {
 		allianceDisable(3);
 		allianceButtons[3]->enable();
-		setAutonRunType(1, autonomousType::BlueDown);
+		setAutonRunType(2, autonomousType::BlueDown);
 	});
 
 	/* Safe Autons */
@@ -477,13 +477,13 @@ void createButtons() {
 	ButtonGui *blueUpSafe = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Up Safe", white, [] {
 		allianceDisable(6);
 		allianceButtons[6]->enable();
-		setAutonRunType(1, autonomousType::BlueUpSafe);
+		setAutonRunType(2, autonomousType::BlueUpSafe);
 	});
 	// Blue Down
 	ButtonGui *blueDownSafe = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Down Safe", white, [] {
 		allianceDisable(7);
 		allianceButtons[7]->enable();
-		setAutonRunType(1, autonomousType::BlueDownSafe);
+		setAutonRunType(2, autonomousType::BlueDownSafe);
 	});
 
 	/* Irregular Autons */
@@ -540,6 +540,11 @@ void createButtons() {
 		allianceButtons[16]->enable();
 		setAutonRunType(0, autonomousType::Test);
 	});
+	ButtonGui *rushTest = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(205, 235, 135), white, 2, "Rush Test", cyan, [] {
+		allianceDisable(17);
+		allianceButtons[17]->enable();
+		setAutonRunType(0, autonomousType::RushTest);
+	});
 	ButtonGui *loveShape = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 160, 160), white, 2, "Love", red, [] {
 		allianceDisable(18);
 		allianceButtons[18]->enable();
@@ -557,13 +562,13 @@ void createButtons() {
 		redUpSafe, redDownSafe, blueUpSafe, blueDownSafe,
 		redSoloAWP, blueSoloAWP, nullptr, nullptr,
 		skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver,
-		autonTest, nullptr, loveShape, fieldTour,
+		autonTest, rushTest, loveShape, fieldTour,
 	};
 	autonSubdock1Buttons = { redUp, redDown, blueUp, blueDown };
 	autonSubdock2Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
 	autonSubdock3Buttons = { redSoloAWP, blueSoloAWP };
 	autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver };
-	autonSubdock5Buttons = { autonTest, loveShape, fieldTour };
+	autonSubdock5Buttons = { autonTest, rushTest, loveShape, fieldTour };
 }
 
 /// @brief Create the interactable sliders on the screen.

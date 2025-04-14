@@ -7,16 +7,16 @@ using namespace autonpaths::pathbuild;
 void doAuton();
 }
 
-/// @brief Run the template.
-void autonpaths::runTemplate() {
+/// @brief Run the rush test.
+void autonpaths::runRushTest() {
 	/* Pre auton */
 
 	// Timer
 	_autonTimer.reset();
 
 	// Set config
-	setRobotPosition(-0.00, -0.00);
-	setRobotRotation(-0.00);
+	setRobotPosition(0.00, 0.00);
+	setRobotRotation(0.00);
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
@@ -30,7 +30,8 @@ void autonpaths::runTemplate() {
 namespace {
 
 void doAuton() {
-
+	// Drive forward 2 tiles
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(2_tiles, robotChassis.getLookRotation()), false);
 }
 
 }

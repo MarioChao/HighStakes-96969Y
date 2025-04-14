@@ -133,6 +133,12 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 			printf("Auton Test\n");
 			autonFilterOutColor = "none";
 			break;
+		case autonomousType::RushTest:
+			// autonpaths::storeProfiles_test();
+			debug::printOnController("Rush Test");
+			printf("Rush Test\n");
+			autonFilterOutColor = "none";
+			break;
 		default:
 			debug::printOnController("Auton: None");
 			printf("None\n");
@@ -210,8 +216,8 @@ void runAutonomous() {
 		case autonomousType::AutonSkills:
 			autonpaths::runAutonSkills();
 			break;
-		case autonomousType::AllianceWallStake:
-			autonpaths::runAllianceWallStake();
+		case autonomousType::RushTest:
+			autonpaths::runRushTest();
 			break;
 		case autonomousType::LoveShape:
 			autonpaths::runLoveShape();

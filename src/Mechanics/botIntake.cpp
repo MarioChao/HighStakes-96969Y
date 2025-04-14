@@ -53,7 +53,7 @@ void runThread() {
 			}
 
 			// Override stuck under certain conditions
-			if (false) {
+			if (true) {
 				isStuck = false;
 			}
 

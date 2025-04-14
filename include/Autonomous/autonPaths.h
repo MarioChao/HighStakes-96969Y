@@ -92,6 +92,7 @@ void runTemplate();
 
 void runAutonTest();
 void odometryRadiusTest();
+void runRushTest();
 
 void runAutonRedUp();
 void runAutonRedUpSafe();
@@ -108,7 +109,6 @@ void runBlueSoloAWP();
 
 void runAutonSkills();
 
-void runAllianceWallStake();
 void runLoveShape();
 void runFieldTour();
 }
