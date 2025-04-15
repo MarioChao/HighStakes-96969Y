@@ -52,7 +52,7 @@ double SimpleFeedforward::getValue(bool useS, bool useV, bool useA) {
 	double valV = useV ? (velocity * kV) : 0;
 	double valA = useA ? (acceleration * kA) : 0;
 
-	return valV + valA + valS;
+	return valS + valV + valA;
 }
 
 

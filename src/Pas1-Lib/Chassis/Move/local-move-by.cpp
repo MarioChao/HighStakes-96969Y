@@ -8,6 +8,7 @@
 
 
 namespace {
+using aespa_lib::geometry::Vector2D;
 using aespa_lib::datas::Linegular;
 using pas1_lib::planning::trajectories::TrajectoryPlanner;
 using pas1_lib::planning::trajectories::ConstraintSequence;
@@ -311,7 +312,7 @@ void runDriveAndTurn() {
 		// Compute current values
 		double targetDistance_tiles = distance_tiles;
 		Linegular currentPose = chassis->getLookPose();
-		double currentTravelDistance_tiles = (currentPose - initialPose).getXYMagnitude() * aespa_lib::genutil::signum(targetDistance_tiles);
+		double currentTravelDistance_tiles = (currentPose - initialPose).getPosition().dot(Vector2D::fromPolar(initialPose.getRotation(), 1));
 		double currentTravelVelocity_tilesPerSec = chassis->getLookVelocity();
 
 		// Compute trajectory values

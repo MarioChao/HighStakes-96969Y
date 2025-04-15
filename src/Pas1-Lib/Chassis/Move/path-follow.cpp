@@ -236,7 +236,7 @@ void runFollowPath() {
 		rightAcceleration_pctPerSec_slew.computeFromTarget(rightVelocity_pct);
 		leftVelocity_pct = leftAcceleration_pctPerSec_slew.getValue();
 		rightVelocity_pct = rightAcceleration_pctPerSec_slew.getValue();
-		// printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
+		printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
 
 		// Drive
 		chassis->control_differential(leftVelocity_pct, rightVelocity_pct);
