@@ -29,7 +29,7 @@ BotInfo botInfo(
 	3.25, // wheel diameter (inches)
 	48.0 / 36.0, // wheel to motor gear ratio
 	600, // motor rpm
-	600 * 1.5 // motor rpm/s
+	600 * 1.75 // motor rpm/s
 );
 
 
@@ -78,7 +78,7 @@ AutonSettings autonSettings(
 	PIDController(1.0), // velocity feedback (tiles/sec to volt)
 	PIDController(70, 0, 0, 0.13, 0.05), // linear pid (tiles to pct)
 	PIDController(3.5, 0, 0.2, 5, 0.05), // angular pid (degrees to pct)
-	SlewController(150), // linear slew (pct/sec)
+	SlewController(200), // linear slew (pct/sec)
 	SlewController(150), // angular slew (pct/sec)
 	PatienceController(30, 0.001, false), // linear patience (tiles)
 	PatienceController(30, 0.5, false), // angular patience (degrees)
