@@ -13,6 +13,7 @@ using pas1_lib::auton::control_loops::SlewController;
 using pas1_lib::chassis::base::Differential;
 using pas1_lib::chassis::settings::BotInfo;
 using pas1_lib::chassis::settings::AutonSettings;
+using pas1_lib::chassis::settings::MotionHandler;
 using namespace pas1_lib::chassis::move::follow;
 
 void runFollowPath();
@@ -34,6 +35,9 @@ namespace follow {
 
 
 void followPath(Differential &chassis, followPath_params params, bool async) {
+	chassis.motionHandler.incrementMotion();
+	waitUntil(chassis.motionHandler.getIsInMotion() == false);
+
 	_splineProfile = params.splineProfile;
 	_diff_chassis = &chassis;
 
@@ -74,6 +78,7 @@ void runFollowPath() {
 	Differential *chassis = _diff_chassis;
 	BotInfo &botInfo = chassis->botInfo;
 	AutonSettings &autonSettings = chassis->autonSettings;
+	MotionHandler &motionHandler = chassis->motionHandler;
 	ramseteController.setDirection(splineProfile->willReverse);
 
 	// Trajectory graph
@@ -108,6 +113,10 @@ void runFollowPath() {
 	double totalDistance_tiles = splineProfile->curveSampler.getDistanceRange().second;
 	double totalTime_seconds = splineProfile->trajectoryPlan.getTotalTime();
 
+	// Store motion id
+	motionHandler.enterMotion();
+	int currentMotionId = motionHandler.getMotionId();
+
 	// Print info
 	printf("----- Spline %.3f tiles %.3f sec -----\n", totalDistance_tiles, totalTime_seconds);
 
@@ -117,6 +126,13 @@ void runFollowPath() {
 	// Follow path
 	while (true) {
 		/* ---------- End conditions ---------- */
+
+		// Check motion id
+		if (!motionHandler.isRunningMotionId(currentMotionId)) {
+			printf("Motion cancelled\n");
+			motionHandler.exitMotion();
+			return;
+		}
 
 		// Get time
 		double traj_time = _pathTimer.time(seconds);
@@ -236,7 +252,7 @@ void runFollowPath() {
 		rightAcceleration_pctPerSec_slew.computeFromTarget(rightVelocity_pct);
 		leftVelocity_pct = leftAcceleration_pctPerSec_slew.getValue();
 		rightVelocity_pct = rightAcceleration_pctPerSec_slew.getValue();
-		printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
+		// printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
 
 		// Drive
 		chassis->control_differential(leftVelocity_pct, rightVelocity_pct);
@@ -252,6 +268,7 @@ void runFollowPath() {
 
 	// Stop
 	chassis->stopMotors(brake);
+	motionHandler.exitMotion();
 
 	// Settled
 	_pathFollowDistanceRemaining_tiles = -1;

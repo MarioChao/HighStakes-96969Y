@@ -15,6 +15,7 @@ using pas1_lib::planning::trajectories::ConstraintSequence;
 using pas1_lib::chassis::base::Differential;
 using pas1_lib::chassis::settings::BotInfo;
 using pas1_lib::chassis::settings::AutonSettings;
+using pas1_lib::chassis::settings::MotionHandler;
 using namespace pas1_lib::chassis::move::local;
 
 namespace turn_to_angle {
@@ -47,6 +48,9 @@ namespace local {
 
 
 void turnToAngle(Differential &chassis, turnToAngle_params params, bool async) {
+	chassis.motionHandler.incrementMotion();
+	waitUntil(chassis.motionHandler.getIsInMotion() == false);
+
 	turn_to_angle::_targetAngle_polarDegrees = params.targetAngle.polarDeg();
 	turn_to_angle::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
 	turn_to_angle::_centerOffset_tiles = params.centerOffset_tiles;
@@ -71,6 +75,9 @@ bool _isTurnToAngleSettled;
 
 
 void driveAndTurn(Differential &chassis, driveAndTurn_params params, bool async) {
+	chassis.motionHandler.incrementMotion();
+	waitUntil(chassis.motionHandler.getIsInMotion() == false);
+
 	drive_and_turn::_distance_tiles = params.distance.tiles();
 	drive_and_turn::_targetAngle_polarDegrees = params.targetAngle.polarDeg();
 	drive_and_turn::_velocityConstraint_tiles_pct = params.velocityConstraint_tiles_pct;
@@ -113,6 +120,7 @@ void runTurnToAngle() {
 	Differential *chassis = _diff_chassis;
 	BotInfo &botInfo = chassis->botInfo;
 	AutonSettings &autonSettings = chassis->autonSettings;
+	MotionHandler &motionHandler = chassis->motionHandler;
 
 	// Center of rotations
 	double leftRotateRadius_tiles = botInfo.trackWidth_tiles / 2.0 + centerOffset_tiles;
@@ -138,10 +146,21 @@ void runTurnToAngle() {
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
+	// Store motion id
+	motionHandler.enterMotion();
+	int currentMotionId = motionHandler.getMotionId();
+
 	// Print info
 	printf("----- Turn to %.3f deg -----\n", targetAngle_polarDegrees);
 
 	while (true) {
+		// Check motion id
+		if (!motionHandler.isRunningMotionId(currentMotionId)) {
+			printf("Motion cancelled\n");
+			motionHandler.exitMotion();
+			return;
+		}
+
 		// Check timeout
 		if (runTimeout.isExpired()) {
 			printf("Expired\n");
@@ -211,6 +230,7 @@ void runTurnToAngle() {
 
 	// Stop
 	chassis->stopMotors(brake);
+	motionHandler.exitMotion();
 
 	// Settled
 	_turnAngleError_degrees = -1;
@@ -229,6 +249,7 @@ void runDriveAndTurn() {
 	Differential *chassis = _diff_chassis;
 	BotInfo &botInfo = chassis->botInfo;
 	AutonSettings &autonSettings = chassis->autonSettings;
+	MotionHandler &motionHandler = chassis->motionHandler;
 
 	// Variables
 	Linegular initialPose = chassis->getLookPose();
@@ -276,11 +297,22 @@ void runDriveAndTurn() {
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
+	// Store motion id
+	motionHandler.enterMotion();
+	int currentMotionId = motionHandler.getMotionId();
+
 	// Print info
 	printf("----- Drive pid trajectory %.3f sec -----\n", motionProfile.getTotalTime());
 
 	while (true) {
 		/* ---------- End conditions ---------- */
+
+		// Check motion id
+		if (!motionHandler.isRunningMotionId(currentMotionId)) {
+			printf("Motion cancelled\n");
+			motionHandler.exitMotion();
+			return;
+		}
 
 		// Check timeout
 		if (runTimeout.isExpired()) {
@@ -398,6 +430,7 @@ void runDriveAndTurn() {
 
 	// Stop
 	chassis->stopMotors(brake);
+	motionHandler.exitMotion();
 
 	// Settled
 	_driveDistanceError_tiles = -1;

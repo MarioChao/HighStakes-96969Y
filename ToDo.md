@@ -43,6 +43,7 @@
 			- [ ] Settings
 				- [x] auton settings
 				- [x] bot info
+				- [x] motion handler
 				- [ ] odometry (require actual tests)
 		- [x] Planning
 			- [x] Profiles

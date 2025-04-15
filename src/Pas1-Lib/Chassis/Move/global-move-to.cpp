@@ -9,6 +9,7 @@ using aespa_lib::datas::Linegular;
 using pas1_lib::chassis::base::Differential;
 using pas1_lib::chassis::settings::BotInfo;
 using pas1_lib::chassis::settings::AutonSettings;
+using pas1_lib::chassis::settings::MotionHandler;
 using namespace pas1_lib::chassis::move::global;
 
 namespace turn_to_face {
@@ -44,6 +45,9 @@ namespace global {
 
 
 void turnToFace(Differential &chassis, turnToFace_params params, bool async) {
+	chassis.motionHandler.incrementMotion();
+	waitUntil(chassis.motionHandler.getIsInMotion() == false);
+
 	turn_to_face::_targetX = params.x.tiles();
 	turn_to_face::_targetY = params.y.tiles();
 	turn_to_face::_isReverse = params.isReverse;
@@ -70,6 +74,9 @@ bool _isTurnToFaceSettled;
 
 
 void driveToPoint(Differential &chassis, driveToPoint_params params, bool async) {
+	chassis.motionHandler.incrementMotion();
+	waitUntil(chassis.motionHandler.getIsInMotion() == false);
+
 	drive_to_point::_targetX = params.x.tiles();
 	drive_to_point::_targetY = params.y.tiles();
 	drive_to_point::_isReverseHeading = params.isReverse;
@@ -115,6 +122,7 @@ void runTurnToFace() {
 	Differential *chassis = _diff_chassis;
 	BotInfo &botInfo = chassis->botInfo;
 	AutonSettings &autonSettings = chassis->autonSettings;
+	MotionHandler &motionHandler = chassis->motionHandler;
 
 	// Center of rotations
 	double leftRotateRadius_tiles = botInfo.trackWidth_tiles / 2.0 + centerOffset_tiles;
@@ -143,10 +151,21 @@ void runTurnToFace() {
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
+	// Store motion id
+	motionHandler.enterMotion();
+	int currentMotionId = motionHandler.getMotionId();
+
 	// Print info
 	printf("----- Turn to face (%.3f, %.3f) tiles -----\n", x_tiles, y_tiles);
 
 	while (true) {
+		// Check motion id
+		if (!motionHandler.isRunningMotionId(currentMotionId)) {
+			printf("Motion cancelled\n");
+			motionHandler.exitMotion();
+			return;
+		}
+
 		// Check timeout
 		if (runTimeout.isExpired()) {
 			printf("Expired\n");
@@ -219,6 +238,7 @@ void runTurnToFace() {
 
 	// Stop
 	chassis->stopMotors(brake);
+	motionHandler.exitMotion();
 
 	// Settled
 	_turnToFaceError_degrees = -1;
@@ -237,6 +257,7 @@ void runDriveToPoint() {
 	double runTimeout_sec = _runTimeout_sec;
 	Differential *chassis = _diff_chassis;
 	AutonSettings &autonSettings = chassis->autonSettings;
+	MotionHandler &motionHandler = chassis->motionHandler;
 
 	// Initial state
 	Linegular startLg = chassis->getLookPose();
@@ -270,10 +291,21 @@ void runDriveToPoint() {
 	// Create timeout
 	pas1_lib::auton::end_conditions::Timeout runTimeout(runTimeout_sec);
 
+	// Store motion id
+	motionHandler.enterMotion();
+	int currentMotionId = motionHandler.getMotionId();
+
 	// Print info
 	printf("----- Drive to (%.3f, %.3f) tiles -----\n", x_tiles, y_tiles);
 
 	while (true) {
+		// Check motion id
+		if (!motionHandler.isRunningMotionId(currentMotionId)) {
+			printf("Motion cancelled\n");
+			motionHandler.exitMotion();
+			return;
+		}
+
 		// Check timeout
 		if (runTimeout.isExpired()) {
 			printf("Expired\n");
@@ -345,7 +377,7 @@ void runDriveToPoint() {
 		/* ---------- Combined ---------- */
 
 		// Cosine trick https://www.ctrlaltftc.com/practical-examples/drivetrain-control#cosine-trick
-		// velocity_pct *= std::cos(aespa_lib::units::operator ""_polarDeg((long double) rotateError).polarRad());
+		velocity_pct *= std::cos(aespa_lib::units::operator ""_polarDeg((long double) rotateError).polarRad());
 
 		// Scale velocity overshoot
 		double leftVelocity_pct = velocity_pct - rotateVelocity_pct;
@@ -373,6 +405,7 @@ void runDriveToPoint() {
 
 	// Stop
 	chassis->stopMotors(brake);
+	motionHandler.exitMotion();
 
 	// Settled
 	_linearPathDistanceError = -1;

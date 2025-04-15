@@ -4,6 +4,7 @@
 #include "Pas1-Lib/Chassis/Settings/odometry.h"
 #include "Pas1-Lib/Chassis/Settings/bot-info.h"
 #include "Pas1-Lib/Chassis/Settings/auton-settings.h"
+#include "Pas1-Lib/Chassis/Settings/motion-handler.h"
 #include "Aespa-Lib/Karina-Data-Structures/linegular.h"
 #include "Aespa-Lib/Winter-Utilities/general.h"
 
@@ -37,6 +38,7 @@ public:
 
 	settings::BotInfo &botInfo;
 	settings::AutonSettings &autonSettings;
+	settings::MotionHandler motionHandler;
 
 	std::pair<bool, double> overwriteLookVelocity;
 

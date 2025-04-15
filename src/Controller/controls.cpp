@@ -148,7 +148,7 @@ void setUpKeybinds() {
 		goalclamp::switchState();
 	});
 	// Intake lift
-	Controller2.ButtonB.pressed([]() -> void {
+	Controller2.ButtonL1.pressed([]() -> void {
 		botintakelift::switchState();
 	});
 	// Climbing PTO

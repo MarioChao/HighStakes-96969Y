@@ -71,26 +71,13 @@ void storeProfiles_blueUp() {
 	);
 	storeNewSplineProfile("bu ring 1-1a",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(0.38), 3.14}, {6-(2), 4}, {6-(2.47), 4.6}, {6-(2.52), 5.2}, {6-(2.54), 8.0} }
+			{ {6-(0.38), 3.14}, {6-(2), 4}, {6-(2.45), 4.6}, {6-(2.5), 5.2}, {6-(2.52), 8.0} }
 		), false
 	);
 	storeNewSplineProfile("bu ring 1-1b",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
 			{ {6-(2.52), 6.19}, {6-(2.52), 5.2}, {6-(2.25), 4.4}, {6-(0.68), 2.37} }
 		), true
-	);
-	storeNewSplineProfile("bu ring 2-1",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(4.86), 5.49}, {6-(2.01), 5}, {6-(0.22), 5.74}, {6-(-0.39), 6.51} }
-		), false
-	);
-	storeNewSplineProfile("bu ring 3-1",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(1.02), 6.15}, {6-(1.02), 5}, {6-(1), 3}, {6-(1), 2.03} }
-		), false,
-		{
-			new PolygonRegionConstraint(Polygon2D({ {6-(0.5), 3}, {6-(1), 2.5}, {6-(1.5), 3}, {6-(1), 3.5} }), botInfo.maxVel_tilesPerSec * 0.3)
-		}
 	);
 }
 void storeProfiles_blueUpSafe() {}
