@@ -121,7 +121,7 @@ void storeProfiles_redSoloAWP() {
 void storeProfiles_blueSoloAWP() {
 	storeNewSplineProfile("bsa grab 1",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(-0.64), 2.63}, {6-(0.53), 3.29}, {6-(2), 4}, {6-(3.55), 4.52} }
+			{ {6-(-0.64), 2.63}, {6-(0.53), 3.29}, {6-(2), 4}, {6-(3.55), 4.74} }
 		), true,
 		{
 			new PolygonRegionConstraint(Polygon2D({ {3.5, 4}, {4, 3.5}, {4.5, 4}, {4, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
@@ -137,7 +137,7 @@ void storeProfiles_blueSoloAWP() {
 	);
 	storeNewSplineProfile("bsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(2.34), -0.36}, {6-(2), 1}, {6-(2.3), 2.2}, {6-(4.6), 3.93} }
+			{ {6-(2.34), -0.36}, {6-(2), 1.2}, {6-(2.3), 2.2}, {6-(4.6), 3.93} }
 		), false
 	);
 }

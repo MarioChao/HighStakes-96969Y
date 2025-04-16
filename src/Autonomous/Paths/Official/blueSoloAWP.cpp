@@ -44,13 +44,13 @@ void doAuton() {
 	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.15);
 	// Top ring
 	setIntakeState(1);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2.65_tiles, 4.65_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2.6_tiles, 4.6_tiles), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.5_tiles, robotChassis.getLookRotation()), false);
 	// (2, 5) ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1.9_tiles, 5.1_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1.9_tiles, 5.1_tiles), true);
 	waitUntil(global::_linearPathDistanceError < 0.4);
 	// Middle ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 4_tiles), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 4_tiles), false);
 	runFollowSpline("bsa ring mid");
 	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 1.5);
 	setIntakeFilterEnabled(false);
@@ -70,12 +70,15 @@ void doAuton() {
 	// (2, 1) ring
 	setIntakeFilterEnabled(true);
 	setIntakeState(1);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 1_tiles), false);
+	setIntakeStoreRing(false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 1_tiles), true);
+	waitUntil(global::_linearPathDistanceError < 0.2);
 	// Ladder
 	runFollowSpline(robotChassis, "bsa ladder");
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.5);
-	setIntakeState(0);
 	waitUntil(follow::_isPathFollowCompleted);
+
+	waitUntil(_autonTimer.time(sec) > 15);
+	setIntakeState(0);
 }
 
 }
