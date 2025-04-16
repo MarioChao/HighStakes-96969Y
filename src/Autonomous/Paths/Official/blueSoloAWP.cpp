@@ -31,8 +31,8 @@ void autonpaths::runBlueSoloAWP() {
 namespace {
 
 void doAuton() {
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.35_tiles, robotChassis.getLookRotation()), true);
-	waitUntil(local::_driveDistanceError_tiles < 0.25);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.25_tiles, robotChassis.getLookRotation()), true);
+	waitUntil(local::_driveDistanceError_tiles < 0.22);
 	setArmStage(7);
 	waitUntil(local::_isDriveAndTurnSettled);
 
@@ -46,11 +46,10 @@ void doAuton() {
 	setIntakeState(1);
 	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - 2.86_tiles, 4.86_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2.65_tiles, 4.65_tiles), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookRotation()), false);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.5_tiles, robotChassis.getLookRotation()), false);
 	// (2, 5) ring
-	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - 2_tiles, 5_tiles), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 5_tiles), false);
-	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - 1_tiles, 4_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 5_tiles), true);
+	waitUntil(global::_linearPathDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 4_tiles), false);
 	// Middle ring
 	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - 1_tiles, 2_tiles), false);
@@ -74,7 +73,6 @@ void doAuton() {
 	waitUntil(local::_isDriveAndTurnSettled);
 	// (2, 1) ring
 	setIntakeState(1);
-	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - 2_tiles, 1_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 1_tiles), false);
 	// Ladder
 	runFollowSpline(robotChassis, "bsa ladder");

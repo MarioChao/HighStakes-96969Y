@@ -53,7 +53,7 @@ void runFollowSpline(Differential &chassis, std::string profileName, bool turnFi
 	if (turnFirst) {
 		aespa_lib::datas::Linegular startPose = splineProfile->spline.getLinegularAt(0, splineProfile->willReverse);
 		local::turnToAngle(chassis, local::turnToAngle_params(startPose.getRotation()), true);
-		waitUntil(local::_turnAngleError_degrees < 10);
+		waitUntil(local::_turnAngleError_degrees < 5);
 	}
 	follow::followPath(chassis, follow::followPath_params(splineProfile), true);
 }

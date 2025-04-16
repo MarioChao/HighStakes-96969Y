@@ -275,8 +275,6 @@ void runDriveToPoint() {
 
 
 	// Reset PID
-	// driveTurn_driveTargetDistance_voltPid.resetErrorToZero();
-	// driveTurn_rotateTargetAngle_voltPid.resetErrorToZero();
 	autonSettings.distanceError_tiles_to_velocity_pct_pid.resetErrorToZero();
 	autonSettings.angleError_degrees_to_velocity_pct_pid.resetErrorToZero();
 
@@ -285,7 +283,6 @@ void runDriveToPoint() {
 	autonSettings.angularAcceleration_pctPerSec_slew.reset();
 
 	// Reset patience
-	// driveError_tilesPatience.reset();
 	autonSettings.distanceError_tiles_patience.reset();
 
 	// Create timeout
@@ -377,7 +374,11 @@ void runDriveToPoint() {
 		/* ---------- Combined ---------- */
 
 		// Cosine trick https://www.ctrlaltftc.com/practical-examples/drivetrain-control#cosine-trick
-		velocity_pct *= std::cos(aespa_lib::units::operator ""_polarDeg((long double) rotateError).polarRad());
+		double cosine_value = std::cos(aespa_lib::units::operator ""_polarDeg((long double) rotateError).polarRad());
+		velocity_pct *= cosine_value;
+
+		// Reset distance patience if turning a lot
+		if (std::fabs(rotateError) > 15) autonSettings.distanceError_tiles_patience.reset();
 
 		// Scale velocity overshoot
 		double leftVelocity_pct = velocity_pct - rotateVelocity_pct;

@@ -31,8 +31,8 @@ void autonpaths::runRedSoloAWP() {
 namespace {
 
 void doAuton() {
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.35_tiles, robotChassis.getLookRotation()), true);
-	waitUntil(local::_driveDistanceError_tiles < 0.25);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.25_tiles, robotChassis.getLookRotation()), true);
+	waitUntil(local::_driveDistanceError_tiles < 0.22);
 	setArmStage(7);
 	waitUntil(local::_isDriveAndTurnSettled);
 
