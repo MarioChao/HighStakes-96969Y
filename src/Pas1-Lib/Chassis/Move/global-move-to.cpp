@@ -193,7 +193,7 @@ void runTurnToFace() {
 		double currentRotation_degrees = robotLg.getRotation().polarDeg();
 
 		// Compute target heading
-		double targetAngle_polarDegrees = aespa_lib::genutil::toDegrees(atan2(y_tiles - robotLg.getY(), x_tiles - robotLg.getX())) + rotationOffset_degrees;
+		double targetAngle_polarDegrees = aespa_lib::genutil::toDegrees(std::atan2(y_tiles - robotLg.getY(), x_tiles - robotLg.getX())) + rotationOffset_degrees;
 
 		// Compute heading error
 		double rotateError_degrees = targetAngle_polarDegrees - currentRotation_degrees;
@@ -271,7 +271,7 @@ void runDriveToPoint() {
 	const double rotationOffset_degrees = (isReverse ? 180 : 0);
 
 	// Target rotation
-	double targetRotation_degrees = aespa_lib::genutil::toDegrees(atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX())) + rotationOffset_degrees;
+	double targetRotation_degrees = aespa_lib::genutil::toDegrees(std::atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX())) + rotationOffset_degrees;
 
 
 	// Reset PID

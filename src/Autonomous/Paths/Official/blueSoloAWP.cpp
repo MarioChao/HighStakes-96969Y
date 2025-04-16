@@ -31,9 +31,10 @@ void autonpaths::runBlueSoloAWP() {
 namespace {
 
 void doAuton() {
+	// Alliance wall stake
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.25_tiles, robotChassis.getLookRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.22);
-	setArmStage(7);
+	setArmStage(20);
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// (2, 4) goal
@@ -65,20 +66,20 @@ void doAuton() {
 	), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.15);
 	setGoalClampState(true);
+	setIntakeFilterEnabled(true);
+	setIntakeStoreRing(false);
 	setArmStage(5);
 	waitUntil(local::_isDriveAndTurnSettled);
 	// (2, 1) ring
-	setIntakeFilterEnabled(true);
 	setIntakeState(1);
-	setIntakeStoreRing(false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 1_tiles), true);
 	waitUntil(global::_linearPathDistanceError < 0.2);
 	// Ladder
 	runFollowSpline(robotChassis, "bsa ladder");
 	waitUntil(follow::_isPathFollowCompleted);
 
-	waitUntil(_autonTimer.time(sec) > 15);
-	setIntakeState(0);
+	// waitUntil(_autonTimer.time(sec) > 15);
+	// setIntakeState(0);
 }
 
 }

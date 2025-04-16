@@ -33,7 +33,7 @@ namespace {
 void doAuton() {
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.25_tiles, robotChassis.getLookRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.22);
-	setArmStage(7);
+	setArmStage(20);
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// (2, 4) goal

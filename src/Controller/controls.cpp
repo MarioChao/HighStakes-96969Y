@@ -108,7 +108,7 @@ void setUpKeybinds() {
 	Controller1.ButtonLeft.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
-		botarm::setArmStage(6);
+		botarm::setArmStage(7);
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
