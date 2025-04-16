@@ -78,8 +78,10 @@ void storeProfiles_blueUp();
 void storeProfiles_blueUpSafe();
 void storeProfiles_redDown();
 void storeProfiles_redDownSafe();
+void storeProfiles_redDownLBRush();
 void storeProfiles_blueDown();
 void storeProfiles_blueDownSafe();
+void storeProfiles_blueDownLBRush();
 void storeProfiles_redSoloAWP();
 void storeProfiles_blueSoloAWP();
 void storeProfiles_skills();
@@ -101,8 +103,10 @@ void runAutonBlueUpSafe();
 
 void runAutonRedDown();
 void runAutonRedDownSafe();
+void runAutonRedDownLBRush();
 void runAutonBlueDown();
 void runAutonBlueDownSafe();
+void runAutonBlueDownLBRush();
 
 void runRedSoloAWP();
 void runBlueSoloAWP();

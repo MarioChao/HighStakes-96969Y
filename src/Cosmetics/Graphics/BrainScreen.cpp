@@ -74,13 +74,13 @@ double fw_drawX = 20;
 // Guis
 vector<ButtonGui *> mainDockButtons;
 vector<ButtonGui *> autonDockButtons, allianceButtons;
-vector<ButtonGui *> autonSubdock1Buttons, autonSubdock2Buttons, autonSubdock3Buttons, autonSubdock4Buttons, autonSubdock5Buttons;
+vector<ButtonGui *> autonSubdock0Buttons, autonSubdock1Buttons, autonSubdock2Buttons, autonSubdock3Buttons, autonSubdock4Buttons, autonSubdock5Buttons;
 vector<ButtonGui *> simulationDockButtons;
 SliderGui *slider;
 DockGui *mainDock, *mainDock_dockDock;
 DockGui *simulationDock;
 DockGui *autonDock, *autonDock_dockDock;
-DockGui *autonSubdock1, *autonSubdock2, *autonSubdock3, *autonSubdock4, *autonSubdock5;
+DockGui *autonSubdock0, *autonSubdock1, *autonSubdock2, *autonSubdock3, *autonSubdock4, *autonSubdock5;
 DockGui *qrCodeDock, *motTempDock, *motTorqueDock;
 
 // Others
@@ -357,37 +357,43 @@ void createButtons() {
 
 	// Auton Dock buttons
 	{
-		double initialY = 50;
+		double initialY = 45;
 		double lengthY = 30;
-		double offsetY = lengthY + 10;
+		double offsetY = lengthY + 5;
 		autonDockButtons = {};
 		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY, 100, lengthY, color(0, 100, 200), color(50, 50, 50), 2), "Normal", white, [] {
 			autonDockDisable(0);
 			autonDockButtons[0]->enable();
 			autonDock_dockDock->setEnabled(false);
-			autonSubdock1->setEnabled(true);
+			autonSubdock0->setEnabled(true);
 		}));
 		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + offsetY, 100, lengthY, color(200, 0, 200), color(50, 50, 50), 2), "Safe", white, [] {
 			autonDockDisable(1);
 			autonDockButtons[1]->enable();
 			autonDock_dockDock->setEnabled(false);
-			autonSubdock2->setEnabled(true);
+			autonSubdock1->setEnabled(true);
 		}));
-		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 2 * offsetY, 100, lengthY, color(200, 100, 0), color(50, 50, 50), 2), "Irregular", white, [] {
+		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 2 * offsetY, 100, lengthY, color(250, 150, 250), color(50, 50, 50), 2), "Special", white, [] {
 			autonDockDisable(2);
 			autonDockButtons[2]->enable();
 			autonDock_dockDock->setEnabled(false);
-			autonSubdock3->setEnabled(true);
+			autonSubdock2->setEnabled(true);
 		}));
-		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 3 * offsetY, 100, lengthY, color(100, 200, 0), color(50, 50, 50), 2), "Skills", white, [] {
+		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 3 * offsetY, 100, lengthY, color(200, 100, 0), color(50, 50, 50), 2), "Solo AWP", white, [] {
 			autonDockDisable(3);
 			autonDockButtons[3]->enable();
 			autonDock_dockDock->setEnabled(false);
-			autonSubdock4->setEnabled(true);
+			autonSubdock3->setEnabled(true);
 		}));
-		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 4 * offsetY, 100, lengthY, color(100, 200, 0), color(50, 50, 50), 2), "Test", white, [] {
+		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 4 * offsetY, 100, lengthY, color(100, 200, 0), color(50, 50, 50), 2), "Skills", white, [] {
 			autonDockDisable(4);
 			autonDockButtons[4]->enable();
+			autonDock_dockDock->setEnabled(false);
+			autonSubdock4->setEnabled(true);
+		}));
+		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 5 * offsetY, 100, lengthY, color(100, 200, 0), color(50, 50, 50), 2), "Test", white, [] {
+			autonDockDisable(5);
+			autonDockButtons[5]->enable();
 			autonDock_dockDock->setEnabled(false);
 			autonSubdock5->setEnabled(true);
 		}));
@@ -486,17 +492,31 @@ void createButtons() {
 		setAutonRunType(2, autonomousType::BlueDownSafe);
 	});
 
-	/* Irregular Autons */
-	// Red Solo AWP
-	ButtonGui *redSoloAWP = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Solo AWP", white, [] {
+	/* Special Autons */
+	// Red Up
+	ButtonGui *redDownLBRush = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "R-Down LB Rush", white, [] {
 		allianceDisable(8);
 		allianceButtons[8]->enable();
+		setAutonRunType(1, autonomousType::RedDownLBRush);
+	});
+	// Red Down
+	ButtonGui *blueDownLBRush = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "B-Down LB Rush", white, [] {
+		allianceDisable(9);
+		allianceButtons[9]->enable();
+		setAutonRunType(2, autonomousType::BlueDownLBRush);
+	});
+
+	/* Solo AWP Autons */
+	// Red Solo AWP
+	ButtonGui *redSoloAWP = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Solo AWP", white, [] {
+		allianceDisable(12);
+		allianceButtons[12]->enable();
 		setAutonRunType(1, autonomousType::RedSoloAWP);
 	});
 	// Blue Solo AWP
 	ButtonGui *blueSoloAWP = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Solo AWP", white, [] {
-		allianceDisable(9);
-		allianceButtons[9]->enable();
+		allianceDisable(13);
+		allianceButtons[13]->enable();
 		setAutonRunType(2, autonomousType::BlueSoloAWP);
 	});
 
@@ -505,54 +525,54 @@ void createButtons() {
 	ButtonGui *skillsAuton59 = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 200, 0), white, 1, "Skills 59", white, [] {
 		ownColor = color::purple;
 		oppColor = color::purple;
-		allianceDisable(12);
-		allianceButtons[12]->enable();
+		allianceDisable(16);
+		allianceButtons[16]->enable();
 		setAutonRunType(0, autonomousType::AutonSkills);
 	});
 	// Auton Skills no wall stake
 	ButtonGui *skillsAutonNoWS = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(0, 200, 0), white, 1, "No Wall Stake", white, [] {
 		ownColor = color::purple;
 		oppColor = color::purple;
-		allianceDisable(13);
-		allianceButtons[13]->enable();
+		allianceDisable(17);
+		allianceButtons[17]->enable();
 		setAutonRunType(0, autonomousType::AutonSkills);
 	});
 	// Driver run Auton Skills
 	ButtonGui *skillsDriverRunAuton = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(200, 0, 200), white, 1, "Drive Run Auton", white, [] {
 		ownColor = color::purple;
 		oppColor = color::purple;
-		allianceDisable(14);
-		allianceButtons[14]->enable();
+		allianceDisable(18);
+		allianceButtons[18]->enable();
 		setAutonRunType(0, autonomousType::DrivingRunAutonSkills);
 	});
 	// Skills Driver
 	ButtonGui *skillsDriver = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(200, 0, 200), white, 1, "Drive Skills", white, [] {
 		ownColor = color::purple;
 		oppColor = color::purple;
-		allianceDisable(15);
-		allianceButtons[15]->enable();
+		allianceDisable(19);
+		allianceButtons[19]->enable();
 		setAutonRunType(0, autonomousType::DrivingSkills);
 	});
 
 	/* Test Autons */
 	ButtonGui *autonTest = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(135, 205, 235), white, 2, "Auton Test", purple, [] {
-		allianceDisable(16);
-		allianceButtons[16]->enable();
+		allianceDisable(20);
+		allianceButtons[20]->enable();
 		setAutonRunType(0, autonomousType::Test);
 	});
-	ButtonGui *rushTest = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(205, 235, 135), white, 2, "Rush Test", cyan, [] {
-		allianceDisable(17);
-		allianceButtons[17]->enable();
+	ButtonGui *rushTest = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(235, 205, 135), white, 2, "Rush Test", color(12, 99, 90), [] {
+		allianceDisable(21);
+		allianceButtons[21]->enable();
 		setAutonRunType(0, autonomousType::RushTest);
 	});
 	ButtonGui *loveShape = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 160, 160), white, 2, "Love", red, [] {
-		allianceDisable(18);
-		allianceButtons[18]->enable();
+		allianceDisable(22);
+		allianceButtons[22]->enable();
 		setAutonRunType(0, autonomousType::LoveShape);
 	});
 	ButtonGui *fieldTour = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(160, 160, 255), white, 2, "Tour", blue, [] {
-		allianceDisable(19);
-		allianceButtons[19]->enable();
+		allianceDisable(23);
+		allianceButtons[23]->enable();
 		setAutonRunType(0, autonomousType::FieldTour);
 	});
 
@@ -560,12 +580,14 @@ void createButtons() {
 	allianceButtons = {
 		redUp, redDown, blueUp, blueDown,
 		redUpSafe, redDownSafe, blueUpSafe, blueDownSafe,
+		redDownLBRush, blueDownLBRush, nullptr, nullptr,
 		redSoloAWP, blueSoloAWP, nullptr, nullptr,
 		skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver,
 		autonTest, rushTest, loveShape, fieldTour,
 	};
-	autonSubdock1Buttons = { redUp, redDown, blueUp, blueDown };
-	autonSubdock2Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
+	autonSubdock0Buttons = { redUp, redDown, blueUp, blueDown };
+	autonSubdock1Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
+	autonSubdock2Buttons = { redDownLBRush, blueDownLBRush };
 	autonSubdock3Buttons = { redSoloAWP, blueSoloAWP };
 	autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver };
 	autonSubdock5Buttons = { autonTest, rushTest, loveShape, fieldTour };
@@ -601,6 +623,7 @@ void createDocks() {
 	});
 
 	// Auton Sub-docks
+	autonSubdock0 = new DockGui(90, 40, 260, 180, {}, {});
 	autonSubdock1 = new DockGui(90, 40, 260, 180, {}, {});
 	autonSubdock2 = new DockGui(90, 40, 260, 180, {}, {});
 	autonSubdock3 = new DockGui(90, 40, 260, 180, {}, {});
@@ -654,10 +677,11 @@ void setDockGUIs() {
 	for (GuiClass *gui : autonDockButtons) {
 		autonDock->addGui(gui);
 	}
-	autonDock->addGuis({ autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5 });
-	autonDock_dockDock->addGuis({ autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5 });
+	autonDock->addGuis({ autonSubdock0, autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5 });
+	autonDock_dockDock->addGuis({ autonSubdock0, autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5 });
 
 	// Auton Subdocks
+	for (GuiClass *gui : autonSubdock0Buttons) autonSubdock0->addGui(gui);
 	for (GuiClass *gui : autonSubdock1Buttons) autonSubdock1->addGui(gui);
 	for (GuiClass *gui : autonSubdock2Buttons) autonSubdock2->addGui(gui);
 	for (GuiClass *gui : autonSubdock3Buttons) autonSubdock3->addGui(gui);
@@ -673,8 +697,11 @@ void setDockGUIs() {
 
 /// @brief Initialize the docks by disabling some of them.
 void initDocks() {
+	autonSubdock1->setEnabled(false);
 	autonSubdock2->setEnabled(false);
 	autonSubdock3->setEnabled(false);
+	autonSubdock4->setEnabled(false);
+	autonSubdock5->setEnabled(false);
 	qrCodeDock->setEnabled(false);
 	motTempDock->setEnabled(false);
 	motTorqueDock->setEnabled(false);

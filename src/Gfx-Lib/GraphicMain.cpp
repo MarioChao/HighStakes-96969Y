@@ -2,7 +2,7 @@
 #include "Gfx-Lib/GraphicMain.h"
 
 namespace {
-	color clearColor(black);
+	color clearColor(25, 25, 25);
 }
 
 namespace gfxmain {

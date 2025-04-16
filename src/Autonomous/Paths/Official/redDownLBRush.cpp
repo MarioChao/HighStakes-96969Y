@@ -3,21 +3,20 @@
 namespace {
 using namespace autonpaths;
 using namespace autonpaths::pathbuild;
-using namespace autonpaths::combination;
 
 void doAuton();
 }
 
-/// @brief Run the 15-seconds red-up autonomous.
-void autonpaths::runAutonRedUp() {
-	/* Pre skills */
+
+void autonpaths::runAutonRedDownLBRush() {
+	/* Pre auton */
 
 	// Timer
 	_autonTimer.reset();
 
 	// Set config
-	setRobotPosition(0.86, 3.46);
-	setRobotRotation(-121.5);
+	setRobotPosition(-0.00, -0.00);
+	setRobotRotation(-0.00);
 	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
@@ -28,10 +27,11 @@ void autonpaths::runAutonRedUp() {
 	doAuton();
 }
 
+
 namespace {
 
 void doAuton() {
-	
+
 }
 
 }

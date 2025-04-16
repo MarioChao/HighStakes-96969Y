@@ -41,10 +41,10 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 			printf("RedUp\n");
 			autonFilterOutColor = "blue";
 			break;
-		case autonomousType::RedDown:
-			autonpaths::storeProfiles_redDown();
-			debug::printOnController("Auton: RedDown");
-			printf("RedDown\n");
+		case autonomousType::RedUpSafe:
+			autonpaths::storeProfiles_redUpSafe();
+			debug::printOnController("Auton: RedUp SF");
+			printf("RedUp Safe\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::BlueUp:
@@ -53,16 +53,16 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 			printf("BlueUp\n");
 			autonFilterOutColor = "red";
 			break;
-		case autonomousType::BlueDown:
-			autonpaths::storeProfiles_blueDown();
-			debug::printOnController("Auton: BlueDown");
-			printf("BlueDown\n");
+		case autonomousType::BlueUpSafe:
+			autonpaths::storeProfiles_blueUpSafe();
+			debug::printOnController("Auton: BlueUp SF");
+			printf("BlueUp Safe\n");
 			autonFilterOutColor = "red";
 			break;
-		case autonomousType::RedUpSafe:
-			autonpaths::storeProfiles_redUpSafe();
-			debug::printOnController("Auton: RedUp SF");
-			printf("RedUp Safe\n");
+		case autonomousType::RedDown:
+			autonpaths::storeProfiles_redDown();
+			debug::printOnController("Auton: RedDown");
+			printf("RedDown\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::RedDownSafe:
@@ -71,10 +71,16 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 			printf("RedDown Safe\n");
 			autonFilterOutColor = "blue";
 			break;
-		case autonomousType::BlueUpSafe:
-			autonpaths::storeProfiles_blueUpSafe();
-			debug::printOnController("Auton: BlueUp SF");
-			printf("BlueUp Safe\n");
+		case autonomousType::RedDownLBRush:
+			autonpaths::storeProfiles_redDownLBRush();
+			debug::printOnController("Auton: RedDown LB");
+			printf("RedDown LB Rush\n");
+			autonFilterOutColor = "blue";
+			break;
+		case autonomousType::BlueDown:
+			autonpaths::storeProfiles_blueDown();
+			debug::printOnController("Auton: BlueDown");
+			printf("BlueDown\n");
 			autonFilterOutColor = "red";
 			break;
 		case autonomousType::BlueDownSafe:
@@ -83,7 +89,12 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 			printf("BlueDown Safe\n");
 			autonFilterOutColor = "red";
 			break;
-
+		case autonomousType::BlueDownLBRush:
+			autonpaths::storeProfiles_blueDownLBRush();
+			debug::printOnController("Auton: BlueDown LB");
+			printf("BlueDown LB Rush\n");
+			autonFilterOutColor = "red";
+			break;
 		case autonomousType::RedSoloAWP:
 			autonpaths::storeProfiles_redSoloAWP();
 			debug::printOnController("Auton: Red SoloAWP");
@@ -186,26 +197,32 @@ void runAutonomous() {
 		case autonomousType::RedUp:
 			autonpaths::runAutonRedUp();
 			break;
-		case autonomousType::RedDown:
-			autonpaths::runAutonRedDown();
+		case autonomousType::RedUpSafe:
+			autonpaths::runAutonRedUpSafe();
 			break;
 		case autonomousType::BlueUp:
 			autonpaths::runAutonBlueUp();
 			break;
-		case autonomousType::BlueDown:
-			autonpaths::runAutonBlueDown();
+		case autonomousType::BlueUpSafe:
+			autonpaths::runAutonBlueUpSafe();
 			break;
-		case autonomousType::RedUpSafe:
-			autonpaths::runAutonRedUpSafe();
+		case autonomousType::RedDown:
+			autonpaths::runAutonRedDown();
 			break;
 		case autonomousType::RedDownSafe:
 			autonpaths::runAutonRedDownSafe();
 			break;
-		case autonomousType::BlueUpSafe:
-			autonpaths::runAutonBlueUpSafe();
+		case autonomousType::RedDownLBRush:
+			autonpaths::runAutonRedDownLBRush();
+			break;
+		case autonomousType::BlueDown:
+			autonpaths::runAutonBlueDown();
 			break;
 		case autonomousType::BlueDownSafe:
 			autonpaths::runAutonBlueDownSafe();
+			break;
+		case autonomousType::BlueDownLBRush:
+			autonpaths::runAutonBlueDownLBRush();
 			break;
 		case autonomousType::RedSoloAWP:
 			autonpaths::runRedSoloAWP();

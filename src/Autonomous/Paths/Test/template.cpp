@@ -7,7 +7,7 @@ using namespace autonpaths::pathbuild;
 void doAuton();
 }
 
-/// @brief Run the template.
+
 void autonpaths::runTemplate() {
 	/* Pre auton */
 
@@ -26,6 +26,7 @@ void autonpaths::runTemplate() {
 	/* Auton */
 	doAuton();
 }
+
 
 namespace {
 
