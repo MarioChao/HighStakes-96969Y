@@ -31,22 +31,28 @@ double armMaxVelocity_radiansPerSec = armMaxVelocity_rpm * (1.0 / 60.0) * (2 * M
 
 double armEncoder_to_arm_ratio = 1.0 / 1.0;
 
-// Stage controllers
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.1, 0.3, 12.0 / armMaxVelocity_radiansPerSec);
-PIDController arm_positionError_radians_to_radiansPerSec_Pid(10.0, 0, 0.25);
+/* Stage controllers */
+
+// Arm feedforward
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.1, 0.2, 12.0 / armMaxVelocity_radiansPerSec);
+PIDController arm_positionError_radians_to_radiansPerSec_Pid(7.7, 0, 0.25);
+
+// Pure pid
 PIDController arm_positionError_degrees_to_volt_pid(0.35, 0, 0);
+
+// Patience
 PatienceController armUpPatience(12, 1.0, true, 5);
 PatienceController armDownPatience(6, 1.0, false, 5);
 
 // Stage config
 std::vector<double> armStages_degrees = { 0, 15, 25, 40, 115, 130, 250, 0 };
 std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 1 };
-int currentArmStage = 0;
+int currentArmStage = -1;
 bool releaseOnExhausted = true;
 
 // Reset arm info
 bool armResetted = false;
-int resetDefaultStageId = 0;
+int resetDefaultStageId = -1;
 
 // Speed config
 double armVelocityPct = 100;
@@ -113,8 +119,11 @@ void setTargetAngle(double state, double delaySec) {
 }
 
 void setArmStage(int stageId, double delaySec) {
-	stageId = aespa_lib::genutil::clamp(stageId, 0, (int) armStages_degrees.size() - 1);
+	stageId = aespa_lib::genutil::clamp(stageId, -1, (int) armStages_degrees.size() - 1);
 	currentArmStage = stageId;
+
+	// -1 case
+	if (stageId == -1) return;
 
 	// Extreme cases
 	int stage_value = extremeStages_values[stageId];
@@ -248,6 +257,11 @@ void resolveArmExtreme() {
 }
 
 void resolveArmDegrees() {
+	// -1 case
+	if (currentArmStage == -1) {
+		return;
+	}
+
 	// Extreme case
 	if (isExtreme()) {
 		resolveArmExtreme();
