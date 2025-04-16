@@ -19,16 +19,18 @@ ChassisBase::ChassisBase(settings::Odometry &odometry, settings::BotInfo &botInf
 
 void ChassisBase::control_local2d(
 	double right_pct, double look_pct,
-	double angular_pct
+	double angular_pct,
+	bool useSlew
 ) {}
 
 void ChassisBase::control_global2d(
 	double right_pct, double look_pct,
-	double angular_pct
+	double angular_pct,
+	bool useSlew
 ) {
 	Vector2D localMove(right_pct, look_pct);
 	localMove.rotateBy(90_polarDeg - getLookPose().getRotation());
-	control_local2d(localMove.x, localMove.y, angular_pct);
+	control_local2d(localMove.x, localMove.y, angular_pct, useSlew);
 }
 
 void ChassisBase::control() {}

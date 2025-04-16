@@ -32,7 +32,7 @@ void storeNewSplineProfile(std::string profileName, SplineCurve spline, bool rev
 		.setSpline(&curveSampler)
 		.maxSmoothCurvature()
 		.addCenterConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 })
-		.addTrackConstraint_maxMotion({ maxVel * 0.75, botInfo.maxAccel_tilesPerSec2 * 0.5 })
+		.addTrackConstraint_maxMotion({ maxVel, botInfo.maxAccel_tilesPerSec2 * 0.5 })
 		.addCenterConstraint_maxCentripetalAcceleration(botInfo.maxAccel_tilesPerSec2 * 0.3)
 		.addCenterTrajectoryConstraints(constraints)
 		.calculateMotionProfile();

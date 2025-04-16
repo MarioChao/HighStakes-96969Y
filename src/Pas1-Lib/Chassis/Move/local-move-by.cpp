@@ -221,7 +221,7 @@ void runTurnToAngle() {
 		angularVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
 
 		// Drive with velocities
-		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct);
+		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct, true);
 
 		wait(10, msec);
 	}
@@ -344,7 +344,8 @@ void runDriveAndTurn() {
 		// Compute current values
 		double targetDistance_tiles = distance_tiles;
 		Linegular currentPose = chassis->getLookPose();
-		double currentTravelDistance_tiles = (currentPose - initialPose).getPosition().dot(Vector2D::fromPolar(initialPose.getRotation(), 1));
+		// double currentTravelDistance_tiles = (currentPose - initialPose).getPosition().dot(Vector2D::fromPolar(initialPose.getRotation(), 1));
+		double currentTravelDistance_tiles = (currentPose - initialPose).getPosition().dot(Vector2D::fromPolar(targetAngle_polarDegrees, 1));
 		double currentTravelVelocity_tilesPerSec = chassis->getLookVelocity();
 
 		// Compute trajectory values
@@ -421,7 +422,7 @@ void runDriveAndTurn() {
 		rotateVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
 
 		// Drive with velocities
-		chassis->control_local2d(0, linearVelocity_pct, rotateVelocity_pct);
+		chassis->control_local2d(0, linearVelocity_pct, rotateVelocity_pct, true);
 
 		wait(10, msec);
 	}

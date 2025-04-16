@@ -90,10 +90,6 @@ void runFollowPath() {
 	PIDController fb_rightVelocity_tilesPerSec_to_volt_pid(autonSettings.fb_velocityError_tilesPerSec_to_volt_pid);
 	fb_leftVelocity_tilesPerSec_to_volt_pid.resetErrorToZero();
 	fb_rightVelocity_tilesPerSec_to_volt_pid.resetErrorToZero();
-	SlewController leftAcceleration_pctPerSec_slew(autonSettings.linearAcceleration_pctPerSec_slew);
-	SlewController rightAcceleration_pctPerSec_slew(autonSettings.linearAcceleration_pctPerSec_slew);
-	leftAcceleration_pctPerSec_slew.reset();
-	rightAcceleration_pctPerSec_slew.reset();
 
 	// Reset PID
 	autonSettings.distanceError_tiles_to_velocity_pct_pid.resetErrorToZero();
@@ -169,7 +165,7 @@ void runFollowPath() {
 		double traj_motion_distance = motion.first;
 		double traj_abs_distance = std::fabs(traj_motion_distance);
 		double traj_velocity = motion.second[0];
-		double traj_acceleration = motion.second[1];
+		// double traj_acceleration = motion.second[1];
 		double traj_tvalue = splineProfile->curveSampler.distanceToParam(traj_abs_distance);
 		double traj_curvature = splineProfile->spline.getCurvatureAt(traj_tvalue);
 		double traj_angularVelocity = std::fabs(traj_velocity) * traj_curvature;
@@ -210,15 +206,11 @@ void runFollowPath() {
 		// Convert to left & right velocity
 		double desiredLeftVelocity_tilesPerSec = linearVelocity_tilesPerSec - angularVelocity_tilesPerSec;
 		double desiredRightVelocity_tilesPerSec = linearVelocity_tilesPerSec + angularVelocity_tilesPerSec;
-		// double scaleFactor = aespa_lib::genutil::getScaleFactor(botInfo.maxVel_tilesPerSec, { desiredLeftVelocity_tilesPerSec, desiredRightVelocity_tilesPerSec });
-		// desiredLeftVelocity_tilesPerSec *= scaleFactor;
-		// desiredRightVelocity_tilesPerSec *= scaleFactor;
 
-		// Command
-		// chassis->control_local2d(0, traj_velocity * botInfo.tilesPerSecond_to_pct, traj_angularVelocity * botInfo.trackWidth_tiles / 2 * botInfo.tilesPerSecond_to_pct);
-		// chassis->control_local2d(0, linearVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct, angularVelocity_tilesPerSec * botInfo.tilesPerSecond_to_pct);
-		// wait(10, msec);
-		// continue;
+		// Scale overshoot
+		double scaleFactor = aespa_lib::genutil::getScaleFactor(botInfo.maxVel_tilesPerSec, { desiredLeftVelocity_tilesPerSec, desiredRightVelocity_tilesPerSec });
+		desiredLeftVelocity_tilesPerSec *= scaleFactor;
+		desiredRightVelocity_tilesPerSec *= scaleFactor;
 
 
 		/* ---------- Velocity control ---------- */
@@ -246,16 +238,10 @@ void runFollowPath() {
 		// To volt
 		double leftVelocity_pct = aespa_lib::genutil::voltToPct(leftVelocity_volt);
 		double rightVelocity_pct = aespa_lib::genutil::voltToPct(rightVelocity_volt);
-
-		// Slew
-		leftAcceleration_pctPerSec_slew.computeFromTarget(leftVelocity_pct);
-		rightAcceleration_pctPerSec_slew.computeFromTarget(rightVelocity_pct);
-		leftVelocity_pct = leftAcceleration_pctPerSec_slew.getValue();
-		rightVelocity_pct = rightAcceleration_pctPerSec_slew.getValue();
 		// printf("ERR_LR, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f\n", traj_time, desiredLeftVelocity_tilesPerSec, currentLeftVelocity_tilesPerSec, leftVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_leftMotor_volt, desiredRightVelocity_tilesPerSec, currentRightVelocity_tilesPerSec, rightVelocity_pct / botInfo.tilesPerSecond_to_pct, chassis->commanded_rightMotor_volt);
 
 		// Drive
-		chassis->control_differential(leftVelocity_pct, rightVelocity_pct);
+		chassis->control_differential(leftVelocity_pct, rightVelocity_pct, true);
 		// printf("ACT XY: %.3f, %.3f TAR XY: %.3f, %.3f\n", robotLg.getX(), robotLg.getY(), targetLg.getX(), targetLg.getY());
 
 		// Wait

@@ -19,11 +19,13 @@ public:
 
 	virtual void control_local2d(
 		double right_pct, double look_pct,
-		double angular_pct
+		double angular_pct,
+		bool useSlew = false
 	);
 	void control_global2d(
 		double right_pct, double look_pct,
-		double angular_pct
+		double angular_pct,
+		bool useSlew = false
 	);
 	virtual void control();
 	virtual void stopMotors(brakeType mode);

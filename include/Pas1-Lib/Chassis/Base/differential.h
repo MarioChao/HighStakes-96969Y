@@ -14,10 +14,11 @@ public:
 		motor_group &left_motors, motor_group &right_motors
 	);
 
-	void control_differential(double left_pct, double right_pct);
+	void control_differential(double left_pct, double right_pct, bool useSlew = false);
 	void control_local2d(
 		double right_pct, double look_pct,
-		double angular_pct
+		double angular_pct,
+		bool useSlew = false
 	) override;
 	void stopMotors(brakeType mode) override;
 
@@ -35,6 +36,8 @@ public:
 
 private:
 	motor_group &left_motors, &right_motors;
+
+	auton::control_loops::SlewController leftAcceleration_pctPerSec_slew, rightAcceleration_pctPerSec_slew;
 };
 
 }

@@ -229,7 +229,7 @@ void runTurnToFace() {
 		angularVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
 
 		// Drive with velocities
-		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct);
+		chassis->control_local2d(0, linearVelocity_pct, angularVelocity_pct, true);
 
 		wait(10, msec);
 	}
@@ -396,7 +396,7 @@ void runDriveToPoint() {
 		rotateVelocity_pct = autonSettings.angularAcceleration_pctPerSec_slew.getValue();
 
 		// Drive
-		chassis->control_local2d(0, velocity_pct, rotateVelocity_pct);
+		chassis->control_local2d(0, velocity_pct, rotateVelocity_pct, true);
 
 		// Delay
 		wait(10, msec);

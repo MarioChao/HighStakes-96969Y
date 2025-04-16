@@ -127,6 +127,14 @@ void storeProfiles_blueSoloAWP() {
 			new PolygonRegionConstraint(Polygon2D({ {3.5, 4}, {4, 3.5}, {4.5, 4}, {4, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
 		}
 	);
+	storeNewSplineProfile("bsa ring mid",
+		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
+			{ {6-(1), 6}, {6-(1), 4}, {6-(1), 2}, {6-(1), 0} }
+		), false,
+		{
+			new PolygonRegionConstraint(Polygon2D({{0.5, 2.5}, {5.5, 2.5}, {5.5, 3.2}, {0.5, 3.2}}), botInfo.maxVel_tilesPerSec * 0.2)
+		}
+	);
 	storeNewSplineProfile("bsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
 			{ {6-(2.34), -0.36}, {6-(2), 1}, {6-(2.3), 2.2}, {6-(4.6), 3.93} }

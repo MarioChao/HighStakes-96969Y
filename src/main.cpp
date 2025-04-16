@@ -77,7 +77,7 @@ void pre_auton(void) {
 	// /*
 	task odometryTask([]() -> int {
 		wait(500, msec);
-		mainOdometry.setPosition_scaled(1, 1);
+		mainOdometry.setPosition_scaled(3, 3);
 		mainOdometry.setLookAngle_field(0);
 		mainOdometry.start();
 		while (true) {
