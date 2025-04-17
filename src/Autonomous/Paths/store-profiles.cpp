@@ -87,17 +87,9 @@ void storeProfiles_blueDown() {}
 void storeProfiles_blueDownSafe() {}
 void storeProfiles_blueDownLBRush() {}
 void storeProfiles_redSoloAWP() {
-	storeNewSplineProfile("rsa grab 1",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {-0.64, 2.63}, {0.53, 3.29}, {2, 4}, {3.55, 4.52} }
-		), true,
-		{
-			new PolygonRegionConstraint(Polygon2D({ {1.5, 4}, {2, 3.5}, {2.5, 4}, {2, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
-		}
-	);
 	storeNewSplineProfile("rsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {2.34, -0.36}, {2, 1}, {2.3, 2.2}, {4.6, 3.93} }
+			{ {2.34, -0.36}, {2, 1.2}, {2.3, 2.2}, {4.6, 3.93} }
 		), false
 	);
 }

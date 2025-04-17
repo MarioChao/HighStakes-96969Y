@@ -31,60 +31,56 @@ void autonpaths::runRedSoloAWP() {
 namespace {
 
 void doAuton() {
+	// Alliance wall stake
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.25_tiles, robotChassis.getLookRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.22);
 	setArmStage(20);
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// (2, 4) goal
-	runFollowSpline(robotChassis, "rsa grab 1", false);
-	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.15);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 4_tiles, 0.1_tiles, true), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	setArmStage(0);
 	setGoalClampState(true);
-	waitUntil(follow::_isRamsetePathFollowCompleted);
+	waitUntil(global::_driveToPointDistanceError < 0.15);
 	// Top ring
 	setIntakeState(1);
-	// runFollowSpline(robotChassis, "rsa ring 1-1a");
-	// waitUntil(follow::_isRamsetePathFollowCompleted);
-	// runFollowSpline(robotChassis, "rsa ring 1-1b", false);
-	// waitUntil(follow::_isRamsetePathFollowCompleted);
-	global::turnToFace(robotChassis, global::turnToFace_params(2.86_tiles, 4.86_tiles), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.65_tiles, 4.65_tiles), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookRotation()), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.82_tiles, 4.86_tiles, 0.4_tiles), false);
 	// (2, 5) ring
-	global::turnToFace(robotChassis, global::turnToFace_params(2_tiles, 5_tiles), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 5_tiles), false);
-	global::turnToFace(robotChassis, global::turnToFace_params(1_tiles, 4_tiles), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 4_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 4.2_tiles, 0_tiles, true), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1.9_tiles, 5.1_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// Middle ring
-	global::turnToFace(robotChassis, global::turnToFace_params(1_tiles, 2_tiles), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(
-		2_tiles, 270_polarDeg, { {0, 100}, {0.7, 20}, {1.4, 100} }
-	), true);
-	waitUntil(local::_driveDistanceError_tiles < 1.5);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 3_tiles, 0_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.5);
 	setIntakeFilterEnabled(false);
 	setIntakeStoreRing(true);
 	setGoalClampState(false);
-	waitUntil(local::_isDriveAndTurnSettled);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.5_tiles, 0_tiles, false, 30), true);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 1.8_tiles, 0_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 2) goal
-	global::turnToFace(robotChassis, global::turnToFace_params(2_tiles, 2_tiles, true), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(
-		-1_tiles, 180_polarDeg,
-		{ {0, 100}, {0.8, 30} }
-	), true);
-	waitUntil(local::_driveDistanceError_tiles < 0.15);
-	setGoalClampState(true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 2_tiles, 0.1_tiles, true), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	setArmStage(5);
-	waitUntil(local::_isDriveAndTurnSettled);
+	setGoalClampState(true);
+	setIntakeFilterEnabled(true);
+	setIntakeStoreRing(false);
+	waitUntil(global::_driveToPointDistanceError < 0.15);
 	// (2, 1) ring
 	setIntakeState(1);
-	global::turnToFace(robotChassis, global::turnToFace_params(2_tiles, 1_tiles), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 1_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1.9_tiles, 0.8_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	runFollowSpline(robotChassis, "rsa ladder");
-	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.5);
-	setIntakeState(0);
 	waitUntil(follow::_isRamsetePathFollowCompleted);
+
+	// waitUntil(_autonTimer.time(sec) > 15);
+	// setIntakeState(0);
 }
 
 }
