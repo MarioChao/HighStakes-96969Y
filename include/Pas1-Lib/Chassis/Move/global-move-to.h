@@ -33,12 +33,15 @@ extern bool _isTurnToFaceSettled;
 struct driveToPoint_params {
 	driveToPoint_params(
 		aespa_lib::units::Length x, aespa_lib::units::Length y,
+		aespa_lib::units::Length earlyStopOffset = 0,
 		bool isReverse = false, double maxVelocity_pct = 100,
 		double runTimeout_sec = 3
 	)
-		: x(x), y(y), isReverse(isReverse), maxVelocity_pct(maxVelocity_pct), runTimeout_sec(runTimeout_sec) {}
+		: x(x), y(y), earlyStopOffset(earlyStopOffset),
+		isReverse(isReverse), maxVelocity_pct(maxVelocity_pct), runTimeout_sec(runTimeout_sec) {}
 
 	aespa_lib::units::Length x, y;
+	aespa_lib::units::Length earlyStopOffset;
 	bool isReverse = false;
 	double maxVelocity_pct = 100, maxTurnVelocity_pct = 100;
 	double runTimeout_sec = 3;

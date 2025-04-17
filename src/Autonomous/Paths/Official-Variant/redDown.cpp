@@ -33,7 +33,7 @@ namespace {
 void doAuton() {
 	setSwingState_left(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 0.88_tiles), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 1_tiles, true), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 1_tiles, 0, true), false);
 	local::turnToAngle(robotChassis, local::turnToAngle_params(-90_polarDeg), false);
 	setSwingState_left(0);
 

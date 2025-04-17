@@ -54,13 +54,13 @@ void doAuton() {
 	// Corner ring 1
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 5_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 0_tiles, 6_tiles, false, 50, 1.0), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 0_tiles, 6_tiles, 0, false, 50, 1.0), false);
 	// Corner ring 2
 	// local::driveAndTurn(robotChassis, local::driveAndTurn_params(-5_in, robotChassis.getLookRotation()), false);
 	// setIntakeLiftState(1);
 	// local::driveAndTurn(robotChassis, local::driveAndTurn_params(10_in, robotChassis.getLookRotation(), 50), false);
 	// Middle ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 5_tiles, true), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 5_tiles, 0, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	setIntakeLiftState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 3.2_tiles), false);
