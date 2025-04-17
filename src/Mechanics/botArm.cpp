@@ -35,7 +35,8 @@ double armEncoder_to_arm_ratio = 1.0 / 1.0;
 
 // Arm feedforward
 ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.1, 0.2, 12.0 / armMaxVelocity_radiansPerSec);
-PIDController arm_positionError_radians_to_radiansPerSec_Pid(7.7, 0, 0.25);
+PIDController arm_positionError_radians_to_radiansPerSec_Pid(10, 0, 0.25);
+// PIDController arm_positionError_radians_to_radiansPerSec_Pid(7.7, 0, 0.25);
 
 // Pure pid
 PIDController arm_positionError_degrees_to_volt_pid(0.35, 0, 0);
@@ -45,7 +46,7 @@ PatienceController armUpPatience(12, 1.0, true, 5);
 PatienceController armDownPatience(6, 1.0, false, 5);
 
 // Stage config
-std::vector<double> armStages_degrees = { 0, 15, 25, 40, 115, 130, 175, 250, 0 };
+std::vector<double> armStages_degrees = { 0, 15, 25, 40, 115, 130, 200, 250, 0 };
 std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
 bool releaseOnExhausted = true;

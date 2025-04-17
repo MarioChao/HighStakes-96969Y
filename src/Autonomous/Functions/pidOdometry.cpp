@@ -33,7 +33,7 @@ void runLinearPIDPath(std::vector<std::vector<aespa_lib::units::Length>> waypoin
 
 		// Linear
 		lg = mainOdometry.getLookPose_scaled();
-		global::driveToPoint(robotChassis, global::driveToPoint_params(point[0], point[1], isReverse, maxVelocity), false);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(point[0], point[1], 0, isReverse, maxVelocity), false);
 
 		// Info
 		lg = mainOdometry.getLookPose_scaled();

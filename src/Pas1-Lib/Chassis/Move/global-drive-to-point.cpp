@@ -18,6 +18,7 @@ const double turnTo_distanceThreshold = 0.3;
 
 double _targetX, _targetY;
 bool _isReverseHeading;
+double _earlyStopOffset_tiles;
 double _maxVelocity_pct, _maxTurnVelocity_pct;
 double _runTimeout_sec;
 Differential *_diff_chassis;
@@ -39,6 +40,7 @@ void driveToPoint(Differential &chassis, driveToPoint_params params, bool async)
 	drive_to_point::_targetX = params.x.tiles();
 	drive_to_point::_targetY = params.y.tiles();
 	drive_to_point::_isReverseHeading = params.isReverse;
+	drive_to_point::_earlyStopOffset_tiles = params.earlyStopOffset.tiles();
 	drive_to_point::_maxVelocity_pct = params.maxVelocity_pct;
 	drive_to_point::_maxTurnVelocity_pct = params.maxTurnVelocity_pct;
 	drive_to_point::_runTimeout_sec = params.runTimeout_sec;
@@ -75,6 +77,7 @@ void runDriveToPoint() {
 	double x_tiles = _targetX;
 	double y_tiles = _targetY;
 	bool isReverse = _isReverseHeading;
+	double earlyStopOffset_tiles = _earlyStopOffset_tiles;
 	double maxVelocity_pct = _maxVelocity_pct;
 	double maxTurnVelocity_pct = _maxTurnVelocity_pct;
 	double runTimeout_sec = _runTimeout_sec;
@@ -162,7 +165,7 @@ void runDriveToPoint() {
 
 		// Compute linear distance error
 		double travelDistance = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { currentX, currentY });
-		double distanceError = targetDistance - travelDistance;
+		double distanceError = targetDistance - travelDistance - earlyStopOffset_tiles;
 		_driveToPointDistanceError = std::fabs(distanceError);
 
 		// Compute motor velocity pid-value from error

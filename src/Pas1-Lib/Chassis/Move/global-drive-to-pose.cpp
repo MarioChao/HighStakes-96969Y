@@ -16,7 +16,7 @@ using namespace pas1_lib::chassis::move::global;
 namespace drive_to_pose {
 void runDriveToPose();
 
-const double carrot_distanceThreshold_tiles = 0.3;
+const double carrot_distanceThreshold_tiles = 0.5;
 
 Linegular _targetPose(0, 0, 0);
 double _carrotLead;
@@ -90,10 +90,11 @@ void runDriveToPose() {
 
 	// Error
 	_driveToPoseDistanceError = (targetPose - startLg).getXYMagnitude();
+	PolarAngle driveToPoseRotateError = (targetPose - startLg).getRotation();
 
 	// Config
 	const double velocityFactor = (isReverse ? -1 : 1);
-	// const double rotationOffset_degrees = (isReverse ? 180 : 0);
+	const double rotationOffset_degrees = (isReverse ? 180 : 0);
 
 
 	// Reset PID
@@ -166,7 +167,7 @@ void runDriveToPose() {
 		// Get target rotation
 		double targetRotation_degrees = [&]() -> double {
 			if (isCloseToTarget) return targetPose.getRotation().polarDeg();
-			return carrotPoint.angleFrom(currentLg.getPosition()).polarDeg() + currentLg.getRotation().polarDeg();
+			return (carrotPoint - currentLg.getPosition()).angleFrom(Vector2D(1, 0)).polarDeg() + rotationOffset_degrees;
 		}();
 		targetRotation_degrees = aespa_lib::genutil::modRange(targetRotation_degrees, 360, -180);
 
@@ -174,18 +175,19 @@ void runDriveToPose() {
 		/* ---------- Linear ---------- */
 
 		// Compute linear distance error
-		double distanceError = (targetPose - currentLg).getPosition().dot(Vector2D::fromPolar(targetPose.getRotation(), 1));
-		_driveToPoseDistanceError = std::fabs(distanceError);
+		double carrotDistanceError = (carrotPoint - currentLg.getPosition()).getMagnitude();
+		double overallDistanceError = (targetPose - currentLg).getXYMagnitude();
+		_driveToPoseDistanceError = std::fabs(overallDistanceError);
 
 		// Compute motor velocity pid-value from error
-		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(distanceError);
+		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(carrotDistanceError);
 		double velocity_pct;
 		velocity_pct = autonSettings.distanceError_tiles_to_velocity_pct_pid.getValue();
 		velocity_pct = aespa_lib::genutil::clamp(velocity_pct, -maxVelocity_pct, maxVelocity_pct);
 		velocity_pct *= velocityFactor;
 
 		// Update error patience
-		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(distanceError));
+		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(overallDistanceError));
 
 
 		/* ---------- Angular ---------- */
@@ -193,6 +195,7 @@ void runDriveToPose() {
 		// Compute polar heading error
 		double rotateError = targetRotation_degrees - currentLg.getRotation().polarDeg();
 		rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
+		driveToPoseRotateError = rotateError;
 
 		// Compute heading pid-value from error
 		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError(rotateError);
@@ -202,8 +205,9 @@ void runDriveToPose() {
 
 
 		/* Debug print */
-		// printf("DIS DE: %.3f, VLin: %.3f, VRot: %.3f\n", distanceError, velocity_pct, rotateVelocity_pct);
+		// printf("DIS CDE: %.3f, VLin: %.3f, TRot: %.3f, VRot: %.3f\n", carrotDistanceError, velocity_pct, targetRotation_degrees, rotateVelocity_pct);
 		// printf("ANG CUR: %.3f CRT: %.3f %.3f TGT: %.3f, DE: %.3f\n", currentLg.getRotation().polarDeg(), carrotPoint.x, carrotPoint.y, targetRotation_degrees, rotateError);
+		// printf("ANG CUR: %.3f TGT: %.3f, RV: %.3f\n", currentLg.getRotation().polarDeg(), targetRotation_degrees, rotateVelocity_pct);
 
 
 		/* ---------- Combined ---------- */
@@ -237,7 +241,7 @@ void runDriveToPose() {
 		wait(10, msec);
 	}
 
-	printf("Err: %.3f tiles %.3f deg\n", _driveToPoseDistanceError.tiles(), (targetPose.getRotation() - chassis->getLookRotation()).polarDeg());
+	printf("Err: %.3f tiles %.3f deg\n", _driveToPoseDistanceError.tiles(), driveToPoseRotateError.polarDeg());
 
 	// Stop
 	chassis->stopMotors(brake);
