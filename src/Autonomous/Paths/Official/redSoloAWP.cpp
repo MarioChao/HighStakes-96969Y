@@ -56,15 +56,16 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 3_tiles, 0_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.5);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.5_tiles, 0_tiles, false, 30), true);
+	waitUntil(global::_driveToPointDistanceError < 0.7);
 	setIntakeFilterEnabled(false);
 	setIntakeStoreRing(true);
 	setGoalClampState(false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.5_tiles, 0_tiles, false, 30), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 1.8_tiles, 0_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 2) goal
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 2_tiles, 0.1_tiles, true), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 2_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	setArmStage(5);
 	setGoalClampState(true);
@@ -72,8 +73,9 @@ void doAuton() {
 	setIntakeStoreRing(false);
 	waitUntil(global::_driveToPointDistanceError < 0.15);
 	// (2, 1) ring
-	setIntakeState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1.9_tiles, 0.8_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.7);
+	setIntakeState(1);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	runFollowSpline(robotChassis, "rsa ladder");
