@@ -38,32 +38,32 @@ void doAuton() {
 	setSwingState_left(0);
 
 	runFollowSpline("rd grab 2", false);
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.15);
+	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.15);
 	setGoalClampState(true);
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	setIntakeState(1);
 	runFollowSpline("rd ring 2-1");
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	local::turnToAngle(robotChassis, local::turnToAngle_params(-90_polarDeg), false);
 	setGoalClampState(false);
 	setIntakeState(0);
 	runFollowSpline("rd grab 3");
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.15);
+	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.15);
 	setGoalClampState(true);
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	setIntakeState(1);
 	runFollowSpline("rd ring 3-1");
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(10_in, robotChassis.getLookPose().getRotation()), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-10_in, robotChassis.getLookPose().getRotation()), false);
 	setIntakeLiftState(1);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(20_in, robotChassis.getLookPose().getRotation()), false);
 	setIntakeLiftState(0);
 	runFollowSpline("rd ladder 1a");
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	setIntakeState(0);
 	runFollowSpline("rd ladder 1b");
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 }
 
 }

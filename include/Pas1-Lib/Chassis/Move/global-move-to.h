@@ -46,8 +46,34 @@ struct driveToPoint_params {
 
 void driveToPoint(base::Differential &chassis, driveToPoint_params params, bool async);
 
-extern double _linearPathDistanceError;
+extern double _driveToPointDistanceError;
 extern bool _isDriveToPointSettled;
+
+
+struct driveToPose_params {
+	driveToPose_params(
+		aespa_lib::units::Length x, aespa_lib::units::Length y,
+		aespa_lib::units::PolarAngle rotation,
+		double carrotLead = 0.6,
+		bool isReverse = false,
+		double maxVelocity_pct = 100,
+		double runTimeout_sec = 3
+	)
+		: x(x), y(y), rotation(rotation), carrotLead(carrotLead),
+		isReverse(isReverse), maxVelocity_pct(maxVelocity_pct), runTimeout_sec(runTimeout_sec) {}
+
+	aespa_lib::units::Length x, y;
+	aespa_lib::units::PolarAngle rotation;
+	double carrotLead = 0.6;
+	bool isReverse = false;
+	double maxVelocity_pct = 100, maxTurnVelocity_pct = 100;
+	double runTimeout_sec = 3;
+};
+
+void driveToPose(base::Differential &chassis, driveToPose_params params, bool async);
+
+extern aespa_lib::units::Length _driveToPoseDistanceError;
+extern bool _isDriveToPoseSettled;
 
 
 }

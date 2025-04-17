@@ -11,18 +11,18 @@ namespace move {
 namespace follow {
 
 
-struct followPath_params {
-	followPath_params(planning::profiles::SplineProfile *splineProfile)
+struct ramseteFollowPath_params {
+	ramseteFollowPath_params(planning::profiles::SplineProfile *splineProfile)
 		: splineProfile(splineProfile) {}
 
 	planning::profiles::SplineProfile *splineProfile;
 };
 
-void followPath(base::Differential &chassis, followPath_params params, bool async);
+void ramseteFollowPath(base::Differential &chassis, ramseteFollowPath_params params, bool async);
 
-extern timer _pathTimer;
-extern double _pathFollowDistanceRemaining_tiles;
-extern bool _isPathFollowCompleted;
+extern timer _ramsetePathTimer;
+extern double _ramseteFollowDistanceRemaining_tiles;
+extern bool _isRamsetePathFollowCompleted;
 
 
 }

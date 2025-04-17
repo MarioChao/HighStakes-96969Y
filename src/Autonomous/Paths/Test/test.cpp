@@ -10,7 +10,7 @@ void autonpaths::runAutonTest() {
 		setRobotLookPose(aespa_lib::datas::Linegular(1.5, 0.5, 90));
 
 		pathbuild::runFollowSpline(robotChassis, "test");
-		waitUntil(follow::_isPathFollowCompleted);
+		waitUntil(follow::_isRamsetePathFollowCompleted);
 
 		global::turnToFace(robotChassis, global::turnToFace_params(1.5, 0.5), false);
 		global::driveToPoint(robotChassis, global::driveToPoint_params(1.5, 0.5), false);

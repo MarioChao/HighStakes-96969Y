@@ -16,7 +16,14 @@ struct Vector2D {
 
 	double getMagnitude();
 	Vector2D getNormalized();
+
+	Vector2D operator-();
+	Vector2D operator+(Vector2D other);
+	Vector2D operator-(Vector2D other);
+
+	double cross_scalar(Vector2D other);
 	double dot(Vector2D other);
+	units::PolarAngle angleFrom(Vector2D other);
 
 	double x, y;
 };

@@ -45,7 +45,7 @@ void storeNewSplineProfile(std::string profileName, pas1_lib::planning::splines:
 
 void runFollowSpline(Differential &chassis, std::string profileName, bool turnFirst) {
 	if (!splineProfile_storage.hasKey(profileName)) {
-		follow::_isPathFollowCompleted = true;
+		follow::_isRamsetePathFollowCompleted = true;
 		printf("Profile %s not stored!\n", profileName.c_str());
 		return;
 	}
@@ -55,7 +55,7 @@ void runFollowSpline(Differential &chassis, std::string profileName, bool turnFi
 		local::turnToAngle(chassis, local::turnToAngle_params(startPose.getRotation()), true);
 		waitUntil(local::_turnAngleError_degrees < 5);
 	}
-	follow::followPath(chassis, follow::followPath_params(splineProfile), true);
+	follow::ramseteFollowPath(chassis, follow::ramseteFollowPath_params(splineProfile), true);
 }
 
 void runFollowSpline(std::string profileName, bool turnFirst) {

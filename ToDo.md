@@ -37,9 +37,16 @@
 				- [x] differential
 				- [ ] x drive?
 			- [x] Move
-				- [x] global move to (need actual tests)
+				- [x] global move to
+					- [x] turn to face
+					- [x] drive to point
+					- [x] drive to pose
 				- [x] local move by
+					- [x] turn to angle
+					- [x] drive and turn
 				- [x] path follow
+					- [ ] ramsete follow (need actual tests)
+					- [ ] pure pursuit
 			- [ ] Settings
 				- [x] auton settings
 				- [x] bot info

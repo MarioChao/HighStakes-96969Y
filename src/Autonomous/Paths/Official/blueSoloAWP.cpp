@@ -39,25 +39,25 @@ void doAuton() {
 
 	// (2, 4) goal
 	runFollowSpline(robotChassis, "bsa grab 1", false);
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.25);
+	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.25);
 	setArmStage(0);
 	setGoalClampState(true);
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.15);
+	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.15);
 	// Top ring
 	setIntakeState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2.6_tiles, 4.6_tiles), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.5_tiles, robotChassis.getLookRotation()), false);
 	// (2, 5) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1.9_tiles, 5.1_tiles), true);
-	waitUntil(global::_linearPathDistanceError < 0.4);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// Middle ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 4_tiles), false);
 	runFollowSpline("bsa ring mid");
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 1.5);
+	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 1.5);
 	setIntakeFilterEnabled(false);
 	setIntakeStoreRing(true);
 	setGoalClampState(false);
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	// (2, 2) goal
 	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - 2_tiles, 2_tiles, true), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(
@@ -73,10 +73,10 @@ void doAuton() {
 	// (2, 1) ring
 	setIntakeState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 1_tiles), true);
-	waitUntil(global::_linearPathDistanceError < 0.2);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	runFollowSpline(robotChassis, "bsa ladder");
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 
 	// waitUntil(_autonTimer.time(sec) > 15);
 	// setIntakeState(0);

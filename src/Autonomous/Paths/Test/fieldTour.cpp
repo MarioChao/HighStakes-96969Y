@@ -51,7 +51,7 @@ void doAuton() {
 
 	// Follow path
 	runFollowSpline("field tour");
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	printf("done\n");
 
 	// Turn to 0

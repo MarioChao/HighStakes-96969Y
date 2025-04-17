@@ -38,16 +38,16 @@ void doAuton() {
 
 	// (2, 4) goal
 	runFollowSpline(robotChassis, "rsa grab 1", false);
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.15);
+	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.15);
 	setArmStage(0);
 	setGoalClampState(true);
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 	// Top ring
 	setIntakeState(1);
 	// runFollowSpline(robotChassis, "rsa ring 1-1a");
-	// waitUntil(follow::_isPathFollowCompleted);
+	// waitUntil(follow::_isRamsetePathFollowCompleted);
 	// runFollowSpline(robotChassis, "rsa ring 1-1b", false);
-	// waitUntil(follow::_isPathFollowCompleted);
+	// waitUntil(follow::_isRamsetePathFollowCompleted);
 	global::turnToFace(robotChassis, global::turnToFace_params(2.86_tiles, 4.86_tiles), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.65_tiles, 4.65_tiles), false);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookRotation()), false);
@@ -82,9 +82,9 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 1_tiles), false);
 	// Ladder
 	runFollowSpline(robotChassis, "rsa ladder");
-	waitUntil(follow::_pathFollowDistanceRemaining_tiles < 0.5);
+	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.5);
 	setIntakeState(0);
-	waitUntil(follow::_isPathFollowCompleted);
+	waitUntil(follow::_isRamsetePathFollowCompleted);
 }
 
 }

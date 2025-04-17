@@ -16,6 +16,7 @@ using pas1_lib::chassis::settings::AutonSettings;
 using pas1_lib::chassis::settings::MotionHandler;
 using namespace pas1_lib::chassis::move::follow;
 
+namespace ramsete_follow_path {
 void runFollowPath();
 
 const double pathFollowDelay_seconds = 0.020;
@@ -27,6 +28,8 @@ SplineProfile *_splineProfile;
 Differential *_diff_chassis;
 }
 
+}
+
 
 namespace pas1_lib {
 namespace chassis {
@@ -34,35 +37,35 @@ namespace move {
 namespace follow {
 
 
-void followPath(Differential &chassis, followPath_params params, bool async) {
+void ramseteFollowPath(Differential &chassis, ramseteFollowPath_params params, bool async) {
 	chassis.motionHandler.incrementMotion();
 	waitUntil(chassis.motionHandler.getIsInMotion() == false);
 
-	_splineProfile = params.splineProfile;
-	_diff_chassis = &chassis;
+	ramsete_follow_path::_splineProfile = params.splineProfile;
+	ramsete_follow_path::_diff_chassis = &chassis;
 
 	// Profile validation
-	if (_splineProfile == nullptr) {
-		_isPathFollowCompleted = true;
+	if (ramsete_follow_path::_splineProfile == nullptr) {
+		_isRamsetePathFollowCompleted = true;
 		return;
 	}
 
-	_isPathFollowCompleted = false;
-	_pathFollowDistanceRemaining_tiles = 1e9;
+	_isRamsetePathFollowCompleted = false;
+	_ramseteFollowDistanceRemaining_tiles = 1e9;
 
 	if (async) {
 		task asyncDrive([]() -> int {
-			runFollowPath();
+			ramsete_follow_path::runFollowPath();
 			return 1;
 		});
 	} else {
-		runFollowPath();
+		ramsete_follow_path::runFollowPath();
 	}
 }
 
-timer _pathTimer;
-double _pathFollowDistanceRemaining_tiles;
-bool _isPathFollowCompleted;
+timer _ramsetePathTimer;
+double _ramseteFollowDistanceRemaining_tiles;
+bool _isRamsetePathFollowCompleted;
 
 
 }
@@ -72,6 +75,8 @@ bool _isPathFollowCompleted;
 
 
 namespace {
+
+namespace ramsete_follow_path {
 void runFollowPath() {
 	// Get global variables
 	SplineProfile *splineProfile = _splineProfile;
@@ -103,7 +108,7 @@ void runFollowPath() {
 	autonSettings.distanceError_tiles_patience.reset();
 
 	// Reset timer
-	_pathTimer.reset();
+	_ramsetePathTimer.reset();
 
 	// Get spline info
 	double totalDistance_tiles = splineProfile->curveSampler.getDistanceRange().second;
@@ -131,7 +136,7 @@ void runFollowPath() {
 		}
 
 		// Get time
-		double traj_time = _pathTimer.time(seconds);
+		double traj_time = _ramsetePathTimer.time(seconds);
 
 		// Check profile ended
 		if (traj_time >= totalTime_seconds + pathFollowDelay_seconds) {
@@ -184,7 +189,7 @@ void runFollowPath() {
 			// printf("TDE: %.3f PDE: %.3f AE: %.3f\n", total_distanceError, maxPoseError, (targetLg - robotLg).getRotation().polarDeg());
 			// printf("TDE: %.3f PDE: %.3f AE: %.3f\n", total_distanceError, pose_distanceError, (targetLg - robotLg).getRotation().polarDeg());
 		}
-		_pathFollowDistanceRemaining_tiles = std::fabs(total_distanceError + pose_distanceError);
+		_ramseteFollowDistanceRemaining_tiles = std::fabs(total_distanceError + pose_distanceError);
 		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(total_distanceError + pose_distanceError);
 
 		// Update angle error
@@ -257,7 +262,9 @@ void runFollowPath() {
 	motionHandler.exitMotion();
 
 	// Settled
-	_pathFollowDistanceRemaining_tiles = -1;
-	_isPathFollowCompleted = true;
+	_ramseteFollowDistanceRemaining_tiles = -1;
+	_isRamsetePathFollowCompleted = true;
 }
+}
+
 }
