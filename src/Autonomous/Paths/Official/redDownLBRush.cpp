@@ -92,7 +92,8 @@ void doAuton() {
 	// Ladder
 	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - (4_tiles), 3_tiles), false);
 	setArmStage(5);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(1_tiles, robotChassis.getLookRotation(), 20), false);
+	waitUntil(_autonTimer.time(sec) > 14.7);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(1_tiles, robotChassis.getLookRotation(), 30), false);
 
 	// waitUntil(_autonTimer.time(sec) > 15);
 	// setIntakeState(0);
