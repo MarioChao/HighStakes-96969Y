@@ -31,7 +31,7 @@ void autonpaths::runAutonRedDownLBRush() {
 namespace {
 
 void doAuton() {
-
+	// ToDo: replace with blue down mirrored
 }
 
 }

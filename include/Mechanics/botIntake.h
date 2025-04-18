@@ -19,7 +19,8 @@ namespace botintake {
 
 	void switchFilterColor();
 
-	void setFilterOutColor(std::string);
+	void setFilterOutColor(std::string colorText);
+	std::string getFilterOutColor();
 
 	void setIntakeStoreRing(bool, double = 0);
 

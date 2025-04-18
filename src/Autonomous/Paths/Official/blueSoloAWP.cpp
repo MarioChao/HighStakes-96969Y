@@ -31,6 +31,8 @@ void autonpaths::runBlueSoloAWP() {
 namespace {
 
 void doAuton() {
+	// ToDo: replace with red solo mirrored
+
 	// Alliance wall stake
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.25_tiles, robotChassis.getLookRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.22);

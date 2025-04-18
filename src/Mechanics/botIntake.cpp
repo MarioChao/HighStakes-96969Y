@@ -175,6 +175,10 @@ void setFilterOutColor(std::string colorText) {
 	// debug::printOnController(colorText);
 }
 
+std::string getFilterOutColor() {
+	return filterOutColor;
+}
+
 void setIntakeStoreRing(bool state, double delaySec) {
 	// Check for instant set
 	if (delaySec <= 1e-9) {
@@ -248,16 +252,19 @@ void resolveIntake() {
 		bool isNewDetected = (!previousIsDetecting && isDetectingRing);
 		previousIsDetecting = isDetectingRing;
 		if (detectedRingColor != "none") lastDetectedRingColor = detectedRingColor;
-
+		// printf("Col: %s distance: %.3f %d\n", lastDetectedRingColor.c_str(), distanceSensor_detectedDistance, distanceSensor_isDetectingRing);
+		
 		// Filter
 		if (true) {
 			/* Optical sensor + distance sensor*/
 			if (distanceSensor_isDetectingRing) {
-				if (lastDetectedRingColor == filterOutColor) {
-					// printf("Distance sensor: filtering out\n");
-					wait(200, msec);
-					IntakeMotor1.spin(fwd, -5, volt);
-					wait(100, msec);
+				// printf("Col: %s %s\n", lastDetectedRingColor.c_str(), filterOutColor.c_str());
+				if (lastDetectedRingColor == "none");
+				else if (lastDetectedRingColor == filterOutColor) {
+					printf("Distance sensor: filtering out\n");
+					wait(170, msec);
+					IntakeMotor1.spin(fwd, -12, volt);
+					wait(80, msec);
 				}
 			}
 		} else {

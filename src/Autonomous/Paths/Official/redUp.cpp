@@ -31,7 +31,7 @@ void autonpaths::runAutonRedUp() {
 namespace {
 
 void doAuton() {
-	
+	// ToDo: replace with blue up mirrored
 }
 
 }

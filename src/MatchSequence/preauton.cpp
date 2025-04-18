@@ -58,6 +58,9 @@ namespace {
 		RingOpticalSensor.setLightPower(100);
 		printf("Optical on\n");
 
+		// Configure sensor
+		RingOpticalSensor.integrationTime(10);
+
 		initComponentFinished = true;
 	}
 

@@ -44,7 +44,7 @@ namespace {
 		wait(20, msec);
 		swing::setState_left(0);
 		swing::setState_right(0);
-		goalclamp::setState(0);
+		// goalclamp::setState(0);
 		// botintakelift::setState(1);
 	}
 }

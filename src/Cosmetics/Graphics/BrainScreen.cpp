@@ -67,6 +67,8 @@ void drawMotorPower();
 void drawMotorTorque();
 void drawInertial(Linegular robotPose);
 
+void drawDebug();
+
 // Variables
 // Flywheel
 double fw_drawX = 20;
@@ -76,12 +78,14 @@ vector<ButtonGui *> mainDockButtons;
 vector<ButtonGui *> autonDockButtons, allianceButtons;
 vector<ButtonGui *> autonSubdock0Buttons, autonSubdock1Buttons, autonSubdock2Buttons, autonSubdock3Buttons, autonSubdock4Buttons, autonSubdock5Buttons;
 vector<ButtonGui *> simulationDockButtons;
+vector<ButtonGui *> debugDockButtons;
 SliderGui *slider;
 DockGui *mainDock, *mainDock_dockDock;
 DockGui *simulationDock;
 DockGui *autonDock, *autonDock_dockDock;
 DockGui *autonSubdock0, *autonSubdock1, *autonSubdock2, *autonSubdock3, *autonSubdock4, *autonSubdock5;
 DockGui *qrCodeDock, *motTempDock, *motTorqueDock;
+DockGui *debugDock;
 
 // Others
 vector<pair<int, int>> vexTeamQRCord, secondQRCord;
@@ -354,6 +358,12 @@ void createButtons() {
 		mainDock_dockDock->setEnabled(false);
 		motTorqueDock->setEnabled(true);
 	}));
+	mainDockButtons.push_back(new ButtonGui(new Rectangle(440, 10, 80, 20, color(135, 255, 255), color(50, 50, 50), 2), "Debug", white, [] {
+		mainDockDisable(5);
+		mainDockButtons[5]->enable();
+		mainDock_dockDock->setEnabled(false);
+		debugDock->setEnabled(true);
+	}));
 
 	// Auton Dock buttons
 	{
@@ -418,6 +428,19 @@ void createButtons() {
 			return 1;
 		});
 	}));
+
+
+	// -------------------------
+	// --- Debug Dock Buttons ---
+	// -------------------------
+
+	debugDockButtons.push_back(new ButtonGui(30, 70, 100, 30, 10, color(185, 255, 135), ClrDarkRed, 2, "switch color", ClrDarkRed, [] {
+		botintake::switchFilterColor();
+		debugDockButtons[0]->setUsability(false);
+		wait(0.5, sec);
+		debugDockButtons[0]->setUsability(true);
+	}));
+
 
 	// -----------------------------------------
 	// --- Alliance & Mode Selection Buttons ---
@@ -662,6 +685,12 @@ void createDocks() {
 	motTorqueDock->addFunction([] {
 		drawMotorTorque();
 	});
+
+	// Debug dock
+	debugDock = new DockGui(0, 20, 480, 220, {}, {});
+	debugDock->addFunction([] {
+		drawDebug();
+	});
 }
 
 /// @brief Set the GUI variables corresponding to each dock.
@@ -671,8 +700,8 @@ void setDockGUIs() {
 		mainDock->addGui(gui);
 	}
 	mainDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock });
-	mainDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock, motTorqueDock });
-	mainDock_dockDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock, motTorqueDock });
+	mainDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock, motTorqueDock, debugDock });
+	mainDock_dockDock->addGuis({ autonDock, simulationDock, qrCodeDock, motTempDock, motTorqueDock, debugDock });
 
 	// Auton Dock
 	for (GuiClass *gui : autonDockButtons) {
@@ -691,9 +720,12 @@ void setDockGUIs() {
 
 	// Simulation Dock
 	for (GuiClass *gui : simulationDockButtons) simulationDock->addGui(gui);
-
+	
 	// QR-Code Dock
 	qrCodeDock->addGuis({ slider });
+	
+	// Debug Dock
+	for (GuiClass *gui : debugDockButtons) debugDock->addGui(gui);
 }
 
 /// @brief Initialize the docks by disabling some of them.
@@ -890,4 +922,11 @@ void drawInertial(Linegular robotPose) {
 	color stableColor = inertialIsStable ? green : red;
 	Brain.Screen.drawCircle(15, 80, 10, stableColor);
 }
+
+void drawDebug() {
+	Brain.Screen.setPenColor(color::green);
+	Brain.Screen.setFillColor(color::transparent);
+	Brain.Screen.printAt(10, 35, 1, "Filter out: %4s\n", botintake::getFilterOutColor().c_str());
+}
+
 }
