@@ -38,12 +38,12 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.95);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3_tiles), 1_tiles, 0.52_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.37);
-	setArmStage(6);
+	setArmStage(7);
 	waitUntil(global::_driveToPointDistanceError < 0.1);
 	// Move goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (4.2_tiles), 0.4_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	setArmStage(7);
+	setArmStage(8);
 	local::turnToAngle(robotChassis, local::turnToAngle_params(-10_polarDeg), false);
 	setArmStage(3);
 
@@ -67,6 +67,7 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (5.6_tiles), 1_tiles, 0), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
+	setArmStage(6);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (4.9_tiles), 1_tiles, 0, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Corner ring 1

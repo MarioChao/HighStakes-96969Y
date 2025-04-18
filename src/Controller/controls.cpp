@@ -103,12 +103,12 @@ void setUpKeybinds() {
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
-	// Stage 6 (score wall stake / tip goal)
+	// Stage 8 (score wall stake / tip goal)
 	Controller1.ButtonL1.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
-		if (botarm::getArmStage() == 7) botarm::setArmStage(0);
-		else botarm::setArmStage(7);
+		if (botarm::getArmStage() == 8) botarm::setArmStage(0);
+		else botarm::setArmStage(8);
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
