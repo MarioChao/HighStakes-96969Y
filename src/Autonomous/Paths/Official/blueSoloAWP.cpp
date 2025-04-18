@@ -31,7 +31,7 @@ void autonpaths::runBlueSoloAWP() {
 namespace {
 
 void doAuton() {
-	// ToDo: replace with red solo mirrored
+	// Mirrored from red solo
 
 	// Alliance wall stake
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.25_tiles, robotChassis.getLookRotation()), true);
@@ -40,48 +40,51 @@ void doAuton() {
 	waitUntil(local::_isDriveAndTurnSettled);
 
 	// (2, 4) goal
-	runFollowSpline(robotChassis, "bsa grab 1", false);
-	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.25);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 4_tiles, 0.1_tiles, true), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	setArmStage(0);
 	setGoalClampState(true);
-	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 0.15);
-	// Top ring
+	waitUntil(global::_driveToPointDistanceError < 0.15);
+	// Top rings
 	setIntakeState(1);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2.6_tiles, 4.6_tiles), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.5_tiles, robotChassis.getLookRotation()), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.82_tiles), 4.86_tiles, 0.4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.7_tiles), 5.8_tiles, 0.4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 5) ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1.9_tiles, 5.1_tiles), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.3_tiles), 4.2_tiles, 0_tiles, true), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.9_tiles), 5.1_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// Middle ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 1_tiles, 4_tiles), false);
-	runFollowSpline("bsa ring mid");
-	waitUntil(follow::_ramseteFollowDistanceRemaining_tiles < 1.5);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1_tiles), 4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1_tiles), 2.7_tiles, 0_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.5);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1_tiles), 2.2_tiles, 0_tiles, false, 15), true);
+	waitUntil(global::_driveToPointDistanceError < 1.0);
 	setIntakeFilterEnabled(false);
 	setIntakeStoreRing(true);
 	setGoalClampState(false);
-	waitUntil(follow::_isRamsetePathFollowCompleted);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1_tiles), 1.8_tiles, 0_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 2) goal
-	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - 2_tiles, 2_tiles, true), false);
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(
-		-1_tiles, 0_polarDeg,
-		{ {0, 100}, {0.8, 30} }
-	), true);
-	waitUntil(local::_driveDistanceError_tiles < 0.15);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 2_tiles, 0_tiles, true), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
+	setArmStage(5);
 	setGoalClampState(true);
 	setIntakeFilterEnabled(true);
 	setIntakeStoreRing(false);
-	setArmStage(5);
-	waitUntil(local::_isDriveAndTurnSettled);
+	waitUntil(global::_driveToPointDistanceError < 0.15);
 	// (2, 1) ring
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.9_tiles), 0.8_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.9);
 	setIntakeState(1);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - 2_tiles, 1_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	runFollowSpline(robotChassis, "bsa ladder");
 	waitUntil(follow::_isRamsetePathFollowCompleted);
-
-	// waitUntil(_autonTimer.time(sec) > 15);
-	// setIntakeState(0);
 }
 
 }

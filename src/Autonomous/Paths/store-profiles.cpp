@@ -28,26 +28,7 @@ void storeProfiles_test() {
 
 void storeProfiles_redUp() {}
 void storeProfiles_redUpSafe() {}
-void storeProfiles_blueUp() {
-	storeNewSplineProfile("bu grab 1",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(-0.64), 2.63}, {6-(0.53), 3.29}, {6-(2), 4}, {6-(3.55), 4.52} }
-		), true,
-		{
-			new PolygonRegionConstraint(Polygon2D({ {6-(1.5), 4}, {6-(2), 3.5}, {6-(2.5), 4}, {6-(2), 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
-		}
-	);
-	storeNewSplineProfile("bu ring 1-1a",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(0.38), 3.14}, {6-(2), 4}, {6-(2.45), 4.6}, {6-(2.5), 5.2}, {6-(2.52), 8.0} }
-		), false
-	);
-	storeNewSplineProfile("bu ring 1-1b",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(2.52), 6.19}, {6-(2.5), 5.2}, {6-(2.25), 4.4}, {6-(0.68), 2.37} }
-		), true
-	);
-}
+void storeProfiles_blueUp() {}
 void storeProfiles_blueUpSafe() {}
 void storeProfiles_redDown() {
 	storeNewSplineProfile("rd grab 2",
@@ -94,22 +75,6 @@ void storeProfiles_redSoloAWP() {
 	);
 }
 void storeProfiles_blueSoloAWP() {
-	storeNewSplineProfile("bsa grab 1",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(-0.64), 2.63}, {6-(0.53), 3.29}, {6-(2), 4}, {6-(3.55), 4.74} }
-		), true,
-		{
-			new PolygonRegionConstraint(Polygon2D({ {3.5, 4}, {4, 3.5}, {4.5, 4}, {4, 4.5} }), botInfo.maxVel_tilesPerSec * 0.3)
-		}
-	);
-	storeNewSplineProfile("bsa ring mid",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(1), 6}, {6-(1), 4}, {6-(1), 2}, {6-(1), 0} }
-		), false,
-		{
-			new PolygonRegionConstraint(Polygon2D({{0.5, 2.5}, {5.5, 2.5}, {5.5, 3.2}, {0.5, 3.2}}), botInfo.maxVel_tilesPerSec * 0.2)
-		}
-	);
 	storeNewSplineProfile("bsa ladder",
 		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
 			{ {6-(2.34), -0.36}, {6-(2), 1.2}, {6-(2.3), 2.2}, {6-(4.6), 3.93} }
