@@ -34,16 +34,17 @@ void doAuton() {
 	// Goal rush
 	global::driveToPoint(robotChassis, global::driveToPoint_params(3.5_tiles, 0.52_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.95);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 1_tiles, 0.48_tiles), true);
-	waitUntil(global::_driveToPointDistanceError < 0.4);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 1_tiles, 0.5_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.35);
 	setArmStage(6);
 	waitUntil(global::_driveToPointDistanceError < 0.1);
 	// Move goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(4_tiles, 0.4_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.5);
-	setArmStage(7);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(180_polarDeg), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(200_polarDeg), false);
+	setArmStage(7);
+	wait(400, msec);
 	setArmStage(3);
 
 	// (4, 1) ring

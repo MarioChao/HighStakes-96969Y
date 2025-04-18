@@ -34,19 +34,19 @@ double armEncoder_to_arm_ratio = 1.0 / 1.0;
 /* Stage controllers */
 
 // Arm feedforward
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.1, 0.2, 12.0 / armMaxVelocity_radiansPerSec);
-PIDController arm_positionError_radians_to_radiansPerSec_Pid(10, 0, 0.25);
-// PIDController arm_positionError_radians_to_radiansPerSec_Pid(7.7, 0, 0.25);
-
-// Pure pid
-PIDController arm_positionError_degrees_to_volt_pid(0.35, 0, 0);
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.3, 0.2, 12 / armMaxVelocity_radiansPerSec);
+PIDController arm_positionError_radians_to_radiansPerSec_pid(0.0001, 0, 0);
+// PIDController arm_positionError_radians_to_radiansPerSec_pid(2.0, 0, 0);
+// Pid
+PIDController arm_positionError_radians_to_volt_pid_feedback(15, 0, 0.52);
 
 // Patience
 PatienceController armUpPatience(12, 1.0, true, 5);
 PatienceController armDownPatience(6, 1.0, false, 5);
 
 // Stage config
-std::vector<double> armStages_degrees = { 0, 15, 25, 40, 115, 130, 200, 250, 0 };
+std::vector<double> armStages_degrees = { 0, 12, 25, 40, 115, 130, 200, 250, 0 };
+// std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 200, 210, 0 }; // angles for tuning
 std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
 bool releaseOnExhausted = true;
@@ -93,7 +93,7 @@ void setTargetAngle(double state, double delaySec) {
 	// Check for instant set
 	if (delaySec <= 1e-9) {
 		// Set state here
-		arm_positionError_radians_to_radiansPerSec_Pid.setErrorI(0);
+		arm_positionError_radians_to_radiansPerSec_pid.setErrorI(0);
 		armStateTargetAngle_degrees = state;
 
 		return;
@@ -112,7 +112,7 @@ void setTargetAngle(double state, double delaySec) {
 		task::sleep(taskDelay * 1000);
 
 		// Set state here
-		arm_positionError_radians_to_radiansPerSec_Pid.setErrorI(0);
+		arm_positionError_radians_to_radiansPerSec_pid.setErrorI(0);
 		armStateTargetAngle_degrees = taskState;
 
 		return 1;
@@ -155,6 +155,7 @@ void setArmStage(int stageId, double delaySec) {
 	}
 
 	// PID stage case
+	printf("Arm deg: %.3f\n", armStages_degrees[stageId]);
 	setTargetAngle(armStages_degrees[stageId], delaySec);
 }
 
@@ -278,23 +279,23 @@ void resolveArmDegrees() {
 	// printf("Cur: %.3f, target: %.3f\n", currentAngle.polarDeg(), armStateTargetAngle_degrees);
 
 	// Get pid value
-	arm_positionError_radians_to_radiansPerSec_Pid.computeFromError(errorAngle.polarRad());
-	double positionPidVelocity_radiansPerSec = arm_positionError_radians_to_radiansPerSec_Pid.getValue();
+	arm_positionError_radians_to_radiansPerSec_pid.computeFromError(errorAngle.polarRad());
+	double positionPidVelocity_radiansPerSec = arm_positionError_radians_to_radiansPerSec_pid.getValue();
 	// printf("Err: %.3f, pid: %.3f\n", errorAngle.polarDeg(), positionPidVelocity_radiansPerSec);
 
 
 	/* Feedforward */
 
 	double desiredVelocity_radiansPerSec = positionPidVelocity_radiansPerSec;
-	double motorVelocityVolt = arm_velocity_radiansPerSec_to_volt_feedforward.calculateFromMotion(currentAngle.polarRad(), desiredVelocity_radiansPerSec, 0);
+	double motorVelocityVolt = arm_velocity_radiansPerSec_to_volt_feedforward.calculateFromMotion(
+		aespa_lib::genutil::toRadians(armStateTargetAngle_degrees), desiredVelocity_radiansPerSec, 0
+	);
+	// double motorVelocityVolt = arm_velocity_radiansPerSec_to_volt_feedforward.calculateFromMotion(currentAngle.polarRad(), desiredVelocity_radiansPerSec, 0);
 
-
-	/* PID overwrite */
-
-	if (false) {
-		arm_positionError_degrees_to_volt_pid.computeFromError(errorAngle.polarDeg());
-		motorVelocityVolt = arm_positionError_degrees_to_volt_pid.getValue();
-	}
+	/* Position feedback PID */
+	arm_positionError_radians_to_volt_pid_feedback.computeFromError(errorAngle.polarRad());
+	double feedbackVelocity_volt = arm_positionError_radians_to_volt_pid_feedback.getValue();
+	motorVelocityVolt += feedbackVelocity_volt;
 
 	// printf("ARM: %.3f, Err: %.3f\n", currentAngle.polarDeg(), errorAngle.polarDeg());
 	double armVelocity_radiansPerSec = ArmMotors.velocity(rpm) * (1.0 / 60.0) * (2 * M_PI);
@@ -347,7 +348,7 @@ bool isExtreme() {
 void setArmPosition(double armEncoderPosition_degrees) {
 	// printf("Set Arm Pos: %.3f %.3f %.3f\n", armEncoderPosition_degrees, armEncoderPosition_degrees * armEncoder_to_arm_ratio, ArmRotationSensor.position(degrees));
 	ArmRotationSensor.setPosition(armEncoderPosition_degrees, degrees);
-	arm_positionError_radians_to_radiansPerSec_Pid.resetErrorToZero();
+	arm_positionError_radians_to_radiansPerSec_pid.resetErrorToZero();
 }
 
 void spinArmMotor(double velocityPct) {
@@ -355,6 +356,7 @@ void spinArmMotor(double velocityPct) {
 	double velocityVolt = aespa_lib::genutil::pctToVolt(velocityPct);
 	velocityVolt = aespa_lib::genutil::clamp(velocityVolt, -12, 12);
 	ArmMotors.spin(forward, velocityVolt, volt);
+	// printf("volt given %.3f, volt: %.3f\n", velocityVolt, ArmMotors.voltage());
 	// printf("VVolt: %.3f, temp: %.3f C, torque: %.3f Nm\n", velocityVolt, ArmMotors.temperature(celsius), ArmMotors.torque());
 	// printf("pos: %.3f\n", ArmRotationSensor.position(deg) * armEncoder_to_arm_ratio);
 	// ArmMotors.spin(forward, velocityPct, pct);

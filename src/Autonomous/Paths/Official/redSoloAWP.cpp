@@ -43,9 +43,12 @@ void doAuton() {
 	setArmStage(0);
 	setGoalClampState(true);
 	waitUntil(global::_driveToPointDistanceError < 0.15);
-	// Top ring
+	// Top rings
 	setIntakeState(1);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.82_tiles, 4.86_tiles, 0.4_tiles), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.82_tiles, 4.86_tiles, 0.4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.76_tiles, 5.24_tiles, 0.4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 5) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 4.2_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
@@ -56,8 +59,8 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 3_tiles, 0_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.5);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.5_tiles, 0_tiles, false, 30), true);
-	waitUntil(global::_driveToPointDistanceError < 0.7);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 30), true);
+	waitUntil(global::_driveToPointDistanceError < 1.0);
 	setIntakeFilterEnabled(false);
 	setIntakeStoreRing(true);
 	setGoalClampState(false);

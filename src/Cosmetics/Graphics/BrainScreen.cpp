@@ -407,6 +407,7 @@ void createButtons() {
 			botintake::setControlState(false);
 			controls::resetStates();
 
+			wait(1, sec);
 			auton::runAutonomous();
 
 			botdrive::setControlState(true);

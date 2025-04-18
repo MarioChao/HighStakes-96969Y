@@ -75,4 +75,4 @@
 - [ ] Tune path following
 	- [x] Trajectory generation
 	- [ ] Velocity control (feedforward, feedback)
-- [x] Tune arm control (pid / feedforward)
+- [ ] Tune arm control (pid / feedforward)

@@ -83,8 +83,7 @@ void setUpKeybinds() {
 	Controller1.ButtonB.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
-		if (botarm::getArmStage() == 1) botarm::setArmStage(2);
-		else botarm::setArmStage(1);
+		botarm::setArmStage(1);
 		botintake::setColorFiltering(false);
 	});
 	// Stage 3
