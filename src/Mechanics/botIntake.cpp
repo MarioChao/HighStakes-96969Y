@@ -53,7 +53,7 @@ void runThread() {
 			}
 
 			// Override stuck under certain conditions
-			if (true) {
+			if (false) {
 				isStuck = false;
 			}
 
@@ -72,13 +72,22 @@ void runThread() {
 			resolveState = 1;
 			resolveIntake();
 
-			bool isDetectingRing = ringoptical::isDetecting();
-			std::string detectedRingColor = ringoptical::getDetectedColor();
+			double distanceSensor_detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
+			bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < 30;
 
-			if (isDetectingRing && detectedRingColor != "none") {
-				if (detectedRingColor != filterOutColor) {
+			if (false) {
+				if (distanceSensor_isDetectingRing && lastDetectedRingColor != "none" && lastDetectedRingColor == filterOutColor) {
 					resolveState = 0;
 					isStoringRing = false;
+				}
+			} else {
+				bool isDetectingRing = ringoptical::isDetecting();
+				std::string detectedRingColor = ringoptical::getDetectedColor();
+				if (isDetectingRing && detectedRingColor != "none") {
+					if (detectedRingColor != filterOutColor) {
+						resolveState = 0;
+						isStoringRing = false;
+					}
 				}
 			}
 		}
@@ -239,19 +248,21 @@ void resolveIntake() {
 	// Make sure intakeResolveState is within [-1, 1]
 	resolveState = (resolveState > 0) - (resolveState < 0);
 
+	// Update ring detection
+	ringoptical::updateDetection();
+	bool isDetectingRing = ringoptical::isDetecting();
+	std::string detectedRingColor = ringoptical::getDetectedColor();
+	if (detectedRingColor != "none") lastDetectedRingColor = detectedRingColor;
+
 	// Filter out on some detection
 	if (colorFilterEnabled && !disableColorFilter) {
 		// Sensor data
-		ringoptical::updateDetection();
-		bool isDetectingRing = ringoptical::isDetecting();
-		std::string detectedRingColor = ringoptical::getDetectedColor();
 		double distanceSensor_detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
 		bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < 30;
 
 		// Newly detected ring
 		bool isNewDetected = (!previousIsDetecting && isDetectingRing);
 		previousIsDetecting = isDetectingRing;
-		if (detectedRingColor != "none") lastDetectedRingColor = detectedRingColor;
 		// printf("Col: %s distance: %.3f %d\n", lastDetectedRingColor.c_str(), distanceSensor_detectedDistance, distanceSensor_isDetectingRing);
 		
 		// Filter
