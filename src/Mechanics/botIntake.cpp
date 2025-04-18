@@ -262,7 +262,7 @@ void resolveIntake() {
 				if (lastDetectedRingColor == "none");
 				else if (lastDetectedRingColor == filterOutColor) {
 					printf("Distance sensor: filtering out\n");
-					wait(170, msec);
+					wait(175, msec);
 					IntakeMotor1.spin(fwd, -12, volt);
 					wait(80, msec);
 				}

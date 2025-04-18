@@ -34,8 +34,8 @@ double armEncoder_to_arm_ratio = 1.0 / 1.0;
 /* Stage controllers */
 
 // Arm feedforward
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.3, 0.2, 12 / armMaxVelocity_radiansPerSec);
-PIDController arm_positionError_radians_to_radiansPerSec_pid(0.0001, 0, 0);
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0, 0.3, 12 / armMaxVelocity_radiansPerSec);
+PIDController arm_positionError_radians_to_radiansPerSec_pid(0, 0, 0);
 // PIDController arm_positionError_radians_to_radiansPerSec_pid(2.0, 0, 0);
 // Pid
 PIDController arm_positionError_radians_to_volt_pid_feedback(15, 0, 0.52);
