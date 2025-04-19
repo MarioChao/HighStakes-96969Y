@@ -45,9 +45,9 @@ PatienceController armUpPatience(12, 1.0, true, 5);
 PatienceController armDownPatience(6, 1.0, false, 5);
 
 // Stage config
-std::vector<double> armStages_degrees = { 0, 12, 25, 40, 115, 130, 180, 200, 250, 0 };
+std::vector<double> armStages_degrees = { 0, 12, 25, 40, 115, 130, 180, 200, 250, 0};
 // std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 180, 200, 210, 0 }; // angles for tuning
-std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 };
 int currentArmStage = -1;
 bool releaseOnExhausted = true;
 
@@ -56,7 +56,8 @@ bool armResetted = false;
 int resetDefaultStageId = -1;
 
 // Speed config
-double armVelocityPct = 100;
+double defaultArmMaxVelocity_pct = 100;
+double armMaxVelocity_pct = 100;
 double armUpVelocityPct = 100;
 
 // PID or direction
@@ -119,12 +120,16 @@ void setTargetAngle(double state, double delaySec) {
 	});
 }
 
-void setArmStage(int stageId, double delaySec) {
+void setArmStage(int stageId, double delay_sec, double maxSpeed_pct) {
 	stageId = aespa_lib::genutil::clamp(stageId, -1, (int) armStages_degrees.size() - 1);
 	currentArmStage = stageId;
 
 	// -1 case
 	if (stageId == -1) return;
+
+	// Stage max velocity
+	armMaxVelocity_pct = maxSpeed_pct;
+	if (armMaxVelocity_pct < 1e-5) armMaxVelocity_pct = defaultArmMaxVelocity_pct;
 
 	// Extreme cases
 	int stage_value = extremeStages_values[stageId];
@@ -132,31 +137,31 @@ void setArmStage(int stageId, double delaySec) {
 		// Down, hold
 		armDownPatience.reset();
 		releaseOnExhausted = false;
-		setTargetAngle(-1e7, delaySec);
+		setTargetAngle(-1e7, delay_sec);
 		return;
 	} else if (stage_value == -1) {
 		// Down, release
 		armDownPatience.reset();
 		releaseOnExhausted = true;
-		setTargetAngle(-1e7, delaySec);
+		setTargetAngle(-1e7, delay_sec);
 		return;
 	} else if (stage_value == 1) {
 		// Up, release
 		armUpPatience.reset();
 		releaseOnExhausted = true;
-		setTargetAngle(1e7, delaySec);
+		setTargetAngle(1e7, delay_sec);
 		return;
 	} else if (stage_value == 2) {
 		// Up, hold
 		armUpPatience.reset();
 		releaseOnExhausted = false;
-		setTargetAngle(1e7, delaySec);
+		setTargetAngle(1e7, delay_sec);
 		return;
 	}
 
 	// PID stage case
 	printf("Arm deg: %.3f\n", armStages_degrees[stageId]);
-	setTargetAngle(armStages_degrees[stageId], delaySec);
+	setTargetAngle(armStages_degrees[stageId], delay_sec);
 }
 
 int getArmStage() {
@@ -237,7 +242,7 @@ void resolveArmExtreme() {
 		}
 
 		// Spin
-		spinArmMotor(armVelocityPct);
+		spinArmMotor(armMaxVelocity_pct);
 
 	} else if (error_degrees < 0) {
 		/* Descend */
@@ -254,7 +259,7 @@ void resolveArmExtreme() {
 		}
 
 		// Spin
-		spinArmMotor(-armVelocityPct);
+		spinArmMotor(-armMaxVelocity_pct);
 	}
 }
 
@@ -305,7 +310,7 @@ void resolveArmDegrees() {
 
 	// Clamp velocity
 	double motorVelocityPct = aespa_lib::genutil::voltToPct(motorVelocityVolt);
-	motorVelocityPct = aespa_lib::genutil::clamp(motorVelocityPct, -armVelocityPct, armVelocityPct);
+	motorVelocityPct = aespa_lib::genutil::clamp(motorVelocityPct, -armMaxVelocity_pct, armMaxVelocity_pct);
 	// printf("MotVal: %.3f\n", motorVelocityPct);
 
 	// Set velocity
@@ -328,7 +333,7 @@ void resolveArmDirection() {
 			if (ArmMotors.position(deg) < 10.0) {
 				ArmMotors.stop();
 			} else {
-				ArmMotors.spin(forward, -aespa_lib::genutil::pctToVolt(armVelocityPct), volt);
+				ArmMotors.spin(forward, -aespa_lib::genutil::pctToVolt(armMaxVelocity_pct), volt);
 			}
 			break;
 
@@ -353,6 +358,7 @@ void setArmPosition(double armEncoderPosition_degrees) {
 
 void spinArmMotor(double velocityPct) {
 	// Spin
+	velocityPct = aespa_lib::genutil::clamp(velocityPct, -armMaxVelocity_pct, armMaxVelocity_pct);
 	double velocityVolt = aespa_lib::genutil::pctToVolt(velocityPct);
 	velocityVolt = aespa_lib::genutil::clamp(velocityVolt, -12, 12);
 	ArmMotors.spin(forward, velocityVolt, volt);
