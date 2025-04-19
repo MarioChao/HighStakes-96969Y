@@ -48,8 +48,8 @@ void doAuton() {
 	// Top ring
 	setIntakeState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.82_tiles), 4.86_tiles, 0.4_tiles), true);
-	waitUntil(global::_driveToPointDistanceError < 0.2);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.7_tiles), 5.8_tiles, 0.4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.3);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.76_tiles), 5.8_tiles, 0.4_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 5) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.3_tiles), 4.2_tiles, 0_tiles, true), true);
