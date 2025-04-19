@@ -48,8 +48,8 @@ void doAuton() {
 	// Top rings
 	setIntakeState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.82_tiles), 4.86_tiles, 0.4_tiles), true);
-	waitUntil(global::_driveToPointDistanceError < 0.2);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.7_tiles), 5.8_tiles, 0.4_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.3);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.72_tiles), 5.8_tiles, 0.4_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 5) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.3_tiles), 4.2_tiles, 0_tiles, true), true);
@@ -83,8 +83,9 @@ void doAuton() {
 	setIntakeState(1);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
-	runFollowSpline(robotChassis, "bsa ladder");
-	waitUntil(follow::_isRamsetePathFollowCompleted);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 2.5_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.7);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3_tiles), 3_tiles, 0.5_tiles, false, 50.0), false);
 }
 
 }

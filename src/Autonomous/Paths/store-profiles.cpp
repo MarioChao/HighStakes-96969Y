@@ -67,20 +67,8 @@ void storeProfiles_redDownLBRush() {}
 void storeProfiles_blueDown() {}
 void storeProfiles_blueDownSafe() {}
 void storeProfiles_blueDownLBRush() {}
-void storeProfiles_redSoloAWP() {
-	storeNewSplineProfile("rsa ladder",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {2.34, -0.36}, {2, 1.2}, {2.3, 2.2}, {4.6, 3.93} }
-		), false
-	);
-}
-void storeProfiles_blueSoloAWP() {
-	storeNewSplineProfile("bsa ladder",
-		SplineCurve::fromAutoTangent_cubicSpline(CatmullRom,
-			{ {6-(2.34), -0.36}, {6-(2), 1.2}, {6-(2.3), 2.2}, {6-(4.6), 3.93} }
-		), false
-	);
-}
+void storeProfiles_redSoloAWP() {}
+void storeProfiles_blueSoloAWP() {}
 
 void storeProfiles_skills() {
 	// Skills
