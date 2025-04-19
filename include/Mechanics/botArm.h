@@ -7,7 +7,7 @@ namespace botarm {
 
 	void setTargetAngle(double, double = 0);
 
-	void setArmStage(int stageId, double delaySec = 0);
+	void setArmStage(int stageId, double delay_sec = 0, double maxSpeed_pct = 100);
 	int getArmStage();
 	void resetArmEncoder();
 	bool isArmResetted();

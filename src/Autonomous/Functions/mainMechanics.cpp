@@ -114,8 +114,8 @@ void setArmHangState(int state, double delaySec) {
 	botarmpneu::setState(state, delaySec);
 }
 
-void setArmStage(int stage, double delaySec) {
-	botarm::setArmStage(stage, delaySec);
+void setArmStage(int stageId, double delay_sec, double maxSpeed_pct) {
+	botarm::setArmStage(stageId, delay_sec, maxSpeed_pct);
 }
 
 bool isArmResetted() {

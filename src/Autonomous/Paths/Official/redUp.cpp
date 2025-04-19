@@ -47,16 +47,18 @@ void doAuton() {
 	setIntakeState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.82_tiles, 4.8_tiles, 0.4_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.52_tiles, 6_tiles, 0.4_tiles), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.52_tiles, 6_tiles, 0.4_tiles, false, 70), true);
+	waitUntil(global::_driveToPointDistanceError < 1.0);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.52_tiles, 6_tiles, 0.4_tiles, false, 30), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 5) ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.2_tiles, 4.1_tiles, 0, true), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.35_tiles, 4.1_tiles, 0, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1.8_tiles, 5_tiles), true);
-	waitUntil(global::_driveToPointDistanceError < 0.4);
+	waitUntil(global::_driveToPointDistanceError < 0.5);
 	// Corner ring 1
 	setArmStage(6);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(0.7_tiles, 5_tiles), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(0.6_tiles, 5_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(0_tiles, 6_tiles, 0, false, 50, 1.5), false);
 	// Middle ring
@@ -72,15 +74,15 @@ void doAuton() {
 	// Back up
 	setArmStage(3);
 	wait(0.5, sec);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 4_tiles, 0, true), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1.8_tiles, 4.2_tiles, 0, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	global::turnToFace(robotChassis, global::turnToFace_params(3_tiles, 3_tiles), true);
 	waitUntil(global::_turnToFaceError_degrees < 20);
 	setArmStage(5);
 	waitUntil(_autonTimer.time(sec) > 13.7);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3_tiles, 1.1_tiles, false, 70, 1.0), false);
-	setArmStage(20);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3_tiles, 1.3_tiles, false, 70, 1.0), false);
+	setArmStage(20, 0, 40);
 }
 
 }

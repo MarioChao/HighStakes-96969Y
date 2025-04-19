@@ -44,7 +44,7 @@ void setIntakeLiftState(bool state);
 
 // Arm
 void setArmHangState(int, double = 0);
-void setArmStage(int, double = 0);
+void setArmStage(int stageId, double delay_sec = 0, double maxSpeed_pct = 100);
 
 bool isArmResetted();
 void setArmResetDefaultStage(int);
