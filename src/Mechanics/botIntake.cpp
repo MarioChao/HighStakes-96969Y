@@ -62,7 +62,7 @@ void runThread() {
 				// IntakeMotor1.spin(fwd, -4, volt);
 				// wait(100, msec);
 				IntakeMotor1.spin(fwd, -12, volt);
-				wait(80, msec);
+				wait(130, msec);
 			} else {
 				resolveIntake();
 			}
