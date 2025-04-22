@@ -16,6 +16,8 @@ double intakeVelocityPct = 100;
 
 /* Factors */
 
+bool antiJamEnabled = true;
+
 bool colorFilterEnabled = true;
 const bool disableColorFilter = false;
 
@@ -41,26 +43,23 @@ void runThread() {
 		if (!isStoringRing) {
 			/* Normal intake */
 
-			// Detect stuck
-			// printf("Int tq: %.3f\n ", IntakeMotor1.torque(Nm));
-			if (IntakeMotor1.torque() > 0.35) {
-				if (!isStuck) {
-					stuckTime.clear();
-					isStuck = true;
+			// Check jam
+			if (antiJamEnabled) {
+				// Detect stuck
+				// printf("Int tq: %.3f\n ", IntakeMotor1.torque(Nm));
+				if (IntakeMotor1.torque() > 0.35) {
+					if (!isStuck) {
+						stuckTime.clear();
+						isStuck = true;
+					}
+				} else {
+					isStuck = false;
 				}
-			} else {
-				isStuck = false;
-			}
+			} else isStuck = false;
 
-			// Override stuck under certain conditions
-			if (false) {
-				isStuck = false;
-			}
-
-			if (isStuck && stuckTime.time(seconds) > 0.1) {
+			// Jam control
+			if (isStuck && stuckTime.time(sec) > 0.2) {
 				// Reverse a little on stuck
-				// IntakeMotor1.spin(fwd, -4, volt);
-				// wait(100, msec);
 				IntakeMotor1.spin(fwd, -12, volt);
 				wait(130, msec);
 			} else {
@@ -70,13 +69,13 @@ void runThread() {
 			/* Store ring */
 
 			resolveState = 1;
-			resolveIntake();
 
 			double distanceSensor_detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
 			bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < 30;
 
-			if (false) {
-				if (distanceSensor_isDetectingRing && lastDetectedRingColor != "none" && lastDetectedRingColor == filterOutColor) {
+			if (true) {
+				if (distanceSensor_isDetectingRing && lastDetectedRingColor != "none" && lastDetectedRingColor != filterOutColor) {
+					printf("Distance sensor: store ring\n");
 					resolveState = 0;
 					isStoringRing = false;
 				}
@@ -90,6 +89,8 @@ void runThread() {
 					}
 				}
 			}
+
+			resolveIntake();
 		}
 
 		wait(5, msec);
@@ -98,7 +99,7 @@ void runThread() {
 
 
 void preauton() {
-
+	setAntiJam(false);
 }
 
 void setIntakeVelocity(double velocityPct) {
@@ -135,6 +136,10 @@ void setState(int state, double delaySec) {
 
 		return 1;
 	});
+}
+
+void setAntiJam(bool antiJamState) {
+	antiJamEnabled = antiJamState;
 }
 
 bool isColorFiltering() {

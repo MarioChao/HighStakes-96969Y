@@ -48,6 +48,7 @@ void driveToPoint(Differential &chassis, driveToPoint_params params, bool async)
 
 	_isDriveToPointSettled = false;
 	_driveToPointDistanceError = 1e9;
+	_driveToPointAngleError_degrees = 1e9;
 
 	if (async) {
 		task asyncDrive([]() -> int {
@@ -59,6 +60,7 @@ void driveToPoint(Differential &chassis, driveToPoint_params params, bool async)
 	}
 }
 
+double _driveToPointAngleError_degrees;
 double _driveToPointDistanceError;
 bool _isDriveToPointSettled;
 
@@ -98,6 +100,7 @@ void runDriveToPoint() {
 
 	// Target rotation
 	double targetRotation_degrees = aespa_lib::genutil::toDegrees(std::atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX())) + rotationOffset_degrees;
+	_driveToPointAngleError_degrees = std::fabs(aespa_lib::genutil::modRange(targetRotation_degrees - startLg.getRotation().polarDeg(), 360, -180));
 
 
 	// Reset PID
@@ -189,6 +192,7 @@ void runDriveToPoint() {
 		// Compute polar heading error
 		double rotateError = targetRotation_degrees - currentLg.getRotation().polarDeg();
 		rotateError = aespa_lib::genutil::modRange(rotateError, 360, -180);
+		_driveToPointAngleError_degrees = std::fabs(rotateError);
 
 		// Compute heading pid-value from error
 		autonSettings.angleError_degrees_to_velocity_pct_pid.computeFromError(rotateError);
@@ -240,6 +244,7 @@ void runDriveToPoint() {
 	motionHandler.exitMotion();
 
 	// Settled
+	_driveToPointAngleError_degrees = -1;
 	_driveToPointDistanceError = -1;
 	_isDriveToPointSettled = true;
 }

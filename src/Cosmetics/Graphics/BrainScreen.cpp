@@ -408,6 +408,7 @@ void createButtons() {
 			botdrive::setControlState(true);
 			botintake::setControlState(true);
 			botdrive::preauton();
+			botintake::preauton();
 			simulationDockButtons[0]->setUsability(true);
 
 			return 1;

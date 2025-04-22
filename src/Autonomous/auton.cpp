@@ -192,6 +192,7 @@ void runAutonomous() {
 
 	// Set config
 	userRunningAutonomous = false;
+	botintake::setAntiJam(true);
 	botintake::setFilterOutColor(autonFilterOutColor);
 	botintake2::setFilterOutColor(autonFilterOutColor);
 	

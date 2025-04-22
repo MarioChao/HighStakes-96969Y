@@ -49,6 +49,7 @@ struct driveToPoint_params {
 
 void driveToPoint(base::Differential &chassis, driveToPoint_params params, bool async);
 
+extern double _driveToPointAngleError_degrees;
 extern double _driveToPointDistanceError;
 extern bool _isDriveToPointSettled;
 

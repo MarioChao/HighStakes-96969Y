@@ -12,6 +12,11 @@ namespace botintake {
 
 	void setState(int, double = 0);
 
+	/* Torque / jam control */
+
+	void setAntiJam(bool antiJamState);
+
+
 	/* Color filter */
 
 	bool isColorFiltering();
@@ -23,6 +28,7 @@ namespace botintake {
 	std::string getFilterOutColor();
 
 	void setIntakeStoreRing(bool, double = 0);
+
 
 	/* Control */
 

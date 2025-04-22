@@ -66,6 +66,7 @@ void setUpKeybinds() {
 		botdrive::setControlState(true);
 		botintake::setControlState(true);
 		botdrive::preauton();
+		botintake::preauton();
 	});
 
 	// Controller 1
@@ -114,6 +115,9 @@ void setUpKeybinds() {
 	});
 
 	/* Ring color filter */
+	Controller2.ButtonR1.pressed([]() -> void {
+		botintake::setIntakeStoreRing(true);
+	});
 	Controller2.ButtonUp.pressed([]() -> void {
 		rumble::setConstantRumbling(false);
 		rumble::setString(".");
@@ -125,11 +129,14 @@ void setUpKeybinds() {
 	Controller2.ButtonB.pressed([]() -> void {
 		botdrive::setControlState(false);
 		botintake::setControlState(false);
+
 		// autonfunctions::pid_diff::driveDistanceTiles(0.1);
 		local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1, robotChassis.getLookPose().getRotation()), false);
+
 		botdrive::setControlState(true);
 		botintake::setControlState(true);
 		botdrive::preauton();
+		botintake::preauton();
 	});
 
 	/* Pneumatics */
@@ -167,6 +174,7 @@ void setUpKeybinds() {
 
 void preauton() {
 	botdrive::preauton();
+	botintake::preauton();
 	botarm::preauton();
 	goalclamp::preauton();
 }
@@ -181,6 +189,7 @@ void resetStates() {
 			return 1;
 		});
 	}
+	botintake::setAntiJam(false);
 	botintake::setIntakeStoreRing(0);
 	botintake::setColorFiltering(true);
 	swing::setState_left(0);
