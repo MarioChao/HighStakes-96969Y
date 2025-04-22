@@ -38,126 +38,107 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 		case autonomousType::RedUp:
 			autonpaths::storeProfiles_redUp();
 			debug::printOnController("Auton: RedUp");
-			printf("RedUp\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::RedUpSafe:
 			autonpaths::storeProfiles_redUpSafe();
 			debug::printOnController("Auton: RedUp SF");
-			printf("RedUp Safe\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::BlueUp:
 			autonpaths::storeProfiles_blueUp();
 			debug::printOnController("Auton: BlueUp");
-			printf("BlueUp\n");
 			autonFilterOutColor = "red";
 			break;
 		case autonomousType::BlueUpSafe:
 			autonpaths::storeProfiles_blueUpSafe();
 			debug::printOnController("Auton: BlueUp SF");
-			printf("BlueUp Safe\n");
 			autonFilterOutColor = "red";
 			break;
 		case autonomousType::RedDown:
 			autonpaths::storeProfiles_redDown();
 			debug::printOnController("Auton: RedDown");
-			printf("RedDown\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::RedDownSafe:
 			autonpaths::storeProfiles_redDownSafe();
 			debug::printOnController("Auton: RedDown SF");
-			printf("RedDown Safe\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::RedDownLBRush:
 			autonpaths::storeProfiles_redDownLBRush();
 			debug::printOnController("Auton: RedDown LB");
-			printf("RedDown LB Rush\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::BlueDown:
 			autonpaths::storeProfiles_blueDown();
 			debug::printOnController("Auton: BlueDown");
-			printf("BlueDown\n");
 			autonFilterOutColor = "red";
 			break;
 		case autonomousType::BlueDownSafe:
 			autonpaths::storeProfiles_blueDownSafe();
 			debug::printOnController("Auton: BlueDown SF");
-			printf("BlueDown Safe\n");
 			autonFilterOutColor = "red";
 			break;
 		case autonomousType::BlueDownLBRush:
 			autonpaths::storeProfiles_blueDownLBRush();
 			debug::printOnController("Auton: BlueDown LB");
-			printf("BlueDown LB Rush\n");
 			autonFilterOutColor = "red";
 			break;
 		case autonomousType::RedSoloAWP:
 			autonpaths::storeProfiles_redSoloAWP();
 			debug::printOnController("Auton: Red SoloAWP");
-			printf("Red SoloAWP\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::BlueSoloAWP:
 			autonpaths::storeProfiles_blueSoloAWP();
 			debug::printOnController("Auton: Blue SoloAWP");
-			printf("Blue SoloAWP\n");
 			autonFilterOutColor = "red";
 			break;
 
 		case autonomousType::AutonSkills:
 			autonpaths::storeProfiles_skills();
 			debug::printOnController("Auton: Skills");
-			printf("AuSk\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::DrivingRunAutonSkills:
 			autonpaths::storeProfiles_skills();
 			debug::printOnController("Driving -> Auton");
-			printf("Dr->AuSk\n");
 			autonFilterOutColor = "blue";
 			break;
 		case autonomousType::DrivingSkills:
 			debug::printOnController("Driving Skills");
-			printf("DrSk\n");
 			autonFilterOutColor = "blue";
 			break;
 
 		case autonomousType::LoveShape:
 			autonpaths::storeProfiles_loveShape();
 			debug::printOnController("Love Shape");
-			printf("LoveShape\n");
 			autonFilterOutColor = "none";
 			break;
 		case autonomousType::FieldTour:
 			autonpaths::storeProfiles_fieldTour();
 			debug::printOnController("Field Tour");
-			printf("Field Tour\n");
 			autonFilterOutColor = "none";
 			break;
 		case autonomousType::Test:
 			autonpaths::storeProfiles_test();
 			debug::printOnController("Auton Test");
-			printf("Auton Test\n");
 			autonFilterOutColor = "none";
 			break;
 		case autonomousType::RushTest:
 			// autonpaths::storeProfiles_test();
 			debug::printOnController("Rush Test");
-			printf("Rush Test\n");
 			autonFilterOutColor = "none";
 			break;
 		default:
 			debug::printOnController("Auton: None");
-			printf("None\n");
 			autonFilterOutColor = "none";
 			break;
 	}
 	auton_runType = autonType;
 	auton_allianceId = allianceId;
+	printf("%s\n", getAutonMode_string().c_str());
 }
 
 void showAutonRunType() {
@@ -167,6 +148,28 @@ void showAutonRunType() {
 
 autonomousType getAutonRunType() {
 	return auton_runType;
+}
+
+std::string getAutonMode_string() {
+	switch (auton_runType) {
+		case autonomousType::AutonSkills: return "AuSk";
+		case autonomousType::DrivingSkills: return "DrSk";
+		case autonomousType::DrivingRunAutonSkills: return "Dr->AuSk";
+		case autonomousType::RedUp: return "R-up";
+		case autonomousType::BlueUp: return "B-up";
+		case autonomousType::RedDown: return "R-dn";
+		case autonomousType::BlueDown: return "B-dn";
+		case autonomousType::RedDownLBRush: return "R-dn-lb";
+		case autonomousType::BlueDownLBRush: return "B-dn-lb";
+		case autonomousType::RedSoloAWP: return "R-sl";
+		case autonomousType::BlueSoloAWP: return "B-sl";
+
+		case autonomousType::LoveShape: return "T-Love";
+		case autonomousType::FieldTour: return "T-Field";
+		case autonomousType::Test: return "T-Auton";
+		case autonomousType::RushTest: return "T-Rush";
+		default: return "none";
+	}
 }
 
 

@@ -66,6 +66,7 @@ void drawTemperature();
 void drawMotorPower();
 void drawMotorTorque();
 void drawInertial(Linegular robotPose);
+void drawAutonMode();
 
 void drawDebug();
 
@@ -151,35 +152,19 @@ void _drawVexField(int x, int y, int width, int height) {
 	}
 
 	// Colored elements
-	// Barrier
+	// Ladder
 	Brain.Screen.setPenColor(color(30, 170, 170));
-	Brain.Screen.drawLine(x + lengthX, y + 2 * lengthY, x + lengthX, y + 4 * lengthY);
-	Brain.Screen.drawLine(x + lengthX, y + 3 * lengthY, x + 5 * lengthX, y + 3 * lengthY);
-	Brain.Screen.drawLine(x + 5 * lengthX, y + 2 * lengthY, x + 5 * lengthX, y + 4 * lengthY);
-
-	// Opponent
-	Brain.Screen.setPenColor(oppColor.rgb());
-	// Diagonal
-	Brain.Screen.drawLine(x + lengthX, y, x, y + lengthY);
-	Brain.Screen.drawLine(x + 5 * lengthX, y, x + 6 * lengthX, y + lengthY);
-	// Middle
-	Brain.Screen.drawLine(x, y + 3 * lengthY, x + lengthX, y + 3 * lengthY);
-	// Goal
-	Brain.Screen.drawLine(x + 2 * lengthX, y + 5 * lengthY, x + 2 * lengthX, y + 6 * lengthY);
-	Brain.Screen.drawLine(x + 2 * lengthX, y + 5 * lengthY, x + 4 * lengthX, y + 5 * lengthY);
-	Brain.Screen.drawLine(x + 4 * lengthX, y + 5 * lengthY, x + 4 * lengthX, y + 6 * lengthY);
-
-	// Alliance
-	Brain.Screen.setPenColor(ownColor.rgb());
-	// Diagonal
-	Brain.Screen.drawLine(x, y + 5 * lengthY, x + lengthX, y + 6 * lengthY);
-	Brain.Screen.drawLine(x + 6 * lengthX, y + 5 * lengthY, x + 5 * lengthX, y + 6 * lengthY);
-	// Middle
-	Brain.Screen.drawLine(x + 5 * lengthX, y + 3 * lengthY, x + 6 * lengthX, y + 3 * lengthY);
-	// Goal
-	Brain.Screen.drawLine(x + 2 * lengthX, y, x + 2 * lengthX, y + lengthY);
-	Brain.Screen.drawLine(x + 2 * lengthX, y + lengthY, x + 4 * lengthX, y + lengthY);
-	Brain.Screen.drawLine(x + 4 * lengthX, y, x + 4 * lengthX, y + lengthY);
+	Brain.Screen.setFillColor(color(30, 170, 170));
+	Brain.Screen.drawLine(x + 3 * lengthX, y + 2 * lengthY, x + 4 * lengthX, y + 3 * lengthY);
+	Brain.Screen.drawLine(x + 4 * lengthX, y + 3 * lengthY, x + 3 * lengthX, y + 4 * lengthY);
+	Brain.Screen.drawLine(x + 3 * lengthX, y + 4 * lengthY, x + 2 * lengthX, y + 3 * lengthY);
+	Brain.Screen.drawLine(x + 2 * lengthX, y + 3 * lengthY, x + 3 * lengthX, y + 2 * lengthY);
+	// Mobile goal
+	Brain.Screen.drawCircle(x + 2 * lengthX, y + 4 * lengthY, 4);
+	Brain.Screen.drawCircle(x + 2 * lengthX, y + 2 * lengthY, 4);
+	Brain.Screen.drawCircle(x + 4 * lengthX, y + 4 * lengthY, 4);
+	Brain.Screen.drawCircle(x + 4 * lengthX, y + 2 * lengthY, 4);
+	Brain.Screen.drawCircle(x + 3 * lengthX, y + 5 * lengthY, 4);
 }
 
 /// @brief Draw the field and robot on a grid system
@@ -434,7 +419,7 @@ void createButtons() {
 	// --- Debug Dock Buttons ---
 	// --------------------------
 
-	debugDockButtons.push_back(new ButtonGui(70, 70, 100, 30, 10, color(185, 255, 135), ClrDarkRed, 2, "switch color", ClrDarkRed, [] {
+	debugDockButtons.push_back(new ButtonGui(70, 70, 100, 30, 10, color(185, 255, 135), color(ClrDarkRed), 2, "switch color", color(ClrDarkRed), [] {
 		botintake::switchFilterColor();
 		debugDockButtons[0]->setUsability(false);
 		wait(0.5, sec);
@@ -644,6 +629,7 @@ void createDocks() {
 	autonDock->addFunction([] {
 		if (mainUseSimulator) drawInertial(robotSimulator.getLookPose());
 		else drawInertial(robotChassis.getLookPose());
+		drawAutonMode();
 	});
 
 	// Auton Sub-docks
@@ -915,18 +901,27 @@ void drawMotorTorque() {
 	Brain.Screen.printAt(10, 90, 1, "ARM1: %07.3f Nm, ARM2: %07.3f Nm", arm1_torque, arm2_torque);
 }
 void drawInertial(Linegular robotPose) {
-	Brain.Screen.setPenColor(color::green);
-	Brain.Screen.setFillColor(color::transparent);
-	Brain.Screen.printAt(10, 35, 1, "%07.3f", robotPose.getRotation().polarDeg());
 	bool inertialIsStable = inertial_s::isStable();
 	color stableColor = inertialIsStable ? green : red;
-	Brain.Screen.drawCircle(15, 80, 10, stableColor);
+	Brain.Screen.setFillColor(color::transparent);
+	Brain.Screen.setPenColor(color(ClrMagenta));
+	Brain.Screen.printAt(10, 120, 1, "Inertial");
+	Brain.Screen.setPenColor(color::green);
+	Brain.Screen.printAt(10, 140, 1, "%07.3f", robotPose.getRotation().polarDeg());
+	Brain.Screen.drawCircle(40, 160, 10, stableColor);
+}
+
+void drawAutonMode() {
+	Brain.Screen.setFillColor(color::transparent);
+	Brain.Screen.setPenColor(color(ClrSkyBlue));
+	Brain.Screen.printAt(10, 60, 1, "Auton:");
+	Brain.Screen.printAt(10, 80, 1, "%-8s", auton::getAutonMode_string().c_str());
 }
 
 void drawDebug() {
 	Brain.Screen.setPenColor(color::green);
 	Brain.Screen.setFillColor(color::transparent);
-	Brain.Screen.printAt(10, 35, 1, "Filter out: %4s\n", botintake::getFilterOutColor().c_str());
+	Brain.Screen.printAt(10, 35, 1, "Filter out: %4s", botintake::getFilterOutColor().c_str());
 }
 
 }

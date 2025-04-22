@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+
+
 namespace auton {
 
 
@@ -30,6 +33,7 @@ void showAutonRunType();
 
 /// @brief Get the type of autonomous that is selected.
 autonomousType getAutonRunType();
+std::string getAutonMode_string();
 
 /// @brief Get whether autonomous code should run when user control begins.
 bool isUserRunningAuton();
