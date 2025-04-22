@@ -51,9 +51,8 @@ TrackingWheel lookLeft_trackingWheel(
 TrackingWheel lookRight_trackingWheel(
 	lookRight_motorBeats, 90, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, botInfo.trackWidth_inches / 2
 );
-TrackingWheel look1_trackingWheel(look_rotationBeats, -90, 1, 2.0, 0);
+TrackingWheel look1_trackingWheel(look_rotationBeats, 90, 1, 2.0, 0);
 TrackingWheel right1_trackingWheel(right_rotationBeats, 180, 1, 2.0, 0);
-TrackingWheel right2_trackingWheel(right_opticalBeats, 180, 1, 2.75, -3.5);
 
 }
 

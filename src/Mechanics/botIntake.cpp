@@ -58,7 +58,7 @@ void runThread() {
 			} else isStuck = false;
 
 			// Jam control
-			if (isStuck && stuckTime.time(sec) > 0.2) {
+			if (isStuck && stuckTime.time(sec) > 0.1) {
 				// Reverse a little on stuck
 				IntakeMotor1.spin(fwd, -12, volt);
 				wait(130, msec);
