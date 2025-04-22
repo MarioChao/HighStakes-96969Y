@@ -135,12 +135,16 @@ void setUpKeybinds() {
 	/* Pneumatics */
 	// Swing
 	Controller2.ButtonLeft.pressed([]() -> void {
-		printf("Left pneu: %ld\n", LeftSword_pneumatics.value());
-		swing::switchState_left();
+		if (Controller2.ButtonA.pressing()) {
+			printf("Left pneu: %ld\n", LeftSword_pneumatics.value());
+			swing::switchState_left();
+		}
 	});
 	Controller2.ButtonRight.pressed([]() -> void {
-		printf("Right pneu: %ld\n", RightSword_pneumatics.value());
-		swing::switchState_right();
+		if (Controller2.ButtonA.pressing()) {
+			printf("Right pneu: %ld\n", RightSword_pneumatics.value());
+			swing::switchState_right();
+		}
 	});
 	// Clamp
 	Controller1.ButtonL2.pressed([]() -> void {

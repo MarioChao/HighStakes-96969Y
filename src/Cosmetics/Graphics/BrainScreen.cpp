@@ -430,11 +430,11 @@ void createButtons() {
 	}));
 
 
-	// -------------------------
+	// --------------------------
 	// --- Debug Dock Buttons ---
-	// -------------------------
+	// --------------------------
 
-	debugDockButtons.push_back(new ButtonGui(30, 70, 100, 30, 10, color(185, 255, 135), ClrDarkRed, 2, "switch color", ClrDarkRed, [] {
+	debugDockButtons.push_back(new ButtonGui(70, 70, 100, 30, 10, color(185, 255, 135), ClrDarkRed, 2, "switch color", ClrDarkRed, [] {
 		botintake::switchFilterColor();
 		debugDockButtons[0]->setUsability(false);
 		wait(0.5, sec);

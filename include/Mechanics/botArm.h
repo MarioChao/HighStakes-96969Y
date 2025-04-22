@@ -6,6 +6,7 @@ namespace botarm {
 	void preauton();
 
 	void setTargetAngle(double, double = 0);
+	double getTargetAngle();
 
 	void setArmStage(int stageId, double delay_sec = 0, double maxSpeed_pct = 100);
 	int getArmStage();

@@ -34,11 +34,11 @@ double armEncoder_to_arm_ratio = 1.0 / 1.0;
 /* Stage controllers */
 
 // Arm feedforward
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0, 0.3, 12 / armMaxVelocity_radiansPerSec);
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0, 0.3, 0);
 PIDController arm_positionError_radians_to_radiansPerSec_pid(0, 0, 0);
 // PIDController arm_positionError_radians_to_radiansPerSec_pid(2.0, 0, 0);
 // Pid
-PIDController arm_positionError_radians_to_volt_pid_feedback(15, 0, 0.52);
+PIDController arm_positionError_radians_to_volt_pid_feedback(11, 0, 0.4);
 
 // Patience
 PatienceController armUpPatience(12, 1.0, true, 5);
@@ -47,7 +47,7 @@ PatienceController armDownPatience(6, 1.0, false, 5);
 // Stage config
 std::vector<double> armStages_degrees = { 0, 12, 25, 50, 115, 130, 180, 200, 230, 0};
 // std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 180, 200, 210, 0 }; // angles for tuning
-std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 };
+std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
 bool releaseOnExhausted = true;
 
@@ -120,8 +120,12 @@ void setTargetAngle(double state, double delaySec) {
 	});
 }
 
+double getTargetAngle() {
+	return armStateTargetAngle_degrees;
+}
+
 void setArmStage(int stageId, double delay_sec, double maxSpeed_pct) {
-	stageId = aespa_lib::genutil::clamp(stageId, -1, (int) armStages_degrees.size() - 1);
+	stageId = aespa_lib::genutil::clamp(stageId, -2, (int) armStages_degrees.size() - 1);
 	currentArmStage = stageId;
 
 	// -1 case
@@ -264,17 +268,18 @@ void resolveArmExtreme() {
 }
 
 void resolveArmDegrees() {
-	// -1 case
-	if (currentArmStage == -1) {
-		return;
+	if (currentArmStage != -2) {
+		// -1 case
+		if (currentArmStage == -1) {
+			return;
+		}
+	
+		// Extreme case
+		if (isExtreme()) {
+			resolveArmExtreme();
+			return;
+		}
 	}
-
-	// Extreme case
-	if (isExtreme()) {
-		resolveArmExtreme();
-		return;
-	}
-
 
 	/* Position feedback */
 
