@@ -569,6 +569,7 @@ void createButtons() {
 		allianceDisable(20);
 		allianceButtons[20]->enable();
 		setAutonRunType(0, autonomousType::Test);
+		// setAutonRunType(0, autonomousType::OdometryRadiusTest);
 	});
 	ButtonGui *rushTest = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(235, 205, 135), white, 2, "Rush Test", color(12, 99, 90), [] {
 		allianceDisable(21);

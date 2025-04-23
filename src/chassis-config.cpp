@@ -8,6 +8,7 @@ using aespa_lib::sensor_beats::RotationSensor;
 using aespa_lib::sensor_beats::OpticalShaftEncoder;
 using aespa_lib::sensor_beats::Motor;
 using aespa_lib::sensor_beats::TrackingWheel;
+using namespace aespa_lib::units::angle;
 
 using pas1_lib::chassis::settings::Odometry;
 using pas1_lib::chassis::settings::BotInfo;
@@ -46,21 +47,21 @@ Motor lookRight_motorBeats(RightMotorA);
 
 // Tracking wheels
 TrackingWheel lookLeft_trackingWheel(
-	lookLeft_motorBeats, 90, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, -botInfo.trackWidth_inches / 2
+	lookLeft_motorBeats, 90_polarDeg, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, -botInfo.trackWidth_inches / 2
 );
 TrackingWheel lookRight_trackingWheel(
-	lookRight_motorBeats, 90, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, botInfo.trackWidth_inches / 2
+	lookRight_motorBeats, 90_polarDeg, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, botInfo.trackWidth_inches / 2
 );
-TrackingWheel look1_trackingWheel(look_rotationBeats, 90, 1, 2.0, 0);
-TrackingWheel right1_trackingWheel(right_rotationBeats, 180, 1, 2.0, 0);
+TrackingWheel look1_trackingWheel(look_rotationBeats, 90_polarDeg, 1, 2.75, -0.013);
+TrackingWheel right1_trackingWheel(right_rotationBeats, 0_polarDeg, 1, 2.75, 2.873);
 
 }
 
 // Odometry
 Odometry mainOdometry = Odometry()
-.addTrackingWheel(lookLeft_trackingWheel)
-.addTrackingWheel(lookRight_trackingWheel)
-// .addTrackingWheel(look1_trackingWheel)
+// .addTrackingWheel(lookLeft_trackingWheel)
+// .addTrackingWheel(lookRight_trackingWheel)
+.addTrackingWheel(look1_trackingWheel)
 .addTrackingWheel(right1_trackingWheel)
 .addInertialSensor(InertialSensor, 0, 0)
 .setPositionFactor(1.0 / field::tileLengthIn);

@@ -116,12 +116,12 @@ std::pair<bool, double> getArcRadius_inches(double arcLength_inches, double rota
 	if (isWithin(rotatedAngle_polarDegrees, 0, 1e-7)) {
 		return { false, 1e9 };
 	}
-	double arcRadius_inches = (arcLength_inches / rotatedAngle_polarDegrees);
+	double arcRadius_inches = (arcLength_inches / toRadians(rotatedAngle_polarDegrees));
 	return { true, arcRadius_inches };
 }
 
 double getChordLength_inches(double arcRadius_inches, double rotatedAngle_polarDegrees) {
-	double chordLength_inches = 2 * std::sin(rotatedAngle_polarDegrees / 2) * arcRadius_inches;
+	double chordLength_inches = 2 * std::sin(toRadians(rotatedAngle_polarDegrees) / 2) * arcRadius_inches;
 	return chordLength_inches;
 }
 
