@@ -31,11 +31,11 @@ void autonpaths::runBlueSoloAWP() {
 namespace {
 
 void doAuton() {
-	// Mirrored from red solo
+	// Mirrored & modified from red solo
 
-	// Partially from red up
+	// Partially from up
 
-	/* Red up start */
+	/* Up start */
 	// Alliance wall stake
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.24_tiles, robotChassis.getLookRotation()), true);
 	waitUntil(local::_driveDistanceError_tiles < 0.21);
@@ -60,7 +60,7 @@ void doAuton() {
 	// (2, 5) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.35_tiles), 4.1_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	/* Red up end */
+	/* Up end */
 
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 5.2_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
@@ -103,7 +103,7 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.5);
 	setArmStage(5);
 	waitUntil(_autonTimer.time(sec) > 13.5);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3_tiles), 3_tiles, 1.3_tiles, false, 70, 1.0), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3_tiles), 3_tiles, 1.2_tiles, false, 70, 1.0), true);
 	waitUntil(_autonTimer.time(sec) > 14.5);
 	setArmStage(20, 0, 40);
 	waitUntil(global::_isDriveToPointSettled);
