@@ -30,7 +30,7 @@ BotInfo botInfo(
 	3.25, // wheel diameter (inches)
 	48.0 / 36.0, // wheel to motor gear ratio
 	600, // motor rpm
-	600 * 1.75 // motor rpm/s
+	600 * 1.5 // motor rpm/s
 );
 
 
@@ -59,9 +59,9 @@ TrackingWheel right1_trackingWheel(right_rotationBeats, 0_polarDeg, 1, 2.75, 2.8
 
 // Odometry
 Odometry mainOdometry = Odometry()
-// .addTrackingWheel(lookLeft_trackingWheel)
-// .addTrackingWheel(lookRight_trackingWheel)
-.addTrackingWheel(look1_trackingWheel)
+.addTrackingWheel(lookLeft_trackingWheel)
+.addTrackingWheel(lookRight_trackingWheel)
+// .addTrackingWheel(look1_trackingWheel)
 .addTrackingWheel(right1_trackingWheel)
 .addInertialSensor(InertialSensor, 0, 0)
 .setPositionFactor(1.0 / field::tileLengthIn);
@@ -77,11 +77,12 @@ AutonSettings autonSettings(
 	PIDController(3.0), // position feedback (tiles to tiles/sec)
 	PIDController(1.0), // velocity feedback (tiles/sec to volt)
 	// PIDController(0.0), // velocity feedback (tiles/sec to volt)
-	PIDController(70, 0, 0, 0.08, 0.05), // linear pid (tiles to pct)
+	PIDController(100, 0, 0, 0.06, 0.05), // linear pid (tiles to pct)
+	// PIDController(70, 0, 0, 0.03, 0.05), // linear pid (tiles to pct)
 	PIDController(3.25, 0, 0.225, 2, 0.05), // angular pid (degrees to pct)
-	SlewController(200), // linear slew (pct/sec)
+	SlewController(100), // linear slew (pct/sec)
 	SlewController(100), // angular slew (pct/sec)
-	SlewController(200), // motor slew (pct/sec)
+	SlewController(120), // motor slew (pct/sec)
 	PatienceController(30, 0.001, false), // linear patience (tiles)
 	PatienceController(30, 0.5, false), // angular patience (degrees)
 	false // relative rotation

@@ -58,8 +58,9 @@ void runThread() {
 			} else isStuck = false;
 
 			// Jam control
-			if (isStuck && stuckTime.time(sec) > 0.1) {
+			if (isStuck && stuckTime.time(sec) > 0.15) {
 				// Reverse a little on stuck
+				printf("Anti jam\n");
 				IntakeMotor1.spin(fwd, -12, volt);
 				wait(130, msec);
 			} else {

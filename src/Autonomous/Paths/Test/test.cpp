@@ -6,7 +6,7 @@ void autonpaths::runAutonTest() {
 
 	setDifferentialUseRelativeRotation(false);
 
-	if (true) {
+	if (false) {
 		setRobotLookPose(aespa_lib::datas::Linegular(1.5, 0.5, 90));
 		global::driveToPose(robotChassis, global::driveToPose_params(1_tiles, 2_tiles, 180_polarDeg, 0.6, false), false);
 		global::driveToPose(robotChassis, global::driveToPose_params(2_tiles, 1_tiles, 90_polarDeg, 0.6, true), false);
@@ -24,7 +24,7 @@ void autonpaths::runAutonTest() {
 		local::turnToAngle(robotChassis, local::turnToAngle_params(90), false);
 	}
 
-	if (false) {
+	if (true) {
 		setRobotLookPose(aespa_lib::datas::Linegular(1, 0, 90));
 
 		global::driveToPoint(robotChassis, global::driveToPoint_params(1, 1, 0, false), false);

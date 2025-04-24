@@ -77,12 +77,12 @@ pneumatics ClimbHook_pneumatics(emptyExpanderPort);
 
 encoder LookEncoder(emptyExpanderPort);
 encoder RightEncoder(emptyExpanderPort);
-rotation LookRotation(PORT18);
+rotation LookRotation(emptyPort);
 rotation RightRotation(PORT10);
 
 rotation ArmRotationSensor(PORT15, false);
 
-inertial InertialSensor(PORT21);
+inertial InertialSensor(PORT18);
 distance DistanceSensor(emptyPort);
 
 distance RingDistanceSensor(PORT7);
