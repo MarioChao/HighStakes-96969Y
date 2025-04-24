@@ -56,7 +56,12 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.35_tiles, 4.1_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 5) ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1.8_tiles, 4.8_tiles), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1.9_tiles, 4.9_tiles), true);
+	setIntakeStoreRing(true);
+	waitUntil(global::_driveToPointAngleError_degrees < 40.0);
+	setIntakeStoreRing(false);
+	waitUntil(global::_driveToPointAngleError_degrees < 20.0);
+	setIntakeState(1);
 	waitUntil(global::_driveToPointDistanceError < 0.6);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 5.5_tiles, 0.3_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
@@ -88,7 +93,11 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	global::turnToFace(robotChassis, global::turnToFace_params(3_tiles, 3_tiles), true);
+	setIntakeStoreRing(true);
+	waitUntil(global::_turnToFaceError_degrees < 40);
+	setIntakeStoreRing(false);
 	waitUntil(global::_turnToFaceError_degrees < 20);
+	setIntakeState(1);
 	setArmStage(5);
 	waitUntil(_autonTimer.time(sec) > 13.5);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3_tiles, 1.3_tiles, false, 70, 1.0), true);
