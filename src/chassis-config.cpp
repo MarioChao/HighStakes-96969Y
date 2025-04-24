@@ -82,7 +82,7 @@ AutonSettings autonSettings(
 	PIDController(3.25, 0, 0.225, 2, 0.05), // angular pid (degrees to pct)
 	SlewController(100), // linear slew (pct/sec)
 	SlewController(100), // angular slew (pct/sec)
-	SlewController(120), // motor slew (pct/sec)
+	SlewController(100), // motor slew (pct/sec)
 	PatienceController(30, 0.001, false), // linear patience (tiles)
 	PatienceController(30, 0.5, false), // angular patience (degrees)
 	false // relative rotation
