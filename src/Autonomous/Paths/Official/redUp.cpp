@@ -69,8 +69,10 @@ void doAuton() {
 	setArmStage(6);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(0.7_tiles, 5.3_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(0_tiles, 6_tiles), true);
+	waitUntil(global::_driveToPointDistanceError < 0.8);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(0_tiles, 6_tiles, 0, false, 40, 1.0), false);
-	wait(0.5, sec);
+	wait(0.3, sec);
 	// Middle ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(0.9_tiles, 5_tiles, 0, true), true);
 	setIntakeStoreRing(true);
