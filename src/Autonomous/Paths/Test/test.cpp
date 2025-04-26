@@ -111,25 +111,23 @@ void autonpaths::runAutonTest() {
 }
 
 void autonpaths::odometryRadiusTest() {
-	setRobotRotation(0.0);
+	setRobotRotation(90.0);
 
 	wait(100, msec);
 
 	printf("Clockwise\n");
 
 	mainOdometry.printDebug();
-	local::turnToAngle(robotChassis, local::turnToAngle_params(3600, 30, 0, 40.0), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(3600_polarDeg, 30, 0, 40.0), false);
 	mainOdometry.printDebug();
 
 	wait(1, sec);
-
-	setRobotRotation(0.0);
 
 	wait(100, msec);
 
 	printf("Counter clockwise\n");
 
 	mainOdometry.printDebug();
-	local::turnToAngle(robotChassis, local::turnToAngle_params(-3600, 30, 0, 40.0), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(0_polarDeg, 30, 0, 40.0), false);
 	mainOdometry.printDebug();
 }

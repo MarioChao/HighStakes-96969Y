@@ -168,6 +168,7 @@ std::string getAutonMode_string() {
 		case autonomousType::FieldTour: return "T-Field";
 		case autonomousType::Test: return "T-Auton";
 		case autonomousType::RushTest: return "T-Rush";
+		case autonomousType::OdometryRadiusTest: return "T-Odom";
 		default: return "none";
 	}
 }

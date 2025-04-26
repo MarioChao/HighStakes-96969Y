@@ -77,14 +77,15 @@ double fw_drawX = 20;
 // Guis
 vector<ButtonGui *> mainDockButtons;
 vector<ButtonGui *> autonDockButtons, allianceButtons;
-vector<ButtonGui *> autonSubdock0Buttons, autonSubdock1Buttons, autonSubdock2Buttons, autonSubdock3Buttons, autonSubdock4Buttons, autonSubdock5Buttons;
+vector<ButtonGui *> autonSubdock0Buttons, autonSubdock1Buttons, autonSubdock2Buttons, autonSubdock3Buttons;
+vector<ButtonGui *> autonSubdock4Buttons, autonSubdock5Buttons, autonSubdock6Buttons;
 vector<ButtonGui *> simulationDockButtons;
 vector<ButtonGui *> debugDockButtons;
 SliderGui *slider;
 DockGui *mainDock, *mainDock_dockDock;
 DockGui *simulationDock;
 DockGui *autonDock, *autonDock_dockDock;
-DockGui *autonSubdock0, *autonSubdock1, *autonSubdock2, *autonSubdock3, *autonSubdock4, *autonSubdock5;
+DockGui *autonSubdock0, *autonSubdock1, *autonSubdock2, *autonSubdock3, *autonSubdock4, *autonSubdock5, *autonSubdock6;
 DockGui *qrCodeDock, *motTempDock, *motTorqueDock;
 DockGui *debugDock;
 
@@ -352,8 +353,8 @@ void createButtons() {
 
 	// Auton Dock buttons
 	{
-		double initialY = 45;
-		double lengthY = 30;
+		double initialY = 40;
+		double lengthY = 25;
 		double offsetY = lengthY + 5;
 		autonDockButtons = {};
 		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY, 100, lengthY, color(0, 100, 200), color(50, 50, 50), 2), "Normal", white, [] {
@@ -391,6 +392,12 @@ void createButtons() {
 			autonDockButtons[5]->enable();
 			autonDock_dockDock->setEnabled(false);
 			autonSubdock5->setEnabled(true);
+		}));
+		autonDockButtons.push_back(new ButtonGui(new Rectangle(420, initialY + 6 * offsetY, 100, lengthY, color(100, 200, 0), color(50, 50, 50), 2), "Test 2", white, [] {
+			autonDockDisable(6);
+			autonDockButtons[6]->enable();
+			autonDock_dockDock->setEnabled(false);
+			autonSubdock6->setEnabled(true);
 		}));
 	}
 
@@ -569,7 +576,6 @@ void createButtons() {
 		allianceDisable(20);
 		allianceButtons[20]->enable();
 		setAutonRunType(0, autonomousType::Test);
-		// setAutonRunType(0, autonomousType::OdometryRadiusTest);
 	});
 	ButtonGui *rushTest = new ButtonGui(rectCenterX + offsetX, rectCenterY, selectorWidth, selectorHeight, 20, color(235, 205, 135), white, 2, "Rush Test", color(12, 99, 90), [] {
 		allianceDisable(21);
@@ -587,6 +593,13 @@ void createButtons() {
 		setAutonRunType(0, autonomousType::FieldTour);
 	});
 
+	/* Test autons 2 */
+	ButtonGui *odomRadiusTest = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(135, 205, 235), white, 2, "Odom Test", purple, [] {
+		allianceDisable(24);
+		allianceButtons[24]->enable();
+		setAutonRunType(0, autonomousType::OdometryRadiusTest);
+	});
+
 	// Buttons groups
 	allianceButtons = {
 		redUp, redDown, blueUp, blueDown,
@@ -595,6 +608,7 @@ void createButtons() {
 		redSoloAWP, blueSoloAWP, nullptr, nullptr,
 		skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver,
 		autonTest, rushTest, loveShape, fieldTour,
+		odomRadiusTest
 	};
 	autonSubdock0Buttons = { redUp, redDown, blueUp, blueDown };
 	autonSubdock1Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
@@ -602,6 +616,7 @@ void createButtons() {
 	autonSubdock3Buttons = { redSoloAWP, blueSoloAWP };
 	autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver };
 	autonSubdock5Buttons = { autonTest, rushTest, loveShape, fieldTour };
+	autonSubdock6Buttons = { odomRadiusTest };
 }
 
 /// @brief Create the interactable sliders on the screen.
@@ -641,6 +656,7 @@ void createDocks() {
 	autonSubdock3 = new DockGui(90, 40, 260, 180, {}, {});
 	autonSubdock4 = new DockGui(90, 40, 260, 180, {}, {});
 	autonSubdock5 = new DockGui(90, 40, 260, 180, {}, {});
+	autonSubdock6 = new DockGui(90, 40, 260, 180, {}, {});
 
 	// Simulation Dock
 	simulationDock = new DockGui(0, 20, 480, 220, {}, {});
@@ -695,8 +711,8 @@ void setDockGUIs() {
 	for (GuiClass *gui : autonDockButtons) {
 		autonDock->addGui(gui);
 	}
-	autonDock->addGuis({ autonSubdock0, autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5 });
-	autonDock_dockDock->addGuis({ autonSubdock0, autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5 });
+	autonDock->addGuis({ autonSubdock0, autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5, autonSubdock6 });
+	autonDock_dockDock->addGuis({ autonSubdock0, autonSubdock1, autonSubdock2, autonSubdock3, autonSubdock4, autonSubdock5, autonSubdock6 });
 
 	// Auton Subdocks
 	for (GuiClass *gui : autonSubdock0Buttons) autonSubdock0->addGui(gui);
@@ -705,13 +721,14 @@ void setDockGUIs() {
 	for (GuiClass *gui : autonSubdock3Buttons) autonSubdock3->addGui(gui);
 	for (GuiClass *gui : autonSubdock4Buttons) autonSubdock4->addGui(gui);
 	for (GuiClass *gui : autonSubdock5Buttons) autonSubdock5->addGui(gui);
+	for (GuiClass *gui : autonSubdock6Buttons) autonSubdock6->addGui(gui);
 
 	// Simulation Dock
 	for (GuiClass *gui : simulationDockButtons) simulationDock->addGui(gui);
-	
+
 	// QR-Code Dock
 	qrCodeDock->addGuis({ slider });
-	
+
 	// Debug Dock
 	for (GuiClass *gui : debugDockButtons) debugDock->addGui(gui);
 }
@@ -723,6 +740,7 @@ void initDocks() {
 	autonSubdock3->setEnabled(false);
 	autonSubdock4->setEnabled(false);
 	autonSubdock5->setEnabled(false);
+	autonSubdock6->setEnabled(false);
 	qrCodeDock->setEnabled(false);
 	motTempDock->setEnabled(false);
 	motTorqueDock->setEnabled(false);

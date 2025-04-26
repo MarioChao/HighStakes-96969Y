@@ -53,7 +53,7 @@ TrackingWheel lookRight_trackingWheel(
 	lookRight_motorBeats, 90_polarDeg, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, botInfo.trackWidth_inches / 2
 );
 TrackingWheel look1_trackingWheel(look_rotationBeats, 90_polarDeg, 1, 2.75, -0.013);
-TrackingWheel right1_trackingWheel(right_rotationBeats, 0_polarDeg, 1, 2.75, 2.873);
+TrackingWheel right1_trackingWheel(right_rotationBeats, 180_polarDeg, 1, 2.00, -2.669);
 
 }
 

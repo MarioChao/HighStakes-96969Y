@@ -80,7 +80,7 @@ encoder RightEncoder(emptyExpanderPort);
 rotation LookRotation(emptyPort);
 rotation RightRotation(PORT10);
 
-rotation ArmRotationSensor(PORT15, false);
+rotation ArmRotationSensor(PORT15, true);
 
 inertial InertialSensor(PORT18);
 distance DistanceSensor(emptyPort);
