@@ -2,6 +2,7 @@
 
 #include "Pas1-Lib/Auton/Control-Loops/feedforward.h"
 #include "Pas1-Lib/Auton/Control-Loops/pid.h"
+#include "Pas1-Lib/Auton/Control-Loops/slew.h"
 #include "Pas1-Lib/Auton/End-Conditions/patience.h"
 
 #include "Aespa-Lib/Winter-Utilities/general.h"
@@ -15,16 +16,19 @@ namespace {
 using pas1_lib::auton::control_loops::ArmFeedforward;
 using pas1_lib::auton::control_loops::PIDController;
 using pas1_lib::auton::control_loops::PID_kI_params;
+using pas1_lib::auton::control_loops::SlewController;
 using pas1_lib::auton::end_conditions::PatienceController;
 
 void resolveArmExtreme();
 void resolveArmDegrees();
 void resolveArmDirection();
 
+double calculateArmVelocity_volt(aespa_lib::units::PolarAngle targetAngle, aespa_lib::units::PolarAngle currentAngle);
+
 bool isExtreme();
 
 void setArmPosition(double armEncoderPosition_degrees);
-void spinArmMotor(double velocityPct);
+void spinArmMotor(double velocity_pct);
 
 // Motor config
 double armMaxVelocity_rpm = 100;
@@ -35,20 +39,22 @@ double armEncoder_to_arm_ratio = 1.0 / 1.0;
 /* Stage controllers */
 
 // Arm feedforward
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.12, 0, 1e-5);
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.7, 1.2, 1e-5);
 PIDController arm_positionError_radians_to_radiansPerSec_pid(1e-5, 0, 0);
-// PIDController arm_positionError_radians_to_radiansPerSec_pid(2.0, 0, 0);
 // Pid
-PIDController arm_positionError_radians_to_volt_pid_feedback(8, PID_kI_params(7.0, 15, true), 0.3);
+// PIDController arm_positionError_radians_to_volt_pid_feedback(3, PID_kI_params(10.0, 15, true), 0.2);
+PIDController arm_positionError_radians_to_volt_pid_feedback(3, PID_kI_params(0.5, 10, true), 0);
+// Slew
+SlewController armAcceleration_pctPerSec_slew(2000);
 
 // Patience
-PatienceController armUpPatience(12, 1.0, true, 5);
-PatienceController armDownPatience(6, 1.0, false, 5);
+PatienceController armUpPatience(12, 1.0, true, 10);
+PatienceController armDownPatience(12, 1.0, false, 10);
 
 // Stage config
-std::vector<double> armStages_degrees = { -2, 10, 25, 60, 115, 130, 180, 200, 230, 0};
+std::vector<double> armStages_degrees = { -5, 8, 25, 60, 115, 130, 180, 200, 230, 230 };
 // std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 180, 200, 210, 0 }; // angles for tuning
-std::vector<int> extremeStages_values = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
 bool releaseOnExhausted = true;
 
@@ -136,37 +142,40 @@ void setArmStage(int stageId, double delay_sec, double maxSpeed_pct) {
 	armMaxVelocity_pct = maxSpeed_pct;
 	if (armMaxVelocity_pct < 1e-5) armMaxVelocity_pct = defaultArmMaxVelocity_pct;
 
+	// Stage degree
+	double stage_degree = armStages_degrees[stageId];
+	printf("Arm deg: %.3f\n", stage_degree);
+
 	// Extreme cases
 	int stage_value = extremeStages_values[stageId];
 	if (stage_value == -2) {
 		// Down, hold
 		armDownPatience.reset();
 		releaseOnExhausted = false;
-		setTargetAngle(-1e7, delay_sec);
+		setTargetAngle(stage_degree, delay_sec);
 		return;
 	} else if (stage_value == -1) {
 		// Down, release
 		armDownPatience.reset();
 		releaseOnExhausted = true;
-		setTargetAngle(-1e7, delay_sec);
+		setTargetAngle(stage_degree, delay_sec);
 		return;
 	} else if (stage_value == 1) {
 		// Up, release
 		armUpPatience.reset();
 		releaseOnExhausted = true;
-		setTargetAngle(1e7, delay_sec);
+		setTargetAngle(stage_degree, delay_sec);
 		return;
 	} else if (stage_value == 2) {
 		// Up, hold
 		armUpPatience.reset();
 		releaseOnExhausted = false;
-		setTargetAngle(1e7, delay_sec);
+		setTargetAngle(stage_degree, delay_sec);
 		return;
 	}
 
 	// PID stage case
-	printf("Arm deg: %.3f\n", armStages_degrees[stageId]);
-	setTargetAngle(armStages_degrees[stageId], delay_sec);
+	setTargetAngle(stage_degree, delay_sec);
 }
 
 int getArmStage() {
@@ -228,16 +237,22 @@ double _taskDelay;
 namespace {
 void resolveArmExtreme() {
 	// Calculate error
-	double currentPosition_degrees = ArmRotationSensor.position(degrees) * armEncoder_to_arm_ratio;
-	double error_degrees = armStateTargetAngle_degrees - currentPosition_degrees;
+	aespa_lib::units::PolarAngle targetAngle = armStateTargetAngle_degrees;
+	aespa_lib::units::PolarAngle currentAngle = ArmRotationSensor.position(degrees) * armEncoder_to_arm_ratio;
+	aespa_lib::units::PolarAngle errorAngle = targetAngle - currentAngle;
+
+	double motorVelocity_volt = calculateArmVelocity_volt(targetAngle, currentAngle);
+	double motorVelocity_pct = aespa_lib::genutil::voltToPct(motorVelocity_volt);
+	motorVelocity_pct = aespa_lib::genutil::clamp(motorVelocity_pct, -armMaxVelocity_pct, armMaxVelocity_pct);
 
 	// Spin up or down
-	if (error_degrees > 0) {
+	if (errorAngle.polarDeg() > 0) {
 		/* Elevate */
 
 		// Check patience
-		armUpPatience.computePatience(currentPosition_degrees);
+		armUpPatience.computePatience(currentAngle.polarDeg());
 		if (armUpPatience.isExhausted()) {
+			arm_positionError_radians_to_volt_pid_feedback.resetErrorToZero();
 			if (releaseOnExhausted) {
 				ArmMotors.stop(coast);
 			} else {
@@ -247,34 +262,37 @@ void resolveArmExtreme() {
 		}
 
 		// Spin
-		spinArmMotor(armMaxVelocity_pct);
+		spinArmMotor(motorVelocity_pct);
 
-	} else if (error_degrees < 0) {
+	} else if (errorAngle.polarDeg() < 0) {
 		/* Descend */
 
 		// Check patience
-		armDownPatience.computePatience(currentPosition_degrees);
+		armDownPatience.computePatience(currentAngle.polarDeg());
 		if (armDownPatience.isExhausted()) {
+			arm_positionError_radians_to_volt_pid_feedback.resetErrorToZero();
 			if (releaseOnExhausted) {
 				ArmMotors.stop(coast);
 			} else {
-				spinArmMotor(-10);
+				spinArmMotor(-3);
 			}
 			return;
 		}
 
 		// Spin
-		spinArmMotor(-armMaxVelocity_pct);
+		spinArmMotor(motorVelocity_pct);
 	}
 }
 
 void resolveArmDegrees() {
+	// Special cases
 	if (currentArmStage != -2) {
 		// -1 case
 		if (currentArmStage == -1) {
+			arm_positionError_radians_to_volt_pid_feedback.resetErrorToZero();
 			return;
 		}
-	
+
 		// Extreme case
 		if (isExtreme()) {
 			resolveArmExtreme();
@@ -282,45 +300,19 @@ void resolveArmDegrees() {
 		}
 	}
 
-	/* Position feedback */
-
-	// Calculate error
+	// Calculate velocity
+	aespa_lib::units::PolarAngle targetAngle = armStateTargetAngle_degrees;
 	aespa_lib::units::PolarAngle currentAngle = ArmRotationSensor.position(degrees) * armEncoder_to_arm_ratio;
-	aespa_lib::units::PolarAngle errorAngle = armStateTargetAngle_degrees - currentAngle.polarDeg();
-	// printf("Cur: %.3f, target: %.3f\n", currentAngle.polarDeg(), armStateTargetAngle_degrees);
 
-	// Get pid value
-	arm_positionError_radians_to_radiansPerSec_pid.computeFromError(errorAngle.polarRad());
-	double positionPidVelocity_radiansPerSec = arm_positionError_radians_to_radiansPerSec_pid.getValue();
-	// printf("Err: %.3f, pid: %.3f\n", errorAngle.polarDeg(), positionPidVelocity_radiansPerSec);
-
-
-	/* Feedforward */
-
-	double desiredVelocity_radiansPerSec = positionPidVelocity_radiansPerSec;
-	double motorVelocityVolt = arm_velocity_radiansPerSec_to_volt_feedforward.calculateFromMotion(
-		aespa_lib::genutil::toRadians(armStateTargetAngle_degrees), desiredVelocity_radiansPerSec, 0
-	);
-	// double motorVelocityVolt = arm_velocity_radiansPerSec_to_volt_feedforward.calculateFromMotion(currentAngle.polarRad(), desiredVelocity_radiansPerSec, 0);
-
-	/* Position feedback PID */
-	arm_positionError_radians_to_volt_pid_feedback.computeFromError(errorAngle.polarRad());
-	double feedbackVelocity_volt = arm_positionError_radians_to_volt_pid_feedback.getValue();
-	motorVelocityVolt += feedbackVelocity_volt;
-
-	// printf("ARM: %.3f, Err: %.3f\n", currentAngle.polarDeg(), errorAngle.polarDeg());
-	double armVelocity_radiansPerSec = ArmMotors.velocity(rpm) * (1.0 / 60.0) * (2 * M_PI);
-	// printf("VRS: %.3f %.3f, volt: %.3f\n", desiredVelocity_radiansPerSec, armVelocity_radiansPerSec, motorVelocityVolt);
-
-	/* Command */
+	double motorVelocity_volt = calculateArmVelocity_volt(targetAngle, currentAngle);
 
 	// Clamp velocity
-	double motorVelocityPct = aespa_lib::genutil::voltToPct(motorVelocityVolt);
-	motorVelocityPct = aespa_lib::genutil::clamp(motorVelocityPct, -armMaxVelocity_pct, armMaxVelocity_pct);
-	// printf("MotVal: %.3f\n", motorVelocityPct);
+	double motorVelocity_pct = aespa_lib::genutil::voltToPct(motorVelocity_volt);
+	motorVelocity_pct = aespa_lib::genutil::clamp(motorVelocity_pct, -armMaxVelocity_pct, armMaxVelocity_pct);
+	// printf("MotVal: %.3f\n", motorVelocity_pct);
 
-	// Set velocity
-	spinArmMotor(motorVelocityPct);
+	// Command velocity
+	spinArmMotor(motorVelocity_pct);
 }
 
 void resolveArmDirection() {
@@ -349,6 +341,33 @@ void resolveArmDirection() {
 	}
 }
 
+double calculateArmVelocity_volt(aespa_lib::units::PolarAngle targetAngle, aespa_lib::units::PolarAngle currentAngle) {
+	/* Feedforward + feedback */
+
+	// Calculate position error
+	aespa_lib::units::PolarAngle errorAngle = targetAngle - currentAngle;
+
+	// Get pid value
+	arm_positionError_radians_to_radiansPerSec_pid.computeFromError(errorAngle.polarRad());
+	double positionPidVelocity_radiansPerSec = arm_positionError_radians_to_radiansPerSec_pid.getValue();
+
+	// Feedforward
+	double desiredVelocity_radiansPerSec = positionPidVelocity_radiansPerSec;
+	double motorVelocity_volt = arm_velocity_radiansPerSec_to_volt_feedforward.calculateFromMotion(
+		currentAngle.polarRad(), desiredVelocity_radiansPerSec, 0
+	);
+
+
+	/* Position feedback PID */
+	arm_positionError_radians_to_volt_pid_feedback.computeFromError(errorAngle.polarRad());
+	double feedbackVelocity_volt = arm_positionError_radians_to_volt_pid_feedback.getValue();
+	motorVelocity_volt += feedbackVelocity_volt;
+
+	// double armVelocity_radiansPerSec = ArmMotors.velocity(rpm) * (1.0 / 60.0) * (2 * M_PI);
+
+	return motorVelocity_volt;
+}
+
 bool isExtreme() {
 	if (!(0 <= currentArmStage && currentArmStage < (int) armStages_degrees.size())) {
 		return false;
@@ -362,15 +381,21 @@ void setArmPosition(double armEncoderPosition_degrees) {
 	arm_positionError_radians_to_radiansPerSec_pid.resetErrorToZero();
 }
 
-void spinArmMotor(double velocityPct) {
+void spinArmMotor(double velocity_pct) {
+	// Clamp
+	velocity_pct = aespa_lib::genutil::clamp(velocity_pct, -armMaxVelocity_pct, armMaxVelocity_pct);
+
+	// Slew
+	armAcceleration_pctPerSec_slew.computeFromTarget(velocity_pct);
+	velocity_pct = armAcceleration_pctPerSec_slew.getValue();
+
 	// Spin
-	velocityPct = aespa_lib::genutil::clamp(velocityPct, -armMaxVelocity_pct, armMaxVelocity_pct);
-	double velocityVolt = aespa_lib::genutil::pctToVolt(velocityPct);
+	double velocityVolt = aespa_lib::genutil::pctToVolt(velocity_pct);
 	velocityVolt = aespa_lib::genutil::clamp(velocityVolt, -12, 12);
 	ArmMotors.spin(forward, velocityVolt, volt);
 	// printf("volt given %.3f, volt: %.3f\n", velocityVolt, ArmMotors.voltage());
 	// printf("VVolt: %.3f, temp: %.3f C, torque: %.3f Nm\n", velocityVolt, ArmMotors.temperature(celsius), ArmMotors.torque());
 	// printf("pos: %.3f\n", ArmRotationSensor.position(deg) * armEncoder_to_arm_ratio);
-	// ArmMotors.spin(forward, velocityPct, pct);
+	// ArmMotors.spin(forward, velocity_pct, pct);
 }
 }

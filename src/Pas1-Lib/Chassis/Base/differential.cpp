@@ -17,13 +17,19 @@ Differential::Differential(
 }
 
 void Differential::control_differential(double left_pct, double right_pct, bool useSlew) {
-	// Slew velocity
-	leftAcceleration_pctPerSec_slew.computeFromTarget(left_pct);
-	rightAcceleration_pctPerSec_slew.computeFromTarget(right_pct);
+	if (useSlew) {
+		// Slew velocity
+		leftAcceleration_pctPerSec_slew.computeFromTarget(left_pct);
+		rightAcceleration_pctPerSec_slew.computeFromTarget(right_pct);
 
-	// Store velocity
-	desired_leftMotor_pct = leftAcceleration_pctPerSec_slew.getValue();
-	desired_rightMotor_pct = rightAcceleration_pctPerSec_slew.getValue();
+		// Store velocity
+		desired_leftMotor_pct = leftAcceleration_pctPerSec_slew.getValue();
+		desired_rightMotor_pct = rightAcceleration_pctPerSec_slew.getValue();
+	} else {
+		desired_leftMotor_pct = left_pct;
+		desired_rightMotor_pct = right_pct;
+	}
+
 
 	commanded_leftMotor_volt = aespa_lib::genutil::pctToVolt(desired_leftMotor_pct);
 	commanded_rightMotor_volt = aespa_lib::genutil::pctToVolt(desired_rightMotor_pct);

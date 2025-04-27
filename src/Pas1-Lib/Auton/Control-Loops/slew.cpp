@@ -36,6 +36,7 @@ void SlewController::computeFromTarget(double targetValue) {
 
 	// Get max change
 	double deltaTime_sec = slewTimer.time(seconds);
+	slewTimer.reset();
 	double maxChange = std::fabs(maxChangeRate_valPerSec * deltaTime_sec);
 
 	// Constrain change

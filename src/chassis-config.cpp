@@ -53,7 +53,7 @@ TrackingWheel lookRight_trackingWheel(
 	lookRight_motorBeats, 90_polarDeg, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, botInfo.trackWidth_inches / 2
 );
 TrackingWheel look1_trackingWheel(look_rotationBeats, 90_polarDeg, 1, 2.75, -0.013);
-TrackingWheel right1_trackingWheel(right_rotationBeats, 180_polarDeg, 1, 2.00, -2.669);
+TrackingWheel right1_trackingWheel(right_rotationBeats, 180_polarDeg, 1, 2.00, -3.5);
 
 }
 
@@ -80,9 +80,9 @@ AutonSettings autonSettings(
 	PIDController(100, 0, 0, 0.06, 0.05), // linear pid (tiles to pct)
 	// PIDController(70, 0, 0, 0.03, 0.05), // linear pid (tiles to pct)
 	PIDController(3.25, 0, 0.225, 2, 0.05), // angular pid (degrees to pct)
-	SlewController(100), // linear slew (pct/sec)
-	SlewController(100), // angular slew (pct/sec)
-	SlewController(100), // motor slew (pct/sec)
+	SlewController(1000), // linear slew (pct/sec)
+	SlewController(1000), // angular slew (pct/sec)
+	SlewController(1000), // motor slew (pct/sec)
 	PatienceController(30, 0.001, false), // linear patience (tiles)
 	PatienceController(30, 0.5, false), // angular patience (degrees)
 	false // relative rotation
