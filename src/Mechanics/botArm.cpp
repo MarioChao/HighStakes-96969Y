@@ -14,6 +14,7 @@
 namespace {
 using pas1_lib::auton::control_loops::ArmFeedforward;
 using pas1_lib::auton::control_loops::PIDController;
+using pas1_lib::auton::control_loops::PID_kI_params;
 using pas1_lib::auton::end_conditions::PatienceController;
 
 void resolveArmExtreme();
@@ -34,18 +35,18 @@ double armEncoder_to_arm_ratio = 1.0 / 1.0;
 /* Stage controllers */
 
 // Arm feedforward
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0, 0.3, 0);
-PIDController arm_positionError_radians_to_radiansPerSec_pid(0, 0, 0);
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.12, 0, 1e-5);
+PIDController arm_positionError_radians_to_radiansPerSec_pid(1e-5, 0, 0);
 // PIDController arm_positionError_radians_to_radiansPerSec_pid(2.0, 0, 0);
 // Pid
-PIDController arm_positionError_radians_to_volt_pid_feedback(11, 0, 0.4);
+PIDController arm_positionError_radians_to_volt_pid_feedback(8, PID_kI_params(7.0, 15, true), 0.3);
 
 // Patience
 PatienceController armUpPatience(12, 1.0, true, 5);
 PatienceController armDownPatience(6, 1.0, false, 5);
 
 // Stage config
-std::vector<double> armStages_degrees = { -2, 17, 25, 60, 115, 130, 180, 200, 230, 0};
+std::vector<double> armStages_degrees = { -2, 10, 25, 60, 115, 130, 180, 200, 230, 0};
 // std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 180, 200, 210, 0 }; // angles for tuning
 std::vector<int> extremeStages_values = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
@@ -176,7 +177,7 @@ void resetArmEncoder() {
 	armResetted = false;
 
 	// Sanitize rotation sensor's initial value to between [-100, 260]
-	setArmPosition(aespa_lib::genutil::modRange(ArmRotationSensor.position(degrees), 360, -100));
+	setArmPosition(aespa_lib::genutil::modRange(ArmRotationSensor.position(degrees), 360, -50));
 
 	/*
 	// Spin downward until exhausted
