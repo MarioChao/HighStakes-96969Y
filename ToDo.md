@@ -1,7 +1,7 @@
 # ToDo
 
 - [ ] Reorganize files
-	- [ ] Aespa Library
+	- [x] Aespa Library
 		- [x] Giselle Geometry
 			- [x] polygon 2d
 			- [x] vector 2d
@@ -40,7 +40,7 @@
 				- [x] global move to
 					- [x] turn to face
 					- [x] drive to point
-					- [x] drive to pose
+					- [x] drive to pose (boomerang)
 				- [x] local move by
 					- [x] turn to angle
 					- [x] drive and turn
@@ -75,4 +75,5 @@
 - [ ] Tune path following
 	- [x] Trajectory generation
 	- [ ] Velocity control (feedforward, feedback)
-- [ ] Tune arm control (pid / feedforward)
+- [x] Tune arm control (pid / feedforward)
+- [ ] Check for bugs in code
