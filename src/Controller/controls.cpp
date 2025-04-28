@@ -99,6 +99,16 @@ void setUpKeybinds() {
 	Controller1.ButtonLeft.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
+		if (botarm::getArmStage() <= 2) {
+			task reverseIntake([]() -> int {
+				botintake::setControlState(false);
+				botintake::setState(-1);
+				wait(0.3, sec);
+				botintake::setState(0);
+				botintake::setControlState(true);
+				return 1;
+			});
+		}
 		if (botarm::getArmStage() == 4) botarm::setArmStage(0);
 		else botarm::setArmStage(4);
 		botintake::setColorFiltering(true);
@@ -108,6 +118,16 @@ void setUpKeybinds() {
 	Controller1.ButtonL1.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
+		if (botarm::getArmStage() <= 2) {
+			task reverseIntake([]() -> int {
+				botintake::setControlState(false);
+				botintake::setState(-1);
+				wait(0.3, sec);
+				botintake::setState(0);
+				botintake::setControlState(true);
+				return 1;
+			});
+		}
 		if (botarm::getArmStage() == 8) botarm::setArmStage(0);
 		else botarm::setArmStage(8);
 		botintake::setColorFiltering(true);
