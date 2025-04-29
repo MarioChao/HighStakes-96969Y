@@ -76,4 +76,7 @@
 	- [x] Trajectory generation
 	- [ ] Velocity control (feedforward, feedback)
 - [x] Tune arm control (pid / feedforward)
+- [x] Tune auton settings
+	- [x] Linear pid
+	- [x] Angular pid
 - [ ] Check for bugs in code

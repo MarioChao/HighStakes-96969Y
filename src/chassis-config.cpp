@@ -16,6 +16,7 @@ using pas1_lib::chassis::settings::AutonSettings;
 using pas1_lib::chassis::base::Differential;
 using pas1_lib::auton::control_loops::SimpleFeedforward;
 using pas1_lib::auton::control_loops::PIDController;
+using pas1_lib::auton::control_loops::PID_kI_params;
 using pas1_lib::auton::control_loops::SlewController;
 using pas1_lib::auton::end_conditions::PatienceController;
 }
@@ -53,7 +54,7 @@ TrackingWheel lookRight_trackingWheel(
 	lookRight_motorBeats, 90_polarDeg, botInfo.motorToWheel_gearRatio, botInfo.wheelDiameter_inches, botInfo.trackWidth_inches / 2
 );
 TrackingWheel look1_trackingWheel(look_rotationBeats, 90_polarDeg, 1, 2.75, -0.013);
-TrackingWheel right1_trackingWheel(right_rotationBeats, 180_polarDeg, 1, 2.00, -3.5);
+TrackingWheel right1_trackingWheel(right_rotationBeats, 0_polarDeg, 1, 2.00, 2.0);
 
 }
 
@@ -79,7 +80,7 @@ AutonSettings autonSettings(
 	// PIDController(0.0), // velocity feedback (tiles/sec to volt)
 	PIDController(100, 0, 0, 0.06, 0.05), // linear pid (tiles to pct)
 	// PIDController(70, 0, 0, 0.03, 0.05), // linear pid (tiles to pct)
-	PIDController(3.25, 0, 0.225, 2, 0.05), // angular pid (degrees to pct)
+	PIDController(3.25, PID_kI_params(0, 7.5, true), 0.225, 3, 0.05), // angular pid (degrees to pct)
 	SlewController(1000), // linear slew (pct/sec)
 	SlewController(1000), // angular slew (pct/sec)
 	SlewController(1000), // motor slew (pct/sec)

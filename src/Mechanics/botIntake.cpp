@@ -28,6 +28,7 @@ bool previousIsDetecting = false;
 std::string lastDetectedRingColor = "none";
 
 bool isStoringRing = false;
+double detectRingDistance_mm = 60;
 
 bool controlState = true;
 }
@@ -72,7 +73,7 @@ void runThread() {
 			resolveState = 1;
 
 			double distanceSensor_detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
-			bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < 30;
+			bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < detectRingDistance_mm;
 
 			if (true) {
 				if (distanceSensor_isDetectingRing && lastDetectedRingColor != "none" && lastDetectedRingColor != filterOutColor) {
@@ -264,7 +265,7 @@ void resolveIntake() {
 	if (colorFilterEnabled && !disableColorFilter) {
 		// Sensor data
 		double distanceSensor_detectedDistance = RingDistanceSensor.objectDistance(distanceUnits::mm);
-		bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < 30;
+		bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < detectRingDistance_mm;
 
 		// Newly detected ring
 		bool isNewDetected = (!previousIsDetecting && isDetectingRing);

@@ -24,7 +24,7 @@ void autonpaths::runAutonTest() {
 		local::turnToAngle(robotChassis, local::turnToAngle_params(90), false);
 	}
 
-	if (true) {
+	if (false) {
 		setRobotLookPose(aespa_lib::datas::Linegular(1, 0, 90));
 
 		global::driveToPoint(robotChassis, global::driveToPoint_params(1, 1, 0, false), false);
@@ -39,7 +39,7 @@ void autonpaths::runAutonTest() {
 		local::turnToAngle(robotChassis, local::turnToAngle_params(90, 50, -botInfo.trackWidth_tiles / 2.0), false);
 	}
 
-	if (false) {
+	if (true) {
 		setRobotLookPose(aespa_lib::datas::Linegular(0.5, 0.5, 90));
 
 		local::turnToAngle(robotChassis, local::turnToAngle_params(180, 100, 0), false);
