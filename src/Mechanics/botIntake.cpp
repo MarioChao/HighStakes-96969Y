@@ -76,7 +76,11 @@ void runThread() {
 			bool distanceSensor_isDetectingRing = distanceSensor_detectedDistance < detectRingDistance_mm;
 
 			if (true) {
-				if (distanceSensor_isDetectingRing && lastDetectedRingColor != "none" && lastDetectedRingColor != filterOutColor) {
+				if (
+					distanceSensor_isDetectingRing
+					&& lastDetectedRingColor != "none"
+					&& lastDetectedRingColor != filterOutColor
+				) {
 					printf("Distance sensor: store ring\n");
 					resolveState = 0;
 					isStoringRing = false;
@@ -84,11 +88,13 @@ void runThread() {
 			} else {
 				bool isDetectingRing = ringoptical::isDetecting();
 				std::string detectedRingColor = ringoptical::getDetectedColor();
-				if (isDetectingRing && detectedRingColor != "none") {
-					if (detectedRingColor != filterOutColor) {
-						resolveState = 0;
-						isStoringRing = false;
-					}
+				if (
+					isDetectingRing && detectedRingColor != "none"
+					&& detectedRingColor != filterOutColor
+				) {
+					printf("Optical sensor: store ring\n");
+					resolveState = 0;
+					isStoringRing = false;
 				}
 			}
 
@@ -271,7 +277,7 @@ void resolveIntake() {
 		bool isNewDetected = (!previousIsDetecting && isDetectingRing);
 		previousIsDetecting = isDetectingRing;
 		// printf("Col: %s distance: %.3f %d\n", lastDetectedRingColor.c_str(), distanceSensor_detectedDistance, distanceSensor_isDetectingRing);
-		
+
 		// Filter
 		if (true) {
 			/* Optical sensor + distance sensor*/

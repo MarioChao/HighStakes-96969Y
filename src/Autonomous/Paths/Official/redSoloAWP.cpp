@@ -31,7 +31,7 @@ void autonpaths::runRedSoloAWP() {
 namespace {
 
 void doAuton() {
-	// Partially from up
+	// Partially from up 4/29
 
 	/* Up start */
 	// Alliance wall stake
@@ -39,7 +39,7 @@ void doAuton() {
 	waitUntil(local::_driveDistanceError_tiles < 0.21);
 	setArmStage(20);
 	waitUntil(local::_isDriveAndTurnSettled);
-	wait(100, msec);
+	wait(0.15, sec);
 
 	// (2, 4) goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 4_tiles, 0_tiles, true), true);
@@ -51,7 +51,7 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.15);
 	// Top ring
 	setIntakeState(1);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 5_tiles, 0.45_tiles, false, 30), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 5_tiles, 0.45_tiles, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.7_tiles, 6_tiles, 0.4_tiles, false, 60, 1.5), true);
 	waitUntil(global::_driveToPointDistanceError < 0.1);
@@ -72,9 +72,13 @@ void doAuton() {
 	setIntakeStoreRing(true);
 	setGoalClampState(false);
 	waitUntil(global::_driveToPointDistanceError < 0.7);
+	// Middle ring: slow down
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 20), true);
 	setArmStage(3);
-	wait(1.15, sec);
+	wait(1.0, sec);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 1.5_tiles, 0_tiles, false, 10), true);
+	wait(0.5, sec);
+	// Middle ring: accelerate
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 1.3_tiles, 0.2_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 2) goal
