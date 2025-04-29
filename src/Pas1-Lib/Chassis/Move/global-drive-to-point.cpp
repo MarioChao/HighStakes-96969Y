@@ -98,9 +98,9 @@ void runDriveToPoint() {
 	const double velocityFactor = (isReverse ? -1 : 1);
 	const double rotationOffset_degrees = (isReverse ? 180 : 0);
 
-	// Target rotation
-	double targetRotation_degrees = aespa_lib::genutil::toDegrees(std::atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX())) + rotationOffset_degrees;
-	_driveToPointAngleError_degrees = std::fabs(aespa_lib::genutil::modRange(targetRotation_degrees - startLg.getRotation().polarDeg(), 360, -180));
+	// Previous states
+	double previousTargetRotation_degrees = aespa_lib::genutil::toDegrees(std::atan2(y_tiles - startLg.getY(), x_tiles - startLg.getX())) + rotationOffset_degrees;
+	_driveToPointAngleError_degrees = std::fabs(aespa_lib::genutil::modRange(previousTargetRotation_degrees - startLg.getRotation().polarDeg(), 360, -180));
 
 
 	// Reset PID
@@ -163,6 +163,15 @@ void runDriveToPoint() {
 		double currentX = currentLg.getX();
 		double currentY = currentLg.getY();
 
+		// Get target rotation
+		bool isCloseToTarget = _driveToPointDistanceError < turnTo_distanceThreshold;
+		double targetRotation_degrees = [&]() -> double {
+			if (isCloseToTarget) return previousTargetRotation_degrees;
+			// if (isCloseToTarget) return currentLg.getRotation().polarDeg();
+			return aespa_lib::genutil::toDegrees(std::atan2(y_tiles - currentY, x_tiles - currentX)) + rotationOffset_degrees;
+		}();
+		previousTargetRotation_degrees = targetRotation_degrees;
+
 
 		/* ---------- Linear ---------- */
 
@@ -183,11 +192,6 @@ void runDriveToPoint() {
 
 
 		/* ---------- Angular ---------- */
-
-		// Compute target polar heading
-		if (distanceError > turnTo_distanceThreshold) {
-			targetRotation_degrees = aespa_lib::genutil::toDegrees(std::atan2(y_tiles - currentY, x_tiles - currentX)) + rotationOffset_degrees;
-		}
 
 		// Compute polar heading error
 		double rotateError = targetRotation_degrees - currentLg.getRotation().polarDeg();
