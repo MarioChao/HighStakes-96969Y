@@ -13,6 +13,7 @@
 
 #include "Mechanics/botDrive.h"
 #include "Mechanics/botIntake.h"
+#include "Mechanics/botArm.h"
 
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
@@ -412,10 +413,12 @@ void createButtons() {
 			wait(1, sec);
 			auton::runAutonomous();
 
+			waitUntil(autonfunctions::_autonTimer.time(sec) > 15);
 			botdrive::setControlState(true);
 			botintake::setControlState(true);
 			botdrive::preauton();
 			botintake::preauton();
+			botarm::setArmStage(-1);
 			simulationDockButtons[0]->setUsability(true);
 
 			return 1;

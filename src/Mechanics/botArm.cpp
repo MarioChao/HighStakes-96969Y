@@ -135,6 +135,7 @@ double getTargetAngle() {
 void setArmStage(int stageId, double delay_sec, double maxSpeed_pct) {
 	stageId = aespa_lib::genutil::clamp(stageId, -2, (int) armStages_degrees.size() - 1);
 	currentArmStage = stageId;
+	printf("Arm stage: %d\n", currentArmStage);
 
 	// -1 case
 	if (stageId == -1) return;
@@ -293,6 +294,7 @@ void resolveArmDegrees() {
 		// -1 case
 		if (currentArmStage == -1) {
 			arm_positionError_radians_to_volt_pid_feedback.resetErrorToZero();
+			spinArmMotor(0);
 			return;
 		}
 

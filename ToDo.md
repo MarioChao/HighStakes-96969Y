@@ -78,5 +78,5 @@
 - [x] Tune arm control (pid / feedforward)
 - [x] Tune auton settings
 	- [x] Linear pid
-	- [x] Angular pid
+	- [x] Angular pid (can be better?)
 - [ ] Check for bugs in code
