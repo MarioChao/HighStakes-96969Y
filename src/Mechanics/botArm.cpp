@@ -53,7 +53,7 @@ PatienceController armUpPatience(12, 1.0, true, 10);
 PatienceController armDownPatience(12, 1.0, false, 10);
 
 // Stage config
-std::vector<double> armStages_degrees = { -10, 4, 25, 60, 140, 130, 180, 200, 230, 230 };
+std::vector<double> armStages_degrees = { -10, 6, 25, 60, 140, 130, 180, 200, 240, 240 };
 // std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 180, 200, 210, 0 }; // angles for tuning
 std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
