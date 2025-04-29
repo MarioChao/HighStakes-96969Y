@@ -80,7 +80,7 @@ AutonSettings autonSettings(
 	// PIDController(0.0), // velocity feedback (tiles/sec to volt)
 	PIDController(100, 0, 0, 0.06, 0.05), // linear pid (tiles to pct)
 	// PIDController(70, 0, 0, 0.03, 0.05), // linear pid (tiles to pct)
-	PIDController(3.25, PID_kI_params(0, 7.5, true), 0.225, 3, 0.05), // angular pid (degrees to pct)
+	PIDController(2, PID_kI_params(0.1, 7.5, true), 0.15, 5, 0.1), // angular pid (degrees to pct)
 	SlewController(1000), // linear slew (pct/sec)
 	SlewController(1000), // angular slew (pct/sec)
 	SlewController(1000), // motor slew (pct/sec)
