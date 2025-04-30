@@ -28,7 +28,7 @@ bool previousIsDetecting = false;
 std::string lastDetectedRingColor = "none";
 
 bool isStoringRing = false;
-double detectRingDistance_mm = 60;
+double detectRingDistance_mm = 50;
 
 bool controlState = true;
 }
@@ -81,7 +81,7 @@ void runThread() {
 					&& lastDetectedRingColor != "none"
 					&& lastDetectedRingColor != filterOutColor
 				) {
-					printf("Distance sensor: store ring\n");
+					printf("Distance sensor: store ring %.3f mm\n", distanceSensor_detectedDistance);
 					resolveState = 0;
 					isStoringRing = false;
 				}

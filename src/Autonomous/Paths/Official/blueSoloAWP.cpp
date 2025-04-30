@@ -59,11 +59,12 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.71_tiles), 6_tiles, 0.35_tiles, false, 60, 1.2), true);
 	waitUntil(global::_driveToPointDistanceError < 0.1);
 	wait(0.2, sec);
-	// (2, 5) ring
+	// Back up
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.35_tiles), 4.1_tiles, 0_tiles, true, 60), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	/* Up end */
 
+	// (2, 5) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 5.2_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 
