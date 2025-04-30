@@ -90,12 +90,13 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// (2, 2) goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 2_tiles, 0_tiles, true, 60), true);
+	setIntakeStoreRing(false);
+	setIntakeState(0, 0.1);
 	waitUntil(global::_driveToPointDistanceError < 1.0);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 2_tiles, 0_tiles, true, 40), true);
 	setArmStage(5);
 	waitUntil(global::_driveToPointDistanceError < 0.25);
 	setGoalClampState(true);
-	setIntakeStoreRing(false);
 	waitUntil(global::_driveToPointDistanceError < 0.15);
 	// (2, 1) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 0.7_tiles, 0.2_tiles), true);
