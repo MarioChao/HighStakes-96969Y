@@ -57,6 +57,11 @@ double ChassisBase::getAngularVelocity() {
 	return 0;
 }
 
+void ChassisBase::cancelMotion() {
+	motionHandler.incrementMotion();
+	waitUntil(motionHandler.getIsInMotion() == false);
+}
+
 }
 }
 }

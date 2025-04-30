@@ -37,6 +37,8 @@ public:
 	virtual double getLookVelocity();
 	virtual double getAngularVelocity();
 
+	void cancelMotion();
+
 
 	settings::BotInfo &botInfo;
 	settings::AutonSettings &autonSettings;

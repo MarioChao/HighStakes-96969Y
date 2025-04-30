@@ -137,40 +137,34 @@ void Odometry::odometryFrame() {
 		start();
 	}
 
-	/* Sensor values */
+
+	/* Local differences */
 
 	// Get new sensor values
 	getNewInertialSensorMeasurements();
 
-
-	/* Measurement differences */
-
-	// Get delta rotation from averages
+	// Get delta pose from averages
 	double deltaPolarAngle_degrees = getDeltaPolarAngle_degrees();
-
-	// Get local delta distance from averages
 	auto localDeltaRightLook = getLocalDeltaXY_inches(deltaPolarAngle_degrees);
-	double localDeltaRight = localDeltaRightLook.first;
-	double localDeltaLook = localDeltaRightLook.second;
-	Linegular deltaDistances(localDeltaRight, localDeltaLook, deltaPolarAngle_degrees);
+	Linegular deltaPose(localDeltaRightLook.first, localDeltaRightLook.second, deltaPolarAngle_degrees);
 
 
-	/* Local to Absolute */
+	/* Absolute differences */
 
+	// Rotate by an amount to estimate curved paths
+	// Two methods available (see https://docs.ftclib.org/ftclib/master/kinematics/odometry)
+	// 1. Half angle (euler integration)
+	// 2. Pose exponential
 	bool useForwardEuler = true;
 	if (useForwardEuler) {
-		// Rotate by half angle (euler integration)
-		// see https://docs.ftclib.org/ftclib/master/kinematics/odometry
-		deltaDistances.rotateXYBy(deltaPolarAngle_degrees / 2);
+		deltaPose.rotateXYBy(deltaPolarAngle_degrees / 2);
 	} else {
-		// Rotate with pose exponential
-		deltaDistances.rotateExponentialBy(deltaPolarAngle_degrees);
+		deltaPose.rotateExponentialBy(deltaPolarAngle_degrees);
 	}
 
-
-	// Rotate to absolute difference
+	// Rotate differences to absolute coordinate
 	PolarAngle rightPolarAngle = trackedPose.getRotation() - 90_polarDeg;
-	deltaDistances.rotateXYBy(rightPolarAngle);
+	deltaPose.rotateXYBy(rightPolarAngle);
 
 
 	/* Update */
@@ -179,7 +173,6 @@ void Odometry::odometryFrame() {
 	inertialSensor_oldMeasurements = inertialSensor_newMeasurements;
 
 	// Update odometry values
-	Linegular deltaPose(deltaDistances.getX(), deltaDistances.getY(), deltaPolarAngle_degrees);
 	trackedPose += deltaPose;
 }
 
