@@ -33,7 +33,7 @@ namespace {
 void doAuton() {
 	// Mirrored & modified from red solo
 
-	// 4/29
+	// 4/30
 	// Partially from up
 
 	/* Up start */

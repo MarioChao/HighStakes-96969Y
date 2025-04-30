@@ -31,7 +31,7 @@ void autonpaths::runRedSoloAWP() {
 namespace {
 
 void doAuton() {
-	// 4/29
+	// 4/30
 	// Partially from up
 
 	/* Up start */
@@ -54,7 +54,7 @@ void doAuton() {
 	setIntakeState(1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 4.8_tiles, 0.35_tiles, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.71_tiles, 6_tiles, 0.35_tiles, false, 60, 1.5), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.71_tiles, 6_tiles, 0.35_tiles, false, 60, 1.2), true);
 	waitUntil(global::_driveToPointDistanceError < 0.1);
 	wait(0.2, sec);
 	// (2, 5) ring
@@ -66,21 +66,23 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 
 	// Middle ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 4_tiles, 0_tiles, false, 50), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 4_tiles, 0.3_tiles, false, 50), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 3_tiles, 0_tiles, false, 70), true);
-	waitUntil(global::_driveToPointAngleError_degrees < 20);
+	wait(0.3, sec);
 	setGoalClampState(false);
-	waitUntil(global::_driveToPointDistanceError < 0.7);
-	// Middle ring: slow down
+	// Middle ring: slow down & back up
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 3_tiles, 0_tiles, false, 70), true);
+	waitUntil(global::_driveToPointDistanceError < 0.8);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 20), true);
-	wait(0.25, sec);
+	wait(0.3, sec);
 	setArmStage(3);
-	wait(0.25, sec);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 5), true);
+	wait(0.3, sec);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 4_tiles, 0_tiles, true, 40), true);
+	wait(0.3, sec);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 30), true);
 	setIntakeStoreRing(true);
-	wait(0.5, sec);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 1.5_tiles, 0_tiles, false, 10), true);
-	wait(0.8, sec);
+	wait(1.0, sec);
 	// Middle ring: accelerate
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 1_tiles, 0.25_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
@@ -90,8 +92,8 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 2_tiles, 0_tiles, true, 40), true);
 	setArmStage(5);
 	waitUntil(global::_driveToPointDistanceError < 0.25);
-	setGoalClampState(true);
 	setIntakeStoreRing(false);
+	setGoalClampState(true);
 	waitUntil(global::_driveToPointDistanceError < 0.15);
 	// (2, 1) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 0.7_tiles, 0.2_tiles), true);
@@ -100,7 +102,6 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 2.2_tiles), true);
-	waitUntil(global::_driveToPointAngleError_degrees < 150.0);
 	setIntakeStoreRing(true);
 	waitUntil(global::_driveToPointAngleError_degrees < 60.0);
 	setIntakeStoreRing(false);
