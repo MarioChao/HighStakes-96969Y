@@ -68,7 +68,7 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 5.5_tiles, 0.3_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// Corner ring 1
-	setArmStage(6);
+	setArmStage(7);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.7_tiles), 5.3_tiles), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0_tiles), 6_tiles), true);

@@ -26,6 +26,8 @@
 
 namespace {
 using namespace pas1_lib::chassis::move;
+
+int mode_manualArm = 0;
 }
 
 
@@ -60,20 +62,36 @@ void setUpKeybinds() {
 	Controller2.ButtonA.pressed([]() -> void {
 		botdrive::setControlState(false);
 		botintake::setControlState(false);
-		
+
 		auton::runAutonomous();
-		
+
 		botdrive::setControlState(true);
 		botintake::setControlState(true);
 		botdrive::preauton();
 		botintake::preauton();
 	});
 
+
+	/* ---------- Mode switch ---------- */
+
+	// Manual arm mode
+	// Controller1.ButtonUp.pressed([]() -> void {
+	// 	mode_manualArm++;
+	// 	mode_manualArm %= 2;
+
+	// 	if (mode_manualArm == 0) debug::printOnController("automatic arm");
+	// 	else debug::printOnController("manual arm");
+
+	// 	rumble::setConstantRumbling(false);
+	// 	rumble::setString(".");
+	// });
+
+
 	// Controller 1
 
 	/* Arm stages */
 	// Stage 0
-	Controller1.ButtonUp.pressed([]() -> void {
+	Controller1.ButtonRight.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
 		botarm::setArmStage(0);
@@ -114,8 +132,8 @@ void setUpKeybinds() {
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
-	// Stage 8 (score wall stake / tip goal)
-	Controller1.ButtonL1.pressed([]() -> void {
+	// Stage 6 (dunk aiming angle)
+	Controller1.ButtonUp.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
 		if (botarm::getArmStage() <= 2) {
@@ -128,8 +146,26 @@ void setUpKeybinds() {
 				return 1;
 			});
 		}
-		if (botarm::getArmStage() == 8) botarm::setArmStage(0);
-		else botarm::setArmStage(8);
+		botarm::setArmStage(6);
+	});
+	// Stage 0 or 9 (score wall stake / tip goal)
+	Controller1.ButtonL1.pressed([]() -> void {
+		if (mode_manualArm != 0) return;
+
+		if (!botarm::isArmResetted()) return;
+
+		if (botarm::getArmStage() <= 2) {
+			task reverseIntake([]() -> int {
+				botintake::setControlState(false);
+				botintake::setState(-1);
+				wait(0.3, sec);
+				botintake::setState(0);
+				botintake::setControlState(true);
+				return 1;
+			});
+		}
+		if (botarm::getArmStage() == 9) botarm::setArmStage(0);
+		else botarm::setArmStage(9);
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
@@ -175,6 +211,8 @@ void setUpKeybinds() {
 	});
 	// Clamp
 	Controller1.ButtonL2.pressed([]() -> void {
+		if (mode_manualArm != 0) return;
+
 		printf("Goal pneu: %ld\n", GoalClampPneumatic.value());
 		goalclamp::switchState();
 	});
@@ -231,7 +269,11 @@ void doControls() {
 			(int) Controller1.ButtonR2.pressing(),
 			/*This is not used =>*/ (int) Controller1.ButtonX.pressing());
 	}
-	// botarm::control((int)Controller1.ButtonL1.pressing() -
-	// 				(int)Controller1.ButtonDown.pressing());
+	if (mode_manualArm == 1) {
+		botarm::control(
+			(int) Controller1.ButtonL1.pressing() -
+			(int) Controller1.ButtonL2.pressing()
+		);
+	}
 }
 }  // namespace controls

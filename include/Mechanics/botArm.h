@@ -1,25 +1,30 @@
 #pragma once
 
+
+#include "Aespa-Lib/Winter-Utilities/units.h"
+
+
 namespace botarm {
-	void runThread();
+void runThread();
 
-	void preauton();
+void preauton();
 
-	void setTargetAngle(double, double = 0);
-	double getTargetAngle();
+void setTargetAngle(double, double = 0);
+double getTargetAngle();
 
-	void setArmStage(int stageId, double delay_sec = 0, double maxSpeed_pct = 100);
-	int getArmStage();
-	void resetArmEncoder();
-	bool isArmResetted();
-	void setResetDefaultStage(int stageId);
+void setArmStage(int stageId, double delay_sec = 0, double maxSpeed_pct = 100);
+int getArmStage();
+aespa_lib::units::PolarAngle getArmAngle();
+void resetArmEncoder();
+bool isArmResetted();
+void setResetDefaultStage(int stageId);
 
-	void switchState();
+void switchState();
 
-	void control(int);
+void control(int);
 
-	bool canControl();
+bool canControl();
 
-	extern double _taskState;
-	extern double _taskDelay;
+extern double _taskState;
+extern double _taskDelay;
 }

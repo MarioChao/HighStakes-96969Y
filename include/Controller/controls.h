@@ -1,13 +1,13 @@
 #pragma once
 
 namespace controls {
-	void startThreads();
+void startThreads();
 
-	void setUpKeybinds();
+void setUpKeybinds();
 
-	void preauton();
+void preauton();
 
-	void resetStates();
+void resetStates();
 
-	void doControls();
+void doControls();
 }

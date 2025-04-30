@@ -53,9 +53,9 @@ PatienceController armUpPatience(12, 1.0, true, 10);
 PatienceController armDownPatience(12, 1.0, false, 10);
 
 // Stage config
-std::vector<double> armStages_degrees = { -10, 6, 25, 60, 140, 130, 180, 200, 240, 240 };
+std::vector<double> armStages_degrees = { -10, 6, 25, 60, 140, 130, 150, 180, 200, 240, 240 };
 // std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 180, 200, 210, 0 }; // angles for tuning
-std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
 bool releaseOnExhausted = true;
 
@@ -133,16 +133,19 @@ double getTargetAngle() {
 }
 
 void setArmStage(int stageId, double delay_sec, double maxSpeed_pct) {
+	useDirection = false;
+
 	stageId = aespa_lib::genutil::clamp(stageId, -2, (int) armStages_degrees.size() - 1);
 	currentArmStage = stageId;
 	printf("Arm stage: %d\n", currentArmStage);
-
-	// -1 case
-	if (stageId == -1) return;
-
+	
 	// Stage max velocity
 	armMaxVelocity_pct = maxSpeed_pct;
 	if (armMaxVelocity_pct < 1e-5) armMaxVelocity_pct = defaultArmMaxVelocity_pct;
+
+	// -1 -2 case
+	if (stageId == -1) return;
+	if (stageId == -2) return;
 
 	// Stage degree
 	double stage_degree = armStages_degrees[stageId];
@@ -184,6 +187,10 @@ int getArmStage() {
 	return currentArmStage;
 }
 
+aespa_lib::units::PolarAngle getArmAngle() {
+	return aespa_lib::units::PolarAngle(ArmRotationSensor.position(degrees) * armEncoder_to_arm_ratio);
+}
+
 void resetArmEncoder() {
 	armResetted = false;
 
@@ -203,7 +210,7 @@ void resetArmEncoder() {
 	// Initialize to default stage
 	setArmStage(resetDefaultStageId);
 	printf("Default arm: %d\n", resetDefaultStageId);
-	armDownPatience.computePatience(ArmRotationSensor.position(degrees) * armEncoder_to_arm_ratio);
+	armDownPatience.computePatience(getArmAngle().polarDeg());
 	armDownPatience.exhaustNow();
 
 	armResetted = true;
@@ -240,7 +247,7 @@ namespace {
 void resolveArmExtreme() {
 	// Calculate error
 	aespa_lib::units::PolarAngle targetAngle = armStateTargetAngle_degrees;
-	aespa_lib::units::PolarAngle currentAngle = ArmRotationSensor.position(degrees) * armEncoder_to_arm_ratio;
+	aespa_lib::units::PolarAngle currentAngle = botarm::getArmAngle();
 	aespa_lib::units::PolarAngle errorAngle = targetAngle - currentAngle;
 
 	double motorVelocity_volt = calculateArmVelocity_volt(targetAngle, currentAngle);
@@ -307,7 +314,7 @@ void resolveArmDegrees() {
 
 	// Calculate velocity
 	aespa_lib::units::PolarAngle targetAngle = armStateTargetAngle_degrees;
-	aespa_lib::units::PolarAngle currentAngle = ArmRotationSensor.position(degrees) * armEncoder_to_arm_ratio;
+	aespa_lib::units::PolarAngle currentAngle = botarm::getArmAngle();
 
 	double motorVelocity_volt = calculateArmVelocity_volt(targetAngle, currentAngle);
 
@@ -325,7 +332,7 @@ void resolveArmDirection() {
 
 	switch (armStateDirection) {
 		case 1:
-			if (ArmMotors.position(deg) > 1000.0) {
+			if (botarm::getArmAngle().polarDeg() > 200.0) {
 				ArmMotors.stop(hold);
 			} else {
 				ArmMotors.spin(forward, aespa_lib::genutil::pctToVolt(armUpVelocityPct), volt);
@@ -333,8 +340,8 @@ void resolveArmDirection() {
 			break;
 
 		case -1:
-			if (ArmMotors.position(deg) < 10.0) {
-				ArmMotors.stop();
+			if (botarm::getArmAngle().polarDeg() < -5.0) {
+				ArmMotors.stop(coast);
 			} else {
 				ArmMotors.spin(forward, -aespa_lib::genutil::pctToVolt(armMaxVelocity_pct), volt);
 			}
