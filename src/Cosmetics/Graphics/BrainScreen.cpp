@@ -630,7 +630,8 @@ void createButtons() {
 		redUp, redDown, blueUp, blueDown,
 		redUpSafe, redDownSafe, blueUpSafe, blueDownSafe,
 		redDownLBRush, blueDownLBRush, nullptr, nullptr,
-		redSoloAWP, blueSoloAWP, redSoloAWP2, blueSoloAWP2,
+		// redSoloAWP, blueSoloAWP, redSoloAWP2, blueSoloAWP2,
+		redSoloAWP, blueSoloAWP, nullptr, nullptr,
 		skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver,
 		autonTest, rushTest, loveShape, fieldTour,
 		odomRadiusTest
@@ -638,7 +639,8 @@ void createButtons() {
 	autonSubdock0Buttons = { redUp, redDown, blueUp, blueDown };
 	autonSubdock1Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
 	autonSubdock2Buttons = { redDownLBRush, blueDownLBRush };
-	autonSubdock3Buttons = { redSoloAWP, blueSoloAWP, redSoloAWP2, blueSoloAWP2 };
+	// autonSubdock3Buttons = { redSoloAWP, blueSoloAWP, redSoloAWP2, blueSoloAWP2 };
+	autonSubdock3Buttons = { redSoloAWP, blueSoloAWP };
 	autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver };
 	autonSubdock5Buttons = { autonTest, rushTest, loveShape, fieldTour };
 	autonSubdock6Buttons = { odomRadiusTest };
