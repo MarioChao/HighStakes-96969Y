@@ -95,6 +95,16 @@ void setAutonRunType(int allianceId, autonomousType autonType) {
 			debug::printOnController("Auton: Blue SoloAWP");
 			autonFilterOutColor = "red";
 			break;
+		case autonomousType::RedSoloAWP2:
+			autonpaths::storeProfiles_redSoloAWP2();
+			debug::printOnController("Auton: Red Solo 2");
+			autonFilterOutColor = "blue";
+			break;
+		case autonomousType::BlueSoloAWP2:
+			autonpaths::storeProfiles_blueSoloAWP2();
+			debug::printOnController("Auton: Blue Solo 2");
+			autonFilterOutColor = "red";
+			break;
 
 		case autonomousType::AutonSkills:
 			autonpaths::storeProfiles_skills();
@@ -161,8 +171,10 @@ std::string getAutonMode_string() {
 		case autonomousType::BlueDown: return "B-dn";
 		case autonomousType::RedDownLBRush: return "R-dn-lb";
 		case autonomousType::BlueDownLBRush: return "B-dn-lb";
-		case autonomousType::RedSoloAWP: return "R-sl";
-		case autonomousType::BlueSoloAWP: return "B-sl";
+		case autonomousType::RedSoloAWP: return "R-sl-1";
+		case autonomousType::BlueSoloAWP: return "B-sl-1";
+		case autonomousType::RedSoloAWP2: return "R-sl-2";
+		case autonomousType::BlueSoloAWP2: return "B-sl-2";
 
 		case autonomousType::LoveShape: return "T-Love";
 		case autonomousType::FieldTour: return "T-Field";
@@ -234,6 +246,12 @@ void runAutonomous() {
 			break;
 		case autonomousType::BlueSoloAWP:
 			autonpaths::runBlueSoloAWP();
+			break;
+		case autonomousType::RedSoloAWP2:
+			autonpaths::runRedSoloAWP2();
+			break;
+		case autonomousType::BlueSoloAWP2:
+			autonpaths::runBlueSoloAWP2();
 			break;
 		case autonomousType::AutonSkills:
 			autonpaths::runAutonSkills();

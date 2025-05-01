@@ -14,6 +14,7 @@ enum autonomousType {
 	RedDown, RedDownSafe, RedDownLBRush,
 	BlueDown, BlueDownSafe, BlueDownLBRush,
 	RedSoloAWP, BlueSoloAWP,
+	RedSoloAWP2, BlueSoloAWP2,
 	AutonSkills,
 	DrivingRunAutonSkills, DrivingSkills,
 	LoveShape, FieldTour,

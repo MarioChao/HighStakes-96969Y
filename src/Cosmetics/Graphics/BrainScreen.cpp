@@ -15,6 +15,8 @@
 #include "Mechanics/botIntake.h"
 #include "Mechanics/botArm.h"
 
+#include "MatchSequence/preauton.h"
+
 #include "Pas1-Lib/Planning/Splines/curve-sampler.h"
 #include "Pas1-Lib/Planning/Trajectories/trajectoryPlanner_old.h"
 
@@ -33,6 +35,7 @@
 #include "chassis-config.h"
 #include "global-vars.h"
 #include "main.h"
+
 
 // File-local Functions & Variables
 namespace {
@@ -431,10 +434,17 @@ void createButtons() {
 	// --------------------------
 
 	debugDockButtons.push_back(new ButtonGui(70, 70, 100, 30, 10, color(185, 255, 135), color(ClrDarkRed), 2, "switch color", color(ClrDarkRed), [] {
-		botintake::switchFilterColor();
 		debugDockButtons[0]->setUsability(false);
+		botintake::switchFilterColor();
 		wait(0.5, sec);
 		debugDockButtons[0]->setUsability(true);
+	}));
+
+	debugDockButtons.push_back(new ButtonGui(50, 200, 80, 30, 10, color(185, 255, 135), color(ClrHotPink), 2, "calibrate", color(ClrDeepPink), [] {
+		debugDockButtons[1]->setUsability(false);
+		preauton::calibrateIMU();
+		wait(0.2, sec);
+		debugDockButtons[1]->setUsability(true);
 	}));
 
 
@@ -527,7 +537,7 @@ void createButtons() {
 	});
 
 	/* Solo AWP Autons */
-	// Red Solo AWP
+	// Red Solo AWPa
 	ButtonGui *redSoloAWP = new ButtonGui(rectCenterX, rectCenterY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Solo AWP", white, [] {
 		allianceDisable(12);
 		allianceButtons[12]->enable();
@@ -538,6 +548,18 @@ void createButtons() {
 		allianceDisable(13);
 		allianceButtons[13]->enable();
 		setAutonRunType(2, autonomousType::BlueSoloAWP);
+	});
+	// Red Solo AWPa
+	ButtonGui *redSoloAWP2 = new ButtonGui(rectCenterX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(255, 0, 0), white, 2, "Red Solo 2", white, [] {
+		allianceDisable(14);
+		allianceButtons[14]->enable();
+		setAutonRunType(1, autonomousType::RedSoloAWP2);
+	});
+	// Blue Solo AWP
+	ButtonGui *blueSoloAWP2 = new ButtonGui(rectCenterX + offsetX, rectCenterY + offsetY, selectorWidth, selectorHeight, 20, color(0, 0, 255), white, 2, "Blue Solo 2", white, [] {
+		allianceDisable(15);
+		allianceButtons[15]->enable();
+		setAutonRunType(2, autonomousType::BlueSoloAWP2);
 	});
 
 	/* Skills Autons */
@@ -608,7 +630,7 @@ void createButtons() {
 		redUp, redDown, blueUp, blueDown,
 		redUpSafe, redDownSafe, blueUpSafe, blueDownSafe,
 		redDownLBRush, blueDownLBRush, nullptr, nullptr,
-		redSoloAWP, blueSoloAWP, nullptr, nullptr,
+		redSoloAWP, blueSoloAWP, redSoloAWP2, blueSoloAWP2,
 		skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver,
 		autonTest, rushTest, loveShape, fieldTour,
 		odomRadiusTest
@@ -616,7 +638,7 @@ void createButtons() {
 	autonSubdock0Buttons = { redUp, redDown, blueUp, blueDown };
 	autonSubdock1Buttons = { redUpSafe, redDownSafe, blueUpSafe, blueDownSafe };
 	autonSubdock2Buttons = { redDownLBRush, blueDownLBRush };
-	autonSubdock3Buttons = { redSoloAWP, blueSoloAWP };
+	autonSubdock3Buttons = { redSoloAWP, blueSoloAWP, redSoloAWP2, blueSoloAWP2 };
 	autonSubdock4Buttons = { skillsAuton59, skillsAutonNoWS, skillsDriverRunAuton, skillsDriver };
 	autonSubdock5Buttons = { autonTest, rushTest, loveShape, fieldTour };
 	autonSubdock6Buttons = { odomRadiusTest };
@@ -945,6 +967,9 @@ void drawDebug() {
 	Brain.Screen.setPenColor(color::green);
 	Brain.Screen.setFillColor(color::transparent);
 	Brain.Screen.printAt(10, 35, 1, "Filter out: %4s", botintake::getFilterOutColor().c_str());
+
+	if (mainUseSimulator) drawInertial(robotSimulator.getLookPose());
+	else drawInertial(robotChassis.getLookPose());
 }
 
 }

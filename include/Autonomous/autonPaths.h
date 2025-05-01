@@ -84,6 +84,8 @@ void storeProfiles_blueDownSafe();
 void storeProfiles_blueDownLBRush();
 void storeProfiles_redSoloAWP();
 void storeProfiles_blueSoloAWP();
+void storeProfiles_redSoloAWP2();
+void storeProfiles_blueSoloAWP2();
 void storeProfiles_skills();
 void storeProfiles_loveShape();
 void storeProfiles_fieldTour();
@@ -110,6 +112,8 @@ void runAutonBlueDownLBRush();
 
 void runRedSoloAWP();
 void runBlueSoloAWP();
+void runRedSoloAWP2();
+void runBlueSoloAWP2();
 
 void runAutonSkills();
 
