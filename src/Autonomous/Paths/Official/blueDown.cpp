@@ -5,8 +5,6 @@ using namespace autonpaths;
 using namespace autonpaths::pathbuild;
 using namespace autonpaths::combination;
 
-void loadPaths(int section);
-
 void doAuton();
 }
 
@@ -18,29 +16,22 @@ void autonpaths::runAutonBlueDown() {
 	_autonTimer.reset();
 
 	// Set config
-	setRobotPosition(5.0, 0.5);
-	setRobotRotation(-67.75);
-	// setDifferentialUseRelativeRotation(true);
+	setRobotPosition(6-(0.9), 1.5);
+	setRobotRotation(-112.2);
+	setDifferentialUseRelativeRotation(true);
 
 	// Wait for arm reset
 	waitUntil(isArmResetted());
 
 
 	/* Auton */
-	loadPaths(1);
 	doAuton();
 }
 
 namespace {
-void loadPaths(int section) {
-	// Clear
-	clearLinear();
-
-	if (section == 1) {
-	}
-}
 
 void doAuton() {
-	
+
 }
+
 }
