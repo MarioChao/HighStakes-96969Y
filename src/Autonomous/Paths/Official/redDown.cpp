@@ -69,21 +69,19 @@ void doAuton() {
 
 	/* Middle start */
 	// Middle ring 1
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3.1_tiles, 3.35_tiles, 0.8_tiles, false, 50), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 2.6_tiles, 0, false, 40), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(35_polarDeg, 50, 0.1), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3_tiles, 0.45_tiles, false, 60), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	setSwingState_right(1);
 	wait(0.2, sec);
-	// Re-position
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 2_tiles, 0.4_tiles, true, 50), true);
+	// Middle ring 2 (tight angle)
+	local::turnToAngle(robotChassis, local::turnToAngle_params(25_polarDeg, 50, 0.05), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(3.8_tiles, 3.2_tiles, 1.1_tiles, false, 60, 0.7), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(45_polarDeg, 30), false);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(65_polarDeg, 30, -0.2), false);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(25_polarDeg, 30, 0.1), false);
-	// Middle ring 2
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3.8_tiles, 3.3_tiles, 1.15_tiles, false, 60, 0.7), true);
-	waitUntil(global::_driveToPointDistanceError < 0.4);
 	setSwingState_left(1);
-	waitUntil(global::_driveToPointDistanceError < 0.2);
+	wait(0.2, sec);
 	return;
 	/* Middle end */
 
