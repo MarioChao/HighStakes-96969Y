@@ -80,6 +80,10 @@ void pre_auton(void) {
 		mainOdometry.setPosition_scaled(3, 3);
 		mainOdometry.setLookAngle_field(0);
 		mainOdometry.start();
+
+		wait(5, msec);
+		autonpaths::setRobotPosition(0.86, 2.54);
+		autonpaths::setRobotRotation(-58.5);
 		while (true) {
 			mainOdometry.odometryFrame();
 			// printf("test, %.3f, %.3f\n", mainOdometry.getX_scaled(), mainOdometry.getY_scaled());
