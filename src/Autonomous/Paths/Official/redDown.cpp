@@ -69,19 +69,19 @@ void doAuton() {
 
 	/* Middle start */
 	// Middle ring 1
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 2.6_tiles, 0, false, 40), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 2.65_tiles, 0, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(38_polarDeg, 50, 0.1), false);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3.1_tiles, 0.5_tiles, false, 60), true);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(40_polarDeg, 50, 0.1), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3.05_tiles, 0.5_tiles, false, 60), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	setSwingState_right(1);
-	wait(0.2, sec);
+	wait(0.1, sec);
 	// Middle ring 2 (tight angle)
 	local::turnToAngle(robotChassis, local::turnToAngle_params(25_polarDeg, 50, 0.05), false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(3.8_tiles, 3.2_tiles, 1.07_tiles, false, 60, 0.7), true);
 	waitUntil(global::_isDriveToPointSettled);
 	setSwingState_left(1);
-	return;
+	wait(0.1, sec);
 	/* Middle end */
 
 
@@ -95,10 +95,11 @@ void doAuton() {
 	// Take in rings
 	setIntakeState(1);
 	setArmStage(3);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2_tiles, 0, false, 40), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(0.9_tiles, 2,1_tiles, 0, false, 40), true);
+	waitUntil(global::_driveToPointDistanceError < 0.4);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1.7_tiles, 2.3_tiles, 0, false, 50), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 1.7_tiles, 0, false, 60), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.3_tiles, 1.7_tiles, 0, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// (2, 1) ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2_tiles, 0.5_tiles, 0.5_tiles, false, 50), true);
