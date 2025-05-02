@@ -46,7 +46,7 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	setArmStage(0);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	local::turnToAngle(robotChassis, local::turnToAngle_params(130), false);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(130_polarDeg), false);
 	setSwingState_right(true);
 	wait(0.1, sec);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.2_tiles, robotChassis.getLookRotation()), true);

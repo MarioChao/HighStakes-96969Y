@@ -247,6 +247,7 @@ void resetStates() {
 			return 1;
 		});
 	}
+	botarm::setArmStage(0);
 	botintake::setAntiJam(false);
 	botintake::setIntakeStoreRing(0);
 	botintake::setColorFiltering(true);

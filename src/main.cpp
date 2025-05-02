@@ -67,6 +67,10 @@ void pre_auton(void) {
 	ringoptical::startThread();
 	inertial_s::startThread();
 
+	// Keybinds
+	controls::setUpKeybinds();
+	video::keybindVideos();
+
 	// Brake-types
 	controls::preauton();
 
@@ -228,10 +232,6 @@ void usercontrol(void) {
 		auton::setAutonRunType(0, auton::autonomousType::AutonSkills);
 		autonomous();
 	}
-
-	// Keybinds
-	controls::setUpKeybinds();
-	video::keybindVideos();
 
 	// Reset
 	controls::resetStates();
