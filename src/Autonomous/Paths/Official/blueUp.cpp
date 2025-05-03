@@ -72,9 +72,9 @@ void doAuton() {
 	setArmStage(7);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.7_tiles), 5.3_tiles, 0.2_tiles, false, 60), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0_tiles), 6_tiles, 0, false, 40), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (-2_tiles), 8_tiles, 2.828_tiles, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.8);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0_tiles), 6_tiles, 0, false, 20, 1.0), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (-2_tiles), 8_tiles, 0, false, 40, 0.5), false);
 	wait(0.3, sec);
 	// Middle ring
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.5_tiles), 4.5_tiles, 0.8_tiles, true, 60), true);
