@@ -68,6 +68,10 @@ void setIntakeBottomState(int state, double delaySec) {
 	else botintake2::setState3(state, delaySec);
 }
 
+void setIntakeAntiJam(bool state) {
+	botintake::setAntiJam(state);
+}
+
 /// @brief Set the hook mode of the intake.
 /// @param state Normal: 0, to arm: 1
 void setIntakeToArm(int state, double delaySec) {

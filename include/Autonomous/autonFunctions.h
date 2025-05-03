@@ -32,6 +32,8 @@ void setIntakeState(int state, double delaySec = 0);
 void setIntakeTopState(int, double = 0);
 void setIntakeBottomState(int, double = 0);
 
+void setIntakeAntiJam(bool state);
+
 void setIntakeToArm(int, double = 0);
 void setIntakeStoreRing(int, double = 0);
 

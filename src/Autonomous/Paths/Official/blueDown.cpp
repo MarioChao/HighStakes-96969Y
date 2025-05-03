@@ -112,6 +112,7 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.7_tiles), 0.7_tiles, 0.2_tiles, false, 60), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Corner ring 1
+	setIntakeAntiJam(false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (-2_tiles), -2_tiles, 2.828_tiles, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.8);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (-2_tiles), -2_tiles, 0, false, 40, 0.7), false);
@@ -130,9 +131,11 @@ void doAuton() {
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.4_tiles, robotChassis.getLookRotation(), 60), true);
 	wait(1.2, sec);
 	setArmStage(5);
+	setIntakeAntiJam(true);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.2_tiles), 1.8_tiles, 0, false, 60), true);
 	waitUntil(global::_driveToPointAngleError_degrees < 30);
 	setGoalClampState(false);
+	setIntakeState(0, 0.5);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 
 	// Touch ladder
