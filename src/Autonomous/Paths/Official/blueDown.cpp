@@ -33,7 +33,7 @@ namespace {
 void doAuton() {
 	// Mirrored from red down
 
-	// 5/2 - 1779X's route https://youtu.be/esmWptONZn0?t=94
+	// 5/3 - 1779X's route https://youtu.be/esmWptONZn0?t=94
 
 	/* Down start */
 	// Alliance wall stake
