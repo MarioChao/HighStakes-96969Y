@@ -67,15 +67,15 @@ void doAuton() {
 	/* Middle start */
 	// Re-position swinged ring
 	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - (2.5_tiles), 3.05_tiles), false);
-	wait(0.1, sec);
+	wait(0.2, sec);
 	setSwingState_left(false);
 	wait(0.1, sec);
 	setIntakeStoreRing(true);
 	// Middle ring 1
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3.05_tiles), 3.05_tiles, 0.5_tiles, false, 60), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	setIntakeStoreRing(false);
-	setIntakeState(0, 0.1);
+	// setIntakeStoreRing(false);
+	// setIntakeState(0, 0.1);
 	setSwingState_left(true);
 	wait(0.1, sec);
 	/* Middle end */
@@ -83,40 +83,39 @@ void doAuton() {
 
 	// Back up
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.7_tiles), 2.2_tiles, 0.1_tiles, true, 40), true);
-	waitUntil(global::_driveToPointDistanceError < 0.6);
-	setIntakeStoreRing(true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Re-position swinged ring
-	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - (2.5_tiles), 1_tiles), true);
-	waitUntil(global::_turnToFaceError_degrees < 10);
+	// -> opposite curve route to avoid wrong ring
+	setArmStage(3);
+	local::turnToAngle(robotChassis, local::turnToAngle_params(180_polarDeg-(-55_polarDeg)), false);
+	waitUntil(local::_turnAngleError_degrees < 10);
 	setIntakeStoreRing(false);
 	setIntakeState(1, 0.1);
-	waitUntil(global::_isTurnToFaceSettled);
+	waitUntil(local::_isTurnToAngleSettled);
 	wait(0.1, sec);
 	setSwingState_left(false);
 	wait(0.1, sec);
 	// Take in rings
-	setArmStage(3);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.8_tiles), 0.5_tiles, 0.7_tiles, false, 30), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.8_tiles), 0.5_tiles, 0.7_tiles, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// (2, 1) ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.2_tiles), 0.8_tiles, 0, false, 30), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.4_tiles), 0.8_tiles, 0, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 
 
 	/* Corner start */
 	// Navigate to corner
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.5_tiles), 0.4_tiles, 0, false, 60), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1.5_tiles), 0.4_tiles, 0, false, 80), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	setArmStage(7);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.7_tiles), 0.7_tiles, 0.2_tiles, false, 60), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.7_tiles), 0.6_tiles, 0.2_tiles, false, 80), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Corner ring 1
 	setIntakeAntiJam(false);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (-2_tiles), -2_tiles, 2.828_tiles, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.8);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (-2_tiles), -2_tiles, 0, false, 40, 0.7), false);
-	wait(0.3, sec);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (-2_tiles), -2_tiles, 0, false, 40, 0.5), false);
+	wait(0.2, sec);
 	// Corner ring 2nd time
 	// local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.2_tiles, robotChassis.getLookRotation(), {{0, 50}}), false);
 	// setIntakeLiftState(true);
@@ -127,21 +126,26 @@ void doAuton() {
 	/* Corner end */
 
 
-	// Drop goal near corner
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.4_tiles, robotChassis.getLookRotation(), 60), true);
+	// Corner ring double check
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookRotation(), 20), true);
+	wait(0.4, sec);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1_tiles, robotChassis.getLookRotation(), 5), true);
 	wait(1.2, sec);
+	// Drop goal near corner
 	setArmStage(5);
 	setIntakeAntiJam(true);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.2_tiles), 1.8_tiles, 0, false, 60), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.1_tiles), 1.9_tiles, 0, false, 60), true);
 	waitUntil(global::_driveToPointAngleError_degrees < 30);
 	setGoalClampState(false);
 	setIntakeState(0, 0.5);
+	waitUntil(global::_driveToPointDistanceError < 0.7);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.1_tiles), 1.9_tiles, 0, false, 100), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 
 	// Touch ladder
 	setArmStage(5);
 	waitUntil(_autonTimer.time(sec) > 13.5);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3.2_tiles), 2.8_tiles, 1.2_tiles, false, 70, 1.0), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3.1_tiles), 2.9_tiles, 1.2_tiles, false, 70, 1.0), true);
 	waitUntil(_autonTimer.time(sec) > 14.7);
 	setArmStage(20, 0, 40);
 	waitUntil(global::_isDriveToPointSettled);
