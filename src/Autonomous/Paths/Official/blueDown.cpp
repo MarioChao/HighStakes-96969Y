@@ -55,7 +55,7 @@ void doAuton() {
 	waitUntil(local::_driveDistanceError_tiles < 0.13);
 
 	// (2, 2) goal
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.1_tiles), 2._tiles, 0_tiles, true), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.1_tiles), 2_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 1.0);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2.1_tiles), 2_tiles, 0_tiles, true, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.25);

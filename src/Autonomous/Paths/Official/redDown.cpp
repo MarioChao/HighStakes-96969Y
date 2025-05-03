@@ -53,7 +53,7 @@ void doAuton() {
 	waitUntil(local::_driveDistanceError_tiles < 0.13);
 
 	// (2, 2) goal
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 2._tiles, 0_tiles, true), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 2_tiles, 0_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 1.0);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 2_tiles, 0_tiles, true, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.25);
@@ -97,12 +97,17 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1.8_tiles, 0.5_tiles, 0.7_tiles, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// (2, 1) ring
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.4_tiles, 0.8_tiles, 0, false, 40), true);
-	waitUntil(global::_driveToPointDistanceError < 0.4);
+	setIntakeStoreRing(true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.4_tiles, 0.8_tiles, 0.2_tiles, false, 40), true);
+	waitUntil(global::_driveToPointDistanceError < 0.2);
 
 
 	/* Corner start */
 	// Navigate to corner
+	global::turnToFace(robotChassis, global::turnToFace_params(1.5_tiles, 0.4_tiles), true);
+	waitUntil(global::_turnToFaceError_degrees < 10);
+	setIntakeStoreRing(false);
+	setIntakeState(1, 0.1);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1.5_tiles, 0.4_tiles, 0, false, 80), true);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	setArmStage(7);
@@ -125,8 +130,9 @@ void doAuton() {
 
 
 	// Corner ring double check
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.25_tiles, robotChassis.getLookRotation(), 15), true);
-	waitUntil(local::_driveDistanceError_tiles < 0.1);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(-0.3_tiles, robotChassis.getLookRotation(), 20), true);
+	wait(0.5, sec);
+	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1_tiles, robotChassis.getLookRotation(), 5), true);
 	wait(1.2, sec);
 	// Drop goal near corner
 	setArmStage(5);
@@ -136,7 +142,7 @@ void doAuton() {
 	setGoalClampState(false);
 	setIntakeState(0, 0.5);
 	waitUntil(global::_driveToPointDistanceError < 0.7);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 1.9_tiles, 0, false, 80), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 1.9_tiles, 0, false, 100), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 
 	// Touch ladder
