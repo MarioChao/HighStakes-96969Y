@@ -81,8 +81,6 @@ void doAuton() {
 
 	// Back up
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1.7_tiles, 2.2_tiles, 0.1_tiles, true, 40), true);
-	waitUntil(global::_driveToPointDistanceError < 0.6);
-	setIntakeStoreRing(true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Re-position swinged ring
 	// -> opposite curve route to avoid wrong ring
