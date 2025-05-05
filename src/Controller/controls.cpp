@@ -104,7 +104,7 @@ void setUpKeybinds() {
 		if (!botarm::isArmResetted()) return;
 
 		botarm::setArmStage(1, 0, 100);
-		botintake::setMaxTorque(90);
+		botintake::setMaxTorque(100);
 		botintake::setColorFiltering(false);
 	});
 	// Stage 3
@@ -211,17 +211,13 @@ void setUpKeybinds() {
 
 	/* Pneumatics */
 	// Swing
-	Controller2.ButtonLeft.pressed([]() -> void {
-		if (Controller2.ButtonA.pressing()) {
-			printf("Left pneu: %ld\n", LeftSword_pneumatics.value());
-			swing::switchState_left();
-		}
+	Controller1.ButtonY.pressed([]() -> void {
+		printf("Left pneu: %ld\n", LeftSword_pneumatics.value());
+		swing::switchState_left();
 	});
-	Controller2.ButtonRight.pressed([]() -> void {
-		if (Controller2.ButtonA.pressing()) {
-			printf("Right pneu: %ld\n", RightSword_pneumatics.value());
-			swing::switchState_right();
-		}
+	Controller1.ButtonA.pressed([]() -> void {
+		printf("Right pneu: %ld\n", RightSword_pneumatics.value());
+		swing::switchState_right();
 	});
 	// Clamp
 	Controller1.ButtonL2.pressed([]() -> void {
