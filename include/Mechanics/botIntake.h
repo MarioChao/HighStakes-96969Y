@@ -15,6 +15,7 @@ namespace botintake {
 	/* Torque / jam control */
 
 	void setAntiJam(bool antiJamState);
+	void setMaxTorque(double maxTorque_pct);
 
 
 	/* Color filter */

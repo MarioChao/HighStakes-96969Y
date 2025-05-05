@@ -39,11 +39,11 @@ double armEncoder_to_arm_ratio = 1.0 / 1.0;
 /* Stage controllers */
 
 // Arm feedforward
-ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.7, 1.2, 1e-5);
+ArmFeedforward arm_velocity_radiansPerSec_to_volt_feedforward(0.7, 1.0, 1e-5);
 PIDController arm_positionError_radians_to_radiansPerSec_pid(1e-5, 0, 0);
 // Pid
 // PIDController arm_positionError_radians_to_volt_pid_feedback(3, PID_kI_params(10.0, 15, true), 0.2);
-PIDController arm_positionError_radians_to_volt_pid_feedback(4, PID_kI_params(0.5, 10, true), 0);
+PIDController arm_positionError_radians_to_volt_pid_feedback(4.5, PID_kI_params(1.0, 10, true), 0.05);
 // Slew
 SlewController armAcceleration_pctPerSec_slew(-1);
 // SlewController armAcceleration_pctPerSec_slew(2000);
@@ -53,7 +53,7 @@ PatienceController armUpPatience(12, 1.0, true, 10);
 PatienceController armDownPatience(12, 1.0, false, 10);
 
 // Stage config
-std::vector<double> armStages_degrees = { -10, 6, 25, 60, 140, 130, 150, 175, 200, 240, 240 };
+std::vector<double> armStages_degrees = { -15, 5, 25, 60, 140, 130, 150, 175, 200, 240, 240 };
 // std::vector<double> armStages_degrees = { 0, 0, 25, 40, 180, 130, 180, 200, 210, 0 }; // angles for tuning
 std::vector<int> extremeStages_values = { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 int currentArmStage = -1;
@@ -138,7 +138,7 @@ void setArmStage(int stageId, double delay_sec, double maxSpeed_pct) {
 	stageId = aespa_lib::genutil::clamp(stageId, -2, (int) armStages_degrees.size() - 1);
 	currentArmStage = stageId;
 	printf("Arm stage: %d\n", currentArmStage);
-	
+
 	// Stage max velocity
 	armMaxVelocity_pct = maxSpeed_pct;
 	if (armMaxVelocity_pct < 1e-5) armMaxVelocity_pct = defaultArmMaxVelocity_pct;
@@ -260,7 +260,7 @@ void resolveArmExtreme() {
 
 		// Check patience
 		armUpPatience.computePatience(currentAngle.polarDeg());
-		if (std::fabs(errorAngle.polarDeg()) > 5) armUpPatience.reset();
+		if (std::fabs(errorAngle.polarDeg()) > 10) armUpPatience.reset();
 		if (armUpPatience.isExhausted()) {
 			arm_positionError_radians_to_volt_pid_feedback.resetErrorToZero();
 			if (releaseOnExhausted) {
@@ -279,7 +279,7 @@ void resolveArmExtreme() {
 
 		// Check patience
 		armDownPatience.computePatience(currentAngle.polarDeg());
-		if (std::fabs(errorAngle.polarDeg()) > 5) armDownPatience.reset();
+		if (std::fabs(errorAngle.polarDeg()) > 10) armDownPatience.reset();
 		if (armDownPatience.isExhausted()) {
 			arm_positionError_radians_to_volt_pid_feedback.resetErrorToZero();
 			if (releaseOnExhausted) {

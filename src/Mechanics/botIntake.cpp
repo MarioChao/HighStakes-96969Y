@@ -150,6 +150,10 @@ void setAntiJam(bool antiJamState) {
 	antiJamEnabled = antiJamState;
 }
 
+void setMaxTorque(double maxTorque_pct) {
+	IntakeMotors.setMaxTorque(maxTorque_pct, percentUnits::pct);
+}
+
 bool isColorFiltering() {
 	return colorFilterEnabled;
 }

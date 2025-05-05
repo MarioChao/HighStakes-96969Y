@@ -95,6 +95,7 @@ void setUpKeybinds() {
 		if (!botarm::isArmResetted()) return;
 
 		botarm::setArmStage(0);
+		botintake::setMaxTorque(100);
 		botintake::setColorFiltering(true);
 		// botintake::setColorFiltering(false);
 	});
@@ -102,16 +103,27 @@ void setUpKeybinds() {
 	Controller1.ButtonB.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
-		botarm::setArmStage(1);
+		botarm::setArmStage(1, 0, 100);
+		botintake::setMaxTorque(90);
 		botintake::setColorFiltering(false);
 	});
 	// Stage 3
 	Controller1.ButtonX.pressed([]() -> void {
 		if (!botarm::isArmResetted()) return;
 
+		if (botarm::getArmStage() <= 2) {
+			task reverseIntake([]() -> int {
+				botintake::setControlState(false);
+				botintake::setState(-1);
+				wait(0.3, sec);
+				botintake::setState(0);
+				botintake::setControlState(true);
+				return 1;
+			});
+		}
 		botarm::setArmStage(3);
+		botintake::setMaxTorque(100);
 		botintake::setColorFiltering(true);
-		// botintake::setColorFiltering(false);
 	});
 	// Stage 0 or 4 (descore)
 	Controller1.ButtonLeft.pressed([]() -> void {
@@ -129,8 +141,8 @@ void setUpKeybinds() {
 		}
 		if (botarm::getArmStage() == 4) botarm::setArmStage(0);
 		else botarm::setArmStage(4);
+		botintake::setMaxTorque(100);
 		botintake::setColorFiltering(true);
-		// botintake::setColorFiltering(false);
 	});
 	// Stage 6 (dunk aiming angle)
 	Controller1.ButtonUp.pressed([]() -> void {
@@ -147,6 +159,8 @@ void setUpKeybinds() {
 			});
 		}
 		botarm::setArmStage(6);
+		botintake::setMaxTorque(100);
+		botintake::setColorFiltering(true);
 	});
 	// Stage 0 or 9 (score wall stake / tip goal)
 	Controller1.ButtonL1.pressed([]() -> void {
@@ -166,8 +180,8 @@ void setUpKeybinds() {
 		}
 		if (botarm::getArmStage() == 9) botarm::setArmStage(0);
 		else botarm::setArmStage(9);
+		botintake::setMaxTorque(100);
 		botintake::setColorFiltering(true);
-		// botintake::setColorFiltering(false);
 	});
 
 	/* Ring color filter */
