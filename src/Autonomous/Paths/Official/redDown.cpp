@@ -67,13 +67,14 @@ void doAuton() {
 	/* Middle start */
 	// Re-position swinged ring
 	global::turnToFace(robotChassis, global::turnToFace_params(2.5_tiles, 3.05_tiles), false);
+	setIntakeState(1);
 	wait(0.2, sec);
 	setSwingState_right(false);
 	wait(0.1, sec);
-	setIntakeStoreRing(true);
 	// Middle ring 1
 	global::driveToPoint(robotChassis, global::driveToPoint_params(3.05_tiles, 3.05_tiles, 0.5_tiles, false, 60), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
+	setIntakeStoreRing(true);
 	// setIntakeStoreRing(false);
 	// setIntakeState(0, 0.1);
 	setSwingState_right(true);
