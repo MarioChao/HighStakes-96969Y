@@ -96,11 +96,11 @@ void doAuton() {
 	setIntakeLiftState(false);
 	// Back up
 	wait(0.5, sec);
+	setIntakeStoreRing(true);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 4.2_tiles, 0.3_tiles, true), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	// Ladder
 	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - (3_tiles), 3_tiles), true);
-	setIntakeStoreRing(true);
 	waitUntil(global::_turnToFaceError_degrees < 40);
 	setIntakeStoreRing(false);
 	waitUntil(global::_turnToFaceError_degrees < 20);
