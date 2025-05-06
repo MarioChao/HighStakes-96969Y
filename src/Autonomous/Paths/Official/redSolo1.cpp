@@ -76,10 +76,10 @@ void doAuton() {
 	// Middle ring: slow down & back up
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 3_tiles, 0_tiles, false, 70), true);
 	waitUntil(global::_driveToPointDistanceError < 0.8);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 20), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 25), true);
 	wait(0.3, sec);
 	setArmStage(3);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 5), true);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 2.2_tiles, 0_tiles, false, 10), true);
 	wait(0.3, sec);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(1_tiles, 4_tiles, 0_tiles, true, 40), true);
 	wait(0.3, sec);
