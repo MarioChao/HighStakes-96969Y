@@ -37,11 +37,13 @@ void doAuton() {
 
 	/* Up start */
 	// Alliance wall stake
-	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.24_tiles, robotChassis.getLookRotation()), true);
-	waitUntil(local::_driveDistanceError_tiles < 0.21);
-	setArmStage(20);
-	waitUntil(local::_isDriveAndTurnSettled);
-	wait(0.15, sec);
+	if (autonpaths::configs::willDoAllianceStake()) {
+		local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.24_tiles, robotChassis.getLookRotation()), true);
+		waitUntil(local::_driveDistanceError_tiles < 0.21);
+		setArmStage(20);
+		waitUntil(local::_isDriveAndTurnSettled);
+		wait(0.15, sec);
+	}
 
 	// (2, 4) goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 4_tiles, 0_tiles, true), true);

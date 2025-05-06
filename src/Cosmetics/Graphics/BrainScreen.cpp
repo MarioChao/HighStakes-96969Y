@@ -6,6 +6,7 @@
 
 #include "Autonomous/auton.h"
 #include "Autonomous/autonFunctions.h"
+#include "Autonomous/autonPaths.h"
 
 #include "Utilities/fieldInfo.h"
 
@@ -445,6 +446,13 @@ void createButtons() {
 		preauton::calibrateIMU();
 		wait(0.2, sec);
 		debugDockButtons[1]->setUsability(true);
+	}));
+
+	debugDockButtons.push_back(new ButtonGui(180, 55, 30, 30, 5, color(ClrLightBlue), color(ClrDarkSlateBlue), 2, "", color(ClrDarkBlue), [] {
+		debugDockButtons[2]->setUsability(false);
+		autonpaths::configs::setDoAllianceStake(!autonpaths::configs::willDoAllianceStake());
+		wait(0.2, sec);
+		debugDockButtons[2]->setUsability(true);
 	}));
 
 
@@ -969,9 +977,14 @@ void drawDebug() {
 	Brain.Screen.setPenColor(color::green);
 	Brain.Screen.setFillColor(color::transparent);
 	Brain.Screen.printAt(10, 35, 1, "Filter out: %4s", botintake::getFilterOutColor().c_str());
-
+	
 	if (mainUseSimulator) drawInertial(robotSimulator.getLookPose());
 	else drawInertial(robotChassis.getLookPose());
+
+	Brain.Screen.setPenColor(color(ClrGold));
+	Brain.Screen.printAt(170, 35, 1, "Auton Config", botintake::getFilterOutColor().c_str());
+	Brain.Screen.setPenColor(color::green);
+	Brain.Screen.printAt(200, 60, 1, "Ally.Stk: %d", autonpaths::configs::willDoAllianceStake());
 }
 
 }

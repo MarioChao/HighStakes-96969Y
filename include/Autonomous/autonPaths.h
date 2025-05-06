@@ -90,6 +90,7 @@ void storeProfiles_skills();
 void storeProfiles_loveShape();
 void storeProfiles_fieldTour();
 
+
 // Paths
 
 void runTemplate();
@@ -119,4 +120,13 @@ void runAutonSkills();
 
 void runLoveShape();
 void runFieldTour();
+
+
+// Configs
+
+namespace configs {
+bool willDoAllianceStake();
+void setDoAllianceStake(bool state);
+}
+
 }
