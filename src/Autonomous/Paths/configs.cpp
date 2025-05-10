@@ -3,6 +3,7 @@
 
 namespace {
 bool doAllianceStake = true;
+bool touchLadder = false;
 }
 
 
@@ -14,6 +15,14 @@ bool willDoAllianceStake() {
 
 void setDoAllianceStake(bool state) {
 	doAllianceStake = state;
+}
+
+bool willTouchLadder() {
+	return touchLadder;
+}
+
+void setWillTouchLadder(bool state) {
+	touchLadder = state;
 }
 }
 }

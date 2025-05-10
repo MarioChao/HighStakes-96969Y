@@ -105,7 +105,7 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// Place mobile goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(-3_tiles, -3_tiles, 0, true, 40), true);
-	wait(0.4, sec);
+	wait(0.8, sec);
 	setGoalClampState(false);
 	wait(0.2, sec);
 	/* First goal end */
@@ -178,7 +178,7 @@ void doAuton() {
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// Place mobile goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(-3_tiles, 6_tiles - (-3_tiles), 0, true, 40), true);
-	wait(0.4, sec);
+	wait(0.8, sec);
 	setGoalClampState(false);
 	wait(0.2, sec);
 	/* 2nd goal end */
@@ -218,7 +218,7 @@ void doAuton() {
 	// Place mobile goal
 	wait(0.5, sec);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(9_tiles, -3_tiles, 0, true, 30), true);
-	wait(0.4, sec);
+	wait(0.8, sec);
 	setGoalClampState(false);
 	wait(0.2, sec);
 	/* 3rd goal end */
@@ -249,9 +249,9 @@ void doAuton() {
 	setIntakeStoreRing(true, 0.3);
 	global::driveToPoint(robotChassis, global::driveToPoint_params(5.5_tiles, 5.5_tiles, 0, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
-	// PLace mobile goal
+	// Place mobile goal
 	global::driveToPoint(robotChassis, global::driveToPoint_params(9_tiles, 9_tiles, 0, true, 30), true);
-	wait(0.4, sec);
+	wait(0.8, sec);
 	setGoalClampState(false);
 	wait(0.2, sec);	
 	/* 4th goal end */
@@ -292,7 +292,7 @@ void doAuton() {
 	setArmStage(9);
 	waitUntil(global::_driveToPointDistanceError < 0.4);
 	// Climb
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3_tiles, 0, true, 1.0), false);
+	global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 3_tiles, 0, true, 60, 1.0), false);
 	setArmStage(0);
 	/* Climb end */
 }

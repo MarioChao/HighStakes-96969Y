@@ -94,23 +94,36 @@ void doAuton() {
 	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.9_tiles), 3_tiles, 0, false, 40), true);
 	waitUntil(global::_driveToPointDistanceError < 0.2);
 	setIntakeLiftState(false);
-	// Back up
-	wait(0.5, sec);
-	setIntakeStoreRing(true);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 4.2_tiles, 0.3_tiles, true), true);
-	waitUntil(global::_driveToPointDistanceError < 0.2);
-	// Ladder
-	global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - (3_tiles), 3_tiles), true);
-	waitUntil(global::_turnToFaceError_degrees < 40);
-	setIntakeStoreRing(false);
-	waitUntil(global::_turnToFaceError_degrees < 20);
-	setIntakeState(1);
-	setArmStage(5);
-	waitUntil(_autonTimer.time(sec) > 13.5);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3_tiles), 3_tiles, 1.2_tiles, false, 70, 1.0), true);
-	waitUntil(_autonTimer.time(sec) > 14.7);
-	setArmStage(20, 0, 40);
-	waitUntil(global::_isDriveToPointSettled);
+	
+	if (configs::willTouchLadder()) {
+		// Back up
+		wait(0.5, sec);
+		setIntakeStoreRing(true);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (2_tiles), 4.2_tiles, 0.3_tiles, true), true);
+		waitUntil(global::_driveToPointDistanceError < 0.2);
+		// Ladder
+		global::turnToFace(robotChassis, global::turnToFace_params(6_tiles - (3_tiles), 3_tiles), true);
+		waitUntil(global::_turnToFaceError_degrees < 40);
+		setIntakeStoreRing(false);
+		waitUntil(global::_turnToFaceError_degrees < 20);
+		setIntakeState(1);
+		setArmStage(5);
+		waitUntil(_autonTimer.time(sec) > 13.5);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (3_tiles), 3_tiles, 1.2_tiles, false, 70, 1.0), true);
+		waitUntil(_autonTimer.time(sec) > 14.7);
+		setArmStage(20, 0, 40);
+		waitUntil(global::_isDriveToPointSettled);
+	} else {
+		// Back up
+		wait(0.5, sec);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (1_tiles), 3.5_tiles, 0, true), true);
+		waitUntil(global::_driveToPointDistanceError < 0.2);
+		// Go to positive corner
+		waitUntil(_autonTimer.time(sec) > 13.5);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.5_tiles), 2_tiles, 0, false, 60), true);
+		waitUntil(global::_driveToPointDistanceError < 0.4);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(6_tiles - (0.5_tiles), 1.5_tiles, 0, false, 60), false);
+	}
 }
 
 }

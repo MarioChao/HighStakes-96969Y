@@ -137,24 +137,37 @@ void doAuton() {
 	wait(0.5, sec);
 	local::driveAndTurn(robotChassis, local::driveAndTurn_params(0.1_tiles, robotChassis.getLookRotation(), 5), true);
 	wait(1.2, sec);
-	// Drop goal near corner
-	setArmStage(5);
-	setIntakeAntiJam(true);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 1.9_tiles, 0, false, 60), true);
-	waitUntil(global::_driveToPointAngleError_degrees < 30);
-	setGoalClampState(false);
-	setIntakeState(0, 0.5);
-	waitUntil(global::_driveToPointDistanceError < 0.7);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 1.9_tiles, 0, false, 100), true);
-	waitUntil(global::_driveToPointDistanceError < 0.2);
 
-	// Touch ladder
-	setArmStage(5);
-	waitUntil(_autonTimer.time(sec) > 13.5);
-	global::driveToPoint(robotChassis, global::driveToPoint_params(3.1_tiles, 2.9_tiles, 1.2_tiles, false, 70, 1.0), true);
-	waitUntil(_autonTimer.time(sec) > 14.7);
-	setArmStage(20, 0, 40);
-	waitUntil(global::_isDriveToPointSettled);
+	if (configs::willTouchLadder()) {
+		// Drop goal near corner
+		setArmStage(5);
+		setIntakeAntiJam(true);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 1.9_tiles, 0, false, 60), true);
+		waitUntil(global::_driveToPointAngleError_degrees < 30);
+		setGoalClampState(false);
+		setIntakeState(0, 0.5);
+		waitUntil(global::_driveToPointDistanceError < 0.7);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(2.1_tiles, 1.9_tiles, 0, false, 100), true);
+		waitUntil(global::_driveToPointDistanceError < 0.2);
+	
+		// Touch ladder
+		setArmStage(5);
+		waitUntil(_autonTimer.time(sec) > 13.5);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(3.1_tiles, 2.9_tiles, 1.2_tiles, false, 70, 1.0), true);
+		waitUntil(_autonTimer.time(sec) > 14.7);
+		setArmStage(20, 0, 40);
+		waitUntil(global::_isDriveToPointSettled);
+	} else {
+		// Drop goal near corner
+		setArmStage(0);
+		global::driveToPoint(robotChassis, global::driveToPoint_params(3_tiles, 1_tiles, 1_tiles, false, 60), true);
+		waitUntil(global::_driveToPointDistanceError < 1.2);
+		setGoalClampState(false);
+		setIntakeState(0, 0.5);
+		waitUntil(global::_driveToPointDistanceError < 0.4);
+		// Clamp face middle goal
+		global::turnToFace(robotChassis, global::turnToFace_params(3_tiles, 1_tiles, true), false);
+	}
 }
 
 }

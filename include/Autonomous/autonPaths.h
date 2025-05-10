@@ -127,6 +127,9 @@ void runFieldTour();
 namespace configs {
 bool willDoAllianceStake();
 void setDoAllianceStake(bool state);
+
+bool willTouchLadder();
+void setWillTouchLadder(bool state);
 }
 
 }

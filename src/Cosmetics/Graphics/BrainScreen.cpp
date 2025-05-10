@@ -455,6 +455,13 @@ void createButtons() {
 		debugDockButtons[2]->setUsability(true);
 	}));
 
+	debugDockButtons.push_back(new ButtonGui(180, 95, 30, 30, 5, color(ClrLightBlue), color(ClrDarkSlateBlue), 2, "", color(ClrDarkBlue), [] {
+		debugDockButtons[3]->setUsability(false);
+		autonpaths::configs::setWillTouchLadder(!autonpaths::configs::willTouchLadder());
+		wait(0.2, sec);
+		debugDockButtons[3]->setUsability(true);
+	}));
+
 
 	// -----------------------------------------
 	// --- Alliance & Mode Selection Buttons ---
@@ -984,7 +991,8 @@ void drawDebug() {
 	Brain.Screen.setPenColor(color(ClrGold));
 	Brain.Screen.printAt(170, 35, 1, "Auton Config", botintake::getFilterOutColor().c_str());
 	Brain.Screen.setPenColor(color::green);
-	Brain.Screen.printAt(200, 60, 1, "Ally.Stk: %d", autonpaths::configs::willDoAllianceStake());
+	Brain.Screen.printAt(200, 60, 1, "Ally Stk: %d", autonpaths::configs::willDoAllianceStake());
+	Brain.Screen.printAt(200, 100, 1, "Ladder: %d", autonpaths::configs::willTouchLadder());
 }
 
 }
