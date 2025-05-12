@@ -9,12 +9,13 @@ using aespa_lib::datas::Linegular;
 using pas1_lib::chassis::base::Differential;
 using pas1_lib::chassis::settings::AutonSettings;
 using pas1_lib::chassis::settings::MotionHandler;
+using namespace aespa_lib::units;
 using namespace pas1_lib::chassis::move::global;
 
 namespace drive_to_point {
 void runDriveToPoint();
 
-const double turnTo_distanceThreshold = 0.3;
+const double turnTo_distanceThreshold_tiles = 0.3;
 
 double _targetX, _targetY;
 bool _isReverseHeading;
@@ -61,7 +62,7 @@ void driveToPoint(Differential &chassis, driveToPoint_params params, bool async)
 }
 
 double _driveToPointAngleError_degrees;
-double _driveToPointDistanceError;
+Length _driveToPointDistanceError(0);
 bool _isDriveToPointSettled;
 
 
@@ -91,8 +92,8 @@ void runDriveToPoint() {
 	Linegular startLg = chassis->getLookPose();
 
 	// Target state
-	const double targetDistance = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { x_tiles, y_tiles });
-	_driveToPointDistanceError = targetDistance;
+	const double targetDistance_tiles = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { x_tiles, y_tiles });
+	_driveToPointDistanceError = targetDistance_tiles;
 
 	// Config
 	const double velocityFactor = (isReverse ? -1 : 1);
@@ -164,7 +165,7 @@ void runDriveToPoint() {
 		double currentY = currentLg.getY();
 
 		// Get target rotation
-		bool isCloseToTarget = _driveToPointDistanceError < turnTo_distanceThreshold;
+		bool isCloseToTarget = _driveToPointDistanceError.tiles() < turnTo_distanceThreshold_tiles;
 		double targetRotation_degrees = [&]() -> double {
 			if (isCloseToTarget) return previousTargetRotation_degrees;
 			// if (isCloseToTarget) return currentLg.getRotation().polarDeg();
@@ -176,19 +177,19 @@ void runDriveToPoint() {
 		/* ---------- Linear ---------- */
 
 		// Compute linear distance error
-		double travelDistance = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { currentX, currentY });
-		double distanceError = targetDistance - travelDistance - earlyStopOffset_tiles;
-		_driveToPointDistanceError = std::fabs(distanceError);
+		double travelDistance_tiles = aespa_lib::genutil::euclideanDistance({ startLg.getX(), startLg.getY() }, { currentX, currentY });
+		double distanceError_tiles = targetDistance_tiles - travelDistance_tiles - earlyStopOffset_tiles;
+		_driveToPointDistanceError = std::fabs(distanceError_tiles);
 
 		// Compute motor velocity pid-value from error
-		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(distanceError);
+		autonSettings.distanceError_tiles_to_velocity_pct_pid.computeFromError(distanceError_tiles);
 		double velocity_pct;
 		velocity_pct = autonSettings.distanceError_tiles_to_velocity_pct_pid.getValue();
 		velocity_pct = aespa_lib::genutil::clamp(velocity_pct, -maxVelocity_pct, maxVelocity_pct);
 		velocity_pct *= velocityFactor;
 
 		// Update error patience
-		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(distanceError));
+		autonSettings.distanceError_tiles_patience.computePatience(std::fabs(distanceError_tiles));
 
 
 		/* ---------- Angular ---------- */
@@ -206,7 +207,7 @@ void runDriveToPoint() {
 
 
 		/* Debug print */
-		// printf("DIS TR: %.3f, TGT: %.3f, DE: %.3f, VLin: %.3f, VRot: %.3f\n", travelDistance, targetDistance, distanceError, velocity_pct, rotateVelocity_pct);
+		// printf("DIS TR: %.3f, TGT: %.3f, DE: %.3f, VLin: %.3f, VRot: %.3f\n", travelDistance_tiles, targetDistance_tiles, distanceError_tiles, velocity_pct, rotateVelocity_pct);
 		// printf("ANG CUR: %.3f, TGT: %.3f, DE: %.3f\n", currentLg.getRotation().polarDeg(), targetRotation_degrees, rotateError);
 
 
@@ -241,7 +242,7 @@ void runDriveToPoint() {
 		wait(10, msec);
 	}
 
-	printf("Err: %.3f tiles\n", _driveToPointDistanceError);
+	printf("Err: %.3f tiles\n", _driveToPointDistanceError.tiles());
 
 	// Stop
 	chassis->stopMotors(brake);
