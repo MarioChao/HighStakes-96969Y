@@ -7,7 +7,7 @@ Our team id is [96969Y](https://www.robotevents.com/teams/VRC/96969Y). Check out
 
 ## Configuration
 
-Modify robot configurations in [robot-config.cpp](./src/robot-config.cpp):
+Modify robot configurations in [robot-config.cpp](./src/robot-config.cpp).
 
 Modify robot specifications, chassis sensors, odometry, and auton settings in [chassis-config.cpp](./src/chassis-config.cpp).
 

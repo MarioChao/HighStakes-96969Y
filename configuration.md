@@ -71,15 +71,9 @@ Motor lookRight_motorBeats(RightMotorA);
 > For encoder sensors, define either `RotationSensor`, `OpticalShaftEncoder`, or `Motor` objects with the corresponding VEX devices.
 
 
-2. Define a `TrackingWheel` object for each encoder sensor:
+2. Define a `TrackingWheel` object for each encoder sensor by specifying:
 	1. The encoder sensor object
 	2. Measured direction in `PolarAngle` units (right: 0°, front: 180°)
-
-	> [!TIP]
-	>
-	> Use **0_polarDeg** or **180_polarDeg** for horizontal (right) tracking wheels,
-	> and **90_polarDeg** or **-90_polarDeg** for vertical (look) tracking wheels.
-
 	3. Gear ratio from encoder to wheel (e.g. sensor gear teeth / wheel gear teeth)
 	4. Wheel diameter in inches
 	5. Center offset in inches (see [tracking-wheel.h](./include/Aespa-Lib/Ningning-Sensors/tracking-wheel.h) for more detail)
@@ -97,6 +91,11 @@ TrackingWheel lookRight_trackingWheel(
 TrackingWheel look1_trackingWheel(look_rotationBeats, 90_polarDeg, 1, 2.75, -0.013);
 TrackingWheel right1_trackingWheel(right_rotationBeats, 0_polarDeg, 1, 2.00, 2.0);
 ```
+
+> [!TIP]
+>
+> Use **0_polarDeg** or **180_polarDeg** for horizontal (right) tracking wheels,
+> and **90_polarDeg** or **-90_polarDeg** for vertical (look) tracking wheels.
 
 > [!IMPORTANT]
 >
@@ -165,9 +164,9 @@ AutonSettings autonSettings(
 > [!TIP]
 >
 > To tune the feedforward and PID controllers, check out:<br>
-> [document by 96969Y](https://docs.google.com/document/d/1gGQUS_ICVblglQYYHCu_tF6tr0dZSVkgfC9vMcKO9wQ/edit?usp=sharing)
+> - [document by 96969Y](https://docs.google.com/document/d/1gGQUS_ICVblglQYYHCu_tF6tr0dZSVkgfC9vMcKO9wQ/edit?usp=sharing)
 > for feedforward tuning<br>
-> [document by 2029C](https://docs.google.com/document/d/1-BjN275RGUCx_rw3oZya8FP3pveYBZwiozITEoHG33Y/edit?tab=t.0)
+> - [document by 2029C](https://docs.google.com/document/d/1-BjN275RGUCx_rw3oZya8FP3pveYBZwiozITEoHG33Y/edit?tab=t.0)
 > for PID tuning
 
 
