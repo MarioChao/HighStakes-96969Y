@@ -4,12 +4,53 @@ Modify robot configurations in [robot-config.cpp](./src/robot-config.cpp):
 
 1. Declare motors & VEX components in [robot-config.h](./include/robot-config.h)
 
+```cpp
+// Brain & Controller
+extern vex::brain Brain;
+extern vex::controller Controller1;
+extern vex::controller Controller2;
+
+// Devices
+extern vex::motor LeftMotorA;
+extern vex::motor LeftMotorB;
+// ...
+extern vex::pneumatics GoalClampPneumatic;
+// ...
+extern vex::rotation LookRotation;
+extern vex::rotation RightRotation;
+// ...
+extern vex::inertial InertialSensor;
+// ...
+extern vex::optical RingOpticalSensor;
+```
+
 > [!NOTE]
 >
 > Devices declared in header files should have "**extern**" keyword in front of them to prevent redefinition error.<br>
 
 
 2. Define those components in [robot-config.cpp](./src/robot-config.cpp), specifying the desired ports and configurations
+
+```cpp
+/* ---------- Brain & Controller ---------- */
+brain Brain;
+controller Controller1(primary);
+controller Controller2(partner);
+
+
+/* ---------- Dummy ---------- */
+// PORT22 is used for the Brain's default ThreeWirePort
+const int emptyPort = PORT16;
+triport EmptyExpander(emptyPort);
+triport::port emptyExpanderPort(EmptyExpander.B);
+
+
+/* ---------- Devices ---------- */
+// Wheel motors
+motor LeftMotorA(PORT1, ratio6_1, true);
+motor LeftMotorB(PORT2, ratio6_1, true);
+// ...
+```
 
 > [!TIP]
 >
@@ -73,7 +114,7 @@ Motor lookRight_motorBeats(RightMotorA);
 
 2. Define a `TrackingWheel` object for each encoder sensor by specifying:
 	1. The encoder sensor object
-	2. Measured direction in `PolarAngle` units (right: 0°, front: 180°)
+	2. Measured direction in `PolarAngle` units (right: 0°, front: 90°)
 	3. Gear ratio from encoder to wheel (e.g. sensor gear teeth / wheel gear teeth)
 	4. Wheel diameter in inches
 	5. Center offset in inches (see [tracking-wheel.h](./include/Aespa-Lib/Ningning-Sensors/tracking-wheel.h) for more detail)
