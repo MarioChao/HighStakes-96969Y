@@ -11,7 +11,9 @@ Modify robot configurations in [robot-config.cpp](./src/robot-config.cpp).
 
 Modify robot specifications, chassis sensors, odometry, and auton settings in [chassis-config.cpp](./src/chassis-config.cpp).
 
-For more details, check [configuration tutorial](./configuration.md).
+> [!TIP]
+>
+> For more details, check [configuration tutorial](./configuration.md).
 
 > **Dev Note:**
 >
@@ -34,6 +36,19 @@ The utility functions are organized into [`Aespa-Lib`](./include/Aespa-Lib/), [`
 ## Resources
 
 Here's some tools that we used during our robot's development.
+
 - [VEX Path Planner (Scratch tool)](https://scratch.mit.edu/projects/921506148/) for path planning and autonomous
 - [Image Array (Web tool)](https://mariochao.github.io/image-array/) for converting images to arrays for drawing
 - [CyberChef](https://gchq.github.io/CyberChef/) for mirroring autonomous routes
+
+
+## Other Programs
+
+Repositories that may help in your coding journey.
+
+- [Vex Library Test](https://github.com/MarioChao/Vex-Library-Test) - code written in C++11 that can be tested locally (**without** V5 Brain):
+	- Aespa Library - geometry, utilities, & units
+	- Pas1 Library - splines & 2d motion profiles
+- [vex video display](https://github.com/MarioChao/vex-video-display) - basic program for displaying multiple videos on V5 Brain (**without** SD card)
+- [LemLib](https://github.com/LemLib/LemLib) - comprehensive PROS template that inspired part of this repository
+- [WPILib (allwpilib)](https://github.com/wpilibsuite/allwpilib) - FRC software library that also greatly inspired us
