@@ -1,3 +1,5 @@
+![Lady Brown (red) and Fish Mech (blue)](/docs/assets/high-stakes-repo-thumbnail.png "High Stakes fan art")
+
 # VEX High Stakes
 
 The repository for PAS1's newest robot program in 2024-25 VEX Robotics - High Stakes.
